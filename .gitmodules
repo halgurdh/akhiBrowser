@@ -1,0 +1,6 @@
+[submodule "browser/extensions/akhi"]
+	path = browser/extensions/akhi
+	url = https://github.com/halgurdh/akhi-extension.git
+[submodule "browser/branding/akhi"]
+	path = browser/branding/akhi
+	url = https://github.com/halgurdh/akhi-branding.git

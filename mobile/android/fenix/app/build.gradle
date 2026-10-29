@@ -47,7 +47,7 @@ android {
             arg("room.schemaLocation", "$projectDir/schemas".toString())
         }
 
-        applicationId "org.mozilla"
+        applicationId "org.akhibrowser"
         minSdk config.minSdkVersion
         targetSdk config.targetSdkVersion
         versionCode 1
@@ -78,6 +78,23 @@ android {
         buildConfigField "boolean", "IS_BENCHMARK_BUILD", "false"
     }
 
+    // AkhiBrowser: the release APKs are signed with AkhiBrowser's key, from the properties file that
+    // AKHI_SIGNING_PROPERTIES names (storeFile, storePassword, keyAlias, keyPassword). It is never in the repo.
+    def akhiSigningFile = System.getenv("AKHI_SIGNING_PROPERTIES")
+    def akhiSigning = null
+    if (akhiSigningFile && file(akhiSigningFile).exists()) {
+        akhiSigning = new Properties()
+        file(akhiSigningFile).withInputStream { akhiSigning.load(it) }
+        signingConfigs {
+            akhiRelease {
+                storeFile file(akhiSigning.getProperty("storeFile"))
+                storePassword akhiSigning.getProperty("storePassword")
+                keyAlias akhiSigning.getProperty("keyAlias")
+                keyPassword akhiSigning.getProperty("keyPassword")
+            }
+        }
+    }
+
     def releaseTemplate = {
         // We allow disabling optimization by passing `-PdisableOptimization` to gradle. This is used
         // in automation for UI testing non-debug builds.
@@ -96,7 +113,9 @@ android {
 	    // If building locally, just use debug signing. In official automation builds, the
 	    // files are signed using a separate service and not within gradle.
 	    // Also skip during buildconfig linting, and skip if the `disableDebugSigning` Gradle property is set.
-        if (!project.hasProperty("disableDebugSigning") && !gradle.hasProperty("localProperties.disableDebugSigning") && !gradle.mozconfig.substs.MOZ_AUTOMATION && System.getenv("MOZ_BUILD_CONFIG_LINT") != "1") {
+        if (akhiSigning != null) {
+            signingConfig = signingConfigs.akhiRelease
+        } else if (!project.hasProperty("disableDebugSigning") && !gradle.hasProperty("localProperties.disableDebugSigning") && !gradle.mozconfig.substs.MOZ_AUTOMATION && System.getenv("MOZ_BUILD_CONFIG_LINT") != "1") {
             signingConfig = signingConfigs.debug
         }
 
@@ -110,12 +129,12 @@ android {
         debug {
             shrinkResources = false
             minifyEnabled = false
-            applicationIdSuffix ".fenix.debug"
+            applicationIdSuffix ".debug"
             resValue "bool", "IS_DEBUG", "true"
             pseudoLocalesEnabled = true
         }
         nightly releaseTemplate >> {
-            applicationIdSuffix ".fenix"
+            applicationIdSuffix ".nightly"
             buildConfigField "boolean", "USE_RELEASE_VERSIONING", "true"
             def deepLinkSchemeValue = "fenix-nightly"
             buildConfigField "String", "DEEP_LINK_SCHEME", "\"$deepLinkSchemeValue\""
@@ -125,7 +144,7 @@ android {
         }
         beta releaseTemplate >> {
             buildConfigField "boolean", "USE_RELEASE_VERSIONING", "true"
-            applicationIdSuffix ".firefox_beta"
+            applicationIdSuffix ".beta"
             def deepLinkSchemeValue = "fenix-beta"
             buildConfigField "String", "DEEP_LINK_SCHEME", "\"$deepLinkSchemeValue\""
             manifestPlaceholders.putAll([
@@ -136,13 +155,12 @@ android {
                     // fatal consequences. For example see:
                     //  - https://issuetracker.google.com/issues/36924841
                     //  - https://issuetracker.google.com/issues/36905922
-                    "sharedUserId": "org.mozilla.firefox.sharedID",
+                    "sharedUserId": "org.akhibrowser.sharedID",
                     "deepLinkScheme": deepLinkSchemeValue,
             ])
         }
         release releaseTemplate >> {
             buildConfigField "boolean", "USE_RELEASE_VERSIONING", "true"
-            applicationIdSuffix ".firefox"
             def deepLinkSchemeValue = "fenix"
             buildConfigField "String", "DEEP_LINK_SCHEME", "\"$deepLinkSchemeValue\""
             manifestPlaceholders.putAll([
@@ -153,7 +171,7 @@ android {
                     // fatal consequences. For example see:
                     //  - https://issuetracker.google.com/issues/36924841
                     //  - https://issuetracker.google.com/issues/36905922
-                    "sharedUserId": "org.mozilla.firefox.sharedID",
+                    "sharedUserId": "org.akhibrowser.sharedID",
                     "deepLinkScheme": deepLinkSchemeValue,
             ])
         }
@@ -161,7 +179,7 @@ android {
             initWith buildTypes.nightly
             shrinkResources = false
             minifyEnabled = false
-            applicationIdSuffix ".fenix"
+            applicationIdSuffix ".nightly"
             signingConfig = signingConfigs.debug
             debuggable false
             buildConfigField "boolean", "IS_BENCHMARK_BUILD", "true"
@@ -336,6 +354,46 @@ androidComponents {
             outputFile = layout.buildDirectory.file("sbom/${variant.name}-runtime-dependencies.json")
         }
     }
+}
+
+// -------------------------------------------------------------------------------------------------
+// AkhiBrowser built-in extension, shared with desktop: browser/extensions/akhi/ is served at
+// resource://android/assets/extensions/akhi/
+// -------------------------------------------------------------------------------------------------
+
+abstract class SyncAkhiExtension extends DefaultTask {
+    @InputDirectory
+    @PathSensitive(PathSensitivity.RELATIVE)
+    abstract DirectoryProperty getSource()
+
+    @OutputDirectory
+    abstract DirectoryProperty getOutputDir()
+
+    @javax.inject.Inject
+    abstract FileSystemOperations getFs()
+
+    @TaskAction
+    void sync() {
+        fs.sync { spec ->
+            spec.from(source)
+            spec.into(outputDir.get().dir("extensions/akhi"))
+            spec.exclude "**/moz.build", "**/jar.mn", "**/tools/**", "**/README.md"
+        }
+    }
+}
+
+def syncAkhiExtension = tasks.register("syncAkhiExtension", SyncAkhiExtension) {
+    source.set(file("${gradle.mozconfig.topsrcdir}/browser/extensions/akhi"))
+}
+
+androidComponents {
+    onVariants(selector().all()) { variant ->
+        variant.sources.assets.addGeneratedSourceDirectory(syncAkhiExtension) { it.outputDir }
+    }
+}
+
+tasks.matching { it.name.startsWith("explodeAssetSource") }.configureEach { t ->
+    t.dependsOn(syncAkhiExtension)
 }
 
 // -------------------------------------------------------------------------------------------------

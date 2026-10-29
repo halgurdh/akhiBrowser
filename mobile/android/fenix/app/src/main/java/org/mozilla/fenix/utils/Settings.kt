@@ -161,6 +161,11 @@ class Settings(
         /** DoH setting is set to "Default", corresponds to TRR_MODE_OFF (0) from GeckoView */
         private const val DOH_SETTINGS_DEFAULT = 0
 
+        // AkhiBrowser: DNS over HTTPS, "increased protection", with Cloudflare's family DNS, which also blocks adult
+        // and malware sites
+        private const val DOH_SETTINGS_AKHI = 2
+        private const val CLOUDFLARE_FAMILY_URI = "https://family.cloudflare-dns.com/dns-query"
+
         /** DoH setting is set to "Increased", corresponds to TRR_MODE_FIRST (2) from GeckoView */
         private const val DOH_SETTINGS_INCREASED = 2
 
@@ -702,7 +707,8 @@ class Settings(
     var crashReportChoice by
         stringPreference(
             appContext.getPreferenceKey(R.string.pref_key_crash_reporting_choice),
-            default = CrashReportOption.Ask.toString(),
+            // AkhiBrowser: crash reports go to Mozilla's servers
+            default = CrashReportOption.Never.toString(),
         )
 
     val isRemoteDebuggingEnabled by
@@ -714,7 +720,8 @@ class Settings(
     var isTelemetryEnabled by
         booleanPreference(
             appContext.getPreferenceKey(R.string.pref_key_telemetry),
-            default = true,
+            // AkhiBrowser: telemetry goes to Mozilla's servers, also the default of the usage ping and experiments
+            default = false,
         )
 
     var isMarketingTelemetryEnabled by
@@ -1285,7 +1292,8 @@ class Settings(
     var shouldUseHttpsOnly by
         booleanPreference(
             appContext.getPreferenceKey(R.string.pref_key_https_only),
-            default = false,
+            // AkhiBrowser: secure by default
+            default = true,
         )
 
     var shouldUseHttpsOnlyInAllTabs by
@@ -1309,7 +1317,8 @@ class Settings(
     var shouldEnableGlobalPrivacyControl by
         booleanPreference(
             appContext.getPreferenceKey(R.string.pref_key_privacy_enable_global_privacy_control),
-            false,
+            // AkhiBrowser: private by default
+            true,
         )
 
     /**
@@ -1340,13 +1349,14 @@ class Settings(
     val useStandardTrackingProtection by
         booleanPreference(
             appContext.getPreferenceKey(R.string.pref_key_tracking_protection_standard_option),
-            true,
+            // AkhiBrowser: strict tracking protection by default
+            false,
         )
 
     val useStrictTrackingProtection by
         booleanPreference(
             appContext.getPreferenceKey(R.string.pref_key_tracking_protection_strict_default),
-            false,
+            true,
         )
 
     val useCustomTrackingProtection by
@@ -3163,7 +3173,7 @@ class Settings(
     private var trrMode by
         intPreference(
             key = appContext.getPreferenceKey(R.string.pref_key_doh_settings_mode),
-            default = DOH_SETTINGS_DEFAULT,
+            default = DOH_SETTINGS_AKHI,
         )
 
     /**
@@ -3173,7 +3183,7 @@ class Settings(
     var dohProviderUrl by
         stringPreference(
             key = appContext.getPreferenceKey(R.string.pref_key_doh_provider_uri),
-            default = "",
+            default = CLOUDFLARE_FAMILY_URI,
         )
 
     /**
