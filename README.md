@@ -13,10 +13,9 @@ and [NoHaram](https://github.com/mohamedsadiqaguenaou/NoHaram) inspired the imag
 
 All built in, on your device, nothing uploaded. No telemetry, studies or crash reports go to Mozilla.
 
-- **Ad blocking (optional, off by default):** install the ad blocker you like, or turn ad blocking on in the
-  settings: AkhiBrowser then installs [uBlock Origin](https://github.com/gorhill/uBlock) from addons.mozilla.org and
-  turns it back on if it's disabled or removed. On a site that refuses ad blockers, its ads are let through, with
-  a button to block them again.
+- **Ad, tracker and malware blocking (on by default):** a built-in network blocker of ad/tracker/malware domains,
+  switchable in the settings. It runs alongside [uBlock Origin](https://github.com/gorhill/uBlock) if you install
+  it yourself. On a site that refuses ad blockers, its ads are let through, with a button to block them again.
 - **No music:** removes background music from videos and keeps the voices
   ([NoMusic](https://github.com/mohamedsadiqaguenaou/NoMusic): FastEnhancer, then RNNoise). The Lite model on phones
   and slow computers.
@@ -35,9 +34,9 @@ All built in, on your device, nothing uploaded. No telemetry, studies or crash r
 - **12 languages:** English, Arabic, Persian, Kurdish (Sorani), Urdu, Turkish, French, German, Dutch, Spanish,
   Indonesian and Malay, right to left where needed.
 
-All of them but ad blocking are on by default, and each can be turned off in the AkhiBrowser shield of the toolbar
-(on Android: menu, **Extensions**, **AkhiBrowser**), which also chooses who to blur and whether an image that can't
-be checked stays blurred.
+All of them are on by default, and each can be turned off in the AkhiBrowser shield of the toolbar (on Android:
+menu, **Extensions**, **AkhiBrowser**), which also chooses who to blur and whether an image that can't be checked
+stays blurred. A parental PIN can lock these off.
 
 **Parental PIN:** like TV Akhi, set a PIN there and turning a protection off, or changing or removing the PIN, needs
 it. Turning one on never does. Only a salted hash of the PIN is kept, and five wrong tries make it wait a minute.
@@ -99,7 +98,7 @@ AkhiBrowser's own code is in two private repositories, pulled into this one as g
 
 | Path | Private repository | What's in it |
 | --- | --- | --- |
-| `browser/extensions/akhi/` | `halgurdh/akhi-extension` | The built-in extension, shared by desktop and Android: no music, the content filters, the image and face checks, the settings and parental PIN, and the uBlock Origin installer. It can't be removed. |
+| `browser/extensions/akhi/` | `halgurdh/akhi-extension` | The built-in extension, shared by desktop and Android: no music, the content filters, the built-in ad blocker, the image and face checks, colour-blindness correction, the settings and parental PIN. It can't be removed. |
 | `browser/branding/akhi/` | `halgurdh/akhi-branding` | Names, installer and icons in TV Akhi's colors, the icon tool, and the build configs (`mozconfigs/`). |
 
 What stays public here is Firefox itself and AkhiBrowser's changes to Firefox's own files: the Android app
@@ -116,7 +115,6 @@ For Android TV, see [TV Akhi](https://github.com/halgurdh/tv-akhi), with the sam
 ## Credits and licenses
 
 Based on Firefox by Mozilla, under the [Mozilla Public License 2.0](LICENSE). It also uses
-[uBlock Origin](https://github.com/gorhill/uBlock) (GPLv3, downloaded at runtime, not bundled),
 [NoMusic](https://github.com/mohamedsadiqaguenaou/NoMusic) (ISC), [FastEnhancer](https://github.com/aask1357/fastenhancer)
 (MIT), [RNNoise](https://github.com/xiph/rnnoise) (BSD), [NSFWJS](https://github.com/infinitered/nsfwjs) (MIT),
 [TensorFlow.js](https://github.com/tensorflow/tfjs) with its COCO-SSD and BlazeFace models (Apache 2.0), Intel's
