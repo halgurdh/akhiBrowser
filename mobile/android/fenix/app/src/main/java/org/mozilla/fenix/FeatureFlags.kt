@@ -25,5 +25,6 @@ object FeatureFlags {
      *
      * ⚠️ DO NOT MODIFY THIS FLAG IN PRODUCTION.
      */
-    val onboardingFeatureEnabled = !Config.channel.isDebug
+    // AkhiBrowser: Firefox's onboarding is about Mozilla's Terms of Use, marketing data and Sync, none of which apply
+    val onboardingFeatureEnabled = false
 }

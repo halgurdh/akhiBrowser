@@ -13,19 +13,22 @@ and [NoHaram](https://github.com/mohamedsadiqaguenaou/NoHaram) inspired the imag
 
 All built in, on your device, nothing uploaded. No telemetry, studies or crash reports go to Mozilla.
 
-- **Ad, tracker and malware blocking (on by default):** a built-in network blocker of ad/tracker/malware domains,
-  switchable in the settings. It runs alongside [uBlock Origin](https://github.com/gorhill/uBlock) if you install
-  it yourself. On a site that refuses ad blockers, its ads are let through, with a button to block them again.
+- **Ad, tracker and malware blocking (on by default):** [uBlock Origin](https://github.com/gorhill/uBlock) is
+  installed from addons.mozilla.org and kept on while ad blocking is on, with a built-in blocker of ad, tracker and
+  malware domains underneath it (from the first page, and the empty ad slots it leaves are hidden). On a site that
+  refuses ad blockers, its ads are let through, with a button to block them again.
 - **No music:** removes background music from videos and keeps the voices
   ([NoMusic](https://github.com/mohamedsadiqaguenaou/NoMusic): FastEnhancer, then RNNoise). The Lite model on phones
   and slow computers.
 - **Nudity blur:** images, CSS backgrounds, videos and canvases stay blurred until an on-device model
   ([NSFWJS](https://github.com/infinitered/nsfwjs)) has checked them, so nothing flashes. Unsafe ones stay blurred,
-  or only their persons are. Works with srcset and `<picture>`, lazy loading, carousels, shadow DOM, iframes and
-  `blob:` images, down to 24 px thumbnails. The same rule for everyone, of any age.
-- **Choose who to blur:** images showing the face of a woman (the default), of a man, or both, are blurred whole, on
-  every site. Faces whose gender is unclear are blurred too, unless turned off. Faces too small to tell apart, like
-  in group photos, aren't counted.
+  or only their persons are. One that can't be checked, like a video another site won't let pages read, is shown.
+  Works with srcset and `<picture>`, lazy loading, carousels, shadow DOM, iframes and `blob:` images, down to 24 px
+  thumbnails. The same rule for everyone, of any age.
+- **Choose who to blur, as in Islam:** for women (the default), men, or both, a person is blurred by what is seen of
+  them, not the whole image: a woman when her hair or body shows (her face and hands may), a man from the navel to
+  the knees. A woman too small to judge stays blurred, and a person whose gender is unclear is judged as a woman,
+  unless turned off.
 - **Adult and haram blocking:** adult, alcohol, drugs, vaping and gambling sites are blocked, and so are pages that
   label themselves adult. SafeSearch is forced on Google, Bing, DuckDuckGo and Yahoo, and so is YouTube Restricted
   Mode.
@@ -35,8 +38,7 @@ All built in, on your device, nothing uploaded. No telemetry, studies or crash r
   Indonesian and Malay, right to left where needed.
 
 All of them are on by default, and each can be turned off in the AkhiBrowser shield of the toolbar (on Android:
-menu, **Extensions**, **AkhiBrowser**), which also chooses who to blur and whether an image that can't be checked
-stays blurred. A parental PIN can lock these off.
+menu, **Extensions**, **AkhiBrowser**), which also chooses who to blur. A parental PIN can lock these off.
 
 **Parental PIN:** like TV Akhi, set a PIN there and turning a protection off, or changing or removing the PIN, needs
 it. Turning one on never does. Only a salted hash of the PIN is kept, and five wrong tries make it wait a minute.
@@ -44,7 +46,8 @@ it. Turning one on never does. Only a salted hash of the PIN is kept, and five w
 ### Light on old devices
 
 Only what's on the screen is checked. Images seen before are answered from a cache, without reading their pixels
-again. The face models (2 MB) only run when a gender is chosen, and not on images already blurred for nudity. The model loads only when it's needed, in its own thread, so page loads never wait on it. It runs on the GPU
+again. The face and body models (6 MB) only run when a gender is chosen, on the largest persons of an image (one on
+phones). The model loads only when it's needed, in its own thread, so page loads never wait on it. It runs on the GPU
 (WebGL) on computers, and on WebAssembly SIMD on phones and computers with few cores, which also covers 32-bit ARMv7
 phones. Videos and canvases are only looked at while a page has them.
 
@@ -89,6 +92,7 @@ To update the domain lists, or to make the icons again from the logo (needs Pill
 ```sh
 python browser/extensions/akhi/tools/make_filter_lists.py
 python browser/extensions/akhi/tools/make_gender_model.py
+python browser/extensions/akhi/tools/make_body_model.py
 python browser/branding/akhi/tools/make_icons.py
 ```
 
