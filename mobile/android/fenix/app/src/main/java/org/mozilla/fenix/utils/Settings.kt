@@ -206,7 +206,8 @@ class Settings(
         lazyFeatureFlagBooleanPreference(
             appContext.getPreferenceKey(R.string.pref_key_pocket_homescreen_recommendations),
             featureFlag = ContentRecommendationsFeatureHelper.isContentRecommendationsFeatureEnabled(appContext),
-            defaultValue = { homescreenSections[HomeScreenSection.POCKET] == true },
+            // AkhiBrowser: no stories on the homepage, as on desktop
+            defaultValue = { false },
         )
 
     /** Indicates what simple toolbar shortcut key is currently selected. */
@@ -248,7 +249,8 @@ class Settings(
     val showPocketSponsoredStories by
         lazyFeatureFlagBooleanPreference(
             key = appContext.getPreferenceKey(R.string.pref_key_pocket_sponsored_stories),
-            defaultValue = { homescreenSections[HomeScreenSection.POCKET_SPONSORED_STORIES] == true },
+            // AkhiBrowser: no sponsored content
+            defaultValue = { false },
             featureFlag = ContentRecommendationsFeatureHelper.isPocketSponsoredStoriesFeatureEnabled(appContext),
         )
 
@@ -2395,7 +2397,8 @@ class Settings(
     var showContileFeature by
         booleanPreference(
             key = appContext.getPreferenceKey(R.string.pref_key_enable_contile),
-            default = true,
+            // AkhiBrowser: no sponsored content
+            default = false,
         )
 
     /** Blocklist used to filter items from the home screen that have previously been removed. */
@@ -2780,7 +2783,8 @@ class Settings(
     var showSponsoredSuggestions by
         lazyFeatureFlagBooleanPreference(
             key = appContext.getPreferenceKey(R.string.pref_key_show_sponsored_suggestions),
-            defaultValue = { enableFxSuggest },
+            // AkhiBrowser: no sponsored content
+            defaultValue = { false },
             featureFlag = FeatureFlags.FX_SUGGEST,
         )
 
