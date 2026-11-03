@@ -48,8 +48,7 @@ it. Turning one on never does. Only a salted hash of the PIN is kept, and five w
 Only what's on the screen is checked. Images seen before are answered from a cache, without reading their pixels
 again. The face and body models (6 MB) only run when a gender is chosen, on the largest persons of an image (one on
 phones). The model loads only when it's needed, in its own thread, so page loads never wait on it. It runs on the GPU
-(WebGL) on computers, and on WebAssembly SIMD on phones and computers with few cores, which also covers 32-bit ARMv7
-phones. Videos and canvases are only looked at while a page has them.
+(WebGL) on computers, and on WebAssembly SIMD on phones and computers with few cores. Videos and canvases are only looked at while a page has them.
 
 ## Building
 
@@ -66,9 +65,8 @@ Every build uses a config from `browser/branding/akhi/mozconfigs/`:
 | Platform | Config | Commands |
 | --- | --- | --- |
 | Windows, macOS, Linux | `akhi-desktop` | `./mach build`, `./mach run`, `./mach package` |
-| Windows 32-bit / ARM | `akhi-windows-x86` / `akhi-windows-arm64` | `./mach build`, `./mach package` |
+| Windows ARM | `akhi-windows-arm64` | `./mach build`, `./mach package` |
 | Android 64-bit ARM | `akhi-android-arm64` | `./mach build`, `./mach gradle :fenix:assembleRelease` |
-| Android 32-bit ARMv7 | `akhi-android-arm` | `./mach build`, `./mach gradle :fenix:assembleRelease` |
 
 Run each with the config, for example `MOZCONFIG=browser/branding/akhi/mozconfigs/akhi-desktop ./mach build`. For
 front-end only work, `akhi-desktop-debug` downloads prebuilt C++ and Rust.
@@ -80,7 +78,8 @@ front-end only work, `akhi-desktop-debug` downloads prebuilt C++ and Rust.
   ([SignPath Foundation](https://signpath.org/) is free for open source, Azure Trusted Signing is low cost).
   SmartScreen trusts a new certificate after enough people have installed with it.
 - **Android:** to sign a release, set `AKHI_SIGNING_PROPERTIES` to a properties file with `storeFile`,
-  `storePassword`, `keyAlias` and `keyPassword`. The APKs are split per ABI (`armeabi-v7a`, `arm64-v8a`, `x86_64`),
+  `storePassword`, `keyAlias` and `keyPassword`. Android is 64-bit only. The APKs are split per ABI (`arm64-v8a`,
+  `x86_64`),
   plus a universal one.
 - **iOS:** not available. Outside the EU, Apple only allows browsers built on WebKit, not on Firefox's engine (Gecko).
   This tree only has Mozilla's prototype of Gecko on iOS (`mobile/ios`, for the simulator). An iOS version would be a
