@@ -16,15 +16,14 @@ an AkhiBrowser build.
 ## What is not covered by the MPL
 
 AkhiBrowser's own new files are separate works under their own terms, not covered by the MPL: the built-in
-extension (`browser/extensions/akhi/`), the branding (`browser/branding/akhi/`) and the build configurations. They
-do not contain Firefox source code.
+extension (`browser/extensions/akhi/`, see its `LICENSE`), the branding's own images and the build configurations.
+They do not contain Firefox source code. The exceptions are the few files of those two private repositories with an MPL
+header, which stay under the MPL and are published in [mpl-sources/](mpl-sources/).
 
 ## How to get the source of the MPL files
 
-If you have an AkhiBrowser build and want the source of the MPL-covered files, request it from the author:
-
-> **Contact:** _(add your source-request address here, for example a GitHub repository, a web page or an email.)_
-
-The source will be provided by reasonable means, at no more than the cost of distribution, as the MPL requires.
+They are public: this repository, at the tag of each release, with [mpl-sources/](mpl-sources/) for the ones that live
+in the private repositories. If you can't get them there, ask at
+[github.com/halgurdh/akhiBrowser/issues](https://github.com/halgurdh/akhiBrowser/issues).
 
 AkhiBrowser isn't affiliated with or endorsed by Mozilla. Firefox is a trademark of the Mozilla Foundation.

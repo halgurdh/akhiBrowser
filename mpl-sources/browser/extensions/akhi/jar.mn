@@ -1,0 +1,22 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+browser.jar:
+    builtin-addons/akhi/manifest.json (manifest.json)
+    builtin-addons/akhi/background.js (background.js)
+    builtin-addons/akhi/body/ (body/*)
+    builtin-addons/akhi/_locales/ (_locales/**)
+    builtin-addons/akhi/content/ (content/*)
+    builtin-addons/akhi/experiment-apis/ (experiment-apis/*)
+    builtin-addons/akhi/faces/ (faces/*)
+    builtin-addons/akhi/filters/ (filters/*.bin)
+    builtin-addons/akhi/gender/ (gender/*)
+    builtin-addons/akhi/icons/ (icons/*)
+    builtin-addons/akhi/lib/ (lib/*.js)
+    builtin-addons/akhi/lib/ (lib/*.wasm)
+    builtin-addons/akhi/licenses/ (licenses/*)
+    builtin-addons/akhi/nomusic/ (nomusic/*)
+    builtin-addons/akhi/nsfw/ (nsfw/*)
+    builtin-addons/akhi/pages/ (pages/*)
+    builtin-addons/akhi/persons/ (persons/*)

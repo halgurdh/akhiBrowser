@@ -26,8 +26,8 @@ studies or crash reports go to Mozilla. A Premium license key is checked with th
   thumbnails. The same rule for everyone, of any age. (slightly re-written to work on lightweight devices)
 - **Choose who to blur:** for women (the default), men, or both, a person is blurred by what is seen of
   them, not the whole image: a woman when her hair or body shows (her face and hands may), a man from the navel to
-  the knees. A woman too small to judge stays blurred, and a person whose gender is unclear is judged as a woman,
-  unless turned off.
+  the knees. A woman too small to judge stays blurred. A person whose gender is unclear can be judged as a woman, which is off by
+  default.
 - **Adult and haram blocking:** adult, alcohol, drugs, vaping and gambling sites are blocked, and so are pages that
   label themselves adult. SafeSearch is forced on Google, Bing, DuckDuckGo and Yahoo, and so is YouTube Restricted
   Mode.

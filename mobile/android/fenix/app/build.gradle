@@ -379,13 +379,15 @@ abstract class SyncAkhiExtension extends DefaultTask {
         fs.sync { spec ->
             spec.from(source)
             spec.into(outputDir.get().dir("extensions/akhi"))
-            spec.exclude "**/moz.build", "**/jar.mn", "**/tools/**", "**/README.md"
+            spec.exclude "**/moz.build", "**/jar.mn", "**/tools/**", "**/README.md", "server/**", "safari/**", "webext/**", ".git*"
         }
     }
 }
 
 def syncAkhiExtension = tasks.register("syncAkhiExtension", SyncAkhiExtension) {
-    source.set(file("${gradle.mozconfig.topsrcdir}/browser/extensions/akhi"))
+    // AKHI_EXTENSION_DIR: the minified copy of a release, see browser/extensions/akhi/webext/minify.mjs
+    def akhiExtensionDir = project.providers.environmentVariable("AKHI_EXTENSION_DIR").getOrElse("")
+    source.set(file(akhiExtensionDir ?: "${gradle.mozconfig.topsrcdir}/browser/extensions/akhi"))
 }
 
 androidComponents {
