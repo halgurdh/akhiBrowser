@@ -18,13 +18,13 @@ license key leaves the device, to check it with the license server.
   refuses ad blockers, its ads are let through, with a button to block them again.
 - **No music:** removes background music from videos and keeps the voices
   ([NoMusic](https://github.com/mohamedsadiqaguenaou/NoMusic): FastEnhancer, then RNNoise). The Lite model on phones
-  and slow computers.
+  and slow computers. (slightly re-written to work on lightweight devices)
 - **Nudity blur:** images, CSS backgrounds, videos and canvases stay blurred until an on-device model
   ([NSFWJS](https://github.com/infinitered/nsfwjs)) has checked them, so nothing flashes. Unsafe ones stay blurred,
   or only their persons are. One that can't be checked, like a video another site won't let pages read, is shown.
   Works with srcset and `<picture>`, lazy loading, carousels, shadow DOM, iframes and `blob:` images, down to 24 px
-  thumbnails. The same rule for everyone, of any age.
-- **Choose who to blur, as in Islam:** for women (the default), men, or both, a person is blurred by what is seen of
+  thumbnails. The same rule for everyone, of any age. (slightly re-written to work on lightweight devices)
+- **Choose who to blur:** for women (the default), men, or both, a person is blurred by what is seen of
   them, not the whole image: a (hijab recognizer) woman when her hair or body shows (her face and hands may), a man from the navel to
   the knees. A woman too small to judge stays blurred, and a person whose gender is unclear is judged as a woman,
   unless turned off.
