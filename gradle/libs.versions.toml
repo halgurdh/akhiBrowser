@@ -60,6 +60,7 @@ ksp = "2.3.12"
 material = "1.14.0"
 mlkit-prompt = "1.0.0-beta5"
 osslicenses-plugin = "0.13.0"
+play-billing = "9.1.0"
 play-integrity = "1.6.0"
 play-review = "2.0.2"
 play-services-ads-id = "18.3.0"
@@ -242,6 +243,7 @@ ksp-symbol-processing-api = { module = "com.google.devtools.ksp:symbol-processin
 ksp-symbol-processing-common-deps = { module = "com.google.devtools.ksp:symbol-processing-common-deps", version.ref = "ksp" }
 mlkit-prompt = { module = "com.google.mlkit:genai-prompt", version.ref = "mlkit-prompt" }
 osslicenses-plugin = { module = "com.google.android.gms:oss-licenses-plugin", version.ref = "osslicenses-plugin" }
+play-billing = { module = "com.android.billingclient:billing", version.ref = "play-billing" }
 play-integrity = { module = "com.google.android.play:integrity", version.ref = "play-integrity" }
 play-review = { module = "com.google.android.play:review", version.ref = "play-review" }
 play-review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "play-review" }

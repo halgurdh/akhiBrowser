@@ -1,0 +1,70 @@
+# The Safari test of AkhiBrowser (browser/extensions/akhi/safari/), unsigned: for the iOS simulator and the Mac.
+# It runs here because public repositories have free runners, and the apps go to a draft release of the private
+# halgurdh/akhi-extension, as anyone could download an artifact of this repository.
+# Needs the secret AKHI_SUBMODULES_TOKEN: read and write to the contents of halgurdh/akhi-extension.
+name: AkhiBrowser Safari test
+
+on:
+  workflow_dispatch:
+    inputs:
+      extension_ref:
+        description: Branch of akhi-extension to build
+        required: true
+        default: main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: halgurdh/akhi-extension
+          ref: ${{ inputs.extension_ref }}
+          token: ${{ secrets.AKHI_SUBMODULES_TOKEN }}
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Test
+        working-directory: safari
+        run: node --test
+
+      - name: Put the extension together
+        run: node safari/build.mjs
+
+      - name: Generate the Xcode project
+        run: |
+          xcrun safari-web-extension-converter safari/dist \
+            --project-location xcode \
+            --app-name AkhiBrowser \
+            --bundle-identifier org.akhibrowser.safari \
+            --swift --no-open --no-prompt --force
+
+      - name: Build for the iOS simulator
+        working-directory: xcode/AkhiBrowser
+        run: |
+          xcodebuild -project AkhiBrowser.xcodeproj -scheme "AkhiBrowser (iOS)" \
+            -configuration Release -sdk iphonesimulator -derivedDataPath build/ios \
+            CODE_SIGNING_ALLOWED=NO build
+
+      - name: Build for the Mac
+        working-directory: xcode/AkhiBrowser
+        run: |
+          xcodebuild -project AkhiBrowser.xcodeproj -scheme "AkhiBrowser (macOS)" \
+            -configuration Release -derivedDataPath build/macos \
+            CODE_SIGNING_ALLOWED=NO build
+
+      - name: Upload to a private draft release
+        working-directory: xcode/AkhiBrowser/build
+        env:
+          GH_TOKEN: ${{ secrets.AKHI_SUBMODULES_TOKEN }}
+        run: |
+          ditto -c -k --keepParent ios/Build/Products/Release-iphonesimulator/AkhiBrowser.app akhibrowser-ios-simulator.zip
+          ditto -c -k --keepParent macos/Build/Products/Release/AkhiBrowser.app akhibrowser-safari-macos.zip
+          gh release create "safari-test-${{ github.run_number }}" akhibrowser-*.zip             --repo halgurdh/akhi-extension --draft --title "Safari test ${{ github.run_number }}"             --notes "Unsigned, from akhi-extension ${{ inputs.extension_ref }}"

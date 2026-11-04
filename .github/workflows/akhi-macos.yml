@@ -1,0 +1,54 @@
+# AkhiBrowser for macOS: a full build and its .dmg, unsigned, so Gatekeeper blocks it on other Macs until it's signed.
+# Started by hand, as it takes hours. It runs here because public repositories have free runners, and the .dmg goes to
+# a draft release of the private halgurdh/akhi-extension, as anyone could download an artifact of this repository.
+# Needs the secret AKHI_SUBMODULES_TOKEN: read access to halgurdh/akhi-branding, read and write to
+# the contents of halgurdh/akhi-extension.
+name: AkhiBrowser macOS
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  MOZCONFIG: browser/branding/akhi/mozconfigs/akhi-desktop
+  MOZBUILD_STATE_PATH: ${{ github.workspace }}/.mozbuild
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 355
+    steps:
+      - name: Free disk space
+        run: |
+          sudo rm -rf "$HOME/Library/Android" /Users/runner/.dotnet
+          for xcode in /Applications/Xcode_*; do
+            [ "$(realpath "$xcode")" = "$(xcode-select -p | sed 's|/Contents/Developer||')" ] || sudo rm -rf "$xcode"
+          done
+          df -h /
+
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          token: ${{ secrets.AKHI_SUBMODULES_TOKEN }}
+          persist-credentials: false
+
+      - name: Install the build tools
+        run: ./mach --no-interactive bootstrap --application-choice "Firefox for Desktop"
+
+      - name: Build
+        run: ./mach build
+
+      - name: Package
+        run: ./mach package
+
+      - name: Disk space left
+        if: always()
+        run: df -h /
+
+      - name: Upload to a private draft release
+        env:
+          GH_TOKEN: ${{ secrets.AKHI_SUBMODULES_TOKEN }}
+        run: |
+          gh release create "macos-build-${{ github.run_number }}" obj-akhi-desktop/dist/*.dmg             --repo halgurdh/akhi-extension --draft --title "macOS build ${{ github.run_number }}"             --notes "Unsigned, from ${{ github.sha }}"

@@ -3,15 +3,14 @@
 A privacy-focused browser for Muslims, built on [Firefox](https://www.firefox.com/), for Windows, macOS, Linux
 and Android.
 
-💛 [**Support this project**](https://paypal.me/halgurdh): free and ad-free by choice, donations keep it that way.
-
 Thanks to [Mohamed Sadiq](https://github.com/mohamedsadiqaguenaou): the background music removal builds on his
 [NoMusic](https://github.com/mohamedsadiqaguenaou/NoMusic), and his [Safaa](https://github.com/mohamedsadiqaguenaou/safaa)
 and [NoHaram](https://github.com/mohamedsadiqaguenaou/NoHaram) inspired the image filter. Give them a star.
 
 ## Features
 
-All built in, on your device, nothing uploaded. No telemetry, studies or crash reports go to Mozilla.
+All built in, on your device, nothing uploaded. No telemetry, studies or crash reports go to Mozilla. Only a Premium
+license key leaves the device, to check it with the license server.
 
 - **Ad, tracker and malware blocking (on by default):** [uBlock Origin](https://github.com/gorhill/uBlock) is
   installed from addons.mozilla.org and kept on while ad blocking is on, with a built-in blocker of ad, tracker and
@@ -26,7 +25,7 @@ All built in, on your device, nothing uploaded. No telemetry, studies or crash r
   Works with srcset and `<picture>`, lazy loading, carousels, shadow DOM, iframes and `blob:` images, down to 24 px
   thumbnails. The same rule for everyone, of any age.
 - **Choose who to blur, as in Islam:** for women (the default), men, or both, a person is blurred by what is seen of
-  them, not the whole image: a woman when her hair or body shows (her face and hands may), a man from the navel to
+  them, not the whole image: a (hijab recognizer) woman when her hair or body shows (her face and hands may), a man from the navel to
   the knees. A woman too small to judge stays blurred, and a person whose gender is unclear is judged as a woman,
   unless turned off.
 - **Adult and haram blocking:** adult, alcohol, drugs, vaping and gambling sites are blocked, and so are pages that
@@ -37,11 +36,18 @@ All built in, on your device, nothing uploaded. No telemetry, studies or crash r
 - **12 languages:** English, Arabic, Persian, Kurdish (Sorani), Urdu, Turkish, French, German, Dutch, Spanish,
   Indonesian and Malay, right to left where needed.
 
+**Premium** unlocks Recognize hijab, which shows a woman who is covered instead of blurring every woman, setting a
+parental PIN, and controls for parents: sites of your choice blocked, only approved sites allowed, time limits with
+bedtime and school hours, and a summary of blocked pages that keeps no addresses. Each is off until it's turned on, and
+all of it stays on the device. All the other protections stay free. It's a monthly, yearly or lifetime purchase: through Google Play
+in a Google Play build, else through Stripe, with a license key and without an account.
+
 All of them are on by default, and each can be turned off in the AkhiBrowser shield of the toolbar (on Android:
 menu, **Extensions**, **AkhiBrowser**), which also chooses who to blur. A parental PIN can lock these off.
 
-**Parental PIN:** like TV Akhi, set a PIN there and turning a protection off, or changing or removing the PIN, needs
-it. Turning one on never does. Only a salted hash of the PIN is kept, and five wrong tries make it wait a minute.
+**Parental PIN (Premium):** like TV Akhi, set a PIN there and turning a protection off, or changing or removing the PIN, needs
+it. Turning one on never does. Only a salted hash of the PIN is kept, and five wrong tries make it wait a minute. Setting a new PIN needs Premium, and a PIN already
+set keeps working without it.
 
 ### Light on old devices
 
@@ -77,14 +83,14 @@ front-end only work, `akhi-desktop-debug` downloads prebuilt C++ and Rust.
   protected your PC". Sign the installer and `AkhiBrowser.exe` with `signtool`, using a code signing certificate
   ([SignPath Foundation](https://signpath.org/) is free for open source, Azure Trusted Signing is low cost).
   SmartScreen trusts a new certificate after enough people have installed with it.
-- **Android:** to sign a release, set `AKHI_SIGNING_PROPERTIES` to a properties file with `storeFile`,
+- **Android:** for Google Play, build with `AKHI_PLAY_STORE=1` (see `browser/extensions/akhi/server/README.md`). To sign a release, set `AKHI_SIGNING_PROPERTIES` to a properties file with `storeFile`,
   `storePassword`, `keyAlias` and `keyPassword`. Android is 64-bit only. The APKs are split per ABI (`arm64-v8a`,
   `x86_64`),
   plus a universal one.
 - **iOS:** not available. Outside the EU, Apple only allows browsers built on WebKit, not on Firefox's engine (Gecko).
-  This tree only has Mozilla's prototype of Gecko on iOS (`mobile/ios`, for the simulator). An iOS version would be a
-  fork of [Firefox for iOS](https://github.com/mozilla-mobile/firefox-ios) with this extension as a Safari web
-  extension.
+  This tree only has Mozilla's prototype of Gecko on iOS (`mobile/ios`, for the simulator). An iOS version would be built on
+  WebKit: a Safari web extension, or a browser with these protections built in, as Safari web extensions only run in
+  Safari. A first test of the Safari one is in `browser/extensions/akhi/safari/` (private).
 
 To update the domain lists, or to make the icons again from the logo (needs Pillow):
 

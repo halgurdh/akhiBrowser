@@ -265,7 +265,7 @@ class Core(
             )
             .also {
                 WebCompatFeature.install(it)
-                AkhiExtension.install(it)
+                AkhiExtension.install(it, context)
             }
     }
 

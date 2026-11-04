@@ -76,6 +76,8 @@ android {
 
         buildConfigField "String[]", "SUPPORTED_LOCALE_ARRAY", getSupportedLocales()
         buildConfigField "boolean", "IS_BENCHMARK_BUILD", "false"
+        // AKHI_PLAY_STORE=1: a build for Google Play, which sells Premium with Play Billing, see AkhiStore.kt
+        buildConfigField "boolean", "AKHI_PLAY_STORE", project.providers.environmentVariable("AKHI_PLAY_STORE").getOrElse("") == "1" ? "true" : "false"
     }
 
     // AkhiBrowser: the release APKs are signed with AkhiBrowser's key, from the properties file that
@@ -696,6 +698,7 @@ dependencies {
     implementation libs.kotlinx.coroutines
     implementation libs.kotlinx.serialization.json
     implementation libs.mozilla.glean
+    implementation libs.play.billing
     implementation libs.play.review
     implementation libs.play.review.ktx
     implementation libs.play.services.ads.id

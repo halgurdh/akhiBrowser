@@ -4,6 +4,7 @@
 
 package org.mozilla.fenix.components
 
+import android.content.Context
 import mozilla.components.concept.engine.webextension.WebExtensionRuntime
 import mozilla.components.support.base.log.logger.Logger
 
@@ -18,11 +19,14 @@ object AkhiExtension {
     private const val EXTENSION_URL = "resource://android/assets/extensions/akhi/"
 
     /** Installs the extension in the runtime, it is updated with the app. */
-    fun install(runtime: WebExtensionRuntime) {
+    fun install(runtime: WebExtensionRuntime, context: Context) {
         runtime.installBuiltInWebExtension(
             EXTENSION_ID,
             EXTENSION_URL,
-            onSuccess = { logger.debug("Installed AkhiBrowser webextension: ${it.id}") },
+            onSuccess = {
+                logger.debug("Installed AkhiBrowser webextension: ${it.id}")
+                it.registerBackgroundMessageHandler(AkhiStore.NATIVE_APP, AkhiStore(context))
+            },
             onError = { throwable -> logger.error("Failed to install AkhiBrowser webextension", throwable) },
         )
     }
