@@ -7,10 +7,10 @@ Thanks to [Mohamed Sadiq](https://github.com/mohamedsadiqaguenaou): the backgrou
 [NoMusic](https://github.com/mohamedsadiqaguenaou/NoMusic), and his [Safaa](https://github.com/mohamedsadiqaguenaou/safaa)
 and [NoHaram](https://github.com/mohamedsadiqaguenaou/NoHaram) inspired the image filter. Give them a star.
 
-## Features
+## Free features
 
-All built in, on your device, nothing uploaded. No telemetry, studies or crash reports go to Mozilla. Only a Premium
-license key leaves the device, to check it with the license server.
+All protections below are free, built in, and run on your device. Browsing data stays on your device; no telemetry,
+studies or crash reports go to Mozilla. A Premium license key is checked with the license server.
 
 - **Ad, tracker and malware blocking (on by default):** [uBlock Origin](https://github.com/gorhill/uBlock) is
   installed from addons.mozilla.org and kept on while ad blocking is on, with a built-in blocker of ad, tracker and
@@ -25,7 +25,7 @@ license key leaves the device, to check it with the license server.
   Works with srcset and `<picture>`, lazy loading, carousels, shadow DOM, iframes and `blob:` images, down to 24 px
   thumbnails. The same rule for everyone, of any age. (slightly re-written to work on lightweight devices)
 - **Choose who to blur:** for women (the default), men, or both, a person is blurred by what is seen of
-  them, not the whole image: a (hijab recognizer) woman when her hair or body shows (her face and hands may), a man from the navel to
+  them, not the whole image: a woman when her hair or body shows (her face and hands may), a man from the navel to
   the knees. A woman too small to judge stays blurred, and a person whose gender is unclear is judged as a woman,
   unless turned off.
 - **Adult and haram blocking:** adult, alcohol, drugs, vaping and gambling sites are blocked, and so are pages that
@@ -36,20 +36,24 @@ license key leaves the device, to check it with the license server.
 - **12 languages:** English, Arabic, Persian, Kurdish (Sorani), Urdu, Turkish, French, German, Dutch, Spanish,
   Indonesian and Malay, right to left where needed.
 
-**Premium** unlocks Recognize hijab, which shows a woman who is covered instead of blurring every woman, setting a
-parental PIN, and controls for parents: sites of your choice blocked, only approved sites allowed, time limits with
-bedtime and school hours, and a summary of blocked pages that keeps no addresses. Each is off until it's turned on, and
-all of it stays on the device. All the other protections stay free. It's a monthly, yearly or lifetime purchase: through Google Play
-in a Google Play build, else through Stripe, with a license key and without an account.
+## Premium
 
-All of them are on by default, and each can be turned off in the AkhiBrowser shield of the toolbar (on Android:
+Premium adds **Recognize hijab**, which shows a woman who is covered instead of blurring every woman; the option to set
+a parental PIN; and optional parent controls to block chosen sites, allow only approved sites, set time limits with
+bedtime and school hours, and see a summary of blocked pages without addresses. Parent controls are off until enabled,
+and their data stays on the device. An active Premium license is needed to set a PIN, but a PIN that's already set keeps
+working without Premium.
+
+Premium is a monthly, yearly or lifetime purchase: through Google Play in a Google Play build, or through Stripe with a
+license key and no account.
+
+The free protections are on by default. Each can be turned off in the AkhiBrowser shield of the toolbar (on Android:
 menu, **Extensions**, **AkhiBrowser**), which also chooses who to blur. A parental PIN can lock these off.
 
-**Parental PIN (Premium):** like TV Akhi, set a PIN there and turning a protection off, or changing or removing the PIN, needs
-it. Turning one on never does. Only a salted hash of the PIN is kept, and five wrong tries make it wait a minute. Setting a new PIN needs Premium, and a PIN already
-set keeps working without it.
+**Parental PIN:** turning a protection off, or changing or removing the PIN, requires it; turning a protection on does
+not. Only a salted hash of the PIN is kept, and five wrong tries make it wait a minute.
 
-### Light on old devices
+## Light on old devices
 
 Only what's on the screen is checked. Images seen before are answered from a cache, without reading their pixels
 again. The face and body models (6 MB) only run when a gender is chosen, on the largest persons of an image (one on
