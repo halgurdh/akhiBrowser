@@ -108,6 +108,13 @@ video { display: block; width: 100%; height: auto; border-radius: 14px; backgrou
 footer { border-top: 1px solid var(--line); padding: 36px 0 48px; font-size: 14px; color: var(--soft); }
 footer p + p { margin-top: 8px; }
 
+.nav-end { display: flex; align-items: center; gap: 22px; }
+.lang { display: flex; flex: none; border-radius: 8px; box-shadow: inset 0 0 0 1.5px var(--gold); overflow: hidden; }
+.lang[hidden] { display: none; }
+.lang button { appearance: none; border: 0; padding: 6px 11px; background: transparent; color: #fff; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+.lang button[aria-pressed="true"] { background: var(--gold); color: var(--ink); }
+.lang button:focus-visible { outline: 3px solid #fff; outline-offset: -3px; }
+
 @media (max-width: 820px) {
   .hero, .split { grid-template-columns: minmax(0, 1fr); gap: 40px; }
   .hero { padding-top: 16px; }
@@ -135,30 +142,35 @@ footer p + p { margin-top: 8px; }
   <div class="wrap">
     <nav aria-label="Main">
       <a class="brand" href="#"><img src="assets/akhi.svg" alt="" width="36" height="36"><span><span>Akhi</span>Browser</span></a>
-      <div class="links">
-        <a href="#watch">Watch</a>
-        <a href="#features">Features</a>
+      <div class="nav-end"><div class="links">
+        <a href="#watch" data-t="t0">Watch</a>
+        <a href="#features" data-t="t1">Features</a>
         <a href="#privacy">Privacy</a>
         <a href="#premium">Premium</a>
         <a href="https://github.com/halgurdh/akhiBrowser">GitHub</a>
       </div>
+      <div class="lang" id="lang" role="group" aria-label="Language / Taal" hidden>
+        <button type="button" data-lang="nl" lang="nl">NL</button>
+        <button type="button" data-lang="en" lang="en">EN</button>
+      </div>
+      </div>
     </nav>
     <div class="hero">
       <div>
-        <h1><span>Filter the web,</span> on your device.</h1>
-        <p class="lead">A private browser for Muslims, built on Firefox. It blocks ads and haram sites, blurs images until they are checked, and takes the music out of videos.</p>
+        <h1 data-t="t2"><span>Filter the web,</span> on your device.</h1>
+        <p class="lead" data-t="t3">A private browser for Muslims, built on Firefox. It blocks ads and haram sites, blurs images until they are checked, and takes the music out of videos.</p>
         <div class="get" id="download">
-          <a class="btn" href="https://github.com/halgurdh/akhiBrowser/releases/download/v1.0.0/AkhiBrowser-1.0.0-windows-x64-setup.exe">Download for Windows<small>64-bit installer, 101 MB</small></a>
-          <a class="btn ghost" href="https://github.com/halgurdh/akhiBrowser/releases/download/v1.0.0/AkhiBrowser-1.0.0-android-arm64-v8a.apk">Download for Android<small>64-bit ARM APK, 151 MB</small></a>
+          <a class="btn" href="https://github.com/halgurdh/akhiBrowser/releases/download/v1.0.0/AkhiBrowser-1.0.0-windows-x64-setup.exe" data-t="t4">Download for Windows<small>64-bit installer, 101 MB</small></a>
+          <a class="btn ghost" href="https://github.com/halgurdh/akhiBrowser/releases/download/v1.0.0/AkhiBrowser-1.0.0-android-arm64-v8a.apk" data-t="t5">Download for Android<small>64-bit ARM APK, 151 MB</small></a>
         </div>
-        <p class="note"><strong>📲 Available for Android (8.0+) and Windows (64-bit)</strong></p>
-        <p class="note">(Insha'Allah, it will also be available soon as a standalone extension for Firefox and Chrome.)</p>
-        <p class="note"><strong>Please note:</strong></p>
-        <p class="note">On Windows, SmartScreen may display a warning; if so, click "More info" → "Run anyway."</p>
-        <p class="note">On Android: Tap the downloaded file → Enable "Allow from this source" if prompted → Tap Install.</p>
-        <p class="note">Free. Version 1.0.0. <a href="https://github.com/halgurdh/akhiBrowser/releases/latest">Portable version, checksums and all releases</a>.</p>
+        <p class="note" data-t="t6"><strong>📲 Available for Android (8.0+) and Windows (64-bit)</strong></p>
+        <p class="note" data-t="t7">(Insha'Allah, it will also be available soon as a standalone extension for Firefox and Chrome.)</p>
+        <p class="note" data-t="t8"><strong>Please note:</strong></p>
+        <p class="note" data-t="t9">On Windows, SmartScreen may display a warning; if so, click "More info" → "Run anyway."</p>
+        <p class="note" data-t="t10">On Android: Tap the downloaded file → Enable "Allow from this source" if prompted → Tap Install.</p>
+        <p class="note" data-t="t11">Free. Version 1.0.0. <a href="https://github.com/halgurdh/akhiBrowser/releases/latest">Portable version, checksums and all releases</a>.</p>
       </div>
-      <img class="shot" src="assets/settings.png" width="520" height="700" alt="AkhiBrowser's settings: background music removed, adult content blocked, haram sites blocked and nude images blurred are all on.">
+      <img class="shot" src="assets/settings.png" width="520" height="700" alt="AkhiBrowser's settings: background music removed, adult content blocked, haram sites blocked and nude images blurred are all on." data-a="alt:a0">
     </div>
   </div>
 </header>
@@ -166,13 +178,13 @@ footer p + p { margin-top: 8px; }
 <main>
   <section id="watch">
     <div class="wrap">
-      <h2>See it work</h2>
+      <h2 data-t="t12">See it work</h2>
       <div class="watch">
-        <video controls playsinline preload="none" poster="assets/promo-poster.png" width="1920" height="1080" aria-label="AkhiBrowser promo video, 35 seconds">
+        <video controls playsinline preload="none" poster="assets/promo-poster.png" width="1920" height="1080" aria-label="AkhiBrowser promo video, 35 seconds" data-a="aria-label:a1">
           <source src="assets/promo.mp4" type="video/mp4">
           <a href="assets/promo.mp4">Download the video</a>
         </video>
-        <video controls playsinline preload="none" poster="assets/reel-poster.jpg" width="1080" height="1920" aria-label="AkhiBrowser hook reel: they put music in, so we took it out, 19 seconds">
+        <video controls playsinline preload="none" poster="assets/reel-poster.jpg" width="1080" height="1920" aria-label="AkhiBrowser hook reel: they put music in, so we took it out, 19 seconds" data-a="aria-label:a2">
           <source src="assets/reel.mp4" type="video/mp4">
           <a href="assets/reel.mp4">Download the video</a>
         </video>
@@ -182,15 +194,15 @@ footer p + p { margin-top: 8px; }
 
   <section id="features">
     <div class="wrap">
-      <h2>On from the first page</h2>
-      <p class="intro">All of this is free and built in. Each protection can be turned off in the AkhiBrowser shield, and a parental PIN can lock them on.</p>
+      <h2 data-t="t13">On from the first page</h2>
+      <p class="intro" data-t="t14">All of this is free and built in. Each protection can be turned off in the AkhiBrowser shield, and a parental PIN can lock them on.</p>
       <ul class="list">
-        <li><h3>Ads and trackers blocked</h3><p>uBlock Origin is installed for you and kept on, with a built-in blocker of ad, tracker and malware domains underneath it.</p></li>
-        <li><h3>Adult and haram sites blocked</h3><p>Adult, alcohol, drugs, vaping and gambling sites. SafeSearch is forced on Google, Bing, DuckDuckGo and Yahoo, and so is YouTube's Restricted Mode.</p></li>
-        <li><h3>Searches filtered</h3><p>Searches for adult or haram content are blocked in 11 languages. Questions about them stay allowed, like "why is alcohol haram".</p></li>
-        <li><h3>No music</h3><p>Removes background music from videos and keeps the voices, using a speech model that runs on your device.</p></li>
-        <li><h3>12 languages</h3><p>English, Arabic, Persian, Kurdish (Sorani), Urdu, Turkish, French, German, Dutch, Spanish, Indonesian and Malay, right to left where needed.</p></li>
-        <li><h3>Light on old devices</h3><p>Only what's on the screen is checked, and images seen before are answered from a cache. Page loads never wait for the model.</p></li>
+        <li><h3 data-t="t15">Ads and trackers blocked</h3><p data-t="t16">uBlock Origin is installed for you and kept on, with a built-in blocker of ad, tracker and malware domains underneath it.</p></li>
+        <li><h3 data-t="t17">Adult and haram sites blocked</h3><p data-t="t18">Adult, alcohol, drugs, vaping and gambling sites. SafeSearch is forced on Google, Bing, DuckDuckGo and Yahoo, and so is YouTube's Restricted Mode.</p></li>
+        <li><h3 data-t="t19">Searches filtered</h3><p data-t="t20">Searches for adult or haram content are blocked in 11 languages. Questions about them stay allowed, like "why is alcohol haram".</p></li>
+        <li><h3 data-t="t21">No music</h3><p data-t="t22">Removes background music from videos and keeps the voices, using a speech model that runs on your device.</p></li>
+        <li><h3 data-t="t23">12 languages</h3><p data-t="t24">English, Arabic, Persian, Kurdish (Sorani), Urdu, Turkish, French, German, Dutch, Spanish, Indonesian and Malay, right to left where needed.</p></li>
+        <li><h3 data-t="t25">Light on old devices</h3><p data-t="t26">Only what's on the screen is checked, and images seen before are answered from a cache. Page loads never wait for the model.</p></li>
       </ul>
     </div>
   </section>
@@ -198,17 +210,17 @@ footer p + p { margin-top: 8px; }
   <section>
     <div class="wrap split">
       <div>
-        <h2>Images stay blurred until they're checked</h2>
-        <p class="intro">An on-device model looks at images, backgrounds, videos and canvases, so nothing flashes on the screen first. Unsafe ones stay blurred.</p>
-        <p class="intro">You choose who to blur: women (the default), men, or both. A person is blurred by what is seen of them, not the whole image: a woman when her hair or body shows, a man from the navel to the knees.</p>
-        <p class="intro">Filters can miss things, and an image that can't be checked is shown. They don't replace a parent's care.</p>
+        <h2 data-t="t27">Images stay blurred until they're checked</h2>
+        <p class="intro" data-t="t28">An on-device model looks at images, backgrounds, videos and canvases, so nothing flashes on the screen first. Unsafe ones stay blurred.</p>
+        <p class="intro" data-t="t29">You choose who to blur: women (the default), men, or both. A person is blurred by what is seen of them, not the whole image: a woman when her hair or body shows, a man from the navel to the knees.</p>
+        <p class="intro" data-t="t30">Filters can miss things, and an image that can't be checked is shown. They don't replace a parent's care.</p>
       </div>
       <figure class="demo">
         <div class="stack">
-          <img class="shot" src="assets/check-before.png" width="520" height="520" alt="A blurred landscape with the label: Checking on your device.">
-          <img class="shot after" src="assets/check-after.png" width="520" height="520" alt="The same landscape, sharp, with the label: Checked: shown.">
+          <img class="shot" src="assets/check-before.png" width="520" height="520" alt="A blurred landscape with the label: Checking on your device." data-a="alt:a3">
+          <img class="shot after" src="assets/check-after.png" width="520" height="520" alt="The same landscape, sharp, with the label: Checked: shown." data-a="alt:a4">
         </div>
-        <figcaption>Demo picture</figcaption>
+        <figcaption data-t="t31">Demo picture</figcaption>
       </figure>
     </div>
   </section>
@@ -216,12 +228,12 @@ footer p + p { margin-top: 8px; }
   <section>
     <div class="wrap split">
       <figure class="demo first">
-        <img class="shot" src="assets/blocked.png" width="520" height="520" alt="A page saying: This page is blocked. AkhiBrowser blocks alcohol, drugs and gambling sites.">
-        <figcaption>What a blocked site shows</figcaption>
+        <img class="shot" src="assets/blocked.png" width="520" height="520" alt="A page saying: This page is blocked. AkhiBrowser blocks alcohol, drugs and gambling sites." data-a="alt:a5">
+        <figcaption data-t="t32">What a blocked site shows</figcaption>
       </figure>
       <div>
-        <h2>Blocked before it loads</h2>
-        <p class="intro">Adult, alcohol, drugs, vaping and gambling sites stop here, and so do pages that label themselves adult.</p>
+        <h2 data-t="t33">Blocked before it loads</h2>
+        <p class="intro" data-t="t34">Adult, alcohol, drugs, vaping and gambling sites stop here, and so do pages that label themselves adult.</p>
       </div>
     </div>
   </section>
@@ -229,12 +241,12 @@ footer p + p { margin-top: 8px; }
   <section>
     <div class="wrap split">
       <div>
-        <h2>Voices stay, music goes</h2>
-        <p class="intro">No music cleans a video's audio as you watch, on your device. Phones and slow computers use a Lite model, so old devices can keep up.</p>
+        <h2 data-t="t35">Voices stay, music goes</h2>
+        <p class="intro" data-t="t36">No music cleans a video's audio as you watch, on your device. Phones and slow computers use a Lite model, so old devices can keep up.</p>
       </div>
       <figure class="demo">
-        <img class="shot" src="assets/music.png" width="520" height="520" alt="A sound wave of voices, with the label: Background music: removed.">
-        <figcaption>Illustration</figcaption>
+        <img class="shot" src="assets/music.png" width="520" height="520" alt="A sound wave of voices, with the label: Background music: removed." data-a="alt:a6">
+        <figcaption data-t="t37">Illustration</figcaption>
       </figure>
     </div>
   </section>
@@ -242,52 +254,168 @@ footer p + p { margin-top: 8px; }
   <section>
     <div class="wrap split">
       <figure class="demo phone first">
-        <img src="assets/android.png" width="540" height="1200" alt="AkhiBrowser's home page on Android: a search bar, the AkhiBrowser logo and the label: You're protected.">
+        <img src="assets/android.png" width="540" height="1200" alt="AkhiBrowser's home page on Android: a search bar, the AkhiBrowser logo and the label: You're protected." data-a="alt:a7">
       </figure>
       <div>
-        <h2>On your phone too</h2>
-        <p class="intro">The same protections on Android, with no sponsored tiles or stories on the home page. To change them, open the menu, then Extensions, then AkhiBrowser.</p>
+        <h2 data-t="t38">On your phone too</h2>
+        <p class="intro" data-t="t39">The same protections on Android, with no sponsored tiles or stories on the home page. To change them, open the menu, then Extensions, then AkhiBrowser.</p>
       </div>
     </div>
   </section>
 
   <section id="privacy">
     <div class="wrap">
-      <h2>What leaves your device</h2>
-      <p class="intro">Your history, pages and images stay on your device. Nothing goes to us, and no telemetry, studies or crash reports go to Mozilla. A browser still has to talk to a few services, so here they all are.</p>
+      <h2 data-t="t40">What leaves your device</h2>
+      <p class="intro" data-t="t41">Your history, pages and images stay on your device. Nothing goes to us, and no telemetry, studies or crash reports go to Mozilla. A browser still has to talk to a few services, so here they all are.</p>
       <ul class="flows">
-        <li><strong>Site names, to Cloudflare.</strong> To block adult sites at the network level, the browser looks up names through Cloudflare's family DNS, so Cloudflare sees the names of the sites you visit.</li>
-        <li><strong>Downloads.</strong> uBlock Origin from addons.mozilla.org, ad block lists, and video codecs from Mozilla, Cisco and Google.</li>
-        <li><strong>Update check.</strong> Once a day, the browser asks GitHub whether a new release is out.</li>
-        <li><strong>A Premium key, if you enter one.</strong> It's checked with our license server, with a random install id, so a key works on 3 devices at a time. The server keeps no names, emails or browsing data.</li>
+        <li data-t="t42"><strong>Site names, to Cloudflare.</strong> To block adult sites at the network level, the browser looks up names through Cloudflare's family DNS, so Cloudflare sees the names of the sites you visit.</li>
+        <li data-t="t43"><strong>Downloads.</strong> uBlock Origin from addons.mozilla.org, ad block lists, and video codecs from Mozilla, Cisco and Google.</li>
+        <li data-t="t44"><strong>Update check.</strong> Once a day, the browser asks GitHub whether a new release is out.</li>
+        <li data-t="t45"><strong>A Premium key, if you enter one.</strong> It's checked with our license server, with a random install id, so a key works on 3 devices at a time. The server keeps no names, emails or browsing data.</li>
       </ul>
-      <p class="note"><a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY-ANDROID.md">Privacy policy</a></p>
+      <p class="note" data-t="t46"><a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY-ANDROID.md">Privacy policy</a></p>
     </div>
   </section>
 
   <section id="premium">
     <div class="wrap">
-      <h2>Premium, if you want it</h2>
-      <p class="intro">Every protection above stays free. Premium adds Recognize hijab, which shows a woman who is covered instead of blurring every woman; a parental PIN; and optional parent controls to block chosen sites, allow only approved sites, set time limits with bedtime and school hours, and see a summary of blocked pages without addresses. That data stays on the device.</p>
+      <h2 data-t="t47">Premium, if you want it</h2>
+      <p class="intro" data-t="t48">Every protection above stays free. Premium adds Recognize hijab, which shows a woman who is covered instead of blurring every woman; a parental PIN; and optional parent controls to block chosen sites, allow only approved sites, set time limits with bedtime and school hours, and see a summary of blocked pages without addresses. That data stays on the device.</p>
       <figure class="demo" style="max-width:520px;margin-top:28px">
-        <img class="shot" src="assets/premium.png" width="520" height="520" alt="Premium settings: plans, a license key field, block sites of your choice, allow only approved sites, time limits and schedules, activity summary and parental PIN.">
+        <img class="shot" src="assets/premium.png" width="520" height="520" alt="Premium settings: plans, a license key field, block sites of your choice, allow only approved sites, time limits and schedules, activity summary and parental PIN." data-a="alt:a8">
       </figure>
       <div class="plans">
-        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/monthly">Monthly</a>
-        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/yearly">Yearly</a>
-        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/lifetime">Lifetime</a>
+        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/monthly" data-t="t49">Monthly</a>
+        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/yearly" data-t="t50">Yearly</a>
+        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/lifetime" data-t="t51">Lifetime</a>
       </div>
-      <p class="note">Paid through Stripe, which shows the price before you pay. You get a license key, with no account, to enter in the browser's settings.</p>
+      <p class="note" data-t="t52">Paid through Stripe, which shows the price before you pay. You get a license key, with no account, to enter in the browser's settings.</p>
     </div>
   </section>
 </main>
 
 <footer>
   <div class="wrap">
-    <p>AkhiBrowser is built on <a href="https://www.firefox.com/">Firefox</a>, and is not made or endorsed by Mozilla. Background music removal builds on <a href="https://github.com/mohamedsadiqaguenaou/NoMusic">NoMusic</a> by Mohamed Sadiq.</p>
-    <p><a href="https://github.com/halgurdh/akhiBrowser">Source on GitHub</a> &middot; <a href="https://www.youtube.com/@akhibrowser">YouTube</a> &middot; <a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY-ANDROID.md">Privacy</a> &middot; <a href="mailto:haukar.hussein@gmail.com">haukar.hussein@gmail.com</a></p>
+    <p data-t="t53">AkhiBrowser is built on <a href="https://www.firefox.com/">Firefox</a>, and is not made or endorsed by Mozilla. Background music removal builds on <a href="https://github.com/mohamedsadiqaguenaou/NoMusic">NoMusic</a> by Mohamed Sadiq.</p>
+    <p><a href="https://github.com/halgurdh/akhiBrowser" data-t="t54">Source on GitHub</a> &middot; <a href="https://www.youtube.com/@akhibrowser">YouTube</a> &middot; <a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY-ANDROID.md">Privacy</a> &middot; <a href="mailto:haukar.hussein@gmail.com">haukar.hussein@gmail.com</a></p>
   </div>
 </footer>
 
+<script>
+(function () {
+  const NL = {
+"t0": "Bekijken",
+"t1": "Functies",
+"t2": "<span>Filter het web,<\/span> op je eigen apparaat.",
+"t3": "Een privébrowser voor moslims, gebouwd op Firefox. Hij blokkeert advertenties en haram sites, vervaagt afbeeldingen totdat ze gecontroleerd zijn en haalt de muziek uit video's.",
+"t4": "Downloaden voor Windows<small>64-bit installatieprogramma, 101 MB<\/small>",
+"t5": "Downloaden voor Android<small>64-bit ARM APK, 151 MB<\/small>",
+"t6": "<strong>📲 Beschikbaar voor Android (8.0+) en Windows (64-bit)<\/strong>",
+"t7": "(Insha'Allah binnenkort ook beschikbaar als losse extensie voor Firefox en Chrome.)",
+"t8": "<strong>Let op:<\/strong>",
+"t9": "Op Windows kan SmartScreen een waarschuwing tonen; klik in dat geval op \"Meer informatie\" → \"Toch uitvoeren\".",
+"t10": "Op Android: tik op het gedownloade bestand → zet \"Toestaan van deze bron\" aan als daarom wordt gevraagd → tik op Installeren.",
+"t11": "Gratis. Versie 1.0.0. <a href=\"https://github.com/halgurdh/akhiBrowser/releases/latest\">Draagbare versie, checksums en alle releases<\/a>.",
+"t12": "Zie het in actie",
+"t13": "Aan vanaf de eerste pagina",
+"t14": "Dit alles is gratis en ingebouwd. Elke bescherming kun je uitzetten via het AkhiBrowser-schild, en met een ouderlijke pincode kun je ze vergrendelen.",
+"t15": "Advertenties en trackers geblokkeerd",
+"t16": "uBlock Origin wordt voor je geïnstalleerd en blijft aan, met daaronder een ingebouwde blokkering van advertentie-, tracker- en malwaredomeinen.",
+"t17": "Volwassen en haram sites geblokkeerd",
+"t18": "Sites met volwassen inhoud, alcohol, drugs, vapen en gokken. SafeSearch staat altijd aan op Google, Bing, DuckDuckGo en Yahoo, en de beperkte modus op YouTube ook.",
+"t19": "Zoekopdrachten gefilterd",
+"t20": "Zoekopdrachten naar volwassen of haram inhoud worden geblokkeerd in 11 talen. Vragen erover blijven toegestaan, zoals \"waarom is alcohol haram\".",
+"t21": "Geen muziek",
+"t22": "Haalt achtergrondmuziek uit video's en behoudt de stemmen, met een spraakmodel dat op je eigen apparaat draait.",
+"t23": "12 talen",
+"t24": "Engels, Arabisch, Perzisch, Koerdisch (Sorani), Urdu, Turks, Frans, Duits, Nederlands, Spaans, Indonesisch en Maleis, van rechts naar links waar nodig.",
+"t25": "Licht op oude apparaten",
+"t26": "Alleen wat op het scherm staat wordt gecontroleerd, en eerder geziene afbeeldingen komen uit een cache. Pagina's wachten nooit op het model.",
+"t27": "Afbeeldingen blijven vervaagd tot ze gecontroleerd zijn",
+"t28": "Een model op je apparaat bekijkt afbeeldingen, achtergronden, video's en canvassen, zodat er eerst niets over het scherm flitst. Onveilige beelden blijven vervaagd.",
+"t29": "Jij kiest wie er vervaagd wordt: vrouwen (standaard), mannen of allebei. Iemand wordt vervaagd op basis van wat er zichtbaar is, niet de hele afbeelding: een vrouw als haar haar of lichaam zichtbaar is, een man van de navel tot de knieën.",
+"t30": "Filters kunnen dingen missen, en een afbeelding die niet gecontroleerd kan worden, wordt getoond. Ze vervangen de zorg van een ouder niet.",
+"t31": "Demoafbeelding",
+"t32": "Wat een geblokkeerde site toont",
+"t33": "Geblokkeerd voordat het laadt",
+"t34": "Sites met volwassen inhoud, alcohol, drugs, vapen en gokken stoppen hier, net als pagina's die zichzelf als volwassen inhoud aanmerken.",
+"t35": "De stemmen blijven, de muziek gaat",
+"t36": "No music schoont het geluid van een video op terwijl je kijkt, op je eigen apparaat. Telefoons en trage computers gebruiken een Lite-model, zodat ook oude apparaten het bijhouden.",
+"t37": "Illustratie",
+"t38": "Ook op je telefoon",
+"t39": "Dezelfde bescherming op Android, zonder gesponsorde tegels of verhalen op de startpagina. Aanpassen doe je via het menu, dan Extensies, dan AkhiBrowser.",
+"t40": "Wat je apparaat verlaat",
+"t41": "Je geschiedenis, pagina's en afbeeldingen blijven op je apparaat. Er gaat niets naar ons, en er gaan geen telemetrie, onderzoeken of crashrapporten naar Mozilla. Een browser moet wel met een paar diensten praten, dus hier staan ze allemaal.",
+"t42": "<strong>Sitenamen, naar Cloudflare.<\/strong> Om sites met volwassen inhoud op netwerkniveau te blokkeren, zoekt de browser namen op via de family-DNS van Cloudflare. Cloudflare ziet dus de namen van de sites die je bezoekt.",
+"t43": "<strong>Downloads.<\/strong> uBlock Origin van addons.mozilla.org, advertentieblokkeerlijsten en videocodecs van Mozilla, Cisco en Google.",
+"t44": "<strong>Updatecontrole.<\/strong> Eén keer per dag vraagt de browser aan GitHub of er een nieuwe versie is.",
+"t45": "<strong>Een Premium-sleutel, als je er een invoert.<\/strong> Die wordt gecontroleerd door onze licentieserver, met een willekeurige installatie-id, zodat een sleutel op 3 apparaten tegelijk werkt. De server bewaart geen namen, e-mailadressen of browsegegevens.",
+"t46": "<a href=\"https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY-ANDROID.md\">Privacybeleid (Engels)<\/a>",
+"t47": "Premium, als je dat wilt",
+"t48": "Alle bescherming hierboven blijft gratis. Premium voegt Hijab herkennen toe, dat een bedekte vrouw toont in plaats van elke vrouw te vervagen; een ouderlijke pincode; en optioneel ouderlijk toezicht om gekozen sites te blokkeren, alleen goedgekeurde sites toe te staan, tijdslimieten in te stellen met bedtijd en schooluren, en een overzicht te zien van geblokkeerde pagina's zonder adressen. Die gegevens blijven op het apparaat.",
+"t49": "Maandelijks",
+"t50": "Jaarlijks",
+"t51": "Levenslang",
+"t52": "Betaling via Stripe, dat de prijs toont voordat je betaalt. Je krijgt zonder account een licentiesleutel die je invoert in de instellingen van de browser.",
+"t53": "AkhiBrowser is gebouwd op <a href=\"https://www.firefox.com/\">Firefox<\/a> en is niet gemaakt of goedgekeurd door Mozilla. Het verwijderen van achtergrondmuziek bouwt voort op <a href=\"https://github.com/mohamedsadiqaguenaou/NoMusic\">NoMusic<\/a> van Mohamed Sadiq.",
+"t54": "Broncode op GitHub",
+"a0": "De instellingen van AkhiBrowser: achtergrondmuziek verwijderd, volwassen inhoud geblokkeerd, haram sites geblokkeerd en naaktbeelden vervaagd staan allemaal aan.",
+"a1": "Promovideo van AkhiBrowser, 35 seconden",
+"a2": "Korte video van AkhiBrowser: zij stopten er muziek in, dus wij haalden het eruit, 19 seconden",
+"a3": "Een vervaagd landschap met het label: Checking on your device.",
+"a4": "Hetzelfde landschap, scherp, met het label: Checked: shown.",
+"a5": "Een pagina met de tekst: This page is blocked. AkhiBrowser blokkeert sites over alcohol, drugs en gokken.",
+"a6": "Een geluidsgolf van stemmen, met het label: Background music: removed.",
+"a7": "De startpagina van AkhiBrowser op Android: een zoekbalk, het AkhiBrowser-logo en het label: You're protected.",
+"a8": "Premium-instellingen: abonnementen, een veld voor de licentiesleutel, gekozen sites blokkeren, alleen goedgekeurde sites toestaan, tijdslimieten en schema's, activiteitenoverzicht en ouderlijke pincode."
+};
+  const META_NL = {
+    title: "AkhiBrowser: een privébrowser voor moslims",
+    description: "Een browser gebouwd op Firefox die advertenties, volwassen en haram sites blokkeert, afbeeldingen vervaagt tot ze gecontroleerd zijn en achtergrondmuziek uit video's haalt. Op je eigen apparaat, gratis.",
+  };
+  const description = document.querySelector('meta[name="description"]');
+  const META_EN = { title: document.title, description: description.content };
+  const textNodes = [...document.querySelectorAll("[data-t]")].map(node => [node, node.innerHTML]);
+  const attrNodes = [...document.querySelectorAll("[data-a]")].map(node => {
+    const [name, key] = node.dataset.a.split(":");
+    return [node, name, key, node.getAttribute(name)];
+  });
+  const buttons = [...document.querySelectorAll("[data-lang]")];
+
+  function show(lang) {
+    const isNl = lang === "nl";
+    document.documentElement.lang = lang;
+    document.title = (isNl ? META_NL : META_EN).title;
+    description.content = (isNl ? META_NL : META_EN).description;
+    for (const [node, en] of textNodes) {
+      node.innerHTML = isNl ? NL[node.dataset.t] : en;
+    }
+    for (const [node, name, key, en] of attrNodes) {
+      node.setAttribute(name, isNl ? NL[key] : en);
+    }
+    for (const button of buttons) {
+      button.setAttribute("aria-pressed", String(button.dataset.lang === lang));
+    }
+  }
+
+  let saved = null;
+  try {
+    saved = localStorage.getItem("lang");
+  } catch (e) {}
+  // the time zone stands in for the country: asking a service about the visitor's IP address would tell it who visits
+  const inNetherlands = Intl.DateTimeFormat().resolvedOptions().timeZone === "Europe/Amsterdam";
+  const prefersDutch = (navigator.languages || [navigator.language]).some(l => /^nl/i.test(l));
+  show(saved === "nl" || saved === "en" ? saved : inNetherlands || prefersDutch ? "nl" : "en");
+  for (const button of buttons) {
+    button.addEventListener("click", () => {
+      show(button.dataset.lang);
+      try {
+        localStorage.setItem("lang", button.dataset.lang);
+      } catch (e) {}
+    });
+  }
+  document.getElementById("lang").hidden = false;
+})();
+</script>
 </body>
 </html>
