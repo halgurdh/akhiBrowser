@@ -98,6 +98,27 @@ front-end only work, `akhi-desktop-debug` downloads prebuilt C++ and Rust.
   WebKit: a Safari web extension, or a browser with these protections built in, as Safari web extensions only run in
   Safari. A first test of the Safari one is in `browser/extensions/akhi/safari/` (private).
 
+### Releasing an update
+
+Windows and the APK from GitHub update themselves from the latest GitHub release. Google Play updates its own builds, and
+macOS only shows a notice.
+
+1. Set the new version in `browser/config/akhi_version.txt` and `CURRENT_VERSION` in
+   `browser/extensions/akhi/lib/updates.js`, and build.
+2. Windows: after `./mach package`, run this, which writes the signed `.mar` and `update-<target>.xml` to
+   `<objdir>/dist/update/`:
+
+   ```sh
+   python browser/branding/akhi/tools/make_update.py --objdir obj-akhi-desktop --keys <folder of the primary key>
+   ```
+
+3. Android: sign with the same key as before, or Android refuses the update. Name the APK
+   `AkhiBrowser-<version>-android-<abi>.apk`, and list it in `SHA256SUMS.txt`.
+4. Upload all of it to a GitHub release tagged `v<version>`, and mark it as the latest.
+
+The public certificates built into the updater are in `browser/branding/akhi/update/`. Keep the private keys out of every
+repository and backed up: without them, installed browsers can't take another update.
+
 To update the domain lists, or to make the icons again from the logo (needs Pillow):
 
 ```sh
