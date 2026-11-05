@@ -7,6 +7,16 @@ Thanks to [Mohamed Sadiq](https://github.com/mohamedsadiqaguenaou): the backgrou
 [NoMusic](https://github.com/mohamedsadiqaguenaou/NoMusic), and his [Safaa](https://github.com/mohamedsadiqaguenaou/safaa)
 and [NoHaram](https://github.com/mohamedsadiqaguenaou/NoHaram) inspired the image filter. Give them a star.
 
+📲 Available for Android (8.0+) and Windows (64-bit)
+📥 Download: https://github.com/halgurdh/akhiBrowser/releases/latest
+
+(Insha'Allah, it will also be available soon as a standalone extension for Firefox and Chrome.)
+
+Please note:
+On Windows, SmartScreen may display a warning; if so, click "More info" → "Run anyway."
+
+On Android: Tap the downloaded file → Enable "Allow from this source" if prompted → Tap Install.
+
 ## Free features
 
 All protections below are free, built in, and run on your device. Your history, pages and images stay on your device; no
