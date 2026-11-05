@@ -51,7 +51,7 @@ lists, and video codecs from Mozilla, Cisco and Google. A Premium license key is
 ## Premium
 
 Premium adds **Recognize hijab**, which shows a woman who is covered instead of blurring every woman; the option to set
-a parental PIN; and optional parent controls to block chosen sites, allow only approved sites, set time limits with
+a **Parental PIN**; and optional parent controls to block chosen sites, allow only approved sites, set time limits with
 bedtime and school hours, and see a summary of blocked pages without addresses. Parent controls are off until enabled,
 and their data stays on the device. An active Premium license is needed to set a PIN, but a PIN that's already set keeps
 working without Premium.
