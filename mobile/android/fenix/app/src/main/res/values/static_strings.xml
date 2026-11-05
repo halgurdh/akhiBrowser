@@ -5,7 +5,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Name of the application -->
     <string name="app_name" translatable="false">AkhiBrowser Debug</string>
-    <string name="firefox" translatable="false">Firefox</string>
+    <string name="firefox" translatable="false">AkhiBrowser</string>
 
     <!-- Preference for developers -->
     <string name="preference_leakcanary" translatable="false">LeakCanary</string>

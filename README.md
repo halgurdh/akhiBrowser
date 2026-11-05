@@ -89,10 +89,18 @@ front-end only work, `akhi-desktop-debug` downloads prebuilt C++ and Rust.
   protected your PC". Sign the installer and `AkhiBrowser.exe` with `signtool`, using a code signing certificate
   ([SignPath Foundation](https://signpath.org/) is free for open source, Azure Trusted Signing is low cost).
   SmartScreen trusts a new certificate after enough people have installed with it.
-- **Android:** for Google Play, build with `AKHI_PLAY_STORE=1` (see `browser/extensions/akhi/server/README.md`). To sign a release, set `AKHI_SIGNING_PROPERTIES` to a properties file with `storeFile`,
-  `storePassword`, `keyAlias` and `keyPassword`. Android is 64-bit only. The APKs are split per ABI (`arm64-v8a`,
-  `x86_64`),
-  plus a universal one.
+- **Android:** to sign a release, set `AKHI_SIGNING_PROPERTIES` to a properties file with `storeFile`, `storePassword`,
+  `keyAlias` and `keyPassword`. Android is 64-bit only. The APKs are split per ABI (`arm64-v8a`, `x86_64`), plus a
+  universal one.
+- **Google Play:** after `./mach build`, run the command below. It writes the `.aab` to upload and a universal APK of the
+  same build to test with to `artifacts/play-<version>/`, and fails on what Play would refuse. A Play build sells Premium
+  with Play Billing instead of Stripe, has no updater, is arm64 only, and has no advertising ID or install permission.
+  `browser/branding/akhi/play/CONSOLE.md` has the answers for the Play Console.
+
+  ```sh
+  python browser/branding/akhi/tools/build_play.py --signing <signing.properties>
+  ```
+
 - **iOS:** not available. Outside the EU, Apple only allows browsers built on WebKit, not on Firefox's engine (Gecko).
   This tree only has Mozilla's prototype of Gecko on iOS (`mobile/ios`, for the simulator). An iOS version would be built on
   WebKit: a Safari web extension, or a browser with these protections built in, as Safari web extensions only run in

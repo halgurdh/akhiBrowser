@@ -31,6 +31,8 @@ if (gradle.mozconfig.substs.MOZILLA_OFFICIAL && !project.hasProperty('android-li
 apply from: 'benchmark.gradle'
 
 def isAppBundle = gradle.startParameter.taskNames.any { it.toLowerCase().contains("bundle") }
+// AKHI_PLAY_STORE=1: a build for Google Play, see browser/branding/akhi/tools/build_play.py
+def akhiPlayStore = providers.environmentVariable("AKHI_PLAY_STORE").getOrElse("") == "1"
 
 android {
     project.maybeConfigForJetpackBenchmark(it)
@@ -79,7 +81,14 @@ android {
         // AKHI_PLAY_STORE=1: a build for Google Play, which sells Premium with Play Billing, see AkhiStore.kt
         // The release of AkhiBrowser this is, compared with the releases on GitHub by AkhiUpdater.kt
         buildConfigField "String", "AKHI_VERSION", "\"" + file("${gradle.mozconfig.topsrcdir}/browser/config/akhi_version.txt").text.trim() + "\""
-        buildConfigField "boolean", "AKHI_PLAY_STORE", project.providers.environmentVariable("AKHI_PLAY_STORE").getOrElse("") == "1" ? "true" : "false"
+        buildConfigField "boolean", "AKHI_PLAY_STORE", akhiPlayStore ? "true" : "false"
+
+        // Gecko is only built for arm64 here: an x86_64 split without it would crash at launch on Play's test devices
+        if (akhiPlayStore && isAppBundle) {
+            ndk {
+                abiFilters "arm64-v8a"
+            }
+        }
     }
 
     // AkhiBrowser: the release APKs are signed with AkhiBrowser's key, from the properties file that
@@ -265,7 +274,7 @@ android {
             // As gradle is unable to pick the right apk to install when multiple apks are generated
             // while running benchmark tests or generating baseline profiles. To circumvent this,
             // this flag is passed to make sure only one apk is generated so gradle can pick that one.
-            if (project.hasProperty("benchmarkTest")) {
+            if (project.hasProperty("benchmarkTest") || akhiPlayStore) {
                 include "arm64-v8a"
             } else {
                 include "arm64-v8a", "x86_64"
@@ -337,7 +346,7 @@ androidComponents {
                 def abi = output.filters.find { it.filterType == FilterConfiguration.FilterType.ABI }?.identifier ?: "universal"
                 def versionCodeOverride = Config.generateFennecVersionCode(abi)
                 project.logger.debug("versionCode for $abi = $versionCodeOverride")
-                output.versionName.set(versionName)
+                output.versionName.set(akhiPlayStore ? file("${gradle.mozconfig.topsrcdir}/browser/config/akhi_version.txt").text.trim() : versionName)
                 output.versionCode.set(versionCodeOverride)
             }
         } else if (gradle.hasProperty("localProperties.branchBuild.fenix.version")) {
@@ -395,6 +404,19 @@ def syncAkhiExtension = tasks.register("syncAkhiExtension", SyncAkhiExtension) {
 androidComponents {
     onVariants(selector().all()) { variant ->
         variant.sources.assets.addGeneratedSourceDirectory(syncAkhiExtension) { it.outputDir }
+    }
+    if (akhiPlayStore) {
+        onVariants(selector().withBuildType("release")) { variant ->
+            variant.sources.manifests.addStaticManifestFile("src/play/AndroidManifest.xml")
+        }
+    }
+}
+
+if (akhiPlayStore && isAppBundle) {
+    gradle.taskGraph.whenReady { graph ->
+        if (graph.allTasks.any { it.name == "bundleRelease" } && !System.getenv("AKHI_SIGNING_PROPERTIES")) {
+            throw new GradleException("Google Play refuses a debug-signed bundle: set AKHI_SIGNING_PROPERTIES")
+        }
     }
 }
 
