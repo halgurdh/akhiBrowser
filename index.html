@@ -103,6 +103,10 @@ video { display: block; width: 100%; height: auto; border-radius: 14px; backgrou
 .flows li { padding: 14px 0; border-top: 1px solid var(--line); color: var(--soft); font-size: 16px; }
 .flows strong { color: #fff; font-weight: 600; }
 
+.cancel { margin-top: 36px; padding-top: 28px; border-top: 1px solid var(--line); max-width: 42em; }
+.cancel h3 { font-size: 21px; }
+.cancel ol { margin: 14px 0 0; padding-left: 1.4em; color: var(--soft); }
+.cancel li + li { margin-top: 6px; }
 .plans { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
 
 footer { border-top: 1px solid var(--line); padding: 36px 0 48px; font-size: 14px; color: var(--soft); }
@@ -290,6 +294,16 @@ footer p + p { margin-top: 8px; }
         <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/lifetime" data-t="t51">Lifetime</a>
       </div>
       <p class="note" data-t="t52">Paid through Stripe, which shows the price before you pay. You get a license key, with no account, to enter in the browser's settings.</p>
+      <div class="cancel" id="cancel">
+        <h3 data-t="c0">How to cancel a subscription</h3>
+        <ol>
+          <li data-t="c1">Open the AkhiBrowser shield in the toolbar. On Android: menu, then Extensions, then AkhiBrowser.</li>
+          <li data-t="c2">Under Premium, press Manage subscription. This opens your subscription on Stripe.</li>
+          <li data-t="c3">Choose to cancel, and confirm.</li>
+        </ol>
+        <p class="note" data-t="c4">Premium then ends, and all the free protections keep working. A lifetime purchase is not a subscription, so there is nothing to cancel.</p>
+        <p class="note" data-t="c5">Can't get to the browser? Email <a href="mailto:haukar.hussein@gmail.com">haukar.hussein@gmail.com</a> with the email address you paid with.</p>
+      </div>
     </div>
   </section>
 </main>
@@ -367,7 +381,13 @@ footer p + p { margin-top: 8px; }
 "a5": "Een pagina met de tekst: This page is blocked. AkhiBrowser blokkeert sites over alcohol, drugs en gokken.",
 "a6": "Een geluidsgolf van stemmen, met het label: Background music: removed.",
 "a7": "De startpagina van AkhiBrowser op Android: een zoekbalk, het AkhiBrowser-logo en het label: You're protected.",
-"a8": "Premium-instellingen: abonnementen, een veld voor de licentiesleutel, gekozen sites blokkeren, alleen goedgekeurde sites toestaan, tijdslimieten en schema's, activiteitenoverzicht en ouderlijke pincode."
+"a8": "Premium-instellingen: abonnementen, een veld voor de licentiesleutel, gekozen sites blokkeren, alleen goedgekeurde sites toestaan, tijdslimieten en schema's, activiteitenoverzicht en ouderlijke pincode.",
+"c0": "Zo zeg je je abonnement op",
+"c1": "Open het AkhiBrowser-schild in de werkbalk. Op Android: menu, dan Extensies, dan AkhiBrowser.",
+"c2": "Druk onder Premium op Abonnement beheren. Dan opent je abonnement bij Stripe.",
+"c3": "Kies voor opzeggen en bevestig dat.",
+"c4": "Daarna stopt Premium, en alle gratis bescherming blijft gewoon werken. Een levenslange aankoop is geen abonnement, dus die hoef je niet op te zeggen.",
+"c5": "Kun je niet bij de browser? Mail naar <a href=\"mailto:haukar.hussein@gmail.com\">haukar.hussein@gmail.com<\/a> met het e-mailadres waarmee je hebt betaald."
 };
   const META_NL = {
     title: "AkhiBrowser: de privébrowser voor moslims",
