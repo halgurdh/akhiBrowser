@@ -95,6 +95,10 @@ if CONFIG["MOZ_APP_BASENAME"]:
     appini_defines["MOZ_APPUPDATE_HOST"] = "aus5.mozilla.org"
     if CONFIG["MOZ_APPUPDATE_HOST"]:
         appini_defines["MOZ_APPUPDATE_HOST"] = CONFIG["MOZ_APPUPDATE_HOST"]
+    if CONFIG["MOZ_BRANDING_DIRECTORY"] == "browser/branding/akhi":
+        appini_defines["AKHI_UPDATE_URL"] = (
+            "https://github.com/halgurdh/akhiBrowser/releases/latest/download/update-%BUILD_TARGET%.xml"
+        )
 
     GeneratedFile(
         "application.ini",

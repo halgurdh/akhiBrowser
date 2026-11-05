@@ -77,6 +77,8 @@ android {
         buildConfigField "String[]", "SUPPORTED_LOCALE_ARRAY", getSupportedLocales()
         buildConfigField "boolean", "IS_BENCHMARK_BUILD", "false"
         // AKHI_PLAY_STORE=1: a build for Google Play, which sells Premium with Play Billing, see AkhiStore.kt
+        // The release of AkhiBrowser this is, compared with the releases on GitHub by AkhiUpdater.kt
+        buildConfigField "String", "AKHI_VERSION", "\"" + file("${gradle.mozconfig.topsrcdir}/browser/config/akhi_version.txt").text.trim() + "\""
         buildConfigField "boolean", "AKHI_PLAY_STORE", project.providers.environmentVariable("AKHI_PLAY_STORE").getOrElse("") == "1" ? "true" : "false"
     }
 

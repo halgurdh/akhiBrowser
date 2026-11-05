@@ -9,8 +9,10 @@ and [NoHaram](https://github.com/mohamedsadiqaguenaou/NoHaram) inspired the imag
 
 ## Free features
 
-All protections below are free, built in, and run on your device. Browsing data stays on your device; no telemetry,
-studies or crash reports go to Mozilla. A Premium license key is checked with the license server, with a random install id: a key works on 3 devices at a time.
+All protections below are free, built in, and run on your device. Your history, pages and images stay on your device; no
+telemetry, studies or crash reports go to Mozilla. To block adult sites at the network level, the desktop browser looks up
+site names through Cloudflare's family DNS, so Cloudflare sees the names of the sites you visit. It also fetches ad block
+lists, and video codecs from Mozilla, Cisco and Google. A Premium license key is checked with the license server, with a random install id: a key works on 3 devices at a time. Once a day the browser asks GitHub whether a new release is out, as it has no automatic updates.
 
 - **Ad, tracker and malware blocking (on by default):** [uBlock Origin](https://github.com/gorhill/uBlock) is
   installed from addons.mozilla.org and kept on while ad blocking is on, with a built-in blocker of ad, tracker and
