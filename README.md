@@ -8,7 +8,7 @@ Thanks to [Mohamed Sadiq](https://github.com/mohamedsadiqaguenaou): the backgrou
 and [NoHaram](https://github.com/mohamedsadiqaguenaou/NoHaram) inspired the image filter. Give them a star.
 
 📲 Available for Android (8.0+) and Windows (64-bit)
-📥 Download: https://github.com/halgurdh/akhiBrowser/releases/latest
+📥 [More info](https://halgurdh.github.io/akhiBrowser/)
 
 (Insha'Allah, it will also be available soon as a standalone extension for Firefox and Chrome.)
 
