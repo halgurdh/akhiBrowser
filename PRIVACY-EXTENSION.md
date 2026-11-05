@@ -29,4 +29,4 @@ addresses) stay in the extension's local storage. Removing the extension deletes
 
 ## Contact
 
-Open an issue at https://github.com/halgurdh/akhiBrowser/issues
+haukar.hussein@gmail.com
