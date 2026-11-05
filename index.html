@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AkhiBrowser: a private browser for Muslims</title>
+<meta name="description" content="A browser built on Firefox that blocks ads, adult and haram sites, blurs images until they are checked, and removes background music from videos. On your device, free.">
+<meta name="theme-color" content="#03282e">
+<meta property="og:title" content="AkhiBrowser">
+<meta property="og:description" content="Filter the web, on your device. For Windows and Android.">
+<meta property="og:image" content="https://akhibrowser.github.io/assets/og.png">
+<meta property="og:url" content="https://akhibrowser.github.io/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/akhi.svg" type="image/svg+xml">
+<style>
+:root {
+  color-scheme: dark;
+  --ink: #03282e;
+  --teal: #074d49;
+  --panel: #06403f;
+  --line: #1c5a58;
+  --gold: #f4be34;
+  --text: #ffffff;
+  --soft: #c9dedb;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--text);
+  font: 17px/1.6 "Segoe UI", system-ui, -apple-system, Roboto, "Noto Sans", sans-serif;
+}
+a { color: var(--gold); text-underline-offset: 3px; }
+a:hover { color: #ffd76a; }
+a:focus-visible, .btn:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+h1, h2, h3 { line-height: 1.15; margin: 0; font-weight: 650; }
+p { margin: 0; }
+img { display: block; max-width: 100%; height: auto; }
+.wrap { width: min(1080px, 100%); margin: 0 auto; padding: 0 24px; }
+
+.top {
+  background: linear-gradient(180deg, var(--teal), var(--ink));
+  padding-bottom: 72px;
+}
+nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 0; }
+.brand { display: flex; align-items: center; gap: 10px; color: #fff; font-size: 20px; font-weight: 650; text-decoration: none; }
+.brand img { width: 36px; height: 36px; }
+.brand span span, h1 span { color: var(--gold); }
+.links { display: flex; gap: 22px; font-size: 15px; }
+.links a { color: #fff; text-decoration: none; }
+.links a:hover { color: var(--gold); }
+
+.hero { display: grid; grid-template-columns: 1.1fr .9fr; gap: 56px; align-items: center; padding-top: 40px; }
+h1 { font-size: clamp(40px, 6.4vw, 66px); letter-spacing: -.02em; }
+.lead { margin-top: 20px; font-size: clamp(19px, 2.2vw, 22px); color: var(--soft); max-width: 30em; }
+.shot { border-radius: 16px; box-shadow: 0 24px 60px rgba(0, 0, 0, .45); }
+
+.get { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.btn {
+  display: inline-block;
+  padding: 13px 20px;
+  border-radius: 10px;
+  background: var(--gold);
+  color: var(--ink);
+  font-weight: 650;
+  text-decoration: none;
+  line-height: 1.3;
+}
+.btn:hover { background: #ffd76a; color: var(--ink); }
+.btn small { display: block; font-size: 13px; font-weight: 400; }
+.btn.ghost { background: transparent; color: #fff; box-shadow: inset 0 0 0 1.5px var(--gold); }
+.btn.ghost:hover { background: rgba(244, 190, 52, .14); color: #fff; }
+.note { margin-top: 16px; font-size: 14px; color: var(--soft); }
+
+section { padding: 72px 0; border-top: 1px solid var(--line); }
+h2 { font-size: clamp(28px, 3.6vw, 38px); color: var(--gold); }
+.intro { margin-top: 12px; color: var(--soft); max-width: 42em; }
+
+.list { margin: 36px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 32px 48px; }
+.list h3 { font-size: 19px; margin-bottom: 6px; }
+.list p { color: var(--soft); font-size: 16px; }
+
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+.demo { margin: 0; max-width: 460px; justify-self: end; }
+.demo.first { justify-self: start; order: -1; }
+.demo figcaption { margin-top: 10px; font-size: 14px; color: var(--soft); text-align: center; }
+.stack { position: relative; }
+.stack .after { position: absolute; inset: 0; animation: reveal 7s ease-in-out infinite; }
+@keyframes reveal {
+  0%, 40% { opacity: 0; }
+  50%, 90% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.phone { max-width: 270px; justify-self: center; }
+.phone img { border-radius: 26px; box-shadow: 0 0 0 8px #0b1b1e, 0 24px 60px rgba(0, 0, 0, .45); }
+
+.watch { display: grid; grid-template-columns: minmax(0, 3.16fr) minmax(0, 1fr); gap: 28px; margin-top: 32px; align-items: start; }
+video { display: block; width: 100%; height: auto; border-radius: 14px; background: #000; box-shadow: 0 24px 60px rgba(0, 0, 0, .45); }
+
+.flows { margin: 28px 0 0; padding: 0; list-style: none; }
+.flows li { padding: 14px 0; border-top: 1px solid var(--line); color: var(--soft); font-size: 16px; }
+.flows strong { color: #fff; font-weight: 600; }
+
+.plans { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+
+footer { border-top: 1px solid var(--line); padding: 36px 0 48px; font-size: 14px; color: var(--soft); }
+footer p + p { margin-top: 8px; }
+
+@media (max-width: 820px) {
+  .hero, .split { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .hero { padding-top: 16px; }
+  .hero .shot { max-width: min(440px, 100%); }
+  .list { grid-template-columns: minmax(0, 1fr); gap: 26px; }
+  .demo, .demo.first { justify-self: start; order: 0; }
+  .watch { grid-template-columns: minmax(0, 1fr); }
+  .watch video + video { max-width: 300px; }
+  section { padding: 56px 0; }
+  .links { display: none; }
+}
+@media (max-width: 480px) {
+  .wrap { padding: 0 16px; }
+  .get .btn { width: 100%; text-align: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .stack .after { animation: none; opacity: 1; }
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <nav aria-label="Main">
+      <a class="brand" href="#"><img src="assets/akhi.svg" alt="" width="36" height="36"><span><span>Akhi</span>Browser</span></a>
+      <div class="links">
+        <a href="#watch">Watch</a>
+        <a href="#features">Features</a>
+        <a href="#privacy">Privacy</a>
+        <a href="#premium">Premium</a>
+        <a href="https://github.com/halgurdh/akhiBrowser">GitHub</a>
+      </div>
+    </nav>
+    <div class="hero">
+      <div>
+        <h1><span>Filter the web,</span> on your device.</h1>
+        <p class="lead">A private browser for Muslims, built on Firefox. It blocks ads and haram sites, blurs images until they are checked, and takes the music out of videos.</p>
+        <div class="get" id="download">
+          <a class="btn" href="https://github.com/halgurdh/akhiBrowser/releases/download/v1.0.0/AkhiBrowser-1.0.0-windows-x64-setup.exe">Download for Windows<small>64-bit installer, 101 MB</small></a>
+          <a class="btn ghost" href="https://github.com/halgurdh/akhiBrowser/releases/download/v1.0.0/AkhiBrowser-1.0.0-android-arm64-v8a.apk">Download for Android<small>64-bit ARM APK, 151 MB</small></a>
+        </div>
+        <p class="note">Free. Version 1.0.0. <a href="https://github.com/halgurdh/akhiBrowser/releases/latest">Portable version, checksums and all releases</a>.</p>
+        <p class="note">The Windows installer isn't code-signed yet, so Windows may say "Windows protected your PC". Choose More info, then Run anyway, or compare the file with <a href="https://github.com/halgurdh/akhiBrowser/releases/download/v1.0.0/SHA256SUMS.txt">SHA256SUMS.txt</a> first.</p>
+      </div>
+      <img class="shot" src="assets/settings.png" width="520" height="700" alt="AkhiBrowser's settings: background music removed, adult content blocked, haram sites blocked and nude images blurred are all on.">
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="watch">
+    <div class="wrap">
+      <h2>See it work</h2>
+      <div class="watch">
+        <video controls playsinline preload="none" poster="assets/promo-poster.png" width="1920" height="1080" aria-label="AkhiBrowser promo video, 35 seconds">
+          <source src="assets/promo.mp4" type="video/mp4">
+          <a href="assets/promo.mp4">Download the video</a>
+        </video>
+        <video controls playsinline preload="none" poster="assets/reel-poster.jpg" width="1080" height="1920" aria-label="AkhiBrowser hook reel: they put music in, so we took it out, 19 seconds">
+          <source src="assets/reel.mp4" type="video/mp4">
+          <a href="assets/reel.mp4">Download the video</a>
+        </video>
+      </div>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="wrap">
+      <h2>On from the first page</h2>
+      <p class="intro">All of this is free and built in. Each protection can be turned off in the AkhiBrowser shield, and a parental PIN can lock them on.</p>
+      <ul class="list">
+        <li><h3>Ads and trackers blocked</h3><p>uBlock Origin is installed for you and kept on, with a built-in blocker of ad, tracker and malware domains underneath it.</p></li>
+        <li><h3>Adult and haram sites blocked</h3><p>Adult, alcohol, drugs, vaping and gambling sites. SafeSearch is forced on Google, Bing, DuckDuckGo and Yahoo, and so is YouTube's Restricted Mode.</p></li>
+        <li><h3>Searches filtered</h3><p>Searches for adult or haram content are blocked in 11 languages. Questions about them stay allowed, like "why is alcohol haram".</p></li>
+        <li><h3>No music</h3><p>Removes background music from videos and keeps the voices, using a speech model that runs on your device.</p></li>
+        <li><h3>12 languages</h3><p>English, Arabic, Persian, Kurdish (Sorani), Urdu, Turkish, French, German, Dutch, Spanish, Indonesian and Malay, right to left where needed.</p></li>
+        <li><h3>Light on old devices</h3><p>Only what's on the screen is checked, and images seen before are answered from a cache. Page loads never wait for the model.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap split">
+      <div>
+        <h2>Images stay blurred until they're checked</h2>
+        <p class="intro">An on-device model looks at images, backgrounds, videos and canvases, so nothing flashes on the screen first. Unsafe ones stay blurred.</p>
+        <p class="intro">You choose who to blur: women (the default), men, or both. A person is blurred by what is seen of them, not the whole image: a woman when her hair or body shows, a man from the navel to the knees.</p>
+        <p class="intro">Filters can miss things, and an image that can't be checked is shown. They don't replace a parent's care.</p>
+      </div>
+      <figure class="demo">
+        <div class="stack">
+          <img class="shot" src="assets/check-before.png" width="520" height="520" alt="A blurred landscape with the label: Checking on your device.">
+          <img class="shot after" src="assets/check-after.png" width="520" height="520" alt="The same landscape, sharp, with the label: Checked: shown.">
+        </div>
+        <figcaption>Demo picture</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap split">
+      <figure class="demo first">
+        <img class="shot" src="assets/blocked.png" width="520" height="520" alt="A page saying: This page is blocked. AkhiBrowser blocks alcohol, drugs and gambling sites.">
+        <figcaption>What a blocked site shows</figcaption>
+      </figure>
+      <div>
+        <h2>Blocked before it loads</h2>
+        <p class="intro">Adult, alcohol, drugs, vaping and gambling sites stop here, and so do pages that label themselves adult.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap split">
+      <div>
+        <h2>Voices stay, music goes</h2>
+        <p class="intro">No music cleans a video's audio as you watch, on your device. Phones and slow computers use a Lite model, so old devices can keep up.</p>
+      </div>
+      <figure class="demo">
+        <img class="shot" src="assets/music.png" width="520" height="520" alt="A sound wave of voices, with the label: Background music: removed.">
+        <figcaption>Illustration</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap split">
+      <figure class="demo phone first">
+        <img src="assets/android.png" width="540" height="1200" alt="AkhiBrowser's home page on Android: a search bar, the AkhiBrowser logo and the label: You're protected.">
+      </figure>
+      <div>
+        <h2>On your phone too</h2>
+        <p class="intro">The same protections on Android, with no sponsored tiles or stories on the home page. To change them, open the menu, then Extensions, then AkhiBrowser.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="privacy">
+    <div class="wrap">
+      <h2>What leaves your device</h2>
+      <p class="intro">Your history, pages and images stay on your device. Nothing goes to us, and no telemetry, studies or crash reports go to Mozilla. A browser still has to talk to a few services, so here they all are.</p>
+      <ul class="flows">
+        <li><strong>Site names, to Cloudflare.</strong> To block adult sites at the network level, the browser looks up names through Cloudflare's family DNS, so Cloudflare sees the names of the sites you visit.</li>
+        <li><strong>Downloads.</strong> uBlock Origin from addons.mozilla.org, ad block lists, and video codecs from Mozilla, Cisco and Google.</li>
+        <li><strong>Update check.</strong> Once a day, the browser asks GitHub whether a new release is out.</li>
+        <li><strong>A Premium key, if you enter one.</strong> It's checked with our license server, with a random install id, so a key works on 3 devices at a time. The server keeps no names, emails or browsing data.</li>
+      </ul>
+      <p class="note"><a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY-ANDROID.md">Privacy policy</a></p>
+    </div>
+  </section>
+
+  <section id="premium">
+    <div class="wrap">
+      <h2>Premium, if you want it</h2>
+      <p class="intro">Every protection above stays free. Premium adds Recognize hijab, which shows a woman who is covered instead of blurring every woman; a parental PIN; and optional parent controls to block chosen sites, allow only approved sites, set time limits with bedtime and school hours, and see a summary of blocked pages without addresses. That data stays on the device.</p>
+      <figure class="demo" style="max-width:520px;margin-top:28px">
+        <img class="shot" src="assets/premium.png" width="520" height="520" alt="Premium settings: plans, a license key field, block sites of your choice, allow only approved sites, time limits and schedules, activity summary and parental PIN.">
+      </figure>
+      <div class="plans">
+        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/monthly">Monthly</a>
+        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/yearly">Yearly</a>
+        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/lifetime">Lifetime</a>
+      </div>
+      <p class="note">Paid through Stripe, which shows the price before you pay. You get a license key, with no account, to enter in the browser's settings.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>AkhiBrowser is built on <a href="https://www.firefox.com/">Firefox</a>, and is not made or endorsed by Mozilla. Background music removal builds on <a href="https://github.com/mohamedsadiqaguenaou/NoMusic">NoMusic</a> by Mohamed Sadiq.</p>
+    <p><a href="https://github.com/halgurdh/akhiBrowser">Source on GitHub</a> &middot; <a href="https://www.youtube.com/@akhibrowser">YouTube</a> &middot; <a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY-ANDROID.md">Privacy</a> &middot; <a href="mailto:haukar.hussein@gmail.com">haukar.hussein@gmail.com</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
