@@ -9,6 +9,7 @@
 const lazy = {};
 ChromeUtils.defineESModuleGetters(lazy, {
   AddonManager: "resource://gre/modules/AddonManager.sys.mjs",
+  AppConstants: "resource://gre/modules/AppConstants.sys.mjs",
   ExtensionPermissions: "resource://gre/modules/ExtensionPermissions.sys.mjs",
   ExtensionStorageIDB: "resource://gre/modules/ExtensionStorageIDB.sys.mjs",
   SearchService: "moz-src:///toolkit/components/search/SearchService.sys.mjs",
@@ -48,6 +49,10 @@ this.akhi = class extends ExtensionAPI {
             `${prefBranch}${name}`,
             defaultValue
           );
+        },
+
+        async isDebugBuild() {
+          return lazy.AppConstants.DEBUG;
         },
 
         async setPref(name, value) {
