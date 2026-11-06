@@ -183,6 +183,27 @@ For Android TV, see [TV Akhi](https://github.com/halgurdh/tv-akhi), with the sam
 # Debug
 obj-akhi-desktop-debug/dist/bin/firefox.exe -no-remote -profile obj-akhi-desktop-debug/tmp/profile-debug
 
+# Markdown files:
+
+README: https://github.com/halgurdh/akhiBrowser/blob/f4f1669a453a/README.md
+Privacy, Android browser: https://github.com/halgurdh/akhiBrowser/blob/f4f1669a453a/PRIVACY-ANDROID.md
+Privacy, extension: https://github.com/halgurdh/akhiBrowser/blob/f4f1669a453a/PRIVACY-EXTENSION.md
+Source and license (MPL): https://github.com/halgurdh/akhiBrowser/blob/f4f1669a453a/SOURCE.md
+MPL files of the private parts: https://github.com/halgurdh/akhiBrowser/tree/f4f1669a453a/mpl-sources
+
+These live in the private repos, on your computer:
+store listing texts for Chrome and Firefox: browser\extensions\akhi\webext\store\listing.md
+Play Console notes: browser\branding\akhi\play\CONSOLE.md
+organization account guide: browser\branding\akhi\play\ORGANIZATION.md
+
+# Build location
+
+File	Location
+Windows installer, portable zip, update file and XML; Android APK; checksums	artifacts\release-*\
+Google Play bundle and test APK	artifacts\play-*\
+Microsoft Store package	artifacts\msstore-*\
+Extensions Firefox, Chrome and source zips	artifacts\extension-*
+
 ## Contact
 
 - Website: [akhibrowser.com](https://akhibrowser.com)
