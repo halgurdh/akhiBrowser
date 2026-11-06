@@ -44,7 +44,9 @@ lists, and video codecs from Mozilla, Cisco and Google. A Premium license key is
   label themselves adult. SafeSearch is forced on Google, Bing, DuckDuckGo and Yahoo, and so is YouTube Restricted
   Mode.
 - **Search blocking:** searches for adult or haram content are blocked in 11 languages. Questions about them stay
-  allowed ("why is alcohol haram").
+  allowed ("why is alcohol haram"). A search for alcohol, drugs or gambling becomes that question, in the language of
+  the browser ("beer" becomes "why is beer bad"); with a word for buying it or for pictures of it ("buy beer"), it stays
+  blocked.
 - **12 languages:** English, Arabic, Persian, Kurdish (Sorani), Urdu, Turkish, French, German, Dutch, Spanish,
   Indonesian and Malay, right to left where needed.
 
