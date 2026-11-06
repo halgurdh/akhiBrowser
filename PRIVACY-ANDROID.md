@@ -1,6 +1,6 @@
 # AkhiBrowser for Android: privacy policy
 
-Last updated: 05-11-2026
+Last updated: 06-11-2026
 
 AkhiBrowser is a web browser built on Firefox, made by Halgurd Hussein. It has no account of its own, no ads and no
 analytics. We do not sell data. We, the makers, receive nothing about you or the sites you visit.
