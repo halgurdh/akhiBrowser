@@ -45,8 +45,9 @@ Your history, bookmarks, passwords, open tabs and settings stay on your device u
   download it again from the site that already shows it, without your cookies.
 - Audio is cleaned of music on the device.
 
-Parent controls, the parental PIN (only a salted hash of it) and the activity summary (blocks counted by day and reason,
-with no addresses) stay on the device.
+Parent controls, the parental PIN (only a salted hash of it), the activity summary (blocks counted by day and reason,
+with no addresses) and the time on social sites for the feed limit (minutes counted for today, with no addresses) stay
+on the device.
 
 Uninstalling the app deletes all of this. You can also clear it in Settings, under Delete browsing data.
 

@@ -25,7 +25,8 @@ To check an image, the extension may download it again from the site that alread
 ## What stays on your device
 
 Settings, your license key, the parental PIN and the activity summary (blocks counted by day and reason, with no
-addresses) stay in the extension's local storage. Removing the extension deletes them.
+addresses) stay in the extension's local storage. So does the time on social sites for the feed limit, when it's on:
+minutes counted for today, with no addresses. Removing the extension deletes them.
 
 ## Contact
 

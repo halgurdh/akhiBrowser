@@ -52,11 +52,20 @@ lists, and video codecs from Mozilla, Cisco and Google. A Premium license key is
 
 ## Premium
 
-Premium adds **Recognize hijab**, which shows a woman who is covered instead of blurring every woman; the option to set
-a parental PIN; and optional parent controls to block chosen sites, allow only approved sites, set time limits with
-bedtime and school hours, and see a summary of blocked pages without addresses. Parent controls are off until enabled,
-and their data stays on the device. An active Premium license is needed to set a PIN, but a PIN that's already set keeps
-working without Premium.
+Premium adds these, each off until you turn it on:
+
+- **Recognize hijab:** shows a woman who is covered instead of blurring every woman.
+- **Parental PIN:** locks the protections so they can't be turned off. An active Premium license is needed to set a PIN,
+  but a PIN that's already set keeps working without Premium.
+- **Block chosen sites**
+- **Allow only approved sites**
+- **Time limits,** with bedtime and school hours
+- **Activity summary** of blocked pages, without their addresses
+- **Feed limit:** hides short video feeds (YouTube Shorts, Instagram and Facebook Reels, TikTok) and stops social sites
+  after a chosen number of minutes a day, with a calm stop screen. It works on those websites in AkhiBrowser and the
+  extensions, not in their apps.
+
+The parent controls and the feed limit keep their data on the device.
 
 Premium is a monthly, yearly or lifetime purchase: through Google Play in a Google Play build, or through Stripe with a
 license key and no account.
@@ -167,6 +176,9 @@ The extension is plain JavaScript inside the installed browser, so keeping its r
 and tools, not the code itself.
 
 For Android TV, see [TV Akhi](https://github.com/halgurdh/tv-akhi), with the same no music and content filters.
+
+# Debug
+obj-akhi-desktop-debug/dist/bin/firefox.exe -no-remote -profile obj-akhi-desktop-debug/tmp/profile-debug
 
 ## Contact
 
