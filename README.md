@@ -8,7 +8,7 @@ Thanks to [Mohamed Sadiq](https://github.com/mohamedsadiqaguenaou): the backgrou
 and [NoHaram](https://github.com/mohamedsadiqaguenaou/NoHaram) inspired the image filter. Give them a star.
 
 📲 Available for Android (8.0+) and Windows (64-bit)
-📥 [Website](https:///akhiBrowser.com)
+📥 [Website](https://akhibrowser.com)
 
 (Insha'Allah, it will also be available soon as a standalone extension for Firefox and Chrome.)
 
@@ -44,17 +44,28 @@ lists, and video codecs from Mozilla, Cisco and Google. A Premium license key is
   label themselves adult. SafeSearch is forced on Google, Bing, DuckDuckGo and Yahoo, and so is YouTube Restricted
   Mode.
 - **Search blocking:** searches for adult or haram content are blocked in 11 languages. Questions about them stay
-  allowed ("why is alcohol haram").
+  allowed ("why is alcohol haram"). A search for alcohol, drugs or gambling becomes that question, in the language of
+  the browser ("beer" becomes "why is beer bad"); with a word for buying it or for pictures of it ("buy beer"), it stays
+  blocked.
 - **12 languages:** English, Arabic, Persian, Kurdish (Sorani), Urdu, Turkish, French, German, Dutch, Spanish,
   Indonesian and Malay, right to left where needed.
 
 ## Premium
 
-Premium adds **Recognize hijab**, which shows a woman who is covered instead of blurring every woman; the option to set
-a **Parental PIN**; and optional parent controls to block chosen sites, allow only approved sites, set time limits with
-bedtime and school hours, and see a summary of blocked pages without addresses. Parent controls are off until enabled,
-and their data stays on the device. An active Premium license is needed to set a PIN, but a PIN that's already set keeps
-working without Premium.
+Premium adds these, each off until you turn it on:
+
+- **Recognize hijab:** shows a woman who is covered instead of blurring every woman.
+- **Parental PIN:** locks the protections so they can't be turned off. An active Premium license is needed to set a PIN,
+  but a PIN that's already set keeps working without Premium.
+- **Block chosen sites**
+- **Allow only approved sites**
+- **Time limits,** with bedtime and school hours
+- **Activity summary** of blocked pages, without their addresses
+- **Feed limit:** hides short video feeds (YouTube Shorts, Instagram and Facebook Reels, TikTok) and stops social sites
+  after a chosen number of minutes a day, with a calm stop screen. It works on those websites in AkhiBrowser and the
+  extensions, not in their apps.
+
+The parent controls and the feed limit keep their data on the device.
 
 Premium is a monthly, yearly or lifetime purchase: through Google Play in a Google Play build, or through Stripe with a
 license key and no account.
@@ -132,7 +143,10 @@ macOS only shows a notice.
 
 3. Android: sign with the same key as before, or Android refuses the update. Name the APK
    `AkhiBrowser-<version>-android-<abi>.apk`, and list it in `SHA256SUMS.txt`.
-4. Upload all of it to a GitHub release tagged `v<version>`, and mark it as the latest.
+4. Upload all of it to a GitHub release tagged `v<version>`, and mark it as the latest. Also upload the setup.exe and
+   the APK once more without the version, as `AkhiBrowser-windows-x64-setup.exe` and
+   `AkhiBrowser-android-arm64-v8a.apk`: akhibrowser.com links to them under `releases/latest/download/`, so it always
+   offers the latest release.
 
 The public certificates built into the updater are in `browser/branding/akhi/update/`. Keep the private keys out of every
 repository and backed up: without them, installed browsers can't take another update.
@@ -165,6 +179,35 @@ The extension is plain JavaScript inside the installed browser, so keeping its r
 and tools, not the code itself.
 
 For Android TV, see [TV Akhi](https://github.com/halgurdh/tv-akhi), with the same no music and content filters.
+
+# Debug
+obj-akhi-desktop-debug/dist/bin/firefox.exe -no-remote -profile obj-akhi-desktop-debug/tmp/profile-debug
+
+# Markdown files:
+
+README: https://github.com/halgurdh/akhiBrowser/blob/f4f1669a453a/README.md
+Privacy, Android browser: https://github.com/halgurdh/akhiBrowser/blob/f4f1669a453a/PRIVACY-ANDROID.md
+Privacy, extension: https://github.com/halgurdh/akhiBrowser/blob/f4f1669a453a/PRIVACY-EXTENSION.md
+Source and license (MPL): https://github.com/halgurdh/akhiBrowser/blob/f4f1669a453a/SOURCE.md
+MPL files of the private parts: https://github.com/halgurdh/akhiBrowser/tree/f4f1669a453a/mpl-sources
+
+These live in the private repos, on your computer:
+store listing texts for Chrome and Firefox: browser\extensions\akhi\webext\store\listing.md
+Play Console notes: browser\branding\akhi\play\CONSOLE.md
+organization account guide: browser\branding\akhi\play\ORGANIZATION.md
+
+# Build location
+
+File	Location
+Windows installer, portable zip, update file and XML; Android APK; checksums	artifacts\release-*\
+Google Play bundle and test APK	artifacts\play-*\
+Microsoft Store package	artifacts\msstore-*\
+Extensions Firefox, Chrome and source zips	artifacts\extension-*
+
+## Contact
+
+- Website: [akhibrowser.com](https://akhibrowser.com)
+- Support: [support@akhibrowser.com](mailto:support@akhibrowser.com)
 
 ## Credits and licenses
 

@@ -1,6 +1,6 @@
 # AkhiBrowser extension: privacy policy
 
-Last updated: 05-11-2026
+Last updated: 06-11-2026
 
 The AkhiBrowser extension does its work on your device. Page addresses, images, audio and your settings are checked
 locally and are not sent to us. We do not sell or share data, and there are no analytics or ads in the extension.
@@ -25,8 +25,9 @@ To check an image, the extension may download it again from the site that alread
 ## What stays on your device
 
 Settings, your license key, the parental PIN and the activity summary (blocks counted by day and reason, with no
-addresses) stay in the extension's local storage. Removing the extension deletes them.
+addresses) stay in the extension's local storage. So does the time on social sites for the feed limit, when it's on:
+minutes counted for today, with no addresses. Removing the extension deletes them.
 
 ## Contact
 
-haukar.hussein@gmail.com
+support@akhibrowser.com

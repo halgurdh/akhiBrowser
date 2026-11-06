@@ -15,6 +15,8 @@ imply_option("MOZ_PROFILE_MIGRATOR", True)
 # add-ons of addons.mozilla.org install
 imply_option("MOZ_APP_VENDOR", "AkhiBrowser")
 imply_option("MOZ_APP_ID", "{ec8030f7-c20a-464f-9b0e-13a3a9e97384}")
+# Sites (Google first) serve their old, basic pages to a browser they don't know: "Firefox/<version>" in the User Agent
+imply_option("MOZ_APP_UA_NAME", "Firefox")
 # Include the DevTools client, not just the server (which is the default)
 imply_option("MOZ_DEVTOOLS", "all")
 imply_option("BROWSER_CHROME_URL", "chrome://browser/content/browser.xhtml")
