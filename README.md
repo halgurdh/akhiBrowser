@@ -143,7 +143,10 @@ macOS only shows a notice.
 
 3. Android: sign with the same key as before, or Android refuses the update. Name the APK
    `AkhiBrowser-<version>-android-<abi>.apk`, and list it in `SHA256SUMS.txt`.
-4. Upload all of it to a GitHub release tagged `v<version>`, and mark it as the latest.
+4. Upload all of it to a GitHub release tagged `v<version>`, and mark it as the latest. Also upload the setup.exe and
+   the APK once more without the version, as `AkhiBrowser-windows-x64-setup.exe` and
+   `AkhiBrowser-android-arm64-v8a.apk`: akhibrowser.com links to them under `releases/latest/download/`, so it always
+   offers the latest release.
 
 The public certificates built into the updater are in `browser/branding/akhi/update/`. Keep the private keys out of every
 repository and backed up: without them, installed browsers can't take another update.
