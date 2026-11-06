@@ -166,6 +166,11 @@ and tools, not the code itself.
 
 For Android TV, see [TV Akhi](https://github.com/halgurdh/tv-akhi), with the same no music and content filters.
 
+## Contact
+
+- Website: [akhibrowser.com](https://akhibrowser.com)
+- Support: [support@akhibrowser.com](mailto:support@akhibrowser.com)
+
 ## Credits and licenses
 
 Based on Firefox by Mozilla, under the [Mozilla Public License 2.0](LICENSE). It also uses

@@ -58,4 +58,4 @@ alone.
 
 ## Contact
 
-haukar.hussein@gmail.com
+support@akhibrowser.com
