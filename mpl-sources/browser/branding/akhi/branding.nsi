@@ -11,8 +11,8 @@
 !define BrandFullNameInternal "AkhiBrowser"
 !define BrandFullName         "AkhiBrowser"
 !define CompanyName           "AkhiBrowser"
-!define URLInfoAbout          "https://github.com/halgurdh/akhiBrowser"
-!define HelpLink              "https://github.com/halgurdh/akhiBrowser/issues"
+!define URLInfoAbout          "https://akhibrowser.com"
+!define HelpLink              "mailto:support@akhibrowser.com"
 
 !define URLStubDownloadX86 "https://download.mozilla.org/?os=win&lang=${AB_CD}&product=firefox-latest"
 !define URLStubDownloadAMD64 "https://download.mozilla.org/?os=win64&lang=${AB_CD}&product=firefox-latest"
