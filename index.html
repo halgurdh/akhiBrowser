@@ -106,10 +106,16 @@ h2 { font-size: clamp(28px, 3.6vw, 38px); color: var(--gold); }
 .demo.first { justify-self: start; order: -1; }
 .demo figcaption { margin-top: 10px; font-size: 14px; color: var(--soft); text-align: center; }
 .stack { position: relative; }
-.stack .after { position: absolute; inset: 0; animation: reveal 7s ease-in-out infinite; }
+.stack .after { position: absolute; inset: 0; animation: reveal 10.5s ease-in-out infinite; }
+.stack .kept { animation-name: keep; }
 @keyframes reveal {
-  0%, 40% { opacity: 0; }
-  50%, 90% { opacity: 1; }
+  0%, 26% { opacity: 0; }
+  33%, 60% { opacity: 1; }
+  66%, 100% { opacity: 0; }
+}
+@keyframes keep {
+  0%, 60% { opacity: 0; }
+  66%, 93% { opacity: 1; }
   100% { opacity: 0; }
 }
 .phone { max-width: 270px; justify-self: center; }
@@ -156,6 +162,7 @@ footer p + p { margin-top: 8px; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .stack .after { animation: none; opacity: 1; }
+  .stack .kept { opacity: 0; }
 }
 </style>
 </head>
@@ -246,8 +253,9 @@ footer p + p { margin-top: 8px; }
         <div class="stack">
           <img class="shot" src="assets/check-before.png" width="520" height="520" alt="A blurred landscape with the label: Checking on your device." data-a="alt:a3">
           <img class="shot after" src="assets/check-after.png" width="520" height="520" alt="The same landscape, sharp, with the label: Checked: shown." data-a="alt:a4">
+          <img class="shot after kept" src="assets/check-hidden.png" width="520" height="520" alt="A picture of a person that stays blurred, with the label: Checked: hidden." data-a="alt:a10">
         </div>
-        <figcaption data-t="t31">Demo picture</figcaption>
+        <figcaption data-t="t31">Demo pictures</figcaption>
       </figure>
     </div>
   </section>
@@ -386,7 +394,7 @@ footer p + p { margin-top: 8px; }
 "t28": "Je apparaat bekijkt zelf afbeeldingen, achtergronden en video's, zodat er niets eerst even in beeld flitst. Is iets niet in orde, dan blijft het wazig.",
 "t29": "Jij kiest wie wazig wordt: vrouwen (standaard), mannen of allebei. Het gaat om wat er van iemand te zien is, niet om de hele afbeelding: bij een vrouw als haar haar of lichaam zichtbaar is, bij een man van navel tot knieën.",
 "t30": "Filters kunnen iets missen, en een afbeelding die niet te controleren is, wordt gewoon getoond. Ze vervangen dus niet de aandacht van een ouder.",
-"t31": "Voorbeeld",
+"t31": "Voorbeelden",
 "t32": "Dit zie je bij een geblokkeerde site",
 "t33": "Tegengehouden voordat het laadt",
 "t34": "18+-sites en sites over alcohol, drugs, vapen en gokken gaan niet open. Ook pagina's die zichzelf als 18+ aanmerken, worden tegengehouden.",
@@ -415,6 +423,7 @@ footer p + p { margin-top: 8px; }
 "a2": "Korte video van AkhiBrowser: zij stopten er muziek in, dus wij haalden het eruit, 19 seconden",
 "a3": "Een wazig landschap met het label: Checking on your device.",
 "a4": "Hetzelfde landschap, scherp, met het label: Checked: shown.",
+"a10": "Een foto van een persoon die wazig blijft, met het label: Checked: hidden.",
 "a5": "Een pagina met de tekst: This page is blocked. AkhiBrowser blokkeert sites over alcohol, drugs en gokken. Daaronder een vers uit de Koran, 2:219, in het Arabisch en Engels, met een link naar quran.com.",
 "a6": "Een geluidsgolf van stemmen, met het label: Background music: removed.",
 "a7": "De startpagina van AkhiBrowser op Android: een zoekbalk, het AkhiBrowser-logo en het label: You're protected.",
