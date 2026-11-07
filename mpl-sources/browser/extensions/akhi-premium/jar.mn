@@ -1,0 +1,15 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+# The Premium part of the built-in extension (browser/extensions/akhi/), in the same folder: its scripts, its models,
+# and its image classifier instead of the free one.
+browser.jar:
+    builtin-addons/akhi/body/ (body/*)
+    builtin-addons/akhi/faces/ (faces/*)
+    builtin-addons/akhi/gender/ (gender/*)
+    builtin-addons/akhi/content/feeds.js (content/feeds.js)
+    builtin-addons/akhi/lib/family.js (lib/family.js)
+    builtin-addons/akhi/lib/premium.js (lib/premium.js)
+    builtin-addons/akhi/lib/image_classifier.js (lib/premium_image_classifier.js)
+    builtin-addons/akhi/pages/settings_premium.js (pages/settings_premium.js)

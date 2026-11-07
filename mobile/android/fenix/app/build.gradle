@@ -379,6 +379,11 @@ abstract class SyncAkhiExtension extends DefaultTask {
     @PathSensitive(PathSensitivity.RELATIVE)
     abstract DirectoryProperty getSource()
 
+    @org.gradle.api.tasks.Optional
+    @InputDirectory
+    @PathSensitive(PathSensitivity.RELATIVE)
+    abstract DirectoryProperty getPremiumSource()
+
     @OutputDirectory
     abstract DirectoryProperty getOutputDir()
 
@@ -392,13 +397,29 @@ abstract class SyncAkhiExtension extends DefaultTask {
             spec.into(outputDir.get().dir("extensions/akhi"))
             spec.exclude "**/moz.build", "**/jar.mn", "**/tools/**", "**/README.md", "server/**", "safari/**", "webext/**", ".git*"
         }
+        if (premiumSource.isPresent()) {
+            fs.copy { spec ->
+                spec.from(premiumSource)
+                spec.into(outputDir.get().dir("extensions/akhi"))
+                spec.include "content/feeds.js", "lib/family.js", "lib/premium.js", "lib/premium_image_classifier.js",
+                    "pages/settings_premium.js", "faces/**", "gender/**", "body/**"
+                spec.eachFile { file ->
+                    if (file.path == "lib/premium_image_classifier.js") {
+                        file.path = "lib/image_classifier.js"
+                    }
+                }
+            }
+        }
     }
 }
 
 def syncAkhiExtension = tasks.register("syncAkhiExtension", SyncAkhiExtension) {
-    // AKHI_EXTENSION_DIR: the minified copy of a release, see browser/extensions/akhi/webext/minify.mjs
+    // AKHI_EXTENSION_DIR: the merged minified copy of a release, see merge_akhi_extension.mjs
     def akhiExtensionDir = project.providers.environmentVariable("AKHI_EXTENSION_DIR").getOrElse("")
     source.set(file(akhiExtensionDir ?: "${gradle.mozconfig.topsrcdir}/browser/extensions/akhi"))
+    if (!akhiExtensionDir) {
+        premiumSource.set(file("${gradle.mozconfig.topsrcdir}/browser/extensions/akhi-premium"))
+    }
 }
 
 androidComponents {

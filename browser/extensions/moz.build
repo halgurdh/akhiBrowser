@@ -4,6 +4,7 @@
 
 DIRS += [
     "akhi",
+    "akhi-premium",
     "formautofill",
     "ipp-activator",
     "webcompat",

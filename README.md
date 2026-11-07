@@ -86,7 +86,7 @@ phones). The model loads only when it's needed, in its own thread, so page loads
 ## Building
 
 Set up your machine with [Mozilla's build instructions](https://firefox-source-docs.mozilla.org/setup/index.html)
-first. Then pull the two private parts (see [Public and private](#public-and-private)), with a GitHub account that
+first. Then pull the three private parts (see [Public and private](#public-and-private)), with a GitHub account that
 has access to them:
 
 ```sh
@@ -173,11 +173,12 @@ python browser/branding/akhi/tools/make_icons.py
 
 ## Public and private
 
-AkhiBrowser's own code is in two private repositories, pulled into this one as git submodules:
+AkhiBrowser's own code is in three private repositories, pulled into this one as git submodules:
 
 | Path | Private repository | What's in it |
 | --- | --- | --- |
-| `browser/extensions/akhi/` | `halgurdh/akhi-extension` | The built-in extension, shared by desktop and Android: no music, the content filters, the built-in ad blocker, the image and face checks, colour-blindness correction, the settings and parental PIN. It can't be removed. |
+| `browser/extensions/akhi/` | `halgurdh/akhi-extension` | The built-in extension, shared by desktop and Android: no music, the content filters, the built-in ad blocker, the nudity check, colour-blindness correction and the settings. It can't be removed. The Chrome and Firefox store extensions are built from it alone. |
+| `browser/extensions/akhi-premium/` | `halgurdh/akhibrowser-premium` | Premium, in the browser only: the license and its server, blurring women or men with the face, gender and body models, recognize hijab, the parental PIN and controls, the feed limit. The browser builds lay it over the extension, see `browser/branding/akhi/tools/merge_akhi_extension.mjs`. |
 | `browser/branding/akhi/` | `halgurdh/akhi-branding` | Names, installer and icons in TV Akhi's colors, the icon tool, and the build configs (`mozconfigs/`). |
 
 What stays public here is Firefox itself and AkhiBrowser's changes to Firefox's own files: the Android app
