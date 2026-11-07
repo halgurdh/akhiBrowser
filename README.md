@@ -186,8 +186,7 @@ obj-akhi-desktop-debug/dist/bin/firefox.exe -no-remote -profile obj-akhi-desktop
 # Markdown files:
 
 README: https://github.com/halgurdh/akhiBrowser/blob/f4f1669a453a/README.md
-Privacy, Android browser: https://github.com/halgurdh/akhiBrowser/blob/f4f1669a453a/PRIVACY-ANDROID.md
-Privacy, extension: https://github.com/halgurdh/akhiBrowser/blob/f4f1669a453a/PRIVACY-EXTENSION.md
+Privacy (browser and extension): https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md
 Source and license (MPL): https://github.com/halgurdh/akhiBrowser/blob/f4f1669a453a/SOURCE.md
 MPL files of the private parts: https://github.com/halgurdh/akhiBrowser/tree/f4f1669a453a/mpl-sources
 
