@@ -3,16 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AkhiBrowser: a private browser for Muslims</title>
-<meta name="description" content="A browser built on Firefox that blocks ads, adult and haram sites, blurs images until they are checked, and removes background music from videos. On your device, free.">
+<title>AkhiBrowser: Halal Browser for Muslims, Blocks Haram and Blurs Images</title>
+<meta name="description" content="AkhiBrowser is a free halal browser for Muslims, built on Firefox. It blocks ads, adult and haram sites, blurs images until they are checked, and removes background music from videos, all on your device.">
+<link rel="canonical" href="https://akhibrowser.com/">
 <meta name="theme-color" content="#03282e">
-<meta property="og:title" content="AkhiBrowser">
-<meta property="og:description" content="Filter the web, on your device. For Windows and Android.">
-<meta property="og:image" content="https://halgurdh.github.io/akhiBrowser/assets/og.png">
-<meta property="og:url" content="https://halgurdh.github.io/akhiBrowser/">
+<meta property="og:title" content="AkhiBrowser: Halal Browser for Muslims">
+<meta property="og:description" content="A free halal browser that blocks haram sites, blurs images and removes background music, on your device. For Windows and Android.">
+<meta property="og:image" content="https://akhibrowser.com/assets/og.png">
+<meta property="og:url" content="https://akhibrowser.com/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="assets/akhi.svg" type="image/svg+xml">
+<script async src="https://www.googletagmanager.com/gtm.js?id=GTM-N2MF3XPS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+</script>
 <style>
 :root {
   color-scheme: dark;
@@ -294,8 +301,9 @@ footer p + p { margin-top: 8px; }
         <li data-t="t43"><strong>Downloads.</strong> uBlock Origin from addons.mozilla.org, ad block lists, and video codecs from Mozilla, Cisco and Google.</li>
         <li data-t="t44"><strong>Update check.</strong> Once a day, the browser asks GitHub whether a new release is out.</li>
         <li data-t="t45"><strong>A Premium key, if you enter one.</strong> It's checked with our license server, with a random install id, so a key works on 3 devices at a time. The server keeps no names, emails or browsing data.</li>
+        <li data-t="t55"><strong>Website analytics.</strong> This site loads Google Tag Manager. Google receives the connection's IP address and technical request information; any analytics tags enabled in the GTM container may also collect page views and events. See <a href="https://policies.google.com/privacy">Google's privacy policy</a>.</li>
       </ul>
-      <p class="note" data-t="t46"><a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY-ANDROID.md">Privacy policy</a></p>
+      <p class="note" data-t="t46"><a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md">Privacy policy</a></p>
     </div>
   </section>
 
@@ -382,7 +390,8 @@ footer p + p { margin-top: 8px; }
 "t43": "<strong>Downloads.<\/strong> uBlock Origin van addons.mozilla.org, lijsten om reclame te blokkeren, en videocodecs van Mozilla, Cisco en Google.",
 "t44": "<strong>Updatecontrole.<\/strong> Eén keer per dag vraagt de browser aan GitHub of er een nieuwe versie is.",
 "t45": "<strong>Je Premium-sleutel, als je die invult.<\/strong> Onze licentieserver controleert hem samen met een willekeurige installatiecode, zodat een sleutel op 3 apparaten tegelijk werkt. De server bewaart geen namen, e-mailadressen of surfgegevens.",
-"t46": "<a href=\"https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY-ANDROID.md\">Privacybeleid (Engels)<\/a>",
+"t46": "<a href=\"https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md\">Privacybeleid (Engels)<\/a>",
+"t55": "<strong>Websiteanalyse.<\/strong> Deze site laadt Google Tag Manager. Google ontvangt het IP-adres en technische informatie over het verzoek; analysetags die in GTM zijn ingeschakeld kunnen ook paginaweergaven en gebeurtenissen verzamelen. Zie <a href=\"https:\/\/policies.google.com\/privacy\">Googles privacybeleid<\/a>.",
 "t47": "Premium, als je dat wilt",
 "t48": "Alles hierboven blijft gratis. Premium voegt Hijab herkennen toe: een bedekte vrouw blijft dan zichtbaar, in plaats van dat elke vrouw wazig wordt. Je krijgt ook een ouderpincode en optioneel ouderlijk toezicht: gekozen sites blokkeren, alleen goedgekeurde sites toestaan, tijdslimieten met bedtijd en schooluren, en een overzicht van geblokkeerde pagina's zonder adressen. Die gegevens blijven op het apparaat.",
 "t49": "Per maand",
@@ -421,8 +430,8 @@ footer p + p { margin-top: 8px; }
 "x11": "Toegankelijkheid"
 };
   const META_NL = {
-    title: "AkhiBrowser: de privébrowser voor moslims",
-    description: "Een browser op basis van Firefox die reclame, 18+- en haram sites tegenhoudt, afbeeldingen wazig houdt tot ze zijn gecontroleerd en de muziek uit video's haalt. Gratis, en alles op je eigen apparaat.",
+    title: "AkhiBrowser: halal browser voor moslims, houdt haram tegen",
+    description: "AkhiBrowser is een gratis halal browser voor moslims, op basis van Firefox, die reclame, 18+- en haram sites tegenhoudt, afbeeldingen wazig houdt tot ze zijn gecontroleerd en de muziek uit video's haalt. Alles gebeurt op je eigen apparaat.",
   };
   const description = document.querySelector('meta[name="description"]');
   const META_EN = { title: document.title, description: description.content };
