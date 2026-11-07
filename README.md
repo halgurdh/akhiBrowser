@@ -127,6 +127,17 @@ front-end only work, `akhi-desktop-debug` downloads prebuilt C++ and Rust.
   WebKit: a Safari web extension, or a browser with these protections built in, as Safari web extensions only run in
   Safari. A first test of the Safari one is in `browser/extensions/akhi/safari/` (private).
 
+### Versions
+
+- **The browser:** `X.Y.Z` in `browser/config/akhi_version.txt`, the same as `CURRENT_VERSION` in
+  `browser/extensions/akhi/lib/updates.js` and the GitHub tag `vX.Y.Z`. A release with new features raises the middle
+  number (1.1.0 to 1.2.0), one with only fixes the last (1.1.0 to 1.1.1). Google Play gets the same version name; its
+  version code comes from the time of the build.
+- **The extension:** `1.N.0` in `browser/extensions/akhi/manifest.json`, one up for every release (1.18.0, 1.19.0,
+  1.20.0). The same version is built into the browser and goes to the Chrome and Firefox stores.
+- **Commits:** in the extension repo `1.20.0; browser 1.2.0`, in this repo
+  `AkhiBrowser 1.2.0; extension 1.20.0: <what is new>`.
+
 ### Releasing an update
 
 Windows and the APK from GitHub update themselves from the latest GitHub release. Google Play updates its own builds, and
