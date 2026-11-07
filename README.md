@@ -7,15 +7,16 @@ Thanks to [Mohamed Sadiq](https://github.com/mohamedsadiqaguenaou): the backgrou
 [NoMusic](https://github.com/mohamedsadiqaguenaou/NoMusic), and his [Safaa](https://github.com/mohamedsadiqaguenaou/safaa)
 and [NoHaram](https://github.com/mohamedsadiqaguenaou/NoHaram) inspired the image filter. Give them a star.
 
-📲 Available for Android (8.0+) and Windows (64-bit)
-📥 [Website](https://akhibrowser.com)
+📲 [Download for Android (8.0+)](https://github.com/halgurdh/akhiBrowser/releases/latest/download/AkhiBrowser-android-arm64-v8a.apk) · [Download for Windows (64-bit)](https://github.com/halgurdh/akhiBrowser/releases/latest/download/AkhiBrowser-windows-x64-setup.exe) · [Website](https://akhibrowser.com)
 
 (Insha'Allah, it will also be available soon as a standalone extension for Firefox and Chrome.)
 
 Please note:
 On Windows, SmartScreen may display a warning; if so, click "More info" → "Run anyway."
 
-On Android: Tap the downloaded file → Enable "Allow from this source" if prompted → Tap Install.
+On Android: tap the downloaded file → enable "Allow from this source" if prompted → tap Install.
+
+![AkhiBrowser on Android](https://akhibrowser.com/assets/android.png)
 
 ## Free features
 
@@ -33,13 +34,9 @@ lists, and video codecs from Mozilla, Cisco and Google. A Premium license key is
   and slow computers. (slightly re-written to work on lightweight devices)
 - **Nudity blur:** images, CSS backgrounds, videos and canvases stay blurred until an on-device model
   ([NSFWJS](https://github.com/infinitered/nsfwjs)) has checked them, so nothing flashes. Unsafe ones stay blurred,
-  or only their persons are. One that can't be checked, like a video another site won't let pages read, is shown.
-  Works with srcset and `<picture>`, lazy loading, carousels, shadow DOM, iframes and `blob:` images, down to 24 px
+  and one that can't be checked, like a video another site won't let pages read, is shown. Works with srcset and
+  `<picture>`, lazy loading, carousels, shadow DOM, iframes and `blob:` images, down to 24 px
   thumbnails. The same rule for everyone, of any age. (slightly re-written to work on lightweight devices)
-- **Choose who to blur:** for women (the default), men, or both, a person is blurred by what is seen of
-  them, not the whole image: a woman when her hair or body shows (her face and hands may), a man from the navel to
-  the knees. A woman too small to judge stays blurred. A person whose gender is unclear can be judged as a woman, which is off by
-  default.
 - **Adult and haram blocking:** adult, alcohol, drugs, vaping and gambling sites are blocked, and so are pages that
   label themselves adult. SafeSearch is forced on Google, Bing, DuckDuckGo and Yahoo, and so is YouTube Restricted
   Mode.
@@ -49,29 +46,38 @@ lists, and video codecs from Mozilla, Cisco and Google. A Premium license key is
   blocked.
 - **12 languages:** English, Arabic, Persian, Kurdish (Sorani), Urdu, Turkish, French, German, Dutch, Spanish,
   Indonesian and Malay, right to left where needed.
+- **Colour-blindness correction:** an optional, on-device setting makes red and green easier to tell apart for the two
+  red-green types of colour blindness.
+
+![Free AkhiBrowser protections](https://akhibrowser.com/assets/settings.png)
 
 ## Premium
 
 Premium adds these, each off until you turn it on:
 
 - **Recognize hijab:** shows a woman who is covered instead of blurring every woman.
+- **Choose who to blur:** women, men, or both. A woman is blurred when her hair or body shows (her face and hands may);
+  a man from the navel to the knees. A person whose gender is unclear can be judged as a woman, an optional setting.
 - **Parental PIN:** locks the protections so they can't be turned off. An active Premium license is needed to set a PIN,
   but a PIN that's already set keeps working without Premium.
 - **Block chosen sites**
 - **Allow only approved sites**
-- **Time limits,** with bedtime and school hours
+- **Time limits,** including a daily limit, bedtime and school hours
+- **No private tabs:** pages don't open in private tabs, so all browsing stays under the parent controls.
 - **Activity summary** of blocked pages, without their addresses
-- **Feed limit:** hides short video feeds (YouTube Shorts, Instagram and Facebook Reels, TikTok) and stops social sites
-  after a chosen number of minutes a day, with a calm stop screen. It works on those websites in AkhiBrowser and the
-  extensions, not in their apps.
+- **Feed limit:** hides short-video feeds and stops social websites after a chosen number of minutes a day, with a calm
+  stop screen. It works on websites in AkhiBrowser, not in social-media apps.
 
 The parent controls and the feed limit keep their data on the device.
 
-Premium is a monthly, yearly or lifetime purchase: through Google Play in a Google Play build, or through Stripe with a
-license key and no account.
+![AkhiBrowser Premium settings](https://akhibrowser.com/assets/premium.png)
+
+Premium is a monthly, yearly or lifetime purchase: through Google Play in a Play build, or directly through Stripe with
+a license key and no account. A license works on up to three devices at a time.
 
 The free protections are on by default. Each can be turned off in the AkhiBrowser shield of the toolbar (on Android:
-menu, **Extensions**, **AkhiBrowser**), which also chooses who to blur. A parental PIN can lock these off.
+menu, **Extensions**, **AkhiBrowser**). Premium controls for choosing who to blur are in the same settings. A parental
+PIN can lock protections against being turned off.
 
 **Parental PIN:** turning a protection off, or changing or removing the PIN, requires it; turning a protection on does
 not. Only a salted hash of the PIN is kept, and five wrong tries make it wait a minute.
