@@ -160,7 +160,7 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
 
     private fun buy(id: Int, plan: String) {
         val isLifetime = plan == "lifetime"
-        if (!isLifetime && plan != "monthly" && plan != "yearly") {
+        if (!isLifetime && plan != "monthly" && plan != "yearly" && plan != "family") {
             replyError(id)
             return
         }
@@ -238,7 +238,7 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
     companion object {
         const val NATIVE_APP = "akhiStore"
 
-        // One subscription with the base plans "monthly" and "yearly", as set up in the Play Console
+        // One subscription with monthly, yearly, and family base plans, as set up in the Play Console
         private const val SUBSCRIPTION_PRODUCT = "akhi_premium"
         private const val LIFETIME_PRODUCT = "akhi_premium_lifetime"
     }
