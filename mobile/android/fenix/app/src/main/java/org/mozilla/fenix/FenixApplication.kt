@@ -114,6 +114,7 @@ import org.mozilla.fenix.GleanMetrics.TermsOfUse
 import org.mozilla.fenix.GleanMetrics.UserAiSummarize
 import org.mozilla.fenix.autofill.AutofillService
 import org.mozilla.fenix.components.AkhiUpdater
+import org.mozilla.fenix.components.AkhiExtension
 import org.mozilla.fenix.components.Components
 import org.mozilla.fenix.components.Core
 import org.mozilla.fenix.components.appstate.AppAction
@@ -402,6 +403,11 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
         initializeRemoteSettingsSupport()
 
         restoreBrowserState()
+        AkhiExtension.setDefaultSearchEngine(
+            this,
+            components.core.store,
+            components.useCases.searchUseCases.selectSearchEngine,
+        )
         restoreDownloads()
         restoreMessaging()
 

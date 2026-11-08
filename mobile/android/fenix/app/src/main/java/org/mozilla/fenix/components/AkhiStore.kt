@@ -145,9 +145,11 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
             purchasesOf(BillingClient.ProductType.SUBS, onError) { subscriptions ->
                 purchasesOf(BillingClient.ProductType.INAPP, onError) { oneTime ->
                     val ownedOneTime = oneTime.filter { LIFETIME_PRODUCT in it.products }
+                    val ownedFamily = subscriptions.filter { FAMILY_PRODUCT in it.products }
                     val ownedSubscriptions = subscriptions.filter { SUBSCRIPTION_PRODUCT in it.products }
-                    (ownedOneTime + ownedSubscriptions).forEach(::acknowledge)
+                    (ownedOneTime + ownedFamily + ownedSubscriptions).forEach(::acknowledge)
                     val plan = when {
+                        ownedFamily.isNotEmpty() -> "family"
                         ownedOneTime.isNotEmpty() -> "lifetime"
                         ownedSubscriptions.isNotEmpty() -> "subscription"
                         else -> JSONObject.NULL
@@ -166,7 +168,13 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
         }
         val productType = if (isLifetime) BillingClient.ProductType.INAPP else BillingClient.ProductType.SUBS
         val product = QueryProductDetailsParams.Product.newBuilder()
-            .setProductId(if (isLifetime) LIFETIME_PRODUCT else SUBSCRIPTION_PRODUCT)
+            .setProductId(
+                when (plan) {
+                    "lifetime" -> LIFETIME_PRODUCT
+                    "family" -> FAMILY_PRODUCT
+                    else -> SUBSCRIPTION_PRODUCT
+                },
+            )
             .setProductType(productType)
             .build()
         withBilling({ replyError(id) }) {
@@ -238,8 +246,9 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
     companion object {
         const val NATIVE_APP = "akhiStore"
 
-        // One subscription with monthly, yearly, and family base plans, as set up in the Play Console
+        // As set up in the Play Console. Family is its own product because a purchase doesn't say its base plan.
         private const val SUBSCRIPTION_PRODUCT = "akhi_premium"
+        private const val FAMILY_PRODUCT = "akhi_family"
         private const val LIFETIME_PRODUCT = "akhi_premium_lifetime"
     }
 }

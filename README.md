@@ -28,7 +28,8 @@ lists, and video codecs from Mozilla, Cisco and Google. A Premium license key is
 - **Ad, tracker and malware blocking (on by default):** [uBlock Origin](https://github.com/gorhill/uBlock) is
   installed from addons.mozilla.org and kept on while ad blocking is on, with a built-in blocker of ad, tracker and
   malware domains underneath it (from the first page, and the empty ad slots it leaves are hidden). On a site that
-  refuses ad blockers, its ads are let through, with a button to block them again.
+  refuses ad blockers, its ads are let through, with a button to block them again. Known phishing and scam sites
+  are blocked with the same switch, with a button to continue anyway.
 - **No music:** removes background music from videos and keeps the voices
   ([NoMusic](https://github.com/mohamedsadiqaguenaou/NoMusic): FastEnhancer, then RNNoise). The Lite model on phones
   and slow computers. (slightly re-written to work on lightweight devices)
@@ -53,13 +54,23 @@ lists, and video codecs from Mozilla, Cisco and Google. A Premium license key is
 
 ## Premium
 
-Premium adds these, each off until you turn it on:
+Premium is for you, Family Premium for parents. Each feature is off until you turn it on.
+
+**Premium** (monthly, yearly or lifetime, up to 3 devices):
 
 - **Recognize hijab:** shows a woman who is covered instead of blurring every woman.
 - **Choose who to blur:** women, men, or both. A woman is blurred when her hair or body shows (her face and hands may);
   a man from the navel to the knees. A person whose gender is unclear can be judged as a woman, an optional setting.
-- **Parental PIN:** locks the protections so they can't be turned off. An active Premium license is needed to set a PIN,
-  but a PIN that's already set keeps working without Premium.
+- **Strict mode:** every image and video stays blurred until tapped, on all sites or chosen ones.
+- **Prayer pause:** social media, video and game sites (or all sites) pause for a few minutes after each prayer time.
+- **YouTube clean mode:** no recommendations, end screens, autoplay or Shorts.
+- **Hide comments** on YouTube, Reddit, TikTok and news sites.
+- **Profanity masking** in the text of pages.
+
+**Family Premium** (yearly, up to 10 devices): everything in Premium, plus the parent controls:
+
+- **Parental PIN:** locks the protections so they can't be turned off. Family Premium is needed to set a PIN, but a PIN
+  that's already set keeps working without it.
 - **Block chosen sites**
 - **Allow only approved sites**
 - **Time limits,** including a daily limit, bedtime and school hours
@@ -67,13 +78,17 @@ Premium adds these, each off until you turn it on:
 - **Activity summary** of blocked pages, without their addresses
 - **Feed limit:** hides short-video feeds and stops social websites after a chosen number of minutes a day, with a calm
   stop screen. It works on websites in AkhiBrowser, not in social-media apps.
+- **Pause the internet** now, for a set time or until undone, with the PIN.
+- **Settings backup:** the parent controls in a file locked with the PIN, to set up another device.
+
+Until version 1.2.1 the parent controls were in every Premium plan: a Premium or Lifetime license active when 1.2.1 is
+first installed keeps them.
 
 The parent controls and the feed limit keep their data on the device.
 
 ![AkhiBrowser Premium settings](https://akhibrowser.com/assets/premium.png)
 
-Premium is a monthly, yearly or lifetime purchase: through Google Play in a Play build, or directly through Stripe with
-a license key and no account. A license works on up to three devices at a time.
+Premium is bought through Google Play in a Play build, or directly through Stripe with a license key and no account.
 
 The free protections are on by default. Each can be turned off in the AkhiBrowser shield of the toolbar (on Android:
 menu, **Extensions**, **AkhiBrowser**). Premium controls for choosing who to blur are in the same settings. A parental
@@ -199,10 +214,17 @@ and tools, not the code itself.
 For Android TV, see [TV Akhi](https://github.com/halgurdh/tv-akhi), with the same no music and content filters.
 
 # Debug
-obj-akhi-desktop-debug/dist/bin/firefox.exe -no-remote -profile obj-akhi-desktop-debug/tmp/profile-debug
+$env:MOZCONFIG = "browser/branding/akhi/mozconfigs/akhi-desktop"; ./mach build
+$env:MOZCONFIG = "browser/branding/akhi/mozconfigs/akhi-desktop"; ./mach run
+//$env:MOZCONFIG = "browser/branding/akhi/mozconfigs/akhi-desktop"; ./mach package
+
+$env:MOZCONFIG="browser/branding/akhi/mozconfigs/akhi-desktop-debug"; ./mach build faster; if ($?) { ./mach run --app "J:\Projects\akhiBrowser\obj-akhi-desktop-debug\dist\bin\firefox.exe" --setpref extensions.akhi.debugPremium=false --setpref extensions.akhi.debugPremiumFamily=false }
+
+$env:MOZCONFIG="browser/branding/akhi/mozconfigs/akhi-desktop-debug"; ./mach build faster; if ($?) { ./mach run --app "J:\Projects\akhiBrowser\obj-akhi-desktop-debug\dist\bin\firefox.exe" --setpref extensions.akhi.debugPremium=true --setpref extensions.akhi.debugPremiumFamily=false }
+
+$env:MOZCONFIG="browser/branding/akhi/mozconfigs/akhi-desktop-debug"; ./mach build faster; if ($?) { ./mach run --app "J:\Projects\akhiBrowser\obj-akhi-desktop-debug\dist\bin\firefox.exe" --setpref extensions.akhi.debugPremium=true --setpref extensions.akhi.debugPremiumFamily=true }
 
 # Markdown files:
-
 README: https://github.com/halgurdh/akhiBrowser/blob/f4f1669a453a/README.md
 Privacy (browser and extension): https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md
 Source and license (MPL): https://github.com/halgurdh/akhiBrowser/blob/f4f1669a453a/SOURCE.md

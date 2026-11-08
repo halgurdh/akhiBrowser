@@ -16,7 +16,6 @@ import mozilla.components.browser.state.search.RegionState
 import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.feature.ipprotection.storage.IPProtectionEligibilityStorage
 import mozilla.components.feature.ipprotection.store.state.EligibilityStatus
-import org.mozilla.fenix.nimbus.FxNimbus
 import org.mozilla.fenix.settings.registerOnSharedPreferenceChangeListener
 
 /**
@@ -40,17 +39,9 @@ class FenixIPProtectionEligibilityStorage(
         combine(
                 browserStore.stateFlow.map { it.search.region },
                 secretEnabled,
-            ) { region, secretOverride ->
-                val nimbus = FxNimbus.features.ipProtection.value()
-                val status =
-                    when {
-                        secretOverride -> EligibilityStatus.Eligible
-                        !nimbus.enabled -> EligibilityStatus.Ineligible
-                        region == null -> EligibilityStatus.Unknown
-                        region.home in nimbus.allowedRegions -> EligibilityStatus.Eligible
-                        else -> EligibilityStatus.UnsupportedRegion
-                    }
-                status
+            ) { _, secretOverride ->
+                // AkhiBrowser: no Mozilla VPN, it isn't AkhiBrowser's service; only the secret setting shows it
+                if (secretOverride) EligibilityStatus.Eligible else EligibilityStatus.Ineligible
             }
             .distinctUntilChanged()
 

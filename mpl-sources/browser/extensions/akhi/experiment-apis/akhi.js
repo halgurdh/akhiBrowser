@@ -16,6 +16,8 @@ ChromeUtils.defineESModuleGetters(lazy, {
 });
 
 const PRIVATE_ALLOWED_PERMISSION = "internal:privateBrowsingAllowed";
+const HARDWARE_VIDEO_PREFS = ["media.hardware-video-decoding.enabled", "media.ffvpx-hw.enabled"];
+const HOME_PAGE_PREF = "browser.startup.homepage";
 
 // next to the profiles, not in one: it stays when the browser is installed again and gets a new profile
 function donatedNotePath() {
@@ -59,9 +61,51 @@ this.akhi = class extends ExtensionAPI {
           Services.prefs.setBoolPref(`${prefBranch}${name}`, value);
         },
 
+        // Android: a video decoded by the graphics chip reads as black in a page (canvas, VideoFrame), the image check
+        // can't see it and it stays blurred. Decoded by the processor while videos are checked.
+        async setReadableVideos(readable) {
+          if (lazy.AppConstants.platform !== "android") {
+            return;
+          }
+          for (const name of HARDWARE_VIDEO_PREFS) {
+            if (readable) {
+              Services.prefs.setBoolPref(name, false);
+            } else {
+              Services.prefs.clearUserPref(name);
+            }
+          }
+        },
+
         // like choosing "Strict" in the privacy settings: all its prefs follow (ContentBlockingPrefs, desktop)
         async setStrictTrackingProtection() {
           Services.prefs.setStringPref("browser.contentblocking.category", "strict");
+        },
+
+        // The page of new tabs and the home page, like chrome_url_overrides.newtab and chrome_settings_overrides,
+        // without their "keep or disable the add-on" doorhangers, which would disable AkhiBrowser's own extension.
+        // A home page the user chose is kept. Desktop only; null brings Firefox's pages back.
+        async setStartPage(url) {
+          if (lazy.AppConstants.platform === "android") {
+            return;
+          }
+          const { AboutNewTab } = ChromeUtils.importESModule(
+            "resource:///modules/AboutNewTab.sys.mjs"
+          );
+          const homePage = Services.prefs.getStringPref(HOME_PAGE_PREF, "");
+          const isOurs = homePage.startsWith(context.extension.baseURI.spec);
+          if (url) {
+            AboutNewTab.newTabURL = url;
+            if (isOurs || !Services.prefs.prefHasUserValue(HOME_PAGE_PREF)) {
+              Services.prefs.setStringPref(HOME_PAGE_PREF, url);
+            }
+          } else {
+            if (AboutNewTab.newTabURLOverridden) {
+              AboutNewTab.resetNewTabURL();
+            }
+            if (isOurs) {
+              Services.prefs.clearUserPref(HOME_PAGE_PREF);
+            }
+          }
         },
 
         // SessionStore is desktop only

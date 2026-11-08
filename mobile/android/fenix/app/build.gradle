@@ -401,7 +401,11 @@ abstract class SyncAkhiExtension extends DefaultTask {
             fs.copy { spec ->
                 spec.from(premiumSource)
                 spec.into(outputDir.get().dir("extensions/akhi"))
-                spec.include "content/feeds.js", "lib/family.js", "lib/premium.js", "lib/premium_image_classifier.js",
+                spec.include "content/feeds.js", "content/yt_clean.js", "content/yt_clean.css",
+                    "content/hide_comments.js", "content/hide_comments.css",
+                    "content/profanity_mask.js", "content/strict_mode.js", "lib/family_controls.js",
+                    "lib/family.js", "lib/premium.js", "lib/prayer_pause.js", "lib/premium_image_classifier.js",
+                    "pages/family_backup.js", "pages/family_pause.*", "pages/family_tools.js",
                     "pages/settings_premium.js", "faces/**", "gender/**", "body/**"
                 spec.eachFile { file ->
                     if (file.path == "lib/premium_image_classifier.js") {
@@ -422,9 +426,28 @@ def syncAkhiExtension = tasks.register("syncAkhiExtension", SyncAkhiExtension) {
     }
 }
 
+// The debug app only: test_family.json next to the extension turns on Family Premium for testing (background.js
+// isTestFamilyApp). Never in a release or Play build.
+abstract class AkhiTestFamilyMarker extends DefaultTask {
+    @OutputDirectory
+    abstract DirectoryProperty getOutputDir()
+
+    @TaskAction
+    void write() {
+        def marker = outputDir.get().file("extensions/akhi/test_family.json").asFile
+        marker.parentFile.mkdirs()
+        marker.text = '{"testFamilyPremium": true}\n'
+    }
+}
+
+def akhiTestFamilyMarker = tasks.register("akhiTestFamilyMarker", AkhiTestFamilyMarker)
+
 androidComponents {
     onVariants(selector().all()) { variant ->
         variant.sources.assets.addGeneratedSourceDirectory(syncAkhiExtension) { it.outputDir }
+    }
+    onVariants(selector().withBuildType("debug")) { variant ->
+        variant.sources.assets.addGeneratedSourceDirectory(akhiTestFamilyMarker) { it.outputDir }
     }
     if (akhiPlayStore) {
         onVariants(selector().withBuildType("release")) { variant ->

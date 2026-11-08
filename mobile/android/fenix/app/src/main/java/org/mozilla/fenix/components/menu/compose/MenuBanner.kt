@@ -43,7 +43,8 @@ fun MenuBanner(
         title = AcornText.String(stringResource(id = R.string.browser_menu_default_banner_title, appName)),
         summary =
             MenuItemSummary(text = AcornText.Resource(R.string.browser_menu_default_banner_subtitle_2), maxLines = 3),
-        icon = MenuItemIconRes(R.drawable.firefox_as_default_banner_illustration),
+        // AkhiBrowser: its shield instead of Firefox's fox
+        icon = MenuItemIconRes(R.drawable.ic_wordmark_logo),
         onDismiss = onDismiss,
         onClick = onClick,
         modifier = modifier,

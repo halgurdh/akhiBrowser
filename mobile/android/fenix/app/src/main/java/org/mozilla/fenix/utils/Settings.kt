@@ -2871,7 +2871,8 @@ class Settings(
     var shakeToSummarizeFeatureFlagEnabled by
         booleanPreference(
             key = appContext.getPreferenceKey(R.string.pref_key_enable_shake_to_summarize),
-            default = { FxNimbus.features.shakeToSummarize.value().enabled },
+            // AkhiBrowser: no AI page summaries, the page would be sent to an AI service
+            default = { false },
         )
 
     /**
