@@ -1,6 +1,5 @@
-# Crash reports are de-obfuscated with the R8 mapping, which needs the line numbers.
--keepattributes SourceFile,LineNumberTable
--renamesourcefileattribute SourceFile
+# The navigation graph and others find classes by name, so obfuscating them crashes the app at startup.
+-dontobfuscate
 
 ####################################################################################################
 # JNA: the Rust bindings look up native symbols and struct fields by their Java names
