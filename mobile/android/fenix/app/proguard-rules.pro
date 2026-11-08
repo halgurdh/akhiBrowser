@@ -1,4 +1,13 @@
--dontobfuscate
+# Crash reports are de-obfuscated with the R8 mapping, which needs the line numbers.
+-keepattributes SourceFile,LineNumberTable
+-renamesourcefileattribute SourceFile
+
+####################################################################################################
+# JNA: the Rust bindings look up native symbols and struct fields by their Java names
+####################################################################################################
+
+-keep class com.sun.jna.** { *; }
+-keep class * implements com.sun.jna.** { *; }
 
 ####################################################################################################
 # GeckoView built-ins
