@@ -515,7 +515,7 @@ void ProfilerChild::JoinGatherProfileThread() {
   mGatherProfileThread = nullptr;
 }
 
-void ProfilerChild::ActorDestroy(ActorDestroyReason aActorDestroyReason) {
+void ProfilerChild::ActorDestroy(ActorDestroyReason /*aActorDestroyReason*/) {
   mDestroyed = true;
   if (mAwaitNextChunkManagerUpdateResolver) {
     // The reply can't be sent anymore (IPC rejects the parent's request);

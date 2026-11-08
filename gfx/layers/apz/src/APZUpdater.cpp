@@ -365,7 +365,7 @@ const WebRenderScrollData* APZUpdater::GetScrollData(LayersId aLayersId) const {
 
 void APZUpdater::AssertOnUpdaterThread() const {
   if (APZThreadUtils::GetThreadAssertionsEnabled()) {
-    MOZ_RELEASE_ASSERT(IsUpdaterThread());
+    MOZ_ASSERT(IsUpdaterThread());
   }
 }
 
@@ -415,7 +415,7 @@ void APZUpdater::RunOnUpdaterThread(LayersId aLayersId,
           }
         }
       }
-      mUpdaterQueue.push_back(QueuedTask{aLayersId, task});
+      mUpdaterQueue.push_back(QueuedTask{aLayersId, task, aDuringShutdown});
     }
     if (sendWakeMessage) {
       RefPtr<wr::WebRenderAPI> api = mApz->GetWebRenderAPI();
@@ -529,7 +529,8 @@ void APZUpdater::ProcessQueue() {
     // might result in tasks getting executed out of order.
 
     auto it = mEpochData.find(task.mLayersId);
-    if (it != mEpochData.end() && it->second.IsBlocked()) {
+    if (task.mDuringShutdown == DuringShutdown::No && it != mEpochData.end() &&
+        it->second.IsBlocked()) {
       // If this task is blocked, put it into the blockedTasks queue that
       // we will replace mUpdaterQueue with
       blockedTasks.push_back(task);
@@ -546,7 +547,9 @@ void APZUpdater::ProcessQueue() {
     // if the tasks were queued after the root pipeline was removed in
     // WebRender, which prevents scene builds (and therefore prevents us
     // from getting updated epochs via CompleteSceneSwap). See bug 1465658
-    // comment 43 for some more context.
+    // comment 43 for some more context. There might also be tasks for the
+    // root layers id that were queued before ClearTree, which runs ahead of
+    // them if the root's last epoch was never built.
     // To avoid leaking these tasks, we discard the contents of the queue.
     // This happens during window shutdown so if we don't run the tasks it's
     // not going to matter much.

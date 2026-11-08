@@ -45,6 +45,7 @@ def test_gradlew_uploads_build_metrics(config, monkeypatch):
         "run": {
             "using": "gradlew",
             "gradlew": ["clean", "assembleDebug"],
+            "workdir": "/builds/worker",
         },
         "worker": {"implementation": "docker-worker"},
     }
@@ -55,6 +56,8 @@ def test_gradlew_uploads_build_metrics(config, monkeypatch):
     worker = taskdesc["worker"]
     assert worker["env"]["GRADLEW_ARGS"] == "clean assembleDebug"
     assert worker["env"]["BUILD_METRICS_DIR"] == job.BUILD_METRICS_DIR
+    assert worker["env"]["GRADLE_FLAGS"] == "--offline --daemon"
+    assert worker["env"]["GRADLE_USER_HOME"] == "/builds/worker/gradle-user-home"
     assert {
         "type": "directory",
         "name": "public/build/build-metrics",
@@ -91,7 +94,11 @@ def test_gradlew_geckoview_dependency(config, monkeypatch, kind, mozconfig, arch
         config, kind_dependencies_tasks={"geckoview": geckoview}
     )
     task = {
-        "run": {"using": "gradlew", "gradlew": ["assembleDebug"]},
+        "run": {
+            "using": "gradlew",
+            "gradlew": ["assembleDebug"],
+            "workdir": "/builds/worker",
+        },
         "worker": {"implementation": "docker-worker"},
     }
     taskdesc = {"dependencies": {"geckoview": "geckoview"}}

@@ -5,6 +5,7 @@ VOLUME /builds/worker/.task-cache/npm
 VOLUME /builds/worker/.task-cache/pip
 VOLUME /builds/worker/.task-cache/uv
 VOLUME /builds/worker/checkouts
+VOLUME /builds/worker/gradle-user-home
 
 # We do want to install recommended packages.
 RUN sed -i /APT::Install-Recommends/d /etc/apt/apt.conf.d/99taskcluster

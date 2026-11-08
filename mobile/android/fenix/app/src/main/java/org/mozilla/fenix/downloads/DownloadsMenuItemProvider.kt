@@ -40,20 +40,22 @@ class DownloadsMenuItemProvider(
     private val target: MenuTarget,
     scope: CoroutineScope,
 ) : MenuItemProvider {
-    override val itemFlow: StateFlow<MenuItem?> =
+    override val itemsFlow: StateFlow<List<MenuItem>> =
         if (target == MenuTarget.CustomizeMenu) {
-            MutableStateFlow(DEFAULT_MENU_ITEM).asStateFlow()
+            MutableStateFlow(listOf(DEFAULT_MENU_ITEM)).asStateFlow()
         } else {
             appStore.stateFlow
                 .map { it.supportedMenuNotifications.contains(SupportedMenuNotifications.Downloads) }
                 .distinctUntilChanged()
-                .map { isHighlighted -> createMenuItem(isHighlighted) }
+                .map { isHighlighted -> listOf(createMenuItem(isHighlighted)) }
                 .stateIn(
                     scope = scope,
                     started = SharingStarted.Eagerly,
                     initialValue =
-                        createMenuItem(
-                            appStore.state.supportedMenuNotifications.contains(SupportedMenuNotifications.Downloads)
+                        listOf(
+                            createMenuItem(
+                                appStore.state.supportedMenuNotifications.contains(SupportedMenuNotifications.Downloads)
+                            )
                         ),
                 )
         }

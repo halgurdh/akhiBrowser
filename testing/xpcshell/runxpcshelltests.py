@@ -1667,11 +1667,6 @@ class XPCShellTests:
         if os.getenv("MOZ_FETCHES_DIR", None):
             self.env["MOZ_FETCHES_DIR"] = os.getenv("MOZ_FETCHES_DIR", None)
 
-        if self.mozInfo.get("socketprocess_networking"):
-            self.env["MOZ_FORCE_USE_SOCKET_PROCESS"] = "1"
-        else:
-            self.env["MOZ_DISABLE_SOCKET_PROCESS"] = "1"
-
         # Self-tests run many sub-processes whose tests fail on purpose, so
         # profiling them only wastes overhead and uploads useless artifacts.
         # Strip any startup-profiling request inherited from the environment
@@ -1951,10 +1946,6 @@ class XPCShellTests:
         self.mozInfo["sessionHistoryInParent"] = True
 
         self.mozInfo["verify"] = options.get("verify", False)
-
-        self.mozInfo["socketprocess_networking"] = prefs.get(
-            "network.http.network_access_on_socket_process.enabled", False
-        )
 
         self.mozInfo["inc_origin_init"] = (
             os.environ.get("MOZ_ENABLE_INC_ORIGIN_INIT") == "1"
@@ -2565,6 +2556,9 @@ class XPCShellTests:
             # in hopes of finding intermittent failures.
             #
 
+            # A retry would hide the intermittent failures we are looking for.
+            kwargs["retry"] = False
+
             def step1():
                 # Run tests sequentially. Parallel mode would also work, except that
                 # the logging system gets confused when 2 or more tests with the same
@@ -2572,9 +2566,7 @@ class XPCShellTests:
                 sequential_tests = []
                 for i in range(VERIFY_REPEAT):
                     self.testCount += 1
-                    test = testClass(
-                        test_object, retry=False, mobileArgs=mobileArgs, **kwargs
-                    )
+                    test = testClass(test_object, mobileArgs=mobileArgs, **kwargs)
                     sequential_tests.append(test)
                 status = self.runTestList(
                     tests_queue, sequential_tests, testClass, mobileArgs, **kwargs
@@ -2594,9 +2586,7 @@ class XPCShellTests:
                 kwargs["harness_timeout"] = self.harness_timeout * 2
                 for i in range(VERIFY_REPEAT):
                     self.testCount += 1
-                    test = testClass(
-                        test_object, retry=False, mobileArgs=mobileArgs, **kwargs
-                    )
+                    test = testClass(test_object, mobileArgs=mobileArgs, **kwargs)
                     sequential_tests.append(test)
                 status = self.runTestList(
                     tests_queue, sequential_tests, testClass, mobileArgs, **kwargs

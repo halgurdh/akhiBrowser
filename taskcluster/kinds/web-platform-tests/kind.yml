@@ -388,7 +388,6 @@ tasks:
         chunks: dynamic
         default-chunks: 1
         max-run-time: 7200
-        # Runs in socket-process mode by default, no need for spi variants.
         # We don't *really* need to be running these in nofis either.
         # We do some things differently in private browsing mode though.
         # Running with a real OpenH264 plugin reflects release best.

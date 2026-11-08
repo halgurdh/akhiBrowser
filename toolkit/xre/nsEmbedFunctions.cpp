@@ -81,7 +81,6 @@
 
 #include "GMPProcessChild.h"
 #include "mozilla/gfx/GPUProcessImpl.h"
-#include "mozilla/net/SocketProcessImpl.h"
 
 #include "ProfilerControl.h"
 
@@ -470,7 +469,6 @@ nsresult XRE_InitChildProcess(int aArgc, char* aArgv[],
     case GeckoProcessType_IPDLUnitTest:
     case GeckoProcessType_VR:
     case GeckoProcessType_RDD:
-    case GeckoProcessType_Socket:
     case GeckoProcessType_Utility:
       // Content processes need the XPCOM/chromium frankenventloop
       uiLoopType = MessageLoop::TYPE_MOZILLA_CHILD;
@@ -533,12 +531,6 @@ nsresult XRE_InitChildProcess(int aArgc, char* aArgv[],
 
         case GeckoProcessType_RDD:
           process = std::make_unique<RDDProcessImpl>(
-              std::move(*clientChannel), *parentPID, messageChannelId);
-          break;
-
-        case GeckoProcessType_Socket:
-          ioInterposerGuard.Init();
-          process = std::make_unique<net::SocketProcessImpl>(
               std::move(*clientChannel), *parentPID, messageChannelId);
           break;
 

@@ -235,10 +235,12 @@ class JsepSessionImpl : public JsepSession, public JsepSessionCopyableStuff {
       const SdpMediaSection& msection);
   Maybe<JsepTransceiver> GetTransceiverWithTransport(
       const std::string& transportId) const;
+  // A transceiver of any media type will do when |type| is Nothing, which is
+  // how an m= section gets recycled for a transceiver of a different type.
   // The w3c and IETF specs have a lot of "magical" behavior that happens when
   // addTrack is used. This was a deliberate design choice. Sadface.
-  Maybe<JsepTransceiver> FindUnassociatedRtpTransceiver(
-      SdpMediaSection::MediaType type, bool magic);
+  Maybe<JsepTransceiver> FindUnassociatedNonAppTransceiver(
+      Maybe<SdpMediaSection::MediaType> type, bool magic);
   // Called for rollback of local description
   void RollbackLocalOffer();
   // Called for rollback of remote description

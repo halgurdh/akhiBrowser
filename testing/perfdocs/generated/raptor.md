@@ -224,6 +224,23 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-benchmark-firefox-assorted-dom**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -1177,6 +1194,23 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-benchmark-firefox-matrix-react-bench**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -1397,6 +1431,28 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-benchmark-chrome-media-capabilities**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-benchmark-firefox-media-capabilities**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -1478,7 +1534,7 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
 * **fetch path**: motionmark
 * **gecko profile features**: stackwalk,js,java,processcpu,memory
 * **gecko profile interval**: 1
-* **gecko profile threads**: GeckoMain,Compositor,Renderer,SwComposite,RenderBackend,SceneBuilder,WrWorker,CanvasWorkers,TextureUpdate
+* **gecko profile threads**: GeckoMain,Compositor,Renderer,SwComposite,RenderBackend,SceneBuilder,WrWorker,TextureUpdate
 * **host from parent**: false
 * **link searchfox**: {searchfox}`testing/raptor/raptor/tests/benchmarks/motionmark-1-3-desktop.toml#13`
 * **lower is better**: false
@@ -1700,7 +1756,7 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
   - ❌
 * - **browsertime-benchmark-firefox-motionmark-1-3**
   - ✅
-  - ❌
+  - ✅
   - ❌
   - ❌
 :::
@@ -1795,7 +1851,7 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
 * **fetch path**: motionmark
 * **gecko profile features**: stackwalk,js,java,processcpu,memory
 * **gecko profile interval**: 1
-* **gecko profile threads**: GeckoMain,Compositor,Renderer,SwComposite,RenderBackend,SceneBuilder,WrWorker,CanvasWorkers,TextureUpdate
+* **gecko profile threads**: GeckoMain,Compositor,Renderer,SwComposite,RenderBackend,SceneBuilder,WrWorker,TextureUpdate
 * **host from parent**: false
 * **link searchfox**: {searchfox}`testing/raptor/raptor/tests/benchmarks/motionmark-1-3-mobile.toml#12`
 * **lower is better**: false
@@ -2017,7 +2073,7 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
   - ❌
 * - **browsertime-benchmark-firefox-motionmark-1-3**
   - ✅
-  - ❌
+  - ✅
   - ❌
   - ❌
 :::
@@ -2126,7 +2182,7 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
 * **fetch path**: motionmark
 * **gecko profile features**: stackwalk,js,java,processcpu,memory
 * **gecko profile interval**: 1
-* **gecko profile threads**: GeckoMain,Compositor,Renderer,SwComposite,RenderBackend,SceneBuilder,WrWorker,CanvasWorkers,TextureUpdate
+* **gecko profile threads**: GeckoMain,Compositor,Renderer,SwComposite,RenderBackend,SceneBuilder,WrWorker,TextureUpdate
 * **host from parent**: false
 * **link searchfox**: {searchfox}`testing/raptor/raptor/tests/benchmarks/motionmark-1-3-desktop.toml#32`
 * **lower is better**: false
@@ -2348,7 +2404,7 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
   - ❌
 * - **browsertime-benchmark-firefox-motionmark-htmlsuite-1-3**
   - ✅
-  - ❌
+  - ✅
   - ❌
   - ❌
 :::
@@ -2443,7 +2499,7 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
 * **fetch path**: motionmark
 * **gecko profile features**: stackwalk,js,java,processcpu,memory
 * **gecko profile interval**: 1
-* **gecko profile threads**: GeckoMain,Compositor,Renderer,SwComposite,RenderBackend,SceneBuilder,WrWorker,CanvasWorkers,TextureUpdate
+* **gecko profile threads**: GeckoMain,Compositor,Renderer,SwComposite,RenderBackend,SceneBuilder,WrWorker,TextureUpdate
 * **host from parent**: false
 * **link searchfox**: {searchfox}`testing/raptor/raptor/tests/benchmarks/motionmark-1-3-mobile.toml#31`
 * **lower is better**: false
@@ -2665,7 +2721,7 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
   - ❌
 * - **browsertime-benchmark-firefox-motionmark-htmlsuite-1-3**
   - ✅
-  - ❌
+  - ✅
   - ❌
   - ❌
 :::
@@ -5451,6 +5507,23 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-benchmark-firefox-stylebench**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -5684,6 +5757,23 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
 * - **browsertime-benchmark-firefox-twitch-animation**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-benchmark-firefox-twitch-animation**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -5925,23 +6015,6 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
 
 
 :::{list-table} **{ref}`test-macosx1470-64/opt <hardware-mac-mini-r8>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-benchmark-firefox-unity-webgl**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1500-aarch64-nightlyasrelease/opt <hardware-mac-mini-m4>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
 
@@ -6202,23 +6275,6 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
 :::
 
 
-:::{list-table} **{ref}`test-macosx1500-aarch64-nightlyasrelease/opt <hardware-mac-mini-m4>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-benchmark-firefox-unity-webgl**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -6423,6 +6479,23 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
   - mozilla-beta
 * - **browsertime-benchmark-wasm-firefox-wasm-godot**
   - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-benchmark-wasm-firefox-wasm-godot**
+  - ✅
   - ❌
   - ❌
   - ❌
@@ -6635,6 +6708,23 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-benchmark-wasm-firefox-wasm-godot-baseline**
+  - ✅
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -6830,6 +6920,23 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
   - mozilla-beta
 * - **browsertime-benchmark-wasm-firefox-wasm-godot-optimizing**
   - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-benchmark-wasm-firefox-wasm-godot-optimizing**
+  - ✅
   - ❌
   - ❌
   - ❌
@@ -7038,6 +7145,23 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
   - mozilla-beta
 * - **browsertime-benchmark-wasm-firefox-wasm-misc**
   - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-benchmark-wasm-firefox-wasm-misc**
+  - ✅
   - ❌
   - ❌
   - ❌
@@ -7253,6 +7377,23 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-benchmark-wasm-firefox-wasm-misc-baseline**
+  - ✅
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -7451,6 +7592,23 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
   - mozilla-beta
 * - **browsertime-benchmark-wasm-firefox-wasm-misc-optimizing**
   - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-benchmark-wasm-firefox-wasm-misc-optimizing**
+  - ✅
   - ❌
   - ❌
   - ❌
@@ -7662,6 +7820,23 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-benchmark-firefox-webaudio**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -7820,6 +7995,23 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-firefox-youtube-playback-av1-sfr**
+  - ✅
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 ::::
 
 (youtube-playback-h264-1080p30-b)=
@@ -7951,6 +8143,23 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
   - mozilla-beta
 * - **browsertime-power-firefox-youtube-playback-h264-1080p30**
   - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-power-firefox-youtube-playback-h264-1080p30**
+  - ✅
   - ❌
   - ❌
   - ❌
@@ -8139,6 +8348,23 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
   - mozilla-beta
 * - **browsertime-power-firefox-youtube-playback-h264-1080p60**
   - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-power-firefox-youtube-playback-h264-1080p60**
+  - ✅
   - ❌
   - ❌
   - ❌
@@ -8472,6 +8698,23 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-power-firefox-youtube-playback-h264-full-1080p30**
+  - ✅
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -8654,6 +8897,23 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
   - mozilla-beta
 * - **browsertime-power-firefox-youtube-playback-h264-full-1080p60**
   - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-power-firefox-youtube-playback-h264-full-1080p60**
+  - ✅
   - ❌
   - ❌
   - ❌
@@ -8902,6 +9162,23 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
   - mozilla-beta
 * - **browsertime-firefox-youtube-playback-h264-sfr**
   - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-firefox-youtube-playback-h264-sfr**
+  - ✅
   - ❌
   - ❌
   - ❌
@@ -9184,6 +9461,23 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-firefox-youtube-playback-hfr**
+  - ✅
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -9366,6 +9660,23 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
   - mozilla-beta
 * - **browsertime-power-firefox-youtube-playback-v9-1080p30**
   - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-power-firefox-youtube-playback-v9-1080p30**
+  - ✅
   - ❌
   - ❌
   - ❌
@@ -9560,6 +9871,23 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-power-firefox-youtube-playback-v9-1080p60**
+  - ✅
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -9748,6 +10076,23 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-power-firefox-youtube-playback-v9-full-1080p30**
+  - ✅
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -9930,6 +10275,23 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
   - mozilla-beta
 * - **browsertime-power-firefox-youtube-playback-v9-full-1080p60**
   - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-power-firefox-youtube-playback-v9-full-1080p60**
+  - ✅
   - ❌
   - ❌
   - ❌
@@ -10330,6 +10692,23 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-firefox-youtube-playback-vp9-sfr**
+  - ✅
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -10528,6 +10907,23 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
   - mozilla-beta
 * - **browsertime-firefox-youtube-playback-widevine-h264-sfr**
   - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-firefox-youtube-playback-widevine-h264-sfr**
+  - ✅
   - ❌
   - ❌
   - ❌
@@ -10738,6 +11134,23 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-firefox-youtube-playback-widevine-hfr**
+  - ✅
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -10936,6 +11349,23 @@ Standard benchmarks are third-party tests (i.e. Speedometer) that we have integr
   - mozilla-beta
 * - **browsertime-firefox-youtube-playback-widevine-vp9-sfr**
   - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-firefox-youtube-playback-widevine-vp9-sfr**
+  - ✅
   - ❌
   - ❌
   - ❌
@@ -11148,6 +11578,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-indexeddb-firefox-addMab1**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -11349,6 +11796,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-indexeddb-firefox-addMabN**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-indexeddb-firefox-addMabN**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -11560,6 +12024,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-indexeddb-firefox-addMar1**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -11761,6 +12242,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-indexeddb-firefox-addMarN**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-indexeddb-firefox-addMarN**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -11972,6 +12470,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-indexeddb-firefox-addMbl1**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -12173,6 +12688,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-indexeddb-firefox-addMblN**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-indexeddb-firefox-addMblN**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -12384,6 +12916,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-indexeddb-firefox-addkAB1**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -12585,6 +13134,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-indexeddb-firefox-addkABN**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-indexeddb-firefox-addkABN**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -12796,6 +13362,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-indexeddb-firefox-addkAR1**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -12997,6 +13580,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-indexeddb-firefox-addkARN**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-indexeddb-firefox-addkARN**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -13208,6 +13808,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-indexeddb-firefox-addkBL1**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -13409,6 +14026,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-indexeddb-firefox-addkBLN**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-indexeddb-firefox-addkBLN**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -13702,6 +14336,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-doh-busy-site-firefox-busydoh**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-shippable/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -13853,6 +14504,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-speculative-firefox-connect**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-speculative-firefox-connect**
+  - ❌
+  - ✅
   - ❌
   - ❌
 :::
@@ -14156,6 +14824,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-trr-performance-firefox-dns-multi**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -14379,6 +15064,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-trr-performance-firefox-dns-native**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -14575,6 +15277,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-indexeddb-firefox-getkeyrng**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-indexeddb-firefox-getkeyrng**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -14954,6 +15673,78 @@ Browsertime tests that use a custom pageload test script. These use the pageload
   - autoland
   - mozilla-release
   - mozilla-beta
+* - **browsertime-network-bench-firefox-h2-download**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-firefox-h2-download-100M_40ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-firefox-h2-download-10M_40ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-firefox-h2-download-1M_400ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-firefox-h2-download-300M_40ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-firefox-h2-download-300M_80ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-network-bench-custom-car-h2-download**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-custom-car-h2-download-100M_40ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-custom-car-h2-download-10M_40ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-custom-car-h2-download-1M_400ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-custom-car-h2-download-300M_40ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-custom-car-h2-download-300M_80ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
 * - **browsertime-network-bench-firefox-h2-download**
   - ❌
   - ❌
@@ -15524,6 +16315,78 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-network-bench-custom-car-h2-upload**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-custom-car-h2-upload-100M_40ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-custom-car-h2-upload-10M_40ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-custom-car-h2-upload-1M_400ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-custom-car-h2-upload-300M_40ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-custom-car-h2-upload-300M_80ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-firefox-h2-upload**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-firefox-h2-upload-100M_40ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-firefox-h2-upload-10M_40ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-firefox-h2-upload-1M_400ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-firefox-h2-upload-300M_40ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-firefox-h2-upload-300M_80ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -16028,6 +16891,78 @@ Browsertime tests that use a custom pageload test script. These use the pageload
   - autoland
   - mozilla-release
   - mozilla-beta
+* - **browsertime-network-bench-firefox-h3-download**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-firefox-h3-download-100M_40ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-firefox-h3-download-10M_40ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-firefox-h3-download-1M_400ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-firefox-h3-download-300M_40ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-firefox-h3-download-300M_80ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-network-bench-custom-car-h3-download**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-custom-car-h3-download-100M_40ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-custom-car-h3-download-10M_40ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-custom-car-h3-download-1M_400ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-custom-car-h3-download-300M_40ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-custom-car-h3-download-300M_80ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
 * - **browsertime-network-bench-firefox-h3-download**
   - ❌
   - ❌
@@ -16598,6 +17533,78 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-network-bench-custom-car-h3-upload**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-custom-car-h3-upload-100M_40ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-custom-car-h3-upload-10M_40ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-custom-car-h3-upload-1M_400ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-custom-car-h3-upload-300M_40ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-custom-car-h3-upload-300M_80ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-firefox-h3-upload**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-firefox-h3-upload-100M_40ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-firefox-h3-upload-10M_40ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-firefox-h3-upload-1M_400ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-firefox-h3-upload-300M_40ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-network-bench-firefox-h3-upload-300M_80ms-0**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -16958,6 +17965,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-hev3-connection-firefox-he3off-dns**
+  - ✅
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -17177,6 +18201,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
   - mozilla-beta
 * - **browsertime-hev3-connection-firefox-he3off-doh**
   - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-hev3-connection-firefox-he3off-doh**
+  - ✅
   - ❌
   - ❌
   - ❌
@@ -17408,6 +18449,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-hev3-connection-firefox-he3on-dns**
+  - ✅
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -17633,6 +18691,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-hev3-connection-firefox-he3on-doh**
+  - ✅
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -17829,6 +18904,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-indexeddb-firefox-idb-open-few-par**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-indexeddb-firefox-idb-open-few-par**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -18040,6 +19132,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-indexeddb-firefox-idb-open-few-seq**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -18241,6 +19350,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-indexeddb-firefox-idb-open-many-par**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-indexeddb-firefox-idb-open-many-par**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -18452,6 +19578,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-indexeddb-firefox-idb-open-many-seq**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -18653,6 +19796,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-indexeddb-firefox-idbCurNext**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-indexeddb-firefox-idbCurNext**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -18864,6 +20024,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-indexeddb-firefox-idbCurPKey**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -19065,6 +20242,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-indexeddb-firefox-idbCurPrev**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-indexeddb-firefox-idbCurPrev**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -19276,6 +20470,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-media-seek-firefox-media-seek**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-media-seek-chrome-media-seek**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-media-seek-firefox-media-seek**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -19600,6 +20816,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 
 
 :::{list-table} **{ref}`test-macosx1500-aarch64-nightlyasrelease/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-media-playback-firefox-mp-1080p30-h264-sw**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
 
@@ -19961,6 +21194,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-media-playback-chrome-mp-2160p30-h264-hw**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-media-playback-firefox-mp-2160p30-h264-hw**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -20220,6 +21475,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-media-playback-chrome-mp-idle**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-media-playback-firefox-mp-idle**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -20420,6 +21697,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-speculation-rules-firefox-prefetch-conservative**
+  - ❌
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -20610,6 +21904,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-speculation-rules-firefox-prefetch-eager**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-speculation-rules-firefox-prefetch-eager**
+  - ❌
+  - ✅
   - ❌
   - ❌
 :::
@@ -20810,6 +22121,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-speculation-rules-firefox-prefetch-immediate**
+  - ❌
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -21000,6 +22328,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-speculation-rules-firefox-prefetch-list-conservative**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-speculation-rules-firefox-prefetch-list-conservative**
+  - ❌
+  - ✅
   - ❌
   - ❌
 :::
@@ -21200,6 +22545,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-speculation-rules-firefox-prefetch-list-eager**
+  - ❌
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -21390,6 +22752,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-speculation-rules-firefox-prefetch-list-immediate**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-speculation-rules-firefox-prefetch-list-immediate**
+  - ❌
+  - ✅
   - ❌
   - ❌
 :::
@@ -21590,6 +22969,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-speculation-rules-firefox-prefetch-list-inflight**
+  - ❌
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -21780,6 +23176,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-speculation-rules-firefox-prefetch-list-moderate**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-speculation-rules-firefox-prefetch-list-moderate**
+  - ❌
+  - ✅
   - ❌
   - ❌
 :::
@@ -21980,6 +23393,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-speculation-rules-firefox-prefetch-moderate**
+  - ❌
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -22168,6 +23598,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
   - mozilla-beta
 * - **browsertime-custom-firefox-process-switch**
   - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-custom-firefox-process-switch**
+  - ✅
   - ❌
   - ❌
   - ❌
@@ -22403,6 +23850,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-throttled-firefox-throttled**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -22598,6 +24062,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-pageload-benchmark-firefox-tp6-bench**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -22771,6 +24252,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 
 
 :::{list-table} **{ref}`test-macosx1500-aarch64-nightlyasrelease/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-trr-performance-firefox-trr-cira**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
 
@@ -23010,6 +24508,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-trr-performance-firefox-trr-cloudf**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -23183,6 +24698,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 
 
 :::{list-table} **{ref}`test-macosx1500-aarch64-nightlyasrelease/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-trr-performance-firefox-trr-comcas**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
 
@@ -23422,6 +24954,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-trr-performance-firefox-trr-multi**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -23645,6 +25194,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-trr-performance-firefox-trr-next**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -23818,6 +25384,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 
 
 :::{list-table} **{ref}`test-macosx1500-aarch64-nightlyasrelease/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-trr-performance-firefox-trr-w-cira**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
 
@@ -24057,6 +25640,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-trr-performance-firefox-trr-w-clou**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -24230,6 +25830,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 
 
 :::{list-table} **{ref}`test-macosx1500-aarch64-nightlyasrelease/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-trr-performance-firefox-trr-w-comc**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
 
@@ -24469,6 +26086,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-trr-performance-firefox-trr-w-next**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -24661,6 +26295,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-upload-firefox-upload**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-upload-firefox-upload**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -24863,6 +26514,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-upload-firefox-upload-h3**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-upload-firefox-upload-h3**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -25072,6 +26740,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-webcodecs-firefox-ve-av1-q**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-chrome-ve-av1-q**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-webcodecs-firefox-ve-av1-q**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -25293,6 +26983,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-chrome-ve-av1-q-cam**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-webcodecs-firefox-ve-av1-q-cam**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -25507,6 +27219,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-chrome-ve-av1-q-i420**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-webcodecs-firefox-ve-av1-q-i420**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -25716,6 +27450,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-webcodecs-firefox-ve-av1-rt**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-chrome-ve-av1-rt**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-webcodecs-firefox-ve-av1-rt**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -25937,6 +27693,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-chrome-ve-av1-rt-cam**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-webcodecs-firefox-ve-av1-rt-cam**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -26151,6 +27929,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-chrome-ve-av1-rt-i420**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-webcodecs-firefox-ve-av1-rt-i420**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -26299,6 +28099,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-firefox-ve-h264-q**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -26434,6 +28251,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-webcodecs-firefox-ve-h264-q-cam**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-firefox-ve-h264-q-cam**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -26577,6 +28411,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-firefox-ve-h264-q-i420**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -26715,6 +28566,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-webcodecs-firefox-ve-h264-q-sd**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-chrome-ve-h264-q-sd**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-webcodecs-firefox-ve-h264-q-sd**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -26875,6 +28748,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-chrome-ve-h264-q-sd-cam**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-webcodecs-firefox-ve-h264-q-sd-cam**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -27023,6 +28918,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-firefox-ve-h264-rt**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -27158,6 +29070,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-webcodecs-firefox-ve-h264-rt-cam**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-firefox-ve-h264-rt-cam**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -27301,6 +29230,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-firefox-ve-h264-rt-i420**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -27439,6 +29385,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-webcodecs-firefox-ve-h264-rt-sd**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-chrome-ve-h264-rt-sd**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-webcodecs-firefox-ve-h264-rt-sd**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -27594,6 +29562,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-webcodecs-firefox-ve-h264-rt-sd-cam**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-chrome-ve-h264-rt-sd-cam**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-webcodecs-firefox-ve-h264-rt-sd-cam**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -27808,6 +29798,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-webcodecs-firefox-ve-vp8-q**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-chrome-ve-vp8-q**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-webcodecs-firefox-ve-vp8-q**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -28029,6 +30041,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-chrome-ve-vp8-q-cam**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-webcodecs-firefox-ve-vp8-q-cam**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -28243,6 +30277,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-chrome-ve-vp8-q-i420**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-webcodecs-firefox-ve-vp8-q-i420**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -28452,6 +30508,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-webcodecs-firefox-ve-vp8-rt**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-chrome-ve-vp8-rt**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-webcodecs-firefox-ve-vp8-rt**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -28673,6 +30751,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-chrome-ve-vp8-rt-cam**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-webcodecs-firefox-ve-vp8-rt-cam**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -28887,6 +30987,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-chrome-ve-vp8-rt-i420**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-webcodecs-firefox-ve-vp8-rt-i420**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -29096,6 +31218,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-webcodecs-firefox-ve-vp9-q**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-chrome-ve-vp9-q**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-webcodecs-firefox-ve-vp9-q**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -29317,6 +31461,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-chrome-ve-vp9-q-cam**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-webcodecs-firefox-ve-vp9-q-cam**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -29531,6 +31697,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-chrome-ve-vp9-q-i420**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-webcodecs-firefox-ve-vp9-q-i420**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -29740,6 +31928,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-webcodecs-firefox-ve-vp9-rt**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-chrome-ve-vp9-rt**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-webcodecs-firefox-ve-vp9-rt**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -29961,6 +32171,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-chrome-ve-vp9-rt-cam**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-webcodecs-firefox-ve-vp9-rt-cam**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -30170,6 +32402,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-webcodecs-firefox-ve-vp9-rt-i420**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-webcodecs-chrome-ve-vp9-rt-i420**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-webcodecs-firefox-ve-vp9-rt-i420**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -30435,6 +32689,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-video-playback-latency-firefox-vpl-av1**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-video-playback-latency-chrome-vpl-av1**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-video-playback-latency-firefox-vpl-av1**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -30732,6 +33008,45 @@ Browsertime tests that use a custom pageload test script. These use the pageload
   - mozilla-release
   - mozilla-beta
 * - **browsertime-video-playback-latency-firefox-vpl-h264**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-video-playback-latency-chrome-vpl-h264**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-video-playback-latency-firefox-vpl-h264**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx2700-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-video-playback-latency-safari-vpl-h264**
   - ❌
   - ❌
   - ❌
@@ -31038,6 +33353,28 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-video-playback-latency-chrome-vpl-vp9**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-video-playback-latency-firefox-vpl-vp9**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-hw-ref-shippable/opt <hardware-nuc12-windows11-reference>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -31269,6 +33606,23 @@ Browsertime tests that use a custom pageload test script. These use the pageload
 * - **browsertime-first-install-firefox-welcome**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-first-install-firefox-welcome**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -31610,7 +33964,27 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - autoland
   - mozilla-release
   - mozilla-beta
+* - **browsertime-tp6-bytecode-firefox-amazon**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
 * - **browsertime-tp6-essential-firefox-amazon**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+* - **browsertime-tp6-live-firefox-amazon**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-tp6-profiling-firefox-amazon**
+  - ✅
+  - ❌
+  - ❌
+  - ❌
+* - **browsertime-tp6-webextensions-firefox-amazon**
   - ✅
   - ✅
   - ❌
@@ -31948,9 +34322,19 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - autoland
   - mozilla-release
   - mozilla-beta
+* - **browsertime-tp6-bytecode-firefox-bing-search**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
 * - **browsertime-tp6-essential-firefox-bing-search**
   - ✅
   - ✅
+  - ❌
+  - ❌
+* - **browsertime-tp6-live-firefox-bing-search**
+  - ❌
+  - ❌
   - ❌
   - ❌
 :::
@@ -32188,6 +34572,23 @@ Tests for page-load performance. The links direct to the actual websites that ar
 * - **browsertime-tp6-firefox-buzzfeed**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-tp6-firefox-buzzfeed**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -32479,9 +34880,19 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - autoland
   - mozilla-release
   - mozilla-beta
+* - **browsertime-tp6-bytecode-firefox-cnn**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
 * - **browsertime-tp6-essential-firefox-cnn**
   - ✅
   - ✅
+  - ❌
+  - ❌
+* - **browsertime-tp6-live-sheriffed-firefox-cnn**
+  - ❌
+  - ❌
   - ❌
   - ❌
 :::
@@ -32696,6 +35107,23 @@ Tests for page-load performance. The links direct to the actual websites that ar
 
 
 :::{list-table} **{ref}`test-macosx1500-aarch64-nightlyasrelease/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-tp7-firefox-docomo**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
 
@@ -32959,6 +35387,28 @@ Tests for page-load performance. The links direct to the actual websites that ar
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-tp6-firefox-ebay**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+* - **browsertime-tp6-live-firefox-ebay**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -33181,6 +35631,23 @@ Tests for page-load performance. The links direct to the actual websites that ar
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-tp6-firefox-espn**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -33388,6 +35855,23 @@ Tests for page-load performance. The links direct to the actual websites that ar
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-tp6-firefox-expedia**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -33432,263 +35916,6 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-expedia**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-::::
-
-(facebook-d)=
-
-::::{dropdown} facebook
-:class-container: anchor-id-facebook-d
-
-* **Command to Run Locally**
-
-  ```
-  ./mach raptor -t facebook
-  ```
-
-**Owner**: PerfTest Team
-
-* **alert on**: [fcp](raptor-metrics.md#first-paint), [loadtime](raptor-metrics.md#load-time), [ContentfulSpeedIndex](raptor-metrics.md#contentful-speed-index), [PerceptualSpeedIndex](raptor-metrics.md#perceptual-speed-index), [SpeedIndex](raptor-metrics.md#speed-index), [FirstVisualChange](raptor-metrics.md#first-visual-change), [LastVisualChange](raptor-metrics.md#last-visual-change), [largestContentfulPaint](raptor-metrics.md#largest-contentful-paint)
-* **alert threshold**: 2.0
-* **apps**: firefox
-* **benchmark page**: true
-* **browser cycles**: 25
-* **expected**: pass
-* **gecko profile interval**: 1
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#59`
-* **lower is better**: true
-* **page cycles**: 25
-* **page timeout**: 60000
-* **playback**: mitmproxy
-* **playback pageset manifest**: mitm11-windows-firefox-facebook.manifest
-* **playback version**: 12.2.1
-* **secondary url**: <https://www.facebook.com/marketplace/?ref=bookmark>
-* **support class**: browsertime_pageload.py
-* **test url**: <https://www.facebook.com>
-* **type**: pageload
-* **unit**: ms
-* **use live sites**: false
-* **Test Task**:
-
-:::{list-table} **{ref}`test-linux2404-64-clang-trunk/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-facebook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-facebook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64-nightlyasrelease/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-facebook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-facebook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64-shippable/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-facebook**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-facebook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-facebook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-facebook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1470-64-shippable/opt <hardware-mac-mini-r8>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-facebook**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-facebook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1470-64/opt <hardware-mac-mini-r8>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-facebook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-facebook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1500-aarch64-nightlyasrelease/opt <hardware-mac-mini-m4>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-facebook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-facebook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-facebook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-facebook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2-shippable/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-facebook**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-facebook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-facebook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-facebook**
   - ❌
   - ❌
   - ❌
@@ -33718,7 +35945,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
 * **browser cycles**: 25
 * **expected**: pass
 * **gecko profile interval**: 1
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#65`
+* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#59`
 * **lower is better**: true
 * **page cycles**: 25
 * **page timeout**: 60000
@@ -33930,9 +36157,19 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - autoland
   - mozilla-release
   - mozilla-beta
+* - **browsertime-tp6-bytecode-firefox-fandom**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
 * - **browsertime-tp6-essential-firefox-fandom**
   - ✅
   - ✅
+  - ❌
+  - ❌
+* - **browsertime-tp6-live-firefox-fandom**
+  - ❌
+  - ❌
   - ❌
   - ❌
 :::
@@ -34041,7 +36278,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
 * **browser cycles**: 25
 * **expected**: pass
 * **gecko profile interval**: 1
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#70`
+* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#64`
 * **lower is better**: true
 * **page complete wait time**: 8000
 * **page cycles**: 25
@@ -34211,6 +36448,28 @@ Tests for page-load performance. The links direct to the actual websites that ar
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-tp6-firefox-google-docs**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+* - **browsertime-tp6-live-firefox-google-docs**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -34270,262 +36529,6 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - ❌
   - ❌
 * - **browsertime-tp6-live-firefox-google-docs**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-::::
-
-(google-mail-d)=
-
-::::{dropdown} google-mail
-:class-container: anchor-id-google-mail-d
-
-* **Command to Run Locally**
-
-  ```
-  ./mach raptor -t google-mail
-  ```
-
-**Owner**: PerfTest Team
-
-* **alert on**: [fcp](raptor-metrics.md#first-paint), [loadtime](raptor-metrics.md#load-time), [ContentfulSpeedIndex](raptor-metrics.md#contentful-speed-index), [PerceptualSpeedIndex](raptor-metrics.md#perceptual-speed-index), [SpeedIndex](raptor-metrics.md#speed-index), [FirstVisualChange](raptor-metrics.md#first-visual-change), [LastVisualChange](raptor-metrics.md#last-visual-change), [largestContentfulPaint](raptor-metrics.md#largest-contentful-paint)
-* **alert threshold**: 2.0
-* **apps**: firefox
-* **benchmark page**: false
-* **browser cycles**: 25
-* **expected**: pass
-* **gecko profile interval**: 1
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#76`
-* **lower is better**: true
-* **page cycles**: 25
-* **page timeout**: 60000
-* **playback**: mitmproxy
-* **playback pageset manifest**: mitm5-linux-firefox-google-mail.manifest
-* **playback version**: 12.2.1
-* **support class**: browsertime_pageload.py
-* **test url**: <https://mail.google.com/>
-* **type**: pageload
-* **unit**: ms
-* **use live sites**: false
-* **Test Task**:
-
-:::{list-table} **{ref}`test-linux2404-64-clang-trunk/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-google-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-google-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64-nightlyasrelease/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-google-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-google-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64-shippable/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-google-mail**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-google-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-google-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-google-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1470-64-shippable/opt <hardware-mac-mini-r8>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-google-mail**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-google-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1470-64/opt <hardware-mac-mini-r8>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-google-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-google-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1500-aarch64-nightlyasrelease/opt <hardware-mac-mini-m4>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-google-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-google-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-google-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-google-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2-shippable/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-google-mail**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-google-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-google-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-google-mail**
   - ❌
   - ❌
   - ❌
@@ -34555,7 +36558,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
 * **browser cycles**: 25
 * **expected**: pass
 * **gecko profile interval**: 1
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#81`
+* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#70`
 * **lower is better**: true
 * **page cycles**: 25
 * **page timeout**: 60000
@@ -34723,6 +36726,28 @@ Tests for page-load performance. The links direct to the actual websites that ar
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-tp6-firefox-google-search**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+* - **browsertime-tp6-live-firefox-google-search**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -34811,7 +36836,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
 * **browser cycles**: 25
 * **expected**: pass
 * **gecko profile interval**: 1
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#87`
+* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#76`
 * **lower is better**: true
 * **page cycles**: 25
 * **page timeout**: 60000
@@ -35024,9 +37049,19 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - autoland
   - mozilla-release
   - mozilla-beta
+* - **browsertime-tp6-bytecode-firefox-google-slides**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
 * - **browsertime-tp6-essential-firefox-google-slides**
   - ✅
   - ✅
+  - ❌
+  - ❌
+* - **browsertime-tp6-live-firefox-google-slides**
+  - ❌
+  - ❌
   - ❌
   - ❌
 :::
@@ -35135,7 +37170,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
 * **browser cycles**: 25
 * **expected**: pass
 * **gecko profile interval**: 1
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#93`
+* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#82`
 * **lower is better**: true
 * **page cycles**: 25
 * **page timeout**: 60000
@@ -35304,6 +37339,28 @@ Tests for page-load performance. The links direct to the actual websites that ar
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-tp6-firefox-imdb**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+* - **browsertime-tp6-live-firefox-imdb**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -35392,7 +37449,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
 * **browser cycles**: 25
 * **expected**: pass
 * **gecko profile interval**: 1
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#98`
+* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#87`
 * **lower is better**: true
 * **page cycles**: 25
 * **page timeout**: 60000
@@ -35562,298 +37619,6 @@ Tests for page-load performance. The links direct to the actual websites that ar
 :::
 
 
-:::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-imgur**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-imgur**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2-shippable/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-imgur**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-imgur**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-imgur**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-imgur**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-::::
-
-(instagram-d)=
-
-::::{dropdown} instagram
-:class-container: anchor-id-instagram-d
-
-* **Command to Run Locally**
-
-  ```
-  ./mach raptor -t instagram
-  ```
-
-**Owner**: PerfTest Team
-
-* **alert on**: [fcp](raptor-metrics.md#first-paint), [loadtime](raptor-metrics.md#load-time), [ContentfulSpeedIndex](raptor-metrics.md#contentful-speed-index), [PerceptualSpeedIndex](raptor-metrics.md#perceptual-speed-index), [SpeedIndex](raptor-metrics.md#speed-index), [FirstVisualChange](raptor-metrics.md#first-visual-change), [LastVisualChange](raptor-metrics.md#last-visual-change), [largestContentfulPaint](raptor-metrics.md#largest-contentful-paint)
-* **alert threshold**: 2.0
-* **apps**: firefox
-* **benchmark page**: true
-* **browser cycles**: 25
-* **expected**: pass
-* **gecko profile interval**: 1
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#110`
-* **lower is better**: true
-* **page cycles**: 25
-* **page timeout**: 60000
-* **playback**: mitmproxy
-* **playback pageset manifest**: mitm8-darwin-firefox-instagram.manifest
-* **playback version**: 12.2.1
-* **secondary url**: <https://www.instagram.com/nobelprize_org/>
-* **support class**: browsertime_pageload.py
-* **test url**: <https://www.instagram.com/>
-* **type**: pageload
-* **unit**: ms
-* **use live sites**: false
-* **Test Task**:
-
-:::{list-table} **{ref}`test-linux2404-64-clang-trunk/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-bytecode-firefox-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-essential-firefox-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64-nightlyasrelease/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-bytecode-firefox-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-essential-firefox-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64-shippable/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-bytecode-firefox-instagram**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-essential-firefox-instagram**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-bytecode-firefox-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-essential-firefox-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1470-64-shippable/opt <hardware-mac-mini-r8>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-bytecode-firefox-instagram**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-essential-firefox-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1470-64/opt <hardware-mac-mini-r8>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-bytecode-firefox-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-essential-firefox-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1500-aarch64-nightlyasrelease/opt <hardware-mac-mini-m4>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-bytecode-firefox-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-essential-firefox-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
 :::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -35863,279 +37628,12 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - autoland
   - mozilla-release
   - mozilla-beta
-* - **browsertime-tp6-essential-firefox-instagram**
+* - **browsertime-tp6-firefox-imgur**
   - ✅
   - ✅
   - ❌
   - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-bytecode-firefox-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-essential-firefox-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2-shippable/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-bytecode-firefox-instagram**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-essential-firefox-instagram**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-bytecode-firefox-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-essential-firefox-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-::::
-
-(linkedin-d)=
-
-::::{dropdown} linkedin
-:class-container: anchor-id-linkedin-d
-
-* **Command to Run Locally**
-
-  ```
-  ./mach raptor -t linkedin
-  ```
-
-**Owner**: PerfTest Team
-
-* **alert on**: [fcp](raptor-metrics.md#first-paint), [loadtime](raptor-metrics.md#load-time), [ContentfulSpeedIndex](raptor-metrics.md#contentful-speed-index), [PerceptualSpeedIndex](raptor-metrics.md#perceptual-speed-index), [SpeedIndex](raptor-metrics.md#speed-index), [FirstVisualChange](raptor-metrics.md#first-visual-change), [LastVisualChange](raptor-metrics.md#last-visual-change), [largestContentfulPaint](raptor-metrics.md#largest-contentful-paint)
-* **alert threshold**: 2.0
-* **apps**: firefox
-* **benchmark page**: true
-* **browser cycles**: 25
-* **expected**: pass
-* **gecko profile interval**: 1
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#115`
-* **lower is better**: true
-* **page cycles**: 25
-* **page timeout**: 60000
-* **playback**: mitmproxy
-* **playback pageset manifest**: mitm6-linux-firefox-linkedin.manifest
-* **playback version**: 8.1.1
-* **secondary url**: <https://www.linkedin.com/in/thommy-harris-hk-385723106/>
-* **support class**: browsertime_pageload.py
-* **test url**: <https://www.linkedin.com/feed/>
-* **type**: pageload
-* **unit**: ms
-* **use live sites**: false
-* **Test Task**:
-
-:::{list-table} **{ref}`test-linux2404-64-clang-trunk/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-linkedin**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-linkedin**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64-nightlyasrelease/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-linkedin**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-linkedin**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64-shippable/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-linkedin**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-linkedin**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-linkedin**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-linkedin**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1470-64-shippable/opt <hardware-mac-mini-r8>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-linkedin**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-linkedin**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1470-64/opt <hardware-mac-mini-r8>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-linkedin**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-linkedin**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1500-aarch64-nightlyasrelease/opt <hardware-mac-mini-m4>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-linkedin**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-linkedin**
+* - **browsertime-tp6-live-firefox-imgur**
   - ❌
   - ❌
   - ❌
@@ -36152,12 +37650,12 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - autoland
   - mozilla-release
   - mozilla-beta
-* - **browsertime-tp6-firefox-linkedin**
+* - **browsertime-tp6-firefox-imgur**
   - ❌
   - ❌
   - ❌
   - ❌
-* - **browsertime-tp6-live-firefox-linkedin**
+* - **browsertime-tp6-live-firefox-imgur**
   - ❌
   - ❌
   - ❌
@@ -36174,12 +37672,12 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - autoland
   - mozilla-release
   - mozilla-beta
-* - **browsertime-tp6-firefox-linkedin**
+* - **browsertime-tp6-firefox-imgur**
   - ✅
   - ✅
   - ❌
   - ❌
-* - **browsertime-tp6-live-firefox-linkedin**
+* - **browsertime-tp6-live-firefox-imgur**
   - ❌
   - ❌
   - ❌
@@ -36196,12 +37694,12 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - autoland
   - mozilla-release
   - mozilla-beta
-* - **browsertime-tp6-firefox-linkedin**
+* - **browsertime-tp6-firefox-imgur**
   - ❌
   - ❌
   - ❌
   - ❌
-* - **browsertime-tp6-live-firefox-linkedin**
+* - **browsertime-tp6-live-firefox-imgur**
   - ❌
   - ❌
   - ❌
@@ -36231,7 +37729,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
 * **browser cycles**: 25
 * **expected**: pass
 * **gecko profile interval**: 1
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#121`
+* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#99`
 * **lower is better**: true
 * **page cycles**: 25
 * **page timeout**: 60000
@@ -36400,6 +37898,28 @@ Tests for page-load performance. The links direct to the actual websites that ar
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-tp6-firefox-microsoft**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+* - **browsertime-tp6-live-firefox-microsoft**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -36459,470 +37979,6 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - ❌
   - ❌
 * - **browsertime-tp6-live-firefox-microsoft**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-::::
-
-(netflix-d)=
-
-::::{dropdown} netflix
-:class-container: anchor-id-netflix-d
-
-* **Command to Run Locally**
-
-  ```
-  ./mach raptor -t netflix
-  ```
-
-**Owner**: PerfTest Team
-
-* **alert on**: [fcp](raptor-metrics.md#first-paint), [loadtime](raptor-metrics.md#load-time), [ContentfulSpeedIndex](raptor-metrics.md#contentful-speed-index), [PerceptualSpeedIndex](raptor-metrics.md#perceptual-speed-index), [SpeedIndex](raptor-metrics.md#speed-index), [FirstVisualChange](raptor-metrics.md#first-visual-change), [LastVisualChange](raptor-metrics.md#last-visual-change), [largestContentfulPaint](raptor-metrics.md#largest-contentful-paint)
-* **alert threshold**: 2.0
-* **apps**: firefox
-* **benchmark page**: true
-* **browser cycles**: 25
-* **expected**: pass
-* **gecko profile interval**: 1
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#126`
-* **lower is better**: true
-* **page cycles**: 25
-* **page timeout**: 60000
-* **playback**: mitmproxy
-* **playback pageset manifest**: mitm6-linux-firefox-netflix.manifest
-* **playback version**: 8.1.1
-* **secondary url**: <https://www.netflix.com/title/699257>
-* **support class**: browsertime_pageload.py
-* **test url**: <https://www.netflix.com/title/80117263>
-* **type**: pageload
-* **unit**: ms
-* **use live sites**: false
-* **Test Task**:
-
-:::{list-table} **{ref}`test-linux2404-64-clang-trunk/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-netflix**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-netflix**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64-nightlyasrelease/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-netflix**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-netflix**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64-shippable/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-netflix**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-netflix**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-netflix**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-netflix**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1470-64-shippable/opt <hardware-mac-mini-r8>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-netflix**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-netflix**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1470-64/opt <hardware-mac-mini-r8>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-netflix**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-netflix**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1500-aarch64-nightlyasrelease/opt <hardware-mac-mini-m4>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-netflix**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-netflix**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-netflix**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-netflix**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2-shippable/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-netflix**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-netflix**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-netflix**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-netflix**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-::::
-
-(office-d)=
-
-::::{dropdown} office
-:class-container: anchor-id-office-d
-
-* **Command to Run Locally**
-
-  ```
-  ./mach raptor -t office
-  ```
-
-**Owner**: PerfTest Team
-
-* **alert on**: [fcp](raptor-metrics.md#first-paint), [loadtime](raptor-metrics.md#load-time), [ContentfulSpeedIndex](raptor-metrics.md#contentful-speed-index), [PerceptualSpeedIndex](raptor-metrics.md#perceptual-speed-index), [SpeedIndex](raptor-metrics.md#speed-index), [FirstVisualChange](raptor-metrics.md#first-visual-change), [LastVisualChange](raptor-metrics.md#last-visual-change), [largestContentfulPaint](raptor-metrics.md#largest-contentful-paint)
-* **alert threshold**: 2.0
-* **apps**: firefox
-* **benchmark page**: true
-* **browser cycles**: 25
-* **expected**: pass
-* **gecko profile interval**: 1
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#132`
-* **lower is better**: true
-* **page cycles**: 25
-* **page timeout**: 60000
-* **playback**: mitmproxy
-* **playback pageset manifest**: mitm7-linux-firefox-office.manifest
-* **playback version**: 12.2.1
-* **secondary url**: <https://www.office.com/>
-* **support class**: browsertime_pageload.py
-* **test url**: <https://www.office.com/launch/powerpoint?auth=1>
-* **type**: pageload
-* **unit**: ms
-* **use live sites**: false
-* **Test Task**:
-
-:::{list-table} **{ref}`test-linux2404-64-clang-trunk/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-office**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64-nightlyasrelease/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-office**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64-shippable/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-office**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-office**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1470-64-shippable/opt <hardware-mac-mini-r8>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-office**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1470-64/opt <hardware-mac-mini-r8>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-office**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1500-aarch64-nightlyasrelease/opt <hardware-mac-mini-m4>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-office**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-office**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2-shippable/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-office**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-office**
   - ❌
   - ❌
   - ❌
@@ -37074,6 +38130,23 @@ Tests for page-load performance. The links direct to the actual websites that ar
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-tp7-firefox-openai**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -37132,775 +38205,6 @@ Tests for page-load performance. The links direct to the actual websites that ar
 
 ::::
 
-(outlook-d)=
-
-::::{dropdown} outlook
-:class-container: anchor-id-outlook-d
-
-* **Command to Run Locally**
-
-  ```
-  ./mach raptor -t outlook
-  ```
-
-**Owner**: PerfTest Team
-
-* **alert on**: [fcp](raptor-metrics.md#first-paint), [loadtime](raptor-metrics.md#load-time), [ContentfulSpeedIndex](raptor-metrics.md#contentful-speed-index), [PerceptualSpeedIndex](raptor-metrics.md#perceptual-speed-index), [SpeedIndex](raptor-metrics.md#speed-index), [FirstVisualChange](raptor-metrics.md#first-visual-change), [LastVisualChange](raptor-metrics.md#last-visual-change), [largestContentfulPaint](raptor-metrics.md#largest-contentful-paint)
-* **alert threshold**: 2.0
-* **apps**: firefox
-* **benchmark page**: true
-* **browser cycles**: 25
-* **expected**: pass
-* **gecko profile interval**: 1
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#136`
-* **lower is better**: true
-* **page cycles**: 25
-* **page timeout**: 60000
-* **playback**: mitmproxy
-* **playback pageset manifest**: mitm5-linux-firefox-live.manifest
-* **playback version**: 12.2.1
-* **support class**: browsertime_pageload.py
-* **test url**: <https://outlook.live.com/mail/inbox>
-* **type**: pageload
-* **unit**: ms
-* **use live sites**: false
-* **Test Task**:
-
-:::{list-table} **{ref}`test-linux2404-64-clang-trunk/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-outlook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-outlook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64-nightlyasrelease/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-outlook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-outlook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64-shippable/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-outlook**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-outlook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-outlook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-outlook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1470-64-shippable/opt <hardware-mac-mini-r8>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-outlook**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-outlook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1470-64/opt <hardware-mac-mini-r8>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-outlook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-outlook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1500-aarch64-nightlyasrelease/opt <hardware-mac-mini-m4>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-outlook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-outlook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-outlook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-outlook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2-shippable/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-outlook**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-outlook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-outlook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-outlook**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-::::
-
-(paypal-d)=
-
-::::{dropdown} paypal
-:class-container: anchor-id-paypal-d
-
-* **Command to Run Locally**
-
-  ```
-  ./mach raptor -t paypal
-  ```
-
-**Owner**: PerfTest Team
-
-* **alert on**: [fcp](raptor-metrics.md#first-paint), [loadtime](raptor-metrics.md#load-time), [ContentfulSpeedIndex](raptor-metrics.md#contentful-speed-index), [PerceptualSpeedIndex](raptor-metrics.md#perceptual-speed-index), [SpeedIndex](raptor-metrics.md#speed-index), [FirstVisualChange](raptor-metrics.md#first-visual-change), [LastVisualChange](raptor-metrics.md#last-visual-change), [largestContentfulPaint](raptor-metrics.md#largest-contentful-paint)
-* **alert threshold**: 2.0
-* **apps**: firefox
-* **benchmark page**: true
-* **browser cycles**: 25
-* **expected**: pass
-* **gecko profile interval**: 1
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#140`
-* **lower is better**: true
-* **page cycles**: 25
-* **page timeout**: 60000
-* **playback**: mitmproxy
-* **playback pageset manifest**: mitm5-linux-firefox-paypal.manifest
-* **playback version**: 12.2.1
-* **support class**: browsertime_pageload.py
-* **test url**: <https://www.paypal.com/myaccount/summary/>
-* **type**: pageload
-* **unit**: ms
-* **use live sites**: false
-* **Test Task**:
-
-:::{list-table} **{ref}`test-linux2404-64-clang-trunk/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-paypal**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-paypal**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64-nightlyasrelease/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-paypal**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-paypal**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64-shippable/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-paypal**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-paypal**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-paypal**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-paypal**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1470-64-shippable/opt <hardware-mac-mini-r8>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-paypal**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-paypal**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1470-64/opt <hardware-mac-mini-r8>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-paypal**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-paypal**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1500-aarch64-nightlyasrelease/opt <hardware-mac-mini-m4>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-paypal**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-paypal**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-paypal**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-paypal**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2-shippable/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-paypal**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-paypal**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-paypal**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-paypal**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-::::
-
-(pinterest-d)=
-
-::::{dropdown} pinterest
-:class-container: anchor-id-pinterest-d
-
-* **Command to Run Locally**
-
-  ```
-  ./mach raptor -t pinterest
-  ```
-
-**Owner**: PerfTest Team
-
-* **alert on**: [fcp](raptor-metrics.md#first-paint), [loadtime](raptor-metrics.md#load-time), [ContentfulSpeedIndex](raptor-metrics.md#contentful-speed-index), [PerceptualSpeedIndex](raptor-metrics.md#perceptual-speed-index), [SpeedIndex](raptor-metrics.md#speed-index), [FirstVisualChange](raptor-metrics.md#first-visual-change), [LastVisualChange](raptor-metrics.md#last-visual-change), [largestContentfulPaint](raptor-metrics.md#largest-contentful-paint)
-* **alert threshold**: 2.0
-* **apps**: firefox
-* **benchmark page**: false
-* **browser cycles**: 25
-* **expected**: pass
-* **gecko profile interval**: 1
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#144`
-* **lower is better**: true
-* **page cycles**: 25
-* **page timeout**: 60000
-* **playback**: mitmproxy
-* **playback pageset manifest**: mitm6-linux-firefox-pinterest.manifest
-* **playback version**: 8.1.1
-* **secondary url**: <https://www.pinterest.com/today/best/halloween-costumes-for-your-furry-friends/75787/>
-* **support class**: browsertime_pageload.py
-* **test url**: <https://pinterest.com/>
-* **type**: pageload
-* **unit**: ms
-* **use live sites**: false
-* **Test Task**:
-
-:::{list-table} **{ref}`test-linux2404-64-clang-trunk/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-pinterest**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-pinterest**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64-nightlyasrelease/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-pinterest**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-pinterest**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64-shippable/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-pinterest**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-pinterest**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-pinterest**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-pinterest**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1470-64-shippable/opt <hardware-mac-mini-r8>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-pinterest**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-pinterest**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1470-64/opt <hardware-mac-mini-r8>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-pinterest**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-pinterest**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1500-aarch64-nightlyasrelease/opt <hardware-mac-mini-m4>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-pinterest**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-pinterest**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-pinterest**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-pinterest**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2-shippable/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-pinterest**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-pinterest**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-pinterest**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-pinterest**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-::::
-
 (reddit-d)=
 
 ::::{dropdown} reddit
@@ -37921,7 +38225,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
 * **browser cycles**: 25
 * **expected**: pass
 * **gecko profile interval**: 1
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#151`
+* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#104`
 * **lower is better**: true
 * **page cycles**: 25
 * **page timeout**: 60000
@@ -38080,6 +38384,28 @@ Tests for page-load performance. The links direct to the actual websites that ar
 * - **browsertime-tp6-firefox-reddit**
   - ❌
   - ❌
+  - ❌
+  - ❌
+* - **browsertime-tp6-live-firefox-reddit**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-tp6-firefox-reddit**
+  - ✅
+  - ✅
   - ❌
   - ❌
 * - **browsertime-tp6-live-firefox-reddit**
@@ -38300,6 +38626,23 @@ Tests for page-load performance. The links direct to the actual websites that ar
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-tp7-firefox-samsung**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -38500,6 +38843,23 @@ Tests for page-load performance. The links direct to the actual websites that ar
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-tp7-firefox-tiktok**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -38558,263 +38918,6 @@ Tests for page-load performance. The links direct to the actual websites that ar
 
 ::::
 
-(tumblr-d)=
-
-::::{dropdown} tumblr
-:class-container: anchor-id-tumblr-d
-
-* **Command to Run Locally**
-
-  ```
-  ./mach raptor -t tumblr
-  ```
-
-**Owner**: PerfTest Team
-
-* **alert on**: [fcp](raptor-metrics.md#first-paint), [loadtime](raptor-metrics.md#load-time), [ContentfulSpeedIndex](raptor-metrics.md#contentful-speed-index), [PerceptualSpeedIndex](raptor-metrics.md#perceptual-speed-index), [SpeedIndex](raptor-metrics.md#speed-index), [FirstVisualChange](raptor-metrics.md#first-visual-change), [LastVisualChange](raptor-metrics.md#last-visual-change), [largestContentfulPaint](raptor-metrics.md#largest-contentful-paint)
-* **alert threshold**: 2.0
-* **apps**: firefox
-* **benchmark page**: true
-* **browser cycles**: 25
-* **expected**: pass
-* **gecko profile interval**: 1
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#157`
-* **lower is better**: true
-* **page cycles**: 25
-* **page timeout**: 60000
-* **playback**: mitmproxy
-* **playback pageset manifest**: mitm6-linux-firefox-tumblr.manifest
-* **playback version**: 8.1.1
-* **secondary url**: <https://www.tumblr.com/tagged/funny+cats?sort=top>
-* **support class**: browsertime_pageload.py
-* **test url**: <https://www.tumblr.com/dashboard>
-* **type**: pageload
-* **unit**: ms
-* **use live sites**: false
-* **Test Task**:
-
-:::{list-table} **{ref}`test-linux2404-64-clang-trunk/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-tumblr**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-tumblr**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64-nightlyasrelease/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-tumblr**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-tumblr**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64-shippable/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-tumblr**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-tumblr**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-tumblr**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-tumblr**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1470-64-shippable/opt <hardware-mac-mini-r8>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-tumblr**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-tumblr**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1470-64/opt <hardware-mac-mini-r8>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-tumblr**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-tumblr**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1500-aarch64-nightlyasrelease/opt <hardware-mac-mini-m4>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-tumblr**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-tumblr**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-tumblr**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-tumblr**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2-shippable/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-tumblr**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-tumblr**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-firefox-tumblr**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-tumblr**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-::::
-
 (twitter-d)=
 
 ::::{dropdown} twitter
@@ -38835,7 +38938,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
 * **browser cycles**: 25
 * **expected**: pass
 * **gecko profile interval**: 1
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#163`
+* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#110`
 * **lower is better**: true
 * **page cycles**: 25
 * **page timeout**: 60000
@@ -39047,9 +39150,19 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - autoland
   - mozilla-release
   - mozilla-beta
+* - **browsertime-tp6-bytecode-firefox-twitter**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
 * - **browsertime-tp6-essential-firefox-twitter**
   - ✅
   - ✅
+  - ❌
+  - ❌
+* - **browsertime-tp6-live-firefox-twitter**
+  - ❌
+  - ❌
   - ❌
   - ❌
 :::
@@ -39280,6 +39393,23 @@ Tests for page-load performance. The links direct to the actual websites that ar
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-tp7-firefox-weather**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -39358,7 +39488,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
 * **browser cycles**: 25
 * **expected**: pass
 * **gecko profile interval**: 1
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#168`
+* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#115`
 * **lower is better**: true
 * **page cycles**: 25
 * **page timeout**: 60000
@@ -39492,6 +39622,23 @@ Tests for page-load performance. The links direct to the actual websites that ar
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-tp6-firefox-wikia**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -39565,7 +39712,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
 * **browser cycles**: 25
 * **expected**: pass
 * **gecko profile interval**: 1
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#175`
+* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#122`
 * **lower is better**: true
 * **page cycles**: 25
 * **page timeout**: 60000
@@ -39778,9 +39925,19 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - autoland
   - mozilla-release
   - mozilla-beta
+* - **browsertime-tp6-bytecode-firefox-wikipedia**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
 * - **browsertime-tp6-essential-firefox-wikipedia**
   - ✅
   - ✅
+  - ❌
+  - ❌
+* - **browsertime-tp6-live-firefox-wikipedia**
+  - ❌
+  - ❌
   - ❌
   - ❌
 :::
@@ -39860,329 +40017,6 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - ❌
   - ❌
 * - **browsertime-tp6-live-firefox-wikipedia**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-::::
-
-(yahoo-mail-d)=
-
-::::{dropdown} yahoo-mail
-:class-container: anchor-id-yahoo-mail-d
-
-* **Command to Run Locally**
-
-  ```
-  ./mach raptor -t yahoo-mail
-  ```
-
-**Owner**: PerfTest Team
-
-* **alert on**: [fcp](raptor-metrics.md#first-paint), [loadtime](raptor-metrics.md#load-time), [ContentfulSpeedIndex](raptor-metrics.md#contentful-speed-index), [PerceptualSpeedIndex](raptor-metrics.md#perceptual-speed-index), [SpeedIndex](raptor-metrics.md#speed-index), [FirstVisualChange](raptor-metrics.md#first-visual-change), [LastVisualChange](raptor-metrics.md#last-visual-change), [largestContentfulPaint](raptor-metrics.md#largest-contentful-paint)
-* **alert threshold**: 2.0
-* **apps**: firefox
-* **benchmark page**: false
-* **browser cycles**: 25
-* **expected**: pass
-* **gecko profile interval**: 1
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#180`
-* **lower is better**: true
-* **page cycles**: 25
-* **page timeout**: 60000
-* **playback**: mitmproxy
-* **playback pageset manifest**: mitm5-linux-firefox-yahoo-mail.manifest
-* **playback version**: 12.2.1
-* **support class**: browsertime_pageload.py
-* **test url**: <https://mail.yahoo.com/>
-* **type**: pageload
-* **unit**: ms
-* **use live sites**: false
-* **Test Task**:
-
-:::{list-table} **{ref}`test-linux2404-64-clang-trunk/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-bytecode-firefox-yahoo-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-essential-firefox-yahoo-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-yahoo-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64-nightlyasrelease/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-bytecode-firefox-yahoo-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-essential-firefox-yahoo-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-yahoo-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64-shippable/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-bytecode-firefox-yahoo-mail**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-essential-firefox-yahoo-mail**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-yahoo-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-linux2404-64/opt <hardware-hpe-moonshot>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-bytecode-firefox-yahoo-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-essential-firefox-yahoo-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-yahoo-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1470-64-shippable/opt <hardware-mac-mini-r8>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-bytecode-firefox-yahoo-mail**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-essential-firefox-yahoo-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-yahoo-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1470-64/opt <hardware-mac-mini-r8>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-bytecode-firefox-yahoo-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-essential-firefox-yahoo-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-yahoo-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1500-aarch64-nightlyasrelease/opt <hardware-mac-mini-m4>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-bytecode-firefox-yahoo-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-essential-firefox-yahoo-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-yahoo-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-essential-firefox-yahoo-mail**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-bytecode-firefox-yahoo-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-essential-firefox-yahoo-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-yahoo-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2-shippable/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-bytecode-firefox-yahoo-mail**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-essential-firefox-yahoo-mail**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-yahoo-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-windows11-64-24h2/opt <hardware-nuc13-windows11>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6-bytecode-firefox-yahoo-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-essential-firefox-yahoo-mail**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6-live-firefox-yahoo-mail**
   - ❌
   - ❌
   - ❌
@@ -40212,7 +40046,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
 * **browser cycles**: 25
 * **expected**: pass
 * **gecko profile interval**: 1
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#185`
+* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/desktop/browsertime-tp6.toml#127`
 * **lower is better**: true
 * **page cycles**: 25
 * **page timeout**: 60000
@@ -40371,6 +40205,28 @@ Tests for page-load performance. The links direct to the actual websites that ar
 * - **browsertime-tp6-firefox-youtube**
   - ❌
   - ❌
+  - ❌
+  - ❌
+* - **browsertime-tp6-live-firefox-youtube**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-tp6-firefox-youtube**
+  - ✅
+  - ✅
   - ❌
   - ❌
 * - **browsertime-tp6-live-firefox-youtube**
@@ -40616,6 +40472,23 @@ Browsertime tests that interact with the webpage. Includes responsiveness tests 
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-responsiveness-firefox-cnn-nav**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -40831,6 +40704,23 @@ Browsertime tests that interact with the webpage. Includes responsiveness tests 
 * - **browsertime-responsiveness-firefox-reddit-billgates-ama**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-responsiveness-firefox-reddit-billgates-ama**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -41056,6 +40946,23 @@ Browsertime tests that interact with the webpage. Includes responsiveness tests 
 :::
 
 
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-responsiveness-firefox-reddit-billgates-post-1**
+  - ✅
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-windows11-64-24h2-nightlyasrelease/opt <hardware-nuc13-windows11>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -41271,6 +41178,23 @@ Browsertime tests that interact with the webpage. Includes responsiveness tests 
 * - **browsertime-responsiveness-firefox-reddit-billgates-post-2**
   - ❌
   - ❌
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-macosx1500-aarch64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-responsiveness-firefox-reddit-billgates-post-2**
+  - ✅
+  - ✅
   - ❌
   - ❌
 :::
@@ -42530,7 +42454,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
   - ❌
   - ❌
 * - **browsertime-tp6m-webextensions-fenix-amazon-search**
-  - ✅
+  - ❌
   - ❌
   - ❌
   - ❌
@@ -44109,116 +44033,6 @@ Page-load performance test suite on Android. The links direct to the actual webs
 
 ::::
 
-(instagram-m)=
-
-::::{dropdown} instagram
-:class-container: anchor-id-instagram-m
-
-* **Command to Run Locally**
-
-  ```
-  ./mach raptor -t instagram
-  ```
-
-**Owner**: PerfTest Team
-
-* **alert on**: [fcp](raptor-metrics.md#first-paint), [loadtime](raptor-metrics.md#load-time), [ContentfulSpeedIndex](raptor-metrics.md#contentful-speed-index), [PerceptualSpeedIndex](raptor-metrics.md#perceptual-speed-index), [SpeedIndex](raptor-metrics.md#speed-index), [FirstVisualChange](raptor-metrics.md#first-visual-change), [LastVisualChange](raptor-metrics.md#last-visual-change), [largestContentfulPaint](raptor-metrics.md#largest-contentful-paint)
-* **alert threshold**: 2.0
-* **apps**: geckoview, fenix, refbrow
-* **benchmark page**: true
-* **browser cycles**: 15
-* **expected**: pass
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/mobile/browsertime-tp6m.toml#81`
-* **login**: true
-* **lower is better**: true
-* **page cycles**: 25
-* **page timeout**: 60000
-* **playback**: mitmproxy-android
-* **playback pageset manifest**: mitm8-android-gve-instagram.manifest
-* **playback version**: 12.2.1
-* **support class**: browsertime_pageload.py
-* **test url**: <https://www.instagram.com>
-* **type**: pageload
-* **unit**: ms
-* **use live sites**: false
-* **Test Task**:
-
-:::{list-table} **{ref}`test-android-hw-a55-14-0-aarch64-shippable/opt <hardware-samsung-a55>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6m-fenix-instagram**
-  - ✅
-  - ✅
-  - ❌
-  - ❌
-* - **browsertime-tp6m-geckoview-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6m-live-fenix-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6m-live-geckoview-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6m-refbrow-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-:::{list-table} **{ref}`test-android-hw-a55-14-0-aarch64/opt <hardware-samsung-a55>`**
-:widths: 30 15 15 15 15
-:header-rows: 1
-
-* - **Test Name**
-  - mozilla-central
-  - autoland
-  - mozilla-release
-  - mozilla-beta
-* - **browsertime-tp6m-fenix-instagram**
-  - ✅
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6m-geckoview-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6m-live-fenix-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6m-live-geckoview-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-* - **browsertime-tp6m-refbrow-instagram**
-  - ❌
-  - ❌
-  - ❌
-  - ❌
-:::
-
-
-::::
-
 (microsoft-support-m)=
 
 ::::{dropdown} microsoft-support
@@ -44238,7 +44052,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
 * **benchmark page**: true
 * **browser cycles**: 15
 * **expected**: pass
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/mobile/browsertime-tp6m.toml#87`
+* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/mobile/browsertime-tp6m.toml#81`
 * **lower is better**: true
 * **page cycles**: 25
 * **page timeout**: 60000
@@ -44347,7 +44161,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
 * **benchmark page**: true
 * **browser cycles**: 15
 * **expected**: pass
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/mobile/browsertime-tp6m.toml#90`
+* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/mobile/browsertime-tp6m.toml#84`
 * **lower is better**: true
 * **page cycles**: 25
 * **page timeout**: 60000
@@ -44456,7 +44270,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
 * **benchmark page**: true
 * **browser cycles**: 15
 * **expected**: pass
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/mobile/browsertime-tp6m.toml#93`
+* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/mobile/browsertime-tp6m.toml#87`
 * **lower is better**: true
 * **page cycles**: 25
 * **page timeout**: 60000
@@ -44565,7 +44379,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
 * **benchmark page**: true
 * **browser cycles**: 15
 * **expected**: pass
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/mobile/browsertime-tp6m.toml#96`
+* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/mobile/browsertime-tp6m.toml#90`
 * **lower is better**: true
 * **page cycles**: 25
 * **page timeout**: 60000
@@ -44674,7 +44488,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
 * **benchmark page**: true
 * **browser cycles**: 15
 * **expected**: pass
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/mobile/browsertime-tp6m.toml#99`
+* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/mobile/browsertime-tp6m.toml#93`
 * **lower is better**: true
 * **page cycles**: 25
 * **page timeout**: 60000
@@ -44783,7 +44597,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
 * **benchmark page**: true
 * **browser cycles**: 15
 * **expected**: pass
-* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/mobile/browsertime-tp6m.toml#102`
+* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/tp6/mobile/browsertime-tp6m.toml#96`
 * **lower is better**: true
 * **page cycles**: 25
 * **page timeout**: 60000
@@ -44897,7 +44711,7 @@ A composite benchmark that measures page loading and sub-navigation performance 
 
 * **accept zero vismet**: false
 * **alert on**: [SpeedIndex](raptor-metrics.md#speed-index)
-* **alert threshold**: 5.0
+* **alert threshold**: 2.0
 * **apps**: firefox, chrome
 * **browser cycles**: 5
 * **browsertime visualmetrics**: true
@@ -45090,6 +44904,124 @@ A composite benchmark that measures page loading and sub-navigation performance 
   - mozilla-release
   - mozilla-beta
 * - **browsertime-nav-bench-firefox-nav-bench**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
+::::
+
+(nav-bench-m-n)=
+
+::::{dropdown} nav-bench-m
+:class-container: anchor-id-nav-bench-m-n
+
+* **Command to Run Locally**
+
+  ```
+  ./mach raptor -t nav-bench-m
+  ```
+
+**Owner**: PerfTest Team
+
+**Description**: Fenix navigation benchmark across Amazon, Wikipedia, DuckDuckGo, and BBC in a single combined session.
+
+
+* **accept zero vismet**: false
+* **alert on**: [SpeedIndex](raptor-metrics.md#speed-index)
+* **alert threshold**: 5.0
+* **apps**: fenix
+* **browser cycles**: 5
+* **browsertime visualmetrics**: true
+* **cold**: true
+* **custom data**: true
+* **expected**: pass
+* **expose browser profiler**: true
+* **gecko profile interval**: 1
+* **interactive**: true
+* **link searchfox**: {searchfox}`testing/raptor/raptor/tests/nav-bench/browsertime-nav-bench-m.toml#44`
+* **lower is better**: false
+* **measure**: SpeedIndex
+* **page cycles**: 1
+* **page timeout**: 600000
+* **playback**: mitmproxy-android
+* **playback manifests dir**: nav-bench
+* **playback mode**: direct
+* **playback pageset manifest**: mitm12-android-gve-amazon-nav.manifest,mitm12-android-gve-wikipedia-nav.manifest,mitm12-android-gve-duckduckgo-nav.manifest,mitm12-android-gve-bbc-nav.manifest
+* **playback version**: 12.2.1
+* **preferences**: fission.bfcacheInParent=false browser.sessionhistory.max_total_viewers=0 network.http.http3.enable=false network.http.altsvc.enabled=false
+* **support class**: nav_bench.py
+* **test cmds**: ['wait.byTime', '30000'] ['measure.start', 'amazon-nav-load'] ['navigate', 'https://www.amazon.ca/s?k=laptop'] ['wait.byTime', '2000'] ['measure.stop', ''] ['measure.start', 'amazon-nav-subnav'] ['click.bySelectorAndWait', 'a[href*="/dp/"]'] ['wait.byTime', '2000'] ['measure.stop', ''] ['navigate', 'about:blank'] ['wait.byTime', '1000'] ['measure.start', 'wikipedia-nav-load'] ['navigate', 'https://en.m.wikipedia.org/wiki/Barack_Obama'] ['wait.byTime', '2000'] ['measure.stop', ''] ['measure.start', 'wikipedia-nav-subnav'] ['click.bySelectorAndWait', 'a[href*="/wiki/Honolulu"]'] ['wait.byTime', '2000'] ['measure.stop', ''] ['navigate', 'about:blank'] ['wait.byTime', '1000'] ['measure.start', 'duckduckgo-nav-load'] ['navigate', 'https://duckduckgo.com/?q=mandelbrot+set'] ['wait.byTime', '2000'] ['measure.stop', ''] ['measure.start', 'duckduckgo-nav-subnav'] ['click.bySelectorAndWait', 'a[href*="ia=images"]'] ['wait.byTime', '3000'] ['measure.stop', ''] ['navigate', 'about:blank'] ['wait.byTime', '1000'] ['measure.start', 'bbc-nav-load'] ['navigate', 'https://www.bbc.com/news/'] ['wait.byTime', '2000'] ['measure.stop', ''] ['navigate', 'about:blank'] ['wait.byTime', '1000']
+* **test url**: <about:blank>
+* **type**: pageload
+* **unit**: score
+* **use live sites**: false
+* **verbose**: true
+* **Test Task**:
+
+:::{list-table} **{ref}`test-android-em-14-arm64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-nav-bench-m-fenix-nav-bench-m**
+  - ❌
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-android-hw-a55-14-0-aarch64-nightlyasrelease/opt <hardware-samsung-a55>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-nav-bench-m-fenix-nav-bench-m**
+  - ❌
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-android-hw-a55-14-0-aarch64-shippable/opt <hardware-samsung-a55>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-nav-bench-m-fenix-nav-bench-m**
+  - ❌
+  - ✅
+  - ❌
+  - ❌
+:::
+
+
+:::{list-table} **{ref}`test-android-hw-a55-14-0-aarch64/opt <hardware-samsung-a55>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-nav-bench-m-fenix-nav-bench-m**
   - ❌
   - ❌
   - ❌

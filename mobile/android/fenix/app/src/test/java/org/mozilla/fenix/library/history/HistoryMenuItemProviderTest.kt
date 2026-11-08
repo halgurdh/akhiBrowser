@@ -32,7 +32,7 @@ class HistoryMenuItemProviderTest {
                 icon = MenuItemIconRes(iconsR.drawable.mozac_ic_history_24),
                 onClickEvent = MenuAction.Navigate.History,
             ),
-            provider.itemFlow.value,
+            provider.itemsFlow.value.single(),
         )
     }
 
@@ -47,7 +47,7 @@ class HistoryMenuItemProviderTest {
                 onClickEvent = null,
                 state = MenuItemState.DEFAULT,
             ),
-            provider.itemFlow.value,
+            provider.itemsFlow.value.single(),
         )
     }
 
@@ -64,7 +64,7 @@ class HistoryMenuItemProviderTest {
     fun `WHEN building the item THEN handle all events it can dispatch and no others`() {
         val provider = HistoryMenuItemProvider(target = MenuTarget.BrowserTab)
 
-        val events = requireNotNull(provider.itemFlow.value).reachableEvents()
+        val events = provider.itemsFlow.value.single().reachableEvents()
 
         assertTrue(events.all { provider.handles(it) }, "Not all of $events are handled")
         assertFalse(provider.handles(MenuAction.Navigate.Bookmarks))

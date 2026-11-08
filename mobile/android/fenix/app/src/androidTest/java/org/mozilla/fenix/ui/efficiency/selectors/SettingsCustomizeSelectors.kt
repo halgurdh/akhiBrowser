@@ -4,6 +4,7 @@
 
 package org.mozilla.fenix.ui.efficiency.selectors
 
+import mozilla.components.feature.summarize.R as summarizeR
 import org.mozilla.fenix.R
 import org.mozilla.fenix.helpers.DataGenerationHelper.getStringResource
 import org.mozilla.fenix.ui.efficiency.helpers.PageReadinessProfile
@@ -136,6 +137,14 @@ object SettingsCustomizeSelectors : SelectorContainer {
             strategy = SelectorStrategy.ESPRESSO_BY_TEXT,
             value = getStringResource(R.string.toolbar_customize_shortcut_add_bookmark),
             description = "Add bookmark simple toolbar shortcut option",
+            scrollDirection = SwipeDirection.UP,
+        )
+
+    val SHORTCUT_SUMMARIZE_PAGES =
+        Selector(
+            strategy = SelectorStrategy.ESPRESSO_BY_TEXT,
+            value = getStringResource(summarizeR.string.mozac_summarize_settings_summarize_pages),
+            description = "Summarize pages simple toolbar shortcut option",
             scrollDirection = SwipeDirection.UP,
         )
 

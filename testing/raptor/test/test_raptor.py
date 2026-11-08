@@ -24,11 +24,10 @@ DEFAULT_TIMEOUT = 125
 
 
 class TestBrowserThread(threading.Thread):
-    def __init__(self, raptor_instance, tests, names):
+    def __init__(self, raptor_instance, tests):
         super().__init__()
         self.raptor_instance = raptor_instance
         self.tests = tests
-        self.names = names
         self.exc = None
 
     def print_error(self):
@@ -39,7 +38,7 @@ class TestBrowserThread(threading.Thread):
 
     def run(self):
         try:
-            self.raptor_instance.run_tests(self.tests, self.names)
+            self.raptor_instance.run_tests(self.tests)
         except BaseException:
             self.exc = sys.exc_info()
 
@@ -58,6 +57,7 @@ def test_direct_playback_sets_firefox_origin_overrides():
     Perftest.run_test_setup(perftest, {"name": "nav-bench", "preferences": {}})
 
     perftest.set_browser_test_prefs.assert_called_with({
+        "network.proxy.type": 0,
         "network.dns.forceResolve": "127.0.0.1",
         "network.socket.forcePort": "80=18080;443=18443",
     })

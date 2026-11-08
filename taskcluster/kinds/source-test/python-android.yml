@@ -15,10 +15,11 @@ android-gradle-build-mach: &android-gradle-build
         kind: test
         tier: 2
     worker-type: t-linux-docker-amd
+    use-gradle: offline
+    use-gradle-cache: true
     worker: &android-gradle-build-worker
         docker-image: {in-tree: android-build}
         env: &android-gradle-build-env
-            GRADLE_USER_HOME: /builds/worker/checkouts/gecko/mobile/android/gradle/dotgradle-offline
             MOZ_OBJDIR: obj-firefox
             PERFHERDER_EXTRA_OPTIONS: android-gradle-build
             TINDERBOX_OUTPUT: '1'
@@ -41,6 +42,7 @@ android-gradle-build-mach: &android-gradle-build
             ln -s $MOZ_FETCHES_DIR/node $GECKO_PATH &&
             cd $GECKO_PATH &&
             export GRADLE_MAVEN_REPOSITORIES="file://$MOZ_FETCHES_DIR/android-gradle-dependencies/mozilla","file://$MOZ_FETCHES_DIR/android-gradle-dependencies/google","file://$MOZ_FETCHES_DIR/android-gradle-dependencies/central","file://$MOZ_FETCHES_DIR/android-gradle-dependencies/gradle-plugins" &&
+            export NIMBUS_FML_CACHE_DIR="$MOZ_FETCHES_DIR/android-gradle-dependencies" &&
             ./mach --log-no-times python-test --subsuite android-gradle-build --run-slow
         tooltool-downloads: internal  # For internal toolchains.
     fetches:

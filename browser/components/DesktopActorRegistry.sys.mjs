@@ -252,6 +252,7 @@ let JSWINDOWACTORS = {
         "AIChatContent:HistoryGridRender": { wantUntrusted: true },
         "AIChatContent:HistoryGridItemClick": { wantUntrusted: true },
         "AIChatContent:FirstCharacterDisplayed": { wantUntrusted: true },
+        "AIChatContent:FirstActionLogDisplayed": { wantUntrusted: true },
         "AIChatContent:ClientError": { wantUntrusted: true },
       },
     },
@@ -965,7 +966,7 @@ let JSWINDOWACTORS = {
       },
     },
     matches: ["about:studies*"],
-    safeForUntrustedWebProcess: true,
+    remoteTypes: ["privilegedabout"],
   },
 
   SmartFormFill: {

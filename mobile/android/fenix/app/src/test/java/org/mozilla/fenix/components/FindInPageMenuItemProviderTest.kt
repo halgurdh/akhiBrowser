@@ -37,7 +37,7 @@ class FindInPageMenuItemProviderTest {
                 icon = MenuItemIconRes(iconsR.drawable.mozac_ic_search_24),
                 onClickEvent = MenuAction.FindInPage,
             ),
-            provider.itemFlow.value,
+            provider.itemsFlow.value.single(),
         )
     }
 
@@ -52,7 +52,7 @@ class FindInPageMenuItemProviderTest {
                 onClickEvent = null,
                 state = MenuItemState.DEFAULT,
             ),
-            provider.itemFlow.value,
+            provider.itemsFlow.value.single(),
         )
     }
 
@@ -70,7 +70,7 @@ class FindInPageMenuItemProviderTest {
     fun `WHEN building the item THEN handle all events it can dispatch and no others`() {
         val provider = FindInPageMenuItemProvider(appStore, target = MenuTarget.BrowserTab)
 
-        val events = requireNotNull(provider.itemFlow.value).reachableEvents()
+        val events = provider.itemsFlow.value.single().reachableEvents()
 
         assertTrue(events.all { provider.handles(it) }, "Not all of $events are handled")
         assertFalse(provider.handles(MenuAction.CustomizeReaderView))

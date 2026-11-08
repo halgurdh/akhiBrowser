@@ -280,6 +280,14 @@ MockWebTransportSessionEventListener::OnOutgoingDatagramOutCome(
   return NS_OK;
 }
 
+NS_IMETHODIMP
+MockWebTransportSessionEventListener::GetAnticipatedConcurrentIncomingStreams(
+    uint16_t* aUni, uint16_t* aBidi) {
+  *aUni = 0;
+  *aBidi = 0;
+  return NS_OK;
+}
+
 NS_IMETHODIMP MockWebTransportSessionEventListener::OnStopSending(
     uint64_t aStreamId, uint64_t aErrorCode) {
   mStopSending = Some(std::pair<uint64_t, uint64_t>(aStreamId, aErrorCode));

@@ -27,7 +27,8 @@ interface CreditCardsAddressesStorage : Storage, StorageMaintenanceRegistry {
     suspend fun addCreditCard(creditCardFields: NewCreditCardFields): CreditCard
 
     /**
-     * Updates the fields in the provided credit card.
+     * Updates the fields in the provided credit card. The stored security code is kept when
+     * [UpdatableCreditCardFields.cardCvv] is null.
      *
      * @param guid Unique identifier for the desired credit card.
      * @param creditCardFields A set of credit card fields, wrapped in [UpdatableCreditCardFields], to update.
@@ -167,6 +168,7 @@ interface CreditCardCrypto : KeyProvider
  * @property timeLastUsed Time of last use in milliseconds from the unix epoch.
  * @property timeLastModified Time of last modified in milliseconds from the unix epoch.
  * @property timesUsed Number of times the credit card was used.
+ * @property cardCvv The credit card security code, or null if none is stored.
  */
 @Parcelize
 data class CreditCard(
@@ -181,6 +183,7 @@ data class CreditCard(
     val timeLastUsed: Long? = 0L,
     val timeLastModified: Long = 0L,
     val timesUsed: Long = 0L,
+    val cardCvv: String?,
 ) : Parcelable {
     val obfuscatedCardNumber: String
         get() = ELLIPSES_START + ELLIPSIS + ELLIPSIS + ELLIPSIS + ELLIPSIS + cardNumberLast4 + ELLIPSES_END
@@ -208,6 +211,7 @@ data class CreditCard(
  * @property expiryMonth The credit card expiry month.
  * @property expiryYear The credit card expiry year.
  * @property cardType The credit card network ID.
+ * @property cardCvv The credit card security code, or null if there is none.
  */
 @Parcelize
 data class CreditCardEntry(
@@ -217,6 +221,7 @@ data class CreditCardEntry(
     val expiryMonth: String,
     val expiryYear: String,
     val cardType: String,
+    val cardCvv: String?,
 ) : Parcelable {
     val obfuscatedCardNumber: String
         get() = ELLIPSES_START + ELLIPSIS + ELLIPSIS + ELLIPSIS + ELLIPSIS + number.last4Digits() + ELLIPSES_END
@@ -261,6 +266,7 @@ data class CreditCardEntry(
  * @property expiryMonth The credit card expiry month.
  * @property expiryYear The credit card expiry year.
  * @property cardType The credit card network ID.
+ * @property cardCvv A plaintext credit card security code, or null for none.
  */
 data class NewCreditCardFields(
     val billingName: String,
@@ -268,6 +274,7 @@ data class NewCreditCardFields(
     val expiryMonth: Long,
     val expiryYear: Long,
     val cardType: String,
+    val cardCvv: String?,
 )
 
 /**
@@ -279,6 +286,8 @@ data class NewCreditCardFields(
  * @property expiryMonth The credit card expiry month.
  * @property expiryYear The credit card expiry year.
  * @property cardType The credit card network ID.
+ * @property cardCvv A plaintext credit card security code. Null keeps the stored security code, and an empty string
+ *   removes it.
  */
 data class UpdatableCreditCardFields(
     val billingName: String,
@@ -286,6 +295,7 @@ data class UpdatableCreditCardFields(
     val expiryMonth: Long,
     val expiryYear: Long,
     val cardType: String,
+    val cardCvv: String?,
 )
 
 /**

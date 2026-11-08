@@ -1441,6 +1441,43 @@ add_task(async function test_flipping_the_pref_back_copies_to_json() {
   await s._finalize();
 });
 
+add_task(async function test_a_failed_copy_back_still_returns_to_json() {
+  const { s, guids } = await setupStorageWithRecords(
+    "mig-switch-back-fail.json",
+    ["Stays One"]
+  );
+  await RustAutofillAddressesAdapter.getInstance().wipe();
+
+  Services.prefs.setBoolPref(ENABLED_PREF, true);
+  await s._addressSwitch;
+  Assert.ok(getBool(ACTIVE_PREF), "Rust is serving");
+  const addedGuid = await s.addresses.add(addr("Added In Rust"));
+  const before = migrationEvents().length;
+
+  s._addresses.addManyWithMeta = records =>
+    Promise.resolve(records.map(() => ({ error: "injected failure" })));
+  try {
+    Services.prefs.setBoolPref(ENABLED_PREF, false);
+    await s._addressSwitch;
+  } finally {
+    delete s._addresses.addManyWithMeta;
+  }
+
+  Assert.ok(!getBool(ACTIVE_PREF), "the profile reads from JSON again");
+  const event = migrationEvents()[before];
+  Assert.equal(event?.extra.direction, "to_json", "the copy back was tried");
+  Assert.equal(event.extra.result, "error", "and reported as a failure");
+  Assert.equal(getInt(ATTEMPTS_PREF), 0, "without spending an attempt");
+  Assert.ok(await s.addresses.get(guids[0]), "JSON serves what it held");
+  Assert.equal(
+    await s.addresses.get(addedGuid),
+    null,
+    "without the record that did not make it back"
+  );
+
+  await s._finalize();
+});
+
 add_task(async function test_a_deletion_that_fails_fails_the_copy() {
   const { s, guids, json, rust } = await nowipeSetup("mig-nodelete.json", [
     "Kept One",
@@ -1770,4 +1807,31 @@ add_task(async function test_a_reporting_failure_still_ends_the_dry_run() {
   }
 
   await s._finalize();
+});
+
+add_task(async function test_lone_surrogates_are_not_a_divergence() {
+  let { s, guids } = await setupStorageWithRecords("mig-surrogates.json", [
+    "Ann One",
+  ]);
+  // A record stored before lone surrogates were refused, which add() no longer
+  // lets through.
+  s.addresses._data[0].organization = "Mozilla\uD83D";
+  s.addresses._store.saveSoon();
+
+  s = await enableRust(s);
+  const rust = activeRust(s);
+
+  Assert.equal(
+    (await rust.get(guids[0])).organization,
+    "Mozilla\uFFFD",
+    "the copy holds U+FFFD in place of the lone surrogate"
+  );
+  const event = migrationEvents().at(-1);
+  Assert.equal(event.extra.result, "ok", "the migration completes");
+  Assert.equal(event.extra.failed, "0", "the record did not fail");
+  Assert.equal(
+    event.extra.diverged,
+    "0",
+    "the replacement is not a divergence"
+  );
 });

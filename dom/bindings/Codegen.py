@@ -24820,6 +24820,9 @@ class GlobalGenRoots:
         for d in sorted(descriptors, key=lambda descriptor: descriptor.name):
             name = d.name
             exposedGlobals = computeGlobalNamesFromExposureSet(d.interface.exposureSet)
+            secureContext = toStringBool(
+                d.interface.getExtendedAttribute("SecureContext") is not None
+            )
             # Strip off trailing newline to make our formatting look right.
             entries.append(
                 fill(
@@ -24828,17 +24831,19 @@ class GlobalGenRoots:
                   /* mTag */ ${tag},
                   /* mDeserialize */ ${name}_Binding::Deserialize,
                   /* mExposedGlobals */ ${exposedGlobals},
+                  /* mSecureContext */ ${secureContext},
                 }
                 """,
                     tag=StructuredCloneTag(name),
                     name=name,
                     exposedGlobals=exposedGlobals,
+                    secureContext=secureContext,
                 )[:-1]
             )
 
         declare = dedent(
             """
-            Maybe<std::pair<uint16_t, WebIDLDeserializer>> LookupDeserializer(StructuredCloneTags aTag);
+            Maybe<std::tuple<uint16_t, bool, WebIDLDeserializer>> LookupDeserializer(StructuredCloneTags aTag);
             """
         )
         define = fill(
@@ -24847,16 +24852,17 @@ class GlobalGenRoots:
               StructuredCloneTags mTag;
               WebIDLDeserializer mDeserialize;
               uint16_t mExposedGlobals;
+              bool mSecureContext;
             };
 
             static const WebIDLSerializableEntry sEntries[] = {
               $*{entries}
             };
 
-            Maybe<std::pair<uint16_t, WebIDLDeserializer>> LookupDeserializer(StructuredCloneTags aTag) {
+            Maybe<std::tuple<uint16_t, bool, WebIDLDeserializer>> LookupDeserializer(StructuredCloneTags aTag) {
               for (auto& entry : sEntries) {
                 if (entry.mTag == aTag) {
-                  return Some(std::pair(entry.mExposedGlobals, entry.mDeserialize));
+                  return Some(std::tuple(entry.mExposedGlobals, entry.mSecureContext, entry.mDeserialize));
                 }
               }
               return Nothing();

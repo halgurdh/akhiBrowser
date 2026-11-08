@@ -9,27 +9,30 @@ import {
 } from "chrome://global/content/vendor/lit.all.mjs";
 import { MozLitElement } from "chrome://global/content/lit-utils.mjs";
 import { isTabGroupMember } from "chrome://browser/content/urlbar/SmartbarMentionUtils.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://browser/content/aiwindow/components/assistant-message-footer.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://browser/content/aiwindow/components/chat-assistant-error.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://browser/content/aiwindow/components/chat-assistant-loader.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://browser/content/aiwindow/components/chat-assistant-citations.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://browser/content/aiwindow/components/website-chip-container.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://browser/content/aiwindow/components/ai-website-confirmation.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://browser/content/aiwindow/components/ai-chat-message.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://browser/content/aiwindow/components/ai-action-confirmation.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://browser/content/aiwindow/components/kit-mention.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://browser/content/aiwindow/components/agent-monitor-item.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// TODO: Bug 2088699 - Render this as a tool UI in the research flow.
+// eslint-disable-next-line import-x/no-unassigned-import
+import "chrome://browser/content/aiwindow/components/ai-clarifying-question.mjs";
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://global/content/elements/moz-textarea.mjs";
 import {
   dispatchClientError,
@@ -382,7 +385,7 @@ export class AIChatContent extends MozLitElement {
   #initFooterActionListeners() {
     this.addEventListener("copy-message", event => {
       const { messageId } = event.detail ?? {};
-      const text = this.#getAssistantMessageBody(messageId);
+      const text = this.#getAssistantMessageCopyText(messageId);
       this.#dispatchAction("copy", { messageId, text });
     });
 
@@ -577,11 +580,35 @@ export class AIChatContent extends MozLitElement {
       return "";
     }
 
-    const msg = this.conversationState.find(m => {
-      return m?.role === "assistant" && m?.messageId === messageId;
-    });
+    const item = this.#buildTurnRenderItems().find(
+      ({ type, msg }) =>
+        type === "message" &&
+        msg.role === "assistant" &&
+        msg.messageId === messageId
+    );
 
-    return msg?.body ?? "";
+    return item?.msg.body ?? "";
+  }
+
+  /**
+   * The text the copy button copies for an assistant message. A localized
+   * message copies the text the user sees, since its body holds text meant
+   * only for the model.
+   *
+   * @param {string} messageId - Id of the assistant message
+   * @returns {string}
+   */
+  #getAssistantMessageCopyText(messageId) {
+    const msg = this.conversationState.find(
+      m => m?.role === "assistant" && m?.messageId === messageId
+    );
+    if (!msg?.messageL10n) {
+      return this.#getAssistantMessageBody(messageId);
+    }
+    const messageEl = this.shadowRoot?.querySelector(
+      `ai-chat-message[data-message-id="${CSS.escape(messageId)}"]`
+    );
+    return messageEl?.localizedText ?? "";
   }
 
   #onFollowUpSelected(event) {
@@ -950,7 +977,8 @@ export class AIChatContent extends MozLitElement {
    * @param {CustomEvent} event
    */
   handleToolMessageEvent(event) {
-    const { convId, ordinal, content, actionLog } = event.detail ?? {};
+    const { convId, ordinal, turnIndex, content, actionLog } =
+      event.detail ?? {};
 
     if (!content?.name || !actionLog?.uiType) {
       return;
@@ -966,6 +994,7 @@ export class AIChatContent extends MozLitElement {
       role: "tool",
       uiType: actionLog.uiType,
       convId,
+      turnIndex,
       ordinal,
       toolCallId: content.tool_call_id,
       toolName: content.name,
@@ -1086,6 +1115,7 @@ export class AIChatContent extends MozLitElement {
     this.conversationState[ordinal] = {
       role: "assistant",
       convId,
+      ordinal,
       messageId,
       body: content.body,
       messageL10n: content.l10nId
@@ -1154,7 +1184,11 @@ export class AIChatContent extends MozLitElement {
       return;
     }
 
-    this.conversationState = this.conversationState.slice(0, idx);
+    const turnStart =
+      this.conversationState.findLastIndex(
+        (m, i) => i < idx && m?.role === "user"
+      ) + 1;
+    this.conversationState = this.conversationState.slice(0, turnStart);
     this.requestUpdate();
   }
 
@@ -1410,6 +1444,8 @@ export class AIChatContent extends MozLitElement {
     const key = `action-log:${toolMsgs[0]?.id ?? toolMsgs[0]?.messageId ?? groupIndex}`;
     return html`
       <ai-action-result
+        .conversationId=${toolMsgs[0].convId}
+        .turnIndex=${toolMsgs[0].turnIndex}
         .labelL10nId=${summary?.l10nId}
         .labelL10nArgs=${summary?.l10nArgs}
         .labelLink=${summary?.link ?? null}
@@ -1777,9 +1813,11 @@ export class AIChatContent extends MozLitElement {
       return nothing;
     }
 
-    // Check if this is a retry component that should be rendered at the top
-    const isRetryComponent =
-      msg.toolUIData?.uiType === UI_TYPES.RETRY_COMPONENT;
+    const isAssistant = msg.role === "assistant";
+    const parts = msg.parts ?? [msg];
+    // Retry components render at the top, other tool UI below the message
+    const isRetryComponent = part =>
+      part.toolUIData?.uiType === UI_TYPES.RETRY_COMPONENT;
 
     return html`<div class=${`chat-bubble chat-bubble-${msg.role}`}>
       ${chips?.length
@@ -1790,8 +1828,8 @@ export class AIChatContent extends MozLitElement {
           ></website-chip-container>`
         : nothing}
       <div class="chat-bubble-inner">
-        ${msg.role === "assistant" && isRetryComponent
-          ? this.#renderToolUI(msg)
+        ${isAssistant
+          ? parts.filter(isRetryComponent).map(part => this.#renderToolUI(part))
           : nothing}
         <ai-chat-message
           .message=${msg.body}
@@ -1803,8 +1841,10 @@ export class AIChatContent extends MozLitElement {
           .seenUrls=${this.seenUrls}
           .historyResults=${msg.historyResultsMap}
         ></ai-chat-message>
-        ${msg.role === "assistant" && msg.toolUIData && !isRetryComponent
-          ? this.#renderToolUI(msg)
+        ${isAssistant
+          ? parts
+              .filter(part => part.toolUIData && !isRetryComponent(part))
+              .map(part => this.#renderToolUI(part))
           : nothing}
         ${msg.role === "assistant" && msg.isLastChunk && msg.citations?.length
           ? html`<chat-assistant-citations
@@ -1819,7 +1859,9 @@ export class AIChatContent extends MozLitElement {
                 .messageId=${msg.messageId}
                 .appliedMemories=${msg.appliedMemories}
                 .showCallout=${msg.showCallout}
-                .hideRetry=${!!msg.toolUIData?.isResumeActivity}
+                .hideRetry=${parts.some(
+                  part => part.toolUIData?.isResumeActivity
+                )}
               ></assistant-message-footer>
             `
           : nothing}
@@ -1865,10 +1907,10 @@ export class AIChatContent extends MozLitElement {
   /**
    * Build the render list one turn at a time.
    *
-   * The model creates an empty assistant placeholder before tools run so by
-   * ordinal the assistant has a lower index than the toolcall messages it produces.
-   * We buffer per turn so action log UI render above the assistant reply,
-   * flipping that ordinal order for display
+   * A turn's assistant text can be split around its tool calls (a preamble
+   * before, the reply after) and older conversations stored the reply before
+   * its tool calls. We buffer per turn so the action log renders above
+   * a single assistant bubble holding all of the text for the turn.
    *
    * @return {Array<{ type: string, msg: object, contextPageUrl?: string }>}
    */
@@ -1876,15 +1918,18 @@ export class AIChatContent extends MozLitElement {
     const items = [];
     let lastContextPageUrl;
     let pendingActionLogs = [];
-    let pendingAssistantMessage = null;
+    let pendingAssistantParts = [];
     let pendingAssistantContextUrl;
+    // Whether an assistant response has streamed since the turn’s last action
+    // log. Resets on every action log and turn.
+    let replyStarted = false;
 
     // Commit the current turn's buffered action logs and assistant reply into
     // items. Action log render above the assistant message
     //
     // isComplete marks whether the turn has finished
     const appendPendingAssistantTurn = isComplete => {
-      if (!pendingActionLogs.length && !pendingAssistantMessage) {
+      if (!pendingActionLogs.length && !pendingAssistantParts.length) {
         return;
       }
 
@@ -1899,17 +1944,18 @@ export class AIChatContent extends MozLitElement {
         });
       }
 
-      if (pendingAssistantMessage) {
+      if (pendingAssistantParts.length) {
         items.push({
           type: "message",
-          msg: pendingAssistantMessage,
+          msg: this.#mergeAssistantParts(pendingAssistantParts),
           contextPageUrl: pendingAssistantContextUrl,
         });
       }
 
       pendingActionLogs = [];
-      pendingAssistantMessage = null;
+      pendingAssistantParts = [];
       pendingAssistantContextUrl = undefined;
+      replyStarted = false;
     };
 
     for (const msg of this.conversationState) {
@@ -1920,18 +1966,30 @@ export class AIChatContent extends MozLitElement {
       // Hold tool UI messages for the current turn
       if (msg.uiType === UI_TYPES.ACTION_LOG) {
         pendingActionLogs.push(msg);
+        replyStarted = false;
         continue;
       }
 
-      // Hold the assistant reply
-      // If a previous assistant is still pending, commit it first, so it isn't dropped
+      // Hold the turn's assistant text. Localized and monitor messages can
+      // follow a reply without a user message in between, so they keep their
+      // own dedicated bubble.
       if (msg.role === "assistant") {
-        if (pendingAssistantMessage) {
+        const previousMessage = pendingAssistantParts.at(-1);
+        const startsNewBubble =
+          previousMessage &&
+          (this.#isStandaloneAssistantMessage(msg) ||
+            this.#isStandaloneAssistantMessage(previousMessage));
+        if (startsNewBubble) {
           appendPendingAssistantTurn(true);
         }
 
-        pendingAssistantMessage = msg;
-        pendingAssistantContextUrl = lastContextPageUrl;
+        if (!pendingAssistantParts.length) {
+          pendingAssistantContextUrl = lastContextPageUrl;
+        }
+        pendingAssistantParts.push(msg);
+        if (msg.body && pendingActionLogs.length) {
+          replyStarted = true;
+        }
         continue;
       }
 
@@ -1953,13 +2011,40 @@ export class AIChatContent extends MozLitElement {
     }
 
     // Commit anything still pending at end of loop. The action log is finished
-    // once the turn's reply starts streaming (its tools are done by then) or the
-    // whole turn completes, so it doesn't keep shimmering through response
-    // generation.
-    const replyStarted = !!pendingAssistantMessage?.body;
+    // once text streams after the turn's last tool (its tools are done by then)
+    // or the whole turn completes, so it doesn't keep shimmering through
+    // response generation.
     appendPendingAssistantTurn(!this.assistantIsLoading || replyStarted);
 
     return items;
+  }
+
+  #isStandaloneAssistantMessage(msg) {
+    return (
+      !!msg.messageL10n || msg.toolUIData?.uiType === UI_TYPES.AGENT_MONITOR
+    );
+  }
+
+  /**
+   * Combine a turn's assistant messages into the rendered bubble.
+   * The footer, completion state and assets belong to the last message, while
+   * tool UI is rendered for each message from `parts`.
+   *
+   * @param {Array<object>} parts - The turn's assistant `conversationState` entries.
+   * @returns {object}
+   */
+  #mergeAssistantParts(parts) {
+    if (parts.length === 1) {
+      return parts[0];
+    }
+    return {
+      ...parts.at(-1),
+      body: parts
+        .map(part => part.body)
+        .filter(Boolean)
+        .join("\n\n"),
+      parts,
+    };
   }
 
   /**
@@ -1994,7 +2079,9 @@ export class AIChatContent extends MozLitElement {
       return `action-log:${first?.toolCallId ?? first?.messageId ?? i}`;
     }
     const { msg } = item;
-    return `message:${msg?.convId ?? ""}:${msg?.ordinal ?? i}`;
+    // Key on the first part so the bubble survives the rest of its turn.
+    const { ordinal } = msg.parts?.[0] ?? msg;
+    return `message:${msg.convId ?? ""}:${ordinal ?? i}`;
   }
 
   render() {

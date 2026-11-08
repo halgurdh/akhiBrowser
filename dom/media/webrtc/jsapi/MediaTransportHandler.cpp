@@ -4,7 +4,6 @@
 
 #include "MediaTransportHandler.h"
 
-#include "MediaTransportHandlerIPC.h"
 #include "nsITimer.h"
 #include "transport/dtlsidentity.h"
 #include "transport/nricemediastream.h"
@@ -18,7 +17,6 @@
 // Config stuff
 #include "mozilla/IceServerParser.h"
 #include "mozilla/Preferences.h"
-#include "mozilla/StaticPrefs_network.h"
 #include "mozilla/dom/RTCConfigurationBinding.h"
 
 // Logging stuff
@@ -539,14 +537,8 @@ class MediaTransportHandlerLocal final : public MediaTransportHandler {
 
 /* static */
 already_AddRefed<MediaTransportHandler> MediaTransportHandler::Create() {
-  RefPtr<MediaTransportHandler> result;
-  if (XRE_IsContentProcess() &&
-      Preferences::GetBool("media.peerconnection.mtransport_process") &&
-      StaticPrefs::network_process_enabled()) {
-    result = MakeRefPtr<MediaTransportHandlerIPC>();
-  } else {
-    result = MakeRefPtr<MediaTransportHandlerLocal>();
-  }
+  RefPtr<MediaTransportHandler> result =
+      MakeRefPtr<MediaTransportHandlerLocal>();
   result->Initialize();
   return result.forget();
 }
@@ -2058,8 +2050,8 @@ void MediaTransportImplNicer::OnConnectionStateChange(
   // surfacing a separate pair for RTCP when rtcp-mux is not in use.
   if (NS_SUCCEEDED(
           aIceStream->GetActivePairAsAttributes(1, &localAttr, &remoteAttr))) {
-    selectedPair = Some(dom::IceCandidateAttributePair(nsCString(localAttr),
-                                                       nsCString(remoteAttr)));
+    selectedPair = Some(dom::IceCandidateAttributePair{nsCString(localAttr),
+                                                       nsCString(remoteAttr)});
   }
   if (auto it = mTransports.find(aIceStream->GetId());
       it != mTransports.end()) {
@@ -2154,7 +2146,8 @@ Maybe<dom::RTCErrorParams> GetErrorInfo(const TransportLayerDtls& aDtlsLayer) {
     return Nothing();
   }
 
-  return Some(dom::RTCErrorParams{error, aDtlsLayer.GetErrorDescription()});
+  return Some(
+      dom::RTCErrorParams{std::move(error), aDtlsLayer.GetErrorDescription()});
 }
 
 void MediaTransportImplNicer::OnStateChange(TransportLayer* aLayer,

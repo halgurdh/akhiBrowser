@@ -413,9 +413,6 @@ skip-if = [
 ["test_explicit_user_agent.html"]
 
 ["test_find.html"]
-skip-if = [
-  "os == 'win' && opt && standalone", # Bug 2026600
-]
 
 ["test_find_bug1601118.html"]
 
@@ -805,6 +802,8 @@ skip-if = [
 ["test_window_own_props.html"]
 
 ["test_window_proto.html"]
+
+["test_window_proxy_unlinked_inner.html"]
 
 ["test_writable-replaceable.html"]
 

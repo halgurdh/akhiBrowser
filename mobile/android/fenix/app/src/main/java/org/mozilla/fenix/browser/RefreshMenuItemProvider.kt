@@ -45,17 +45,17 @@ class RefreshMenuItemProvider(
     private val stopLoading: SessionUseCases.StopLoadingUseCase,
     scope: CoroutineScope,
 ) : MenuItemProvider {
-    override val itemFlow: StateFlow<MenuItem?> =
+    override val itemsFlow: StateFlow<List<MenuItem>> =
         if (target == MenuTarget.CustomizeMenu) {
-            MutableStateFlow(DEFAULT_MENU_ITEM).asStateFlow()
+            MutableStateFlow(listOf(DEFAULT_MENU_ITEM)).asStateFlow()
         } else {
             browserStore.stateFlow
                 .distinctUntilChangedBy { target.browserSessionFrom(it)?.content?.loading }
-                .map { it.refreshItem() }
+                .map { listOfNotNull(it.refreshItem()) }
                 .stateIn(
                     scope = scope,
                     started = SharingStarted.Eagerly,
-                    initialValue = browserStore.state.refreshItem(),
+                    initialValue = listOfNotNull(browserStore.state.refreshItem()),
                 )
         }
 

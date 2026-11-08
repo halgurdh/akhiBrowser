@@ -1897,10 +1897,7 @@ already_AddRefed<Attr> Element::RemoveAttributeNode(Attr& aAttribute,
     return nullptr;
   }
 
-  nsAutoString nameSpaceURI;
-  aAttribute.NodeInfo()->GetNamespaceURI(nameSpaceURI);
-  return Attributes()->RemoveNamedItemNS(
-      nameSpaceURI, aAttribute.NodeInfo()->LocalName(), aError);
+  return Attributes()->RemoveNamedItem(aAttribute.NodeInfo(), aError);
 }
 
 void Element::GetAttributeNS(const nsAString& aNamespaceURI,
@@ -3354,12 +3351,7 @@ void Element::UnbindFromTree(UnbindContext& aContext) {
 
   ClearInDocument();
   SetIsConnected(false);
-  if (HasElementCreatedFromPrototypeAndHasUnmodifiedL10n()) {
-    if (document) {
-      document->mL10nProtoElements.Remove(this);
-    }
-    ClearElementCreatedFromPrototypeAndHasUnmodifiedL10n();
-  }
+  ClearElementTranslatedFromPrototype();
 
   if (nullParent || !mParent->IsInShadowTree()) {
     UnsetFlags(NODE_IS_IN_SHADOW_TREE);
@@ -3767,8 +3759,7 @@ nsresult Element::SetClassAttrFromParser(nsAtom* aValue) {
   nsAttrValue value;
   value.ParseAtomArray(aValue);
 
-  Document* document = GetComposedDoc();
-  mozAutoDocUpdate updateBatch(document, false);
+  mozAutoDocUpdate updateBatch(GetComposedDoc(), false);
 
   // In principle, BeforeSetAttr should be called here if a node type
   // existed that wanted to do something special for class, but there
@@ -3780,8 +3771,7 @@ nsresult Element::SetClassAttrFromParser(nsAtom* aValue) {
                           nullptr,  // old value
                           value, nullptr, AttrModType::Addition,
                           false,  // notify
-                          kCallAfterSetAttr, document, updateBatch,
-                          IsKnownNewAttr::Yes);
+                          kCallAfterSetAttr, updateBatch, IsKnownNewAttr::Yes);
 }
 
 nsresult Element::SetAttr(int32_t aNamespaceID, nsAtom* aName, nsAtom* aPrefix,
@@ -3881,10 +3871,9 @@ nsresult Element::SetAttrInternal(int32_t aNamespaceID, nsAtom* aName,
     return NS_OK;
   }
 
-  // Hold a script blocker while calling ParseAttribute since that can call
-  // out to id-observers
-  Document* document = GetComposedDoc();
-  mozAutoDocUpdate updateBatch(document, aNotify);
+  // Hold a script blocker while calling ParseAttribute since that can call out
+  // to id-observers
+  mozAutoDocUpdate updateBatch(GetComposedDoc(), aNotify);
 
   if (aNotify) {
     MutationObservers::NotifyAttributeWillChange(this, aNamespaceID, aName,
@@ -3898,10 +3887,10 @@ nsresult Element::SetAttrInternal(int32_t aNamespaceID, nsAtom* aName,
     BeforeSetAttr(aNamespaceID, aName, &attrValue, aNotify);
   }
 
-  return SetAttrAndNotify(
-      aNamespaceID, aName, aPrefix, oldValueSet ? &oldValue : nullptr,
-      attrValue, aSubjectPrincipal, modType, aNotify, kCallAfterSetAttr,
-      document, updateBatch, aIsKnownNew);
+  return SetAttrAndNotify(aNamespaceID, aName, aPrefix,
+                          oldValueSet ? &oldValue : nullptr, attrValue,
+                          aSubjectPrincipal, modType, aNotify,
+                          kCallAfterSetAttr, updateBatch, aIsKnownNew);
 }
 
 nsresult Element::SetParsedAttr(int32_t aNamespaceID, nsAtom* aName,
@@ -3929,8 +3918,7 @@ nsresult Element::SetParsedAttr(int32_t aNamespaceID, nsAtom* aName,
     }
   }
 
-  Document* document = GetComposedDoc();
-  mozAutoDocUpdate updateBatch(document, aNotify);
+  mozAutoDocUpdate updateBatch(GetComposedDoc(), aNotify);
 
   if (aNotify) {
     MutationObservers::NotifyAttributeWillChange(this, aNamespaceID, aName,
@@ -3944,7 +3932,7 @@ nsresult Element::SetParsedAttr(int32_t aNamespaceID, nsAtom* aName,
   return SetAttrAndNotify(aNamespaceID, aName, aPrefix,
                           oldValueSet ? &oldValue : nullptr, aParsedValue,
                           nullptr, modType, aNotify, kCallAfterSetAttr,
-                          document, updateBatch, aIsKnownNew);
+                          updateBatch, aIsKnownNew);
 }
 
 static MOZ_ALWAYS_INLINE void SetLifecycleCallbackNamespaceURI(
@@ -4146,8 +4134,8 @@ nsresult Element::SetAttrAndNotify(
     int32_t aNamespaceID, nsAtom* aName, nsAtom* aPrefix,
     const nsAttrValue* aOldValue, nsAttrValue& aParsedValue,
     nsIPrincipal* aSubjectPrincipal, AttrModType aModType, bool aNotify,
-    bool aCallAfterSetAttr, Document* aComposedDocument,
-    const mozAutoDocUpdate& aGuard, IsKnownNewAttr aIsKnownNew) {
+    bool aCallAfterSetAttr, const mozAutoDocUpdate& aGuard,
+    IsKnownNewAttr aIsKnownNew) {
   // NOTE: Please keep changes to this method in sync with
   // `SetNoNameSpaceAttrOnNewlyCreatedElement`!
   nsMutationGuard::DidMutate();
@@ -4193,15 +4181,6 @@ nsresult Element::SetAttrAndNotify(
     // No need to conditionally assign null here. If there was no previously
     // set value for the attribute, aOldValue will already be null.
     oldValue = aOldValue;
-  }
-
-  if (HasElementCreatedFromPrototypeAndHasUnmodifiedL10n() &&
-      aNamespaceID == kNameSpaceID_None &&
-      (aName == nsGkAtoms::datal10nid || aName == nsGkAtoms::datal10nargs)) {
-    ClearElementCreatedFromPrototypeAndHasUnmodifiedL10n();
-    if (aComposedDocument) {
-      aComposedDocument->mL10nProtoElements.Remove(this);
-    }
   }
 
   const CustomElementData* data = GetCustomElementData();
@@ -4360,6 +4339,14 @@ void Element::AfterSetAttr(int32_t aNamespaceID, nsAtom* aName,
              aName == nsGkAtoms::aria_labelledby ||
              aName == nsGkAtoms::aria_owns) {
     ClearExplicitlySetAttrElements(aName);
+  } else if ((aName == nsGkAtoms::datal10nid ||
+              aName == nsGkAtoms::datal10nargs) &&
+             aNotify) {
+    ClearElementTranslatedFromPrototype();
+    auto* doc = OwnerDoc();
+    if (!doc->mUntranslatedL10nProtoElements.IsEmpty()) [[unlikely]] {
+      doc->mUntranslatedL10nProtoElements.Remove(this);
+    }
   }
 }
 
@@ -4520,10 +4507,14 @@ int32_t Element::FindAttrValueIn(int32_t aNameSpaceID, const nsAtom* aName,
   return mAttrs.FindAttrValueIn(aNameSpaceID, aName, aValues, aCaseSensitive);
 }
 
-nsresult Element::UnsetAttr(int32_t aNameSpaceID, nsAtom* aName, bool aNotify) {
+nsresult Element::UnsetAttr(int32_t aNameSpaceID, nsAtom* aName, bool aNotify,
+                            bool* aHadValue) {
   NS_ASSERTION(nullptr != aName, "must have attribute name");
 
   int32_t index = mAttrs.IndexOfAttr(aName, aNameSpaceID);
+  if (aHadValue) {
+    *aHadValue = index >= 0;
+  }
   if (index < 0) {
     return NS_OK;
   }
@@ -4543,7 +4534,8 @@ nsresult Element::UnsetAttr(int32_t aNameSpaceID, nsAtom* aName, bool aNotify) {
   // Clear the attribute out from attribute map.
   nsDOMSlots* slots = GetExistingDOMSlots();
   if (slots && slots->mAttributeMap) {
-    slots->mAttributeMap->DropAttribute(aNameSpaceID, aName);
+    slots->mAttributeMap->DropAttribute(aNameSpaceID, aName,
+                                        mAttrs.AttrAt(index));
   }
 
   // The id-handling code, and in the future possibly other code, need to
@@ -4777,9 +4769,7 @@ void Element::GetEventTargetParentForLinks(EventChainPreVisitor& aVisitor) {
     case eFocus: {
       InternalFocusEvent* focusEvent = aVisitor.mEvent->AsFocusEvent();
       if (!focusEvent || !focusEvent->mIsRefocus) {
-        nsAutoString target;
-        GetLinkTarget(target);
-        nsContentUtils::TriggerLinkMouseOver(this, absURI, target);
+        nsContentUtils::TriggerLinkMouseOver(this, absURI);
         // Make sure any ancestor links don't also TriggerLink
         aVisitor.mEvent->mFlags.mMultipleActionsPrevented = true;
       }
@@ -5707,6 +5697,8 @@ void Element::SetInnerHTML(const TrustedHTMLOrNullIsEmptyString& aInnerHTML,
                            nsIPrincipal* aSubjectPrincipal,
                            ErrorResult& aError) {
   constexpr nsLiteralString sink = u"Element innerHTML"_ns;
+  // Bug 2072122: Trusted Types readiness experiment only, to be removed.
+  OwnerDoc()->RecordTrustedTypesHTMLSink(aInnerHTML.IsTrustedHTML());
 
   Maybe<nsAutoString> compliantStringHolder;
   const nsAString* compliantString =
@@ -5735,6 +5727,8 @@ void Element::SetOuterHTML(const TrustedHTMLOrNullIsEmptyString& aOuterHTML,
                            nsIPrincipal* aSubjectPrincipal,
                            ErrorResult& aError) {
   constexpr nsLiteralString sink = u"Element outerHTML"_ns;
+  // Bug 2072122: Trusted Types readiness experiment only, to be removed.
+  OwnerDoc()->RecordTrustedTypesHTMLSink(aOuterHTML.IsTrustedHTML());
 
   Maybe<nsAutoString> compliantStringHolder;
   const nsAString* compliantString =
@@ -5808,6 +5802,8 @@ void Element::InsertAdjacentHTML(
   // 1. "Let compliantString be the result of invoking the get trusted type
   //    compliant string algorithm..."
   constexpr nsLiteralString kSink = u"Element insertAdjacentHTML"_ns;
+  // Bug 2072122: Trusted Types readiness experiment only, to be removed.
+  OwnerDoc()->RecordTrustedTypesHTMLSink(aTrustedHTMLOrString.IsTrustedHTML());
 
   Maybe<nsAutoString> compliantStringHolder;
   const nsAString* compliantString =
@@ -6175,6 +6171,7 @@ void Element::SetSavedScrollState(UniquePtr<ScrollState> aState) {
 
 void Element::ClearServoData(Document* aDoc) {
   MOZ_ASSERT(aDoc);
+  MOZ_ASSERT(NS_IsMainThread());
   if (HasServoData()) {
     Servo_Element_ClearData(this);
   } else {

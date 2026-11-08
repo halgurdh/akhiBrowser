@@ -332,6 +332,11 @@ public class GeckoSession {
     }
 
     @WrapForJNI(calledFrom = "ui")
+    private GeckoSession getSession() {
+      return GeckoSession.this;
+    }
+
+    @WrapForJNI(calledFrom = "ui")
     private void onCompositorAttached() {
       GeckoSession.this.onCompositorAttached();
     }
@@ -416,12 +421,8 @@ public class GeckoSession {
     // cases, the viewport information we have in Java is no longer valid and needs to
     // be replaced with the new viewport information provided.
     @WrapForJNI(calledFrom = "ui")
-    private void notifyCompositorScrollUpdate(
-        final float scrollX,
-        final float scrollY,
-        final float zoom,
-        final @ScrollPositionUpdate.SourceType int source) {
-      GeckoSession.this.onCompositorScrollUpdate(scrollX, scrollY, zoom, source);
+    private void notifyCompositorScrollUpdate(final ScrollPositionUpdate update) {
+      GeckoSession.this.onCompositorScrollUpdate(update);
     }
 
     @WrapForJNI(calledFrom = "ui")
@@ -2193,6 +2194,9 @@ public class GeckoSession {
    */
   @AnyThread
   public static class Loader {
+    /** Public constructor for Loader. */
+    public Loader() {}
+
     private String mUri;
     private GeckoSession mReferrerSession;
     private String mReferrerUri;
@@ -3720,9 +3724,7 @@ public class GeckoSession {
     mHistoryHandler.setDelegate(delegate, this);
   }
 
-  /**
-   * @return The history tracking delegate for this session.
-   */
+  /** {@return the history tracking delegate for this session} */
   @AnyThread
   public @Nullable HistoryDelegate getHistoryDelegate() {
     return mHistoryHandler.getDelegate();
@@ -4736,7 +4738,7 @@ public class GeckoSession {
      */
     @UiThread
     default @Nullable GeckoResult<AllowOrDeny> onShowClipboardPermissionRequest(
-        @NonNull final GeckoSession session, @NonNull ClipboardPermission permission) {
+        @NonNull final GeckoSession session, @NonNull final ClipboardPermission permission) {
       return GeckoResult.deny();
     }
 
@@ -4806,10 +4808,10 @@ public class GeckoSession {
      */
     @UiThread
     default void onLocationChange(
-        @NonNull GeckoSession session,
-        @Nullable String url,
+        @NonNull final GeckoSession session,
+        @Nullable final String url,
         final @NonNull List<PermissionDelegate.ContentPermission> perms,
-        @NonNull Boolean hasUserGesture) {}
+        @NonNull final Boolean hasUserGesture) {}
 
     /**
      * The view's ability to go back has changed.
@@ -4981,6 +4983,8 @@ public class GeckoSession {
     }
 
     /**
+     * A request has failed to load.
+     *
      * @param session The GeckoSession that initiated the callback.
      * @param uri The URI that failed to load.
      * @param error A WebRequestError containing details about the error
@@ -5080,7 +5084,7 @@ public class GeckoSession {
          * @param prompt the prompt that was completed.
          */
         @AnyThread
-        default void onPromptCompleted(@NonNull BasePrompt prompt) {}
+        default void onPromptCompleted(@NonNull final BasePrompt prompt) {}
       }
 
       private void complete() {
@@ -5359,6 +5363,9 @@ public class GeckoSession {
 
     /** Contains all the Identity credential prompts (FedCM) */
     final class IdentityCredential {
+      /** Public constructor for IdentityCredential. */
+      public IdentityCredential() {}
+
       /**
        * ProviderSelectorPrompt contains the information necessary to represent a prompt that allows
        * the user to select the identity credential provider they would like to use.
@@ -6589,7 +6596,11 @@ public class GeckoSession {
       }
     }
 
-    /** Request containing information required to resolve Autocomplete prompt requests. */
+    /**
+     * Request containing information required to resolve Autocomplete prompt requests.
+     *
+     * @param <T> The type of the Autocomplete options.
+     */
     class AutocompleteRequest<T extends Autocomplete.Option<?>> extends BasePrompt {
       /**
        * The Autocomplete options for this request. This can contain a single or multiple entries.
@@ -7090,6 +7101,7 @@ public class GeckoSession {
      * @param source The source of the scroll position change, one of {@link
      *     #SOURCE_USER_INTERACTION} or {@link #SOURCE_OTHER}.
      */
+    @WrapForJNI
     public ScrollPositionUpdate(
         final float scrollX, final float scrollY, final float zoom, final @SourceType int source) {
       this.scrollX = scrollX;
@@ -7684,7 +7696,7 @@ public class GeckoSession {
      */
     @UiThread
     default @Nullable GeckoResult<Integer> onContentPermissionRequest(
-        @NonNull final GeckoSession session, @NonNull ContentPermission perm) {
+        @NonNull final GeckoSession session, @NonNull final ContentPermission perm) {
       return GeckoResult.fromValue(ContentPermission.VALUE_PROMPT);
     }
 
@@ -8204,22 +8216,17 @@ public class GeckoSession {
     mOverscroll.setDistance(y, OverscrollEdgeEffect.AXIS_Y);
   }
 
-  /* package */ void onCompositorScrollUpdate(
-      final float scrollX,
-      final float scrollY,
-      final float zoom,
-      final @ScrollPositionUpdate.SourceType int source) {
+  /* package */ void onCompositorScrollUpdate(final ScrollPositionUpdate update) {
     if (DEBUG) {
       ThreadUtils.assertOnUiThread();
     }
 
     // Tbe incoming scrollX and scrollY are in CSS pixels.
     // For mViewportLeft/Top, convert them to Screen pixels.
-    mViewportLeft = scrollX * zoom;
-    mViewportTop = scrollY * zoom;
-    mViewportZoom = zoom;
+    mViewportLeft = update.scrollX * update.zoom;
+    mViewportTop = update.scrollY * update.zoom;
+    mViewportZoom = update.zoom;
 
-    final ScrollPositionUpdate update = new ScrollPositionUpdate(scrollX, scrollY, zoom, source);
     mLastScrollPositionUpdate = update;
     if (mCompositorScrollDelegate != null) {
       mCompositorScrollDelegate.onScrollChanged(this, update);
@@ -8587,9 +8594,7 @@ public class GeckoSession {
     getAutofillSupport().setDelegate(delegate);
   }
 
-  /**
-   * @return The current {@link Autofill.Delegate} for this session, if any.
-   */
+  /** {@return the current {@link Autofill.Delegate} for this session, if any} */
   @UiThread
   public @Nullable Autofill.Delegate getAutofillDelegate() {
     return getAutofillSupport().getDelegate();

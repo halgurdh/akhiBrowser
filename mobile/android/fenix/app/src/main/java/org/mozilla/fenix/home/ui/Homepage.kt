@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -45,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import mozilla.components.compose.base.modifier.thenConditional
 import mozilla.components.compose.base.theme.Theme
 import mozilla.components.feature.top.sites.TopSite
 import mozilla.components.support.ktx.android.net.hostWithoutCommonPrefixes
@@ -54,7 +56,6 @@ import org.mozilla.fenix.GleanMetrics.History
 import org.mozilla.fenix.GleanMetrics.HomeBookmarks
 import org.mozilla.fenix.GleanMetrics.RecentlyVisitedHomepage
 import org.mozilla.fenix.R
-import org.mozilla.fenix.browser.browsingmode.BrowsingMode
 import org.mozilla.fenix.components.appstate.AppAction
 import org.mozilla.fenix.components.appstate.AppAction.ShortcutAction
 import org.mozilla.fenix.components.appstate.setup.checklist.SetupChecklistState
@@ -88,6 +89,7 @@ import org.mozilla.fenix.home.recentvisits.view.RecentlyVisited
 import org.mozilla.fenix.home.sessioncontrol.CollectionInteractor
 import org.mozilla.fenix.home.sessioncontrol.MessageCardInteractor
 import org.mozilla.fenix.home.setup.ui.SetupChecklist
+import org.mozilla.fenix.home.sports.ui.SportsWidget
 import org.mozilla.fenix.home.store.HeaderState
 import org.mozilla.fenix.home.store.HomepageState
 import org.mozilla.fenix.home.store.MiddleSearchState
@@ -166,33 +168,13 @@ internal fun Homepage(
                 )
             }
 
-            when (val headerState = state.headerState) {
-                is HeaderState.Experimental.Normal -> {
-                    val settings = components.settings
-
-                    ExperimentalHomepageHeader(
-                        showStoriesButton = headerState.showStoriesButton,
-                        showButtonAnimation = headerState.showButtonAnimation,
-                        onPrivateModeTapped = { browsingModeChanged(BrowsingMode.Private) },
-                        onStoriesTapped = { interactor.onDiscoverMoreClicked() },
-                        onNewsAnimationShown = { settings.recordNewsButtonAnimationShown() },
-                    )
-                }
-
-                is HeaderState.Experimental.Private -> {
-                    ExperimentalPrivateHomepageHeader(onHomeTapped = { browsingModeChanged(BrowsingMode.Normal) })
-                }
-
-                is HeaderState.Normal -> {
-                    HomepageHeader(
-                        browsingMode = state.browsingMode,
-                        showStoriesButton = headerState.showStoriesButton,
-                        showButtons = headerState.showButtons,
-                        browsingModeChanged = browsingModeChanged,
-                        onStoriesTapped = { interactor.onDiscoverMoreClicked() },
-                    )
-                }
-            }
+            HomepageHeader(
+                browsingMode = state.browsingMode,
+                showStoriesButton = state.headerState.showStoriesButton,
+                showButtons = state.headerState.showButtons,
+                browsingModeChanged = browsingModeChanged,
+                onStoriesTapped = { interactor.onDiscoverMoreClicked() },
+            )
 
             if (state.firstFrameDrawn) {
                 with(state) {
@@ -207,6 +189,13 @@ internal fun Homepage(
                             Image(
                                 painter = painterResource(id = iconsR.drawable.mozac_ic_private_mode_circle_fill_72),
                                 contentDescription = null,
+                                modifier =
+                                    Modifier.thenConditional(
+                                            Modifier.padding(vertical = FirefoxTheme.layout.space.static50)
+                                        ) {
+                                            middleSearchState.isShown
+                                        }
+                                        .size(40.dp),
                             )
 
                             if (middleSearchState.isShown) {
@@ -219,7 +208,7 @@ internal fun Homepage(
 
                                 Spacer(Modifier.height(FirefoxTheme.layout.space.static400))
                             } else {
-                                Spacer(Modifier.height(FirefoxTheme.layout.space.static300))
+                                Spacer(Modifier.height(FirefoxTheme.layout.space.static500))
                             }
 
                             PrivateBrowsingDescription(onLearnMoreClick = interactor::onLearnMoreClicked)
@@ -284,6 +273,13 @@ internal fun Homepage(
                                     modifier = Modifier.padding(top = 16.dp),
                                     longfoxEnabled = longfoxEnabled,
                                     showLongfoxAnimation = showLongfoxAnimation,
+                                )
+                            }
+
+                            if (sportsWidgetState.isShown) {
+                                SportsWidget(
+                                    state = sportsWidgetState,
+                                    modifier = Modifier.padding(top = FirefoxTheme.layout.space.static500),
                                 )
                             }
 
@@ -673,7 +669,7 @@ private fun HomepagePreview() {
                         longfoxEnabled = false,
                         showLongfoxAnimation = false,
                         trackersBlockedCount = 754,
-                        headerState = HeaderState.Normal(showStoriesButton = true),
+                        headerState = HeaderState(showStoriesButton = true),
                         middleSearchState = MiddleSearchState(searchBarVisible = true, searchBarEnabled = false),
                         firstFrameDrawn = true,
                         setupChecklistState = null,
@@ -716,7 +712,7 @@ private fun HomepageBannerPreview() {
                         longfoxEnabled = false,
                         showLongfoxAnimation = false,
                         trackersBlockedCount = 754,
-                        headerState = HeaderState.Normal(showStoriesButton = true),
+                        headerState = HeaderState(showStoriesButton = true),
                         middleSearchState = MiddleSearchState(searchBarVisible = true, searchBarEnabled = false),
                         firstFrameDrawn = true,
                         setupChecklistState = null,
@@ -750,7 +746,7 @@ private fun HomepagePreviewCollections() {
                         longfoxEnabled = false,
                         showLongfoxAnimation = false,
                         trackersBlockedCount = 754,
-                        headerState = HeaderState.Normal(showStoriesButton = true),
+                        headerState = HeaderState(showStoriesButton = true),
                         middleSearchState = MiddleSearchState(searchBarVisible = true, searchBarEnabled = false),
                         firstFrameDrawn = true,
                         setupChecklistState = null,
@@ -784,7 +780,7 @@ private fun HomepageCollectionsMigrationCardPreview() {
                         longfoxEnabled = false,
                         showLongfoxAnimation = false,
                         trackersBlockedCount = 754,
-                        headerState = HeaderState.Normal(showStoriesButton = true),
+                        headerState = HeaderState(showStoriesButton = true),
                         middleSearchState = MiddleSearchState(searchBarVisible = true, searchBarEnabled = false),
                         firstFrameDrawn = true,
                         setupChecklistState = null,
@@ -822,7 +818,7 @@ private fun MinimalHomepagePreview() {
                         longfoxEnabled = false,
                         showLongfoxAnimation = false,
                         trackersBlockedCount = 754,
-                        headerState = HeaderState.Normal(showStoriesButton = true),
+                        headerState = HeaderState(showStoriesButton = true),
                         firstFrameDrawn = true,
                         setupChecklistState = null,
                         isSearchInProgress = false,
@@ -846,7 +842,7 @@ private fun PrivateHomepagePreview() {
         Homepage(
             state =
                 HomepageState.Private(
-                    headerState = HeaderState.Normal(showStoriesButton = true),
+                    headerState = HeaderState(showStoriesButton = true),
                     firstFrameDrawn = true,
                     isSearchInProgress = false,
                 ),

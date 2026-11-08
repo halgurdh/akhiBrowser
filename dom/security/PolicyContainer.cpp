@@ -4,11 +4,14 @@
 
 #include "PolicyContainer.h"
 
+#include "mozilla/BasePrincipal.h"
 #include "mozilla/dom/ConnectionAllowlists.h"
 #include "mozilla/dom/IntegrityPolicy.h"
 #include "mozilla/dom/IntegrityPolicyWAICT.h"
 #include "mozilla/dom/nsCSPContext.h"
+#include "mozilla/extensions/WebExtensionPolicy.h"
 #include "mozilla/ipc/PBackgroundSharedTypes.h"
+#include "nsCSPUtils.h"
 #include "nsIClassInfoImpl.h"
 #include "nsIObjectInputStream.h"
 #include "nsIObjectOutputStream.h"
@@ -89,6 +92,59 @@ PolicyContainer::Write(nsIObjectOutputStream* aStream) {
   MOZ_TRY(aStream->Write16(static_cast<uint16_t>(mIPAddressSpace)));
 
   return NS_OK;
+}
+
+// static
+Result<already_AddRefed<PolicyContainer>, nsresult>
+PolicyContainer::CreateForNonDocument(nsIPrincipal* aPrincipal,
+                                      nsIURI* aSelfURI,
+                                      const Headers& aHeaders) {
+  RefPtr<PolicyContainer> policyContainer = new PolicyContainer();
+
+  RefPtr<extensions::WebExtensionPolicy> addonPolicy;
+  if (auto* basePrin = BasePrincipal::Cast(aPrincipal)) {
+    addonPolicy = basePrin->AddonPolicy();
+  }
+
+  if (!aHeaders.mContentSecurityPolicy.IsEmpty() ||
+      !aHeaders.mContentSecurityPolicyReportOnly.IsEmpty() || addonPolicy) {
+    RefPtr<nsCSPContext> csp = new nsCSPContext();
+    MOZ_TRY(csp->SetRequestContextWithPrincipal(aPrincipal, aSelfURI,
+                                                /* aReferrer */ ""_ns,
+                                                /* aInnerWindowId */ 0));
+    if (!aHeaders.mContentSecurityPolicy.IsEmpty()) {
+      MOZ_TRY(CSP_AppendCSPFromHeader(
+          csp, NS_ConvertASCIItoUTF16(aHeaders.mContentSecurityPolicy),
+          false /* aReportOnly */));
+    }
+    if (!aHeaders.mContentSecurityPolicyReportOnly.IsEmpty()) {
+      MOZ_TRY(CSP_AppendCSPFromHeader(
+          csp,
+          NS_ConvertASCIItoUTF16(aHeaders.mContentSecurityPolicyReportOnly),
+          true /* aReportOnly */));
+    }
+    // For extensions there aren't any CSP header values, instead the
+    // Extension CSP is inherited.
+    if (addonPolicy) {
+      csp->AppendPolicy(addonPolicy->BaseCSP(), false, false);
+      csp->AppendPolicy(addonPolicy->ExtensionPageCSP(), false, false);
+    }
+    policyContainer->SetCSP(csp);
+  }
+
+  if (!aHeaders.mConnectionAllowlist.IsEmpty() ||
+      !aHeaders.mConnectionAllowlistReportOnly.IsEmpty()) {
+    RefPtr<ConnectionAllowlists> allowlists;
+    MOZ_TRY(ConnectionAllowlists::ParseHeaders(
+        aHeaders.mConnectionAllowlist, aHeaders.mConnectionAllowlistReportOnly,
+        getter_AddRefs(allowlists)));
+    if (allowlists) {
+      allowlists->SetResponseURI(aSelfURI);
+    }
+    policyContainer->SetConnectionAllowlists(allowlists);
+  }
+
+  return policyContainer.forget();
 }
 
 void PolicyContainer::ToArgs(const PolicyContainer* aPolicy,

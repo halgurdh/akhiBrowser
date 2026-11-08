@@ -61,6 +61,7 @@ var gExceptionPaths = [
   // wasm is not available.
   "resource://pdf.js/web/wasm/openjpeg_nowasm_fallback.js",
   "resource://pdf.js/web/wasm/jbig2_nowasm_fallback.js",
+  "resource://pdf.js/web/wasm/hellbox_nowasm_fallback.js",
 
   // Exclude the form autofill path that has been moved out of the extensions to
   // toolkit, see bug 1691821.
@@ -206,7 +207,7 @@ var allowlist = [
   // extensions/pref/autoconfig/src/nsReadConfig.cpp
   { file: "resource://gre/defaults/autoconfig/prefcalls.js" },
 
-  // browser/components/preferences/moreFromMozilla.js
+  // browser/components/preferences/config/moreFromMozilla.mjs
   // These files URLs are constructed programatically at run time.
   {
     file: "chrome://browser/content/preferences/more-from-mozilla-qr-code-simple.svg",
@@ -348,6 +349,19 @@ var allowlist = [
   {
     file: "moz-src:///browser/components/backup/resources/CookiesBackupResource.sys.mjs",
   },
+
+  // Bug 2078933: The widget dashboard will generate widgets with this module.
+  { file: "moz-src:///browser/components/widgets/WidgetGenerator.sys.mjs" },
+
+  // Bug 2083829: The single page onboarding screen will consume these. They
+  // can be removed from this list once it lands.
+  {
+    file: "chrome://browser/content/aiwindow/components/smartwindow-option-select.mjs",
+  },
+  {
+    file: "chrome://browser/content/aiwindow/components/smartwindow-option-select.css",
+  },
+  { file: "chrome://browser/content/aiwindow/assets/model-choice-auto.svg" },
 ];
 
 if (AppConstants.NIGHTLY_BUILD) {
@@ -375,14 +389,6 @@ if (AppConstants.platform != "win") {
   allowlist.push({
     file: "resource://app/localization/en-US/browser/backgroundtasks/defaultagent.ftl",
   });
-
-  if (AppConstants.NIGHTLY_BUILD) {
-    // This path is refereneced in nsFxrCommandLineHandler.cpp, which is only
-    // compiled in Windows. This path is allowed so that non-Windows builds
-    // can access the FxR UI via --chrome rather than --fxr (which includes VR-
-    // specific functionality)
-    allowlist.push({ file: "chrome://fxr/content/fxrui.html" });
-  }
 }
 
 if (AppConstants.platform == "android") {
@@ -720,7 +726,7 @@ function parseCodeFile(fileUri) {
         }
 
         // This handles `import` lines which may be multi-line.
-        // We have an ESLint rule, `import/no-unassigned-import` which prevents
+        // We have an ESLint rule, `import-x/no-unassigned-import` which prevents
         // using bare `import "foo.js"`, so we don't need to handle that case
         // here.
         match = line.match(/from\W*['"](.*?)['"]/);

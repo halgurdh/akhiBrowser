@@ -715,7 +715,7 @@ nsresult PeerConnectionImpl::GetDatachannelParameters(
 
   Maybe<const JsepTransceiver> datachannelTransceiver =
       mJsepSession->FindTransceiver([](const JsepTransceiver& aTransceiver) {
-        return aTransceiver.GetMediaType() == SdpMediaSection::kApplication;
+        return aTransceiver.GetMediaTypeInfo().IsDataChannel();
       });
 
   if (!datachannelTransceiver ||
@@ -965,7 +965,7 @@ bool PeerConnectionImpl::CheckNegotiationNeeded() {
   if (mDataConnection) {
     Maybe<const JsepTransceiver> dcTransceiver =
         mJsepSession->FindTransceiver([](const JsepTransceiver& aTransceiver) {
-          return aTransceiver.GetMediaType() == SdpMediaSection::kApplication;
+          return aTransceiver.GetMediaTypeInfo().IsDataChannel();
         });
     if (!dcTransceiver || !dcTransceiver->IsNegotiated()) {
       return true;
@@ -1080,7 +1080,7 @@ PeerConnectionImpl::CreateDataChannel(
 
   Maybe<JsepTransceiver> dcTransceiver =
       mJsepSession->FindTransceiver([](const JsepTransceiver& aTransceiver) {
-        return aTransceiver.GetMediaType() == SdpMediaSection::kApplication;
+        return aTransceiver.GetMediaTypeInfo().IsDataChannel();
       });
 
   if (dcTransceiver) {
@@ -1274,8 +1274,7 @@ void PeerConnectionImpl::SyncFromJsep() {
   mJsepSession->ForEachTransceiver(
       [this, self = RefPtr<PeerConnectionImpl>(this)](
           const JsepTransceiver& jsepTransceiver) {
-        if (jsepTransceiver.GetMediaType() ==
-            SdpMediaSection::MediaType::kApplication) {
+        if (!jsepTransceiver.GetMediaTypeInfo().IsRtp()) {
           return;
         }
 
@@ -3474,9 +3473,9 @@ void PeerConnectionImpl::IceConnectionStateChange(
   } else if (oldPair && aSelectedPair.isSome()) {
     // Compare against the internal (un-redacted) candidate strings.
     noChange = oldPair->Local()->CandidateInternal().EqualsASCII(
-                   aSelectedPair->local().get()) &&
+                   aSelectedPair->local.get()) &&
                oldPair->Remote()->CandidateInternal().EqualsASCII(
-                   aSelectedPair->remote().get());
+                   aSelectedPair->remote.get());
   }
 
   if (!noChange) {
@@ -3488,10 +3487,10 @@ void PeerConnectionImpl::IceConnectionStateChange(
     if (aSelectedPair.isSome()) {
       nsCOMPtr<nsIGlobalObject> global = do_QueryInterface(mWindow);
       RefPtr<RTCIceCandidate> local = RTCIceCandidate::FromAttribute(
-          global, aSelectedPair->local(),
+          global, aSelectedPair->local,
           /*aHidePrflx=*/GetPrefObfuscateHostAddresses());
       RefPtr<RTCIceCandidate> remote = RTCIceCandidate::FromAttribute(
-          global, aSelectedPair->remote(), /*aHidePrflx=*/true);
+          global, aSelectedPair->remote, /*aHidePrflx=*/true);
       newCandidatePair = new RTCIceCandidatePair(global, local, remote);
     }
 
@@ -4364,11 +4363,12 @@ void PeerConnectionImpl::UpdateRTCDtlsTransports() {
           mTransportIdToRTCDtlsTransport.GetOrInsertNew(key, GetParentObject());
     }
 
-    if (jsepTransceiver.GetMediaType() == SdpMediaSection::kApplication) {
+    const auto mediaTypeInfo = jsepTransceiver.GetMediaTypeInfo();
+    if (mediaTypeInfo.IsDataChannel()) {
       if (mSctpTransport) {
         mSctpTransport->SetTransport(dtlsTransport.get());
       }
-    } else {
+    } else if (mediaTypeInfo.IsRtp()) {
       RefPtr<dom::RTCRtpTransceiver> domTransceiver =
           GetTransceiver(jsepTransceiver.GetUuid());
       if (domTransceiver) {

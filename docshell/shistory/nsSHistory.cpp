@@ -1838,10 +1838,13 @@ void nsSHistory::LoadURIs(const nsTArray<LoadEntryResult>& aLoadResults,
                   //      reject the finished promise for apiMethodTracker with
                   //      a new "AbortError" DOMException created in
                   //      navigation's relevant realm.
-                  if (aResult == nsIDocumentViewer::eCanceledByBeforeUnload) {
+                  if (aResult == nsIDocumentViewer::eCanceledByBeforeUnload ||
+                      aResult == nsIDocumentViewer::eCanceledByNavigate) {
                     return aResolver(nsresult::NS_ERROR_DOM_ABORT_ERR);
                   }
 
+                  // The traverse navigate event of the traversable was
+                  // intercepted. Its traversal resumes once it commits.
                   aResolver(NS_OK);
 
                   return;

@@ -89,7 +89,6 @@ abridged_certs = { path = "../../../../security/manager/ssl/abridged_certs" }
 cert_storage = { path = "../../../../security/manager/ssl/cert_storage" }
 crypto_hash = { path = "../../../../security/manager/ssl/crypto_hash" }
 data_storage = { path = "../../../../security/manager/ssl/data_storage" }
-ipcclientcerts = { path = "../../../../security/manager/ssl/ipcclientcerts" }
 lockstore_ffi = { path = "../../../../security/lockstore/lockstore_ffi" }
 mls_gk = { path = "../../../../security/mls/mls_gk" }
 noise = { path = "../../../../security/manager/ssl/noise" }

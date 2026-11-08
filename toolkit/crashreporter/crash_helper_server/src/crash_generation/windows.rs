@@ -6,14 +6,14 @@ use super::{BreakpadProcessId, CrashGenerator};
 
 use anyhow::Result;
 use crash_helper_common::{
-    crash_annotations::CrashAnnotation, messages, ApplicationInfo, ExtraCrashData,
+    crash_annotations::CrashAnnotation, messages, ApplicationInfo, ExtraCrashData, RawProcessHandle,
 };
 use mozannotation_server::{AnnotationData, CAnnotation};
 use std::{
     convert::TryInto,
     env,
     fs::{create_dir_all, File},
-    mem::{size_of, zeroed},
+    mem::{size_of, zeroed, MaybeUninit},
     os::windows::io::AsRawHandle,
     path::PathBuf,
     ptr::{null, null_mut},
@@ -21,7 +21,7 @@ use std::{
 use uuid::Uuid;
 use win32_process_mitigations::MitigationOptions;
 use windows_sys::Win32::{
-    Foundation::{FALSE, HANDLE},
+    Foundation::{GetLastError, FALSE, FILETIME, HANDLE},
     System::{
         Diagnostics::Debug::{
             MiniDumpWithFullMemory, MiniDumpWithFullMemoryInfo, MiniDumpWithHandleData,
@@ -30,11 +30,11 @@ use windows_sys::Win32::{
             MINIDUMP_EXCEPTION_INFORMATION, MINIDUMP_TYPE,
         },
         SystemInformation::{
-            VerSetConditionMask, VerifyVersionInfoW, OSVERSIONINFOEXW, VER_MAJORVERSION,
-            VER_MINORVERSION, VER_SERVICEPACKMAJOR, VER_SERVICEPACKMINOR,
+            GetSystemTimeAsFileTime, VerSetConditionMask, VerifyVersionInfoW, OSVERSIONINFOEXW,
+            VER_MAJORVERSION, VER_MINORVERSION, VER_SERVICEPACKMAJOR, VER_SERVICEPACKMINOR,
         },
         SystemServices::VER_GREATER_EQUAL,
-        Threading::{OpenProcess, PROCESS_ALL_ACCESS},
+        Threading::{GetProcessTimes, OpenProcess, PROCESS_ALL_ACCESS},
     },
 };
 
@@ -205,11 +205,11 @@ pub(crate) fn create_platform_specific_annotations(
     let sys_mitigations = win32_process_mitigations::get_system_mitigation_options()?;
     if let Some(mitigations) = MitigationOptions::amalgamate(sys_mitigations, app_mitigations) {
         Ok(vec![
-            super::make_annotation(
+            super::make_annotation_str(
                 CrashAnnotation::WindowsProcessMitigationsBytes,
                 &format!("{}", mitigations),
             ),
-            super::make_annotation(
+            super::make_annotation_str(
                 CrashAnnotation::WindowsProcessMitigations,
                 &mitigations.describe(),
             ),
@@ -217,4 +217,53 @@ pub(crate) fn create_platform_specific_annotations(
     } else {
         Ok(vec![])
     }
+}
+
+fn filetime_to_u64(ft: &FILETIME) -> u64 {
+    ((ft.dwHighDateTime as u64) << 32) + ft.dwLowDateTime as u64
+}
+
+pub(crate) fn process_uptime(handle: RawProcessHandle) -> f64 {
+    let mut creation_time = MaybeUninit::<FILETIME>::uninit();
+    let mut exit_time = MaybeUninit::<FILETIME>::uninit();
+    let mut kernel_time = MaybeUninit::<FILETIME>::uninit();
+    let mut user_time = MaybeUninit::<FILETIME>::uninit();
+
+    // SAFETY: All the pointers we pass to `GetProcessTimes()` point to
+    // stack-allocated structures and thus are valid. We assume the process
+    // creation time structure to be initialized only after having verified
+    // that the call was successful.
+    let creation_time = unsafe {
+        if GetProcessTimes(
+            handle,
+            creation_time.as_mut_ptr(),
+            exit_time.as_mut_ptr(),
+            kernel_time.as_mut_ptr(),
+            user_time.as_mut_ptr(),
+        ) != 0
+        {
+            creation_time.assume_init()
+        } else {
+            log::error!(
+                "Could not get process time stats, error: {:x}",
+                GetLastError()
+            );
+            return 0.0f64;
+        }
+    };
+
+    let mut current_time = MaybeUninit::<FILETIME>::uninit();
+
+    // SAFETY: The pointer we pass to `GetSystemTimeAsFileTime()` point to
+    // stack-allocated memory and thus are guaranteed to be valid. The call
+    // always populates the passed in structure so we can assume it has been
+    // properly initialized after the call.
+    let current_time = unsafe {
+        GetSystemTimeAsFileTime(current_time.as_mut_ptr());
+        current_time.assume_init()
+    };
+
+    let uptime =
+        filetime_to_u64(&current_time).saturating_sub(filetime_to_u64(&creation_time)) as f64;
+    uptime / 10_000_000.0 // 100-ns to seconds
 }

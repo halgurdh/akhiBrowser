@@ -1737,6 +1737,14 @@ void MacroAssemblerRiscv64::computeScaledAddress(
   }
 }
 
+Address MacroAssemblerRiscv64::computeAbsoluteAddress(AbsoluteAddress address,
+                                                      Register scratch) {
+  int64_t value = int64_t(address.addr);
+  int64_t low12 = int64_t(uint64_t(value) << 52) >> 52;
+  ma_li(scratch, ImmWord(uint64_t(value - low12)));
+  return Address(scratch, int32_t(low12));
+}
+
 void MacroAssemblerRiscv64::computeScaledAddress32(const BaseIndex& address,
                                                    Register dest) {
   Register base = address.base;
@@ -1834,8 +1842,7 @@ FaultingCodeRange MacroAssemblerRiscv64Compat::load32(AbsoluteAddress address,
                                                       Register dest) {
   UseScratchRegisterScope temps(this);
   Register scratch = temps.Acquire();
-  movePtr(ImmPtr(address.addr), scratch);
-  return load32(Address(scratch, 0), dest);
+  return load32(computeAbsoluteAddress(address, scratch), dest);
 }
 
 FaultingCodeRange MacroAssemblerRiscv64Compat::load32(
@@ -1860,8 +1867,7 @@ FaultingCodeRange MacroAssemblerRiscv64Compat::loadPtr(AbsoluteAddress address,
                                                        Register dest) {
   UseScratchRegisterScope temps(this);
   Register scratch = temps.Acquire();
-  movePtr(ImmPtr(address.addr), scratch);
-  return loadPtr(Address(scratch, 0), dest);
+  return loadPtr(computeAbsoluteAddress(address, scratch), dest);
 }
 
 FaultingCodeRange MacroAssemblerRiscv64Compat::loadPtr(
@@ -1921,8 +1927,7 @@ FaultingCodeRange MacroAssemblerRiscv64Compat::store32(
     Register src, AbsoluteAddress address) {
   UseScratchRegisterScope temps(this);
   Register scratch = temps.Acquire();
-  movePtr(ImmPtr(address.addr), scratch);
-  return store32(src, Address(scratch, 0));
+  return store32(src, computeAbsoluteAddress(address, scratch));
 }
 
 FaultingCodeRange MacroAssemblerRiscv64Compat::store32(Register src,
@@ -2002,8 +2007,7 @@ FaultingCodeRange MacroAssemblerRiscv64Compat::storePtr(Register src,
                                                         AbsoluteAddress dest) {
   UseScratchRegisterScope temps(this);
   Register scratch = temps.Acquire();
-  movePtr(ImmPtr(dest.addr), scratch);
-  return storePtr(src, Address(scratch, 0));
+  return storePtr(src, computeAbsoluteAddress(dest, scratch));
 }
 
 void MacroAssemblerRiscv64Compat::testNullSet(Condition cond,
@@ -2246,11 +2250,11 @@ void MacroAssemblerRiscv64Compat::boxValue(JSValueType type, Register src,
     case JSVAL_TYPE_PRIVATE_GCTHING:
     case JSVAL_TYPE_BIGINT:
     case JSVAL_TYPE_OBJECT: {
-      // Loading the shifted tag requires only two instructions.
-      ma_li(dest, ImmShiftedTag(type));
+      // Loading the negated shifted tag requires at most two instructions.
+      ma_li(dest, ImmNegatedShiftedTag(type));
 
       // Insert payload.
-      or_(dest, dest, src);
+      sub(dest, src, dest);
       return;
     }
     case JSVAL_TYPE_DOUBLE:
@@ -2508,11 +2512,11 @@ void MacroAssemblerRiscv64Compat::tagValue(JSValueType type, Register payload,
       case JSVAL_TYPE_PRIVATE_GCTHING:
       case JSVAL_TYPE_BIGINT:
       case JSVAL_TYPE_OBJECT: {
-        // Loading the shifted tag requires only two instructions.
-        ma_li(scratch, ImmShiftedTag(type));
+        // Loading the negated shifted tag requires at most two instructions.
+        ma_li(scratch, ImmNegatedShiftedTag(type));
 
         // Insert payload.
-        or_(dest.valueReg(), payload, scratch);
+        sub(dest.valueReg(), payload, scratch);
         break;
       }
       case JSVAL_TYPE_DOUBLE:
@@ -5950,7 +5954,7 @@ void MacroAssemblerRiscv64::ma_mul32(Register rd, Register rs, Imm32 rt) {
   uint32_t shift = mozilla::FloorLog2(uint32_t(rt.value));
 
   // If the constant has only one bit set, it can be encoded as a bit-shift.
-  if ((1 << shift) == rt.value) {
+  if (std::has_single_bit(uint32_t(rt.value))) {
     slliw(rd, rs, shift);
     return;
   }
@@ -5958,8 +5962,8 @@ void MacroAssemblerRiscv64::ma_mul32(Register rd, Register rs, Imm32 rt) {
   // If the constant cannot be encoded as (1<<C1), see if it can be encoded
   // as (1<<C1) | (1<<C2), which can be computed using an add and a shift.
   uint32_t rest = rt.value - (1 << shift);
-  uint32_t shift_rest = mozilla::FloorLog2(rest);
-  if ((1u << shift_rest) == rest) {
+  if (std::has_single_bit(rest)) {
+    uint32_t shift_rest = std::countr_zero(rest);
     UseScratchRegisterScope temps(this);
     Register scratch = temps.Acquire();
 
@@ -6035,7 +6039,7 @@ void MacroAssemblerRiscv64::ma_mul64(Register rd, Register rs, Imm64 rt) {
     }
 
     if (std::has_single_bit(rt.value + 1)) {
-      int32_t shift = mozilla::FloorLog2(rt.value + 1);
+      int32_t shift = std::countr_zero(rt.value + 1);
 
       UseScratchRegisterScope temps(this);
       Register savedRs = rs;
@@ -6049,7 +6053,7 @@ void MacroAssemblerRiscv64::ma_mul64(Register rd, Register rs, Imm64 rt) {
     }
 
     if (std::has_single_bit(rt.value - 1)) {
-      int32_t shift = mozilla::FloorLog2(rt.value - 1);
+      int32_t shift = std::countr_zero(rt.value - 1);
 
       UseScratchRegisterScope temps(this);
       Register savedRs = rs;
@@ -6063,8 +6067,8 @@ void MacroAssemblerRiscv64::ma_mul64(Register rd, Register rs, Imm64 rt) {
     }
 
     // Use shift if constant is power of 2.
-    uint8_t shift = mozilla::FloorLog2(rt.value);
-    if (uint64_t(1) << shift == rt.value) {
+    if (std::has_single_bit(rt.value)) {
+      uint8_t shift = std::countr_zero(rt.value);
       slli(rd, rs, shift);
       return;
     }

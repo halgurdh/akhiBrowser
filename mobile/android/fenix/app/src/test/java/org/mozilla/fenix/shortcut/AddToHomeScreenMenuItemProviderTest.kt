@@ -10,7 +10,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
@@ -44,21 +43,21 @@ class AddToHomeScreenMenuItemProviderTest {
     fun `GIVEN a simple webpage is shown WHEN providing the item THEN offer adding it to the home screen`() = runTest {
         val provider = provider(webAppUseCases = webAppUseCases(isInstallable = false))
 
-        assertEquals(expectedItem(isInstallable = false), provider.itemFlow.value)
+        assertEquals(expectedItem(isInstallable = false), provider.itemsFlow.value.single())
     }
 
     @Test
     fun `GIVEN the page can be added as a PWA WHEN providing the item THEN offer adding it as a PWA`() = runTest {
         val provider = provider(webAppUseCases = webAppUseCases(isInstallable = true))
 
-        assertEquals(expectedItem(isInstallable = true), provider.itemFlow.value)
+        assertEquals(expectedItem(isInstallable = true), provider.itemsFlow.value.single())
     }
 
     @Test
     fun `GIVEN the launcher does not support shortcuts WHEN providing the item THEN don't show it`() = runTest {
         val provider = provider(webAppUseCases = webAppUseCases(isPinningSupported = false))
 
-        assertNull(provider.itemFlow.value)
+        assertTrue(provider.itemsFlow.value.isEmpty())
     }
 
     @Test
@@ -73,7 +72,7 @@ class AddToHomeScreenMenuItemProviderTest {
                 onClickEvent = null,
                 state = MenuItemState.DEFAULT,
             ),
-            provider.itemFlow.value,
+            provider.itemsFlow.value.single(),
         )
     }
 
@@ -109,7 +108,7 @@ class AddToHomeScreenMenuItemProviderTest {
             listOf(true, false).forEach { isInstallable ->
                 val provider = provider(webAppUseCases = webAppUseCases(isInstallable = isInstallable))
 
-                val events = requireNotNull(provider.itemFlow.value).reachableEvents()
+                val events = provider.itemsFlow.value.single().reachableEvents()
 
                 assertTrue(events.all { provider.handles(it) }, "Not all of $events are handled")
                 assertFalse(provider.handles(MenuAction.Navigate.Settings))

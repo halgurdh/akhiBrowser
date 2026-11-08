@@ -544,6 +544,10 @@ newtab-wallpaper-firefox-peak-dark = A fox’s face at the left edge, on a dark 
 newtab-wallpaper-firefox-peak-light = A fox’s face at the left edge, on a light background
 newtab-wallpaper-firefox-sky-dark = Dark purple hills under a night sky
 newtab-wallpaper-firefox-sky-light = Light hills under a soft sky
+# “Wrexham AFC” is the name of a football club. Use the name the club is known
+# by in your language, if it has one: in Welsh, “CPD Wrecsam”.
+# "crest" refers to the football club's logo (team badge).
+newtab-wallpaper-firefox-wrexham = The Wrexham AFC crest on a red background
 
 # Variables
 #   $author_string (String) - The name of the creator of the photo.
@@ -822,6 +826,12 @@ newtab-widget-menu-move-left = Left
 # Submenu item under "Move"; moves the widget one position to the right.
 # RTL locales should translate this as "Left".
 newtab-widget-menu-move-right = Right
+# Submenu item under "Move"; pins the widget to Home, the New Tab space the
+# page opens on.
+newtab-widget-menu-move-to-home = Home
+# Submenu item under "Move"; moves the widget from Home back to the Widgets
+# space, the New Tab space that holds every widget not pinned to Home.
+newtab-widget-menu-move-to-widgets = Widgets
 newtab-widget-size-small = Small
 newtab-widget-size-medium = Medium
 newtab-widget-size-large = Large
@@ -858,6 +868,10 @@ newtab-widget-section-show-more =
 # allowing users to collapse it back to one row.
 newtab-widget-section-show-less =
     .label = Show fewer widgets
+# Shown in place of a widget's content when the widget could not be loaded.
+# The widget's name is shown and read out separately, just before this message,
+# so this message names no widget.
+newtab-widget-error-not-available = Widget unavailable. Check back later.
 newtab-widget-lists-name-default = Checklist
 newtab-widget-lists-name-label-default =
     .label = Task list
@@ -894,10 +908,6 @@ newtab-widget-lists-menu-create = Create a new list
 newtab-widget-lists-menu-delete = Delete this list
 newtab-widget-lists-menu-copy = Copy list to clipboard
 newtab-widget-lists-menu-learn-more = Learn more
-# "Change" is a verb here: the button switches which list is shown
-newtab-widget-lists-change-list =
-    .title = Change list
-    .aria-label = Change list
 newtab-widget-lists-button-add-item = Add an item
 newtab-widget-lists-input-add-an-item2 =
     .placeholder = Add an item
@@ -1386,6 +1396,9 @@ newtab-privacy-empty-state = { -brand-short-name } automatically blocks trackers
 # Here we are referring to the number of trackers blocked, which increases as the user browses.
 # An alternative can be "See a running total here"
 newtab-privacy-empty-state-tally = See a running tally here.
+# Shorter empty-state copy for the small card, shown as two separate lines.
+newtab-privacy-empty-state-small-title = Fewer trackers, faster browsing.
+newtab-privacy-empty-state-small-message = Browse to start blocking.
 
 ## Privacy widget — Enhanced Tracking Protection off state
 
@@ -1814,6 +1827,35 @@ newtab-solitaire-widget-open-menu-button =
 
 # Context menu item linking to more information about the widget.
 newtab-solitaire-menu-learn-more = Learn more
+
+## Strings for the Wrexham AFC widget. Wrexham AFC is a football club from
+## Wrexham, Wales. For now, the widget is only expected to be shown in Welsh
+## and British English. “Wrexham AFC” is the club’s name. Use the name the
+## club is known by in your language, if it has one: in Welsh, “CPD Wrecsam”.
+
+# The widget's name. .title is its heading and accessible name, .label its
+# Customize panel toggle, and .menu-label the screen reader label of the
+# button that opens its menu.
+newtab-custom-widget-wrexhamafc =
+    .title = Wrexham AFC
+    .label = Wrexham AFC
+    .menu-label = Open Wrexham AFC menu
+
+# Menu item opening a submenu that switches what the widget shows. “View” is a
+# noun here, as in “the view the widget shows”.
+newtab-widget-wrexhamafc-menu-view = View
+
+## Options in the View submenu, each switching the widget to a different view.
+## These are football terms: “Matches” shows the club’s latest or next match,
+## with its score once it has started; “Table” shows the league table, the
+## standings of the teams in the club’s league; and “Fixtures” lists the club’s
+## upcoming scheduled matches.
+
+newtab-widget-wrexhamafc-view-matches = Matches
+newtab-widget-wrexhamafc-view-table = Table
+newtab-widget-wrexhamafc-view-fixtures = Fixtures
+# Menu item opening the New Tab customize panel, where wallpapers are chosen.
+newtab-widget-wrexhamafc-menu-wallpapers = Wallpapers
 
 ## Strings for the navigable panels that new tab content area can be
 ## split into.

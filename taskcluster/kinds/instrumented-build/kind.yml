@@ -293,10 +293,10 @@ tasks:
         treeherder:
             platform: android-5-0-x86_64-shippable/opt
         worker-type: b-linux-docker-xlarge-amd
+        use-gradle: offline
         worker:
             docker-image: {in-tree: android-build}
             env:
-                GRADLE_USER_HOME: "/builds/worker/checkouts/gecko/mobile/android/gradle/dotgradle-offline"
                 TOOLTOOL_MANIFEST: "mobile/android/config/tooltool-manifests/android/releng.manifest"
             artifacts:
                 - name: public/build
@@ -351,10 +351,10 @@ tasks:
         treeherder:
             platform: android-5-0-aarch64-shippable/opt
         worker-type: b-linux-docker-xlarge-amd
+        use-gradle: offline
         worker:
             docker-image: {in-tree: android-build}
             env:
-                GRADLE_USER_HOME: "/builds/worker/checkouts/gecko/mobile/android/gradle/dotgradle-offline"
                 TOOLTOOL_MANIFEST: "mobile/android/config/tooltool-manifests/android/releng.manifest"
             artifacts:
                 - name: public/build
@@ -409,10 +409,10 @@ tasks:
         treeherder:
             platform: android-5-0-aarch64-nightlyasrelease/opt
         worker-type: b-linux-docker-xlarge-amd
+        use-gradle: offline
         worker:
             docker-image: {in-tree: android-build}
             env:
-                GRADLE_USER_HOME: "/builds/worker/checkouts/gecko/mobile/android/gradle/dotgradle-offline"
                 TOOLTOOL_MANIFEST: "mobile/android/config/tooltool-manifests/android/releng.manifest"
             artifacts:
                 - name: public/build
@@ -467,10 +467,10 @@ tasks:
         treeherder:
             platform: android-5-0-armv7-shippable/opt
         worker-type: b-linux-docker-xlarge-amd
+        use-gradle: offline
         worker:
             docker-image: {in-tree: android-build}
             env:
-                GRADLE_USER_HOME: "/builds/worker/checkouts/gecko/mobile/android/gradle/dotgradle-offline"
                 TOOLTOOL_MANIFEST: "mobile/android/config/tooltool-manifests/android/releng.manifest"
             artifacts:
                 - name: public/build

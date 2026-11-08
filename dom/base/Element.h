@@ -1176,8 +1176,10 @@ class Element : public FragmentOrElement {
    * @param aName the name of the attribute to unset
    * @param aNotify specifies whether or not the document should be
    * notified of the attribute change
+   * @param aHadValue if non-null, receives whether the attribute was found
    */
-  nsresult UnsetAttr(int32_t aNameSpaceID, nsAtom* aName, bool aNotify);
+  nsresult UnsetAttr(int32_t aNameSpaceID, nsAtom* aName, bool aNotify,
+                     bool* aHadValue = nullptr);
 
   /**
    * Swap an attribute value. This is a public wrapper that ensures bloom
@@ -2480,7 +2482,6 @@ class Element : public FragmentOrElement {
    * @param aModType      AttrModType::Modification or AttrModType::Addition.
    * @param aNotify       should we notify document-observers?
    * @param aCallAfterSetAttr should we call AfterSetAttr?
-   * @param aComposedDocument The current composed document of the element.
    * @param aGuard        For making sure that this is called with a
    *                      mozAutoDocUpdate instance, this is here.  Specify
    *                      an instance of it which you created for the call.
@@ -2490,7 +2491,7 @@ class Element : public FragmentOrElement {
                             nsAttrValue& aParsedValue,
                             nsIPrincipal* aSubjectPrincipal,
                             AttrModType aModType, bool aNotify,
-                            bool aCallAfterSetAttr, Document* aComposedDocument,
+                            bool aCallAfterSetAttr,
                             const mozAutoDocUpdate& aGuard,
                             IsKnownNewAttr aIsKnownNew);
 

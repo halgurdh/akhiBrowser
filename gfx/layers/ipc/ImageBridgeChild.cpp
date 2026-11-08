@@ -921,7 +921,11 @@ void ImageBridgeChild::RemoveTextureFromCompositable(
 
 void ImageBridgeChild::ClearImagesFromCompositable(
     CompositableClient* aCompositable, ClearImagesType aType) {
-  MOZ_RELEASE_ASSERT(CanSend());
+  // The compositable may belong to an ImageBridgeChild that was replaced, for
+  // example after a GPU process restart. Its host is gone with it.
+  if (!CanSend()) {
+    return;
+  }
   MOZ_ASSERT(aCompositable->IsConnected());
   if (!aCompositable->IsConnected()) {
     return;

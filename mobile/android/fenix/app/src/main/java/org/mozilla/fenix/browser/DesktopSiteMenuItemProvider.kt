@@ -44,16 +44,16 @@ class DesktopSiteMenuItemProvider(
     private val requestDesktopSite: SessionUseCases.RequestDesktopSiteUseCase,
     scope: CoroutineScope,
 ) : MenuItemProvider {
-    override val itemFlow: StateFlow<MenuItem?> =
+    override val itemsFlow: StateFlow<List<MenuItem>> =
         if (target == MenuTarget.CustomizeMenu) {
-            MutableStateFlow(DEFAULT_MENU_ITEM).asStateFlow()
+            MutableStateFlow(listOf(DEFAULT_MENU_ITEM)).asStateFlow()
         } else {
             browserStore.stateFlow
-                .map { it.desktopSiteItem() }
+                .map { listOfNotNull(it.desktopSiteItem()) }
                 .stateIn(
                     scope = scope,
                     started = SharingStarted.Eagerly,
-                    initialValue = browserStore.state.desktopSiteItem(),
+                    initialValue = listOfNotNull(browserStore.state.desktopSiteItem()),
                 )
         }
 

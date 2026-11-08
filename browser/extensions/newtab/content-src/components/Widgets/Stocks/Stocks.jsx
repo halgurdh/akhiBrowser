@@ -32,7 +32,8 @@ import { WidgetMenuFooter } from "../WidgetMenuFooter";
 import { SizeSubmenu } from "../SizeSubmenu";
 import { StockTicker } from "./StockTicker";
 import { StockSearch } from "./StockSearch";
-import { focusOnceRendered, useStockSearch } from "./useStockSearch";
+import { focusOnceRendered } from "../../../lib/utils";
+import { useStockSearch } from "./useStockSearch";
 import { StocksError } from "./StocksError";
 
 const STOCKS_ENTRY = WIDGET_REGISTRY.find(w => w.id === "stocks");

@@ -50,17 +50,21 @@ class AddToHomeScreenMenuItemProvider(
     // is shown.
     private val isPinningSupported by lazy(LazyThreadSafetyMode.NONE) { webAppUseCases.isPinningSupported() }
 
-    override val itemFlow: StateFlow<MenuItem?> =
+    override val itemsFlow: StateFlow<List<MenuItem>> =
         if (target == MenuTarget.CustomizeMenu) {
-            MutableStateFlow(DEFAULT_MENU_ITEM)
+            MutableStateFlow(listOf(DEFAULT_MENU_ITEM))
         } else {
             browserStore.stateFlow
-                .map { state -> addToHomeScreenItem(hasPageShown = target.browserSessionFrom(state) != null) }
+                .map { state ->
+                    listOfNotNull(addToHomeScreenItem(hasPageShown = target.browserSessionFrom(state) != null))
+                }
                 .stateIn(
                     scope = scope,
                     started = SharingStarted.Eagerly,
                     initialValue =
-                        addToHomeScreenItem(hasPageShown = target.browserSessionFrom(browserStore.state) != null),
+                        listOfNotNull(
+                            addToHomeScreenItem(hasPageShown = target.browserSessionFrom(browserStore.state) != null)
+                        ),
                 )
         }
 

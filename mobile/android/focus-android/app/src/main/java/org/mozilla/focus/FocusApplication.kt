@@ -12,6 +12,7 @@ import android.util.Log.INFO
 import androidx.annotation.OpenForTesting
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.UserManagerCompat
 import androidx.emoji2.text.DefaultEmojiCompatConfig
 import androidx.emoji2.text.EmojiCompat
 import androidx.lifecycle.ProcessLifecycleOwner
@@ -85,6 +86,10 @@ open class FocusApplication : Application(), Provider {
         super.onCreate()
 
         Log.addSink(AndroidLogSink("Focus"))
+
+        // Read buildMetadata once at startup, so that it is in memory before anything can crash.
+        components.buildMetadata
+
         components.crashReporter.install(this)
 
         if (isMainProcess()) {
@@ -139,12 +144,10 @@ open class FocusApplication : Application(), Provider {
     }
 
     override fun onConfigurationChanged(config: android.content.res.Configuration) {
-        applicationContext.resources.configuration.uiMode = config.uiMode
-
         if (isMainProcess()) {
             super.onConfigurationChanged(config)
             // Update locale on main process
-            LocaleManager.updateResources(this)
+            LocaleManager.onAttachBaseContext(this)
         } else {
             super.onConfigurationChanged(config)
         }
@@ -153,7 +156,7 @@ open class FocusApplication : Application(), Provider {
     override fun attachBaseContext(base: Context) {
         // Sets the locale information. Other threads do not have locale aware needs
         if (base.isMainProcess()) {
-            val localeAwareContext = LocaleManager.updateResources(base)
+            val localeAwareContext = LocaleManager.onAttachBaseContext(base)
             super.attachBaseContext(localeAwareContext)
         } else {
             super.attachBaseContext(base)
@@ -345,5 +348,13 @@ open class FocusApplication : Application(), Provider {
     }
 
     override val workManagerConfiguration
-        get() = Builder().setMinimumLoggingLevel(INFO).build()
+        get() =
+            Builder()
+                .setMinimumLoggingLevel(INFO)
+                .setInitializationExceptionHandler { throwable ->
+                    if (UserManagerCompat.isUserUnlocked(this)) {
+                        throw throwable
+                    }
+                }
+                .build()
 }

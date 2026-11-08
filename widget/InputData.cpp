@@ -533,7 +533,8 @@ PanGestureInput::PanGestureInput(PanGestureType aType, TimeStamp aTimeStamp,
       mOverscrollBehaviorAllowsSwipe(false),
       mSimulateMomentum(false),
       mIsNoLineOrPageDelta(true) {
-  mMayTriggerSwipe = SwipeTracker::CanTriggerSwipe(*this);
+  mMayTriggerSwipe =
+      SwipeTracker::CanTriggerSwipe(*this, SwipeInputSource::Touchpad);
 }
 
 PanGestureInput::PanGestureInput(PanGestureType aType, TimeStamp aTimeStamp,
@@ -561,6 +562,21 @@ bool PanGestureInput::IsMomentum() const {
       return true;
     default:
       return false;
+  }
+}
+
+bool PanGestureInput::ShouldDispatchToContentAfterAPZ() const {
+  if (mPanDisplacement != ScreenPoint()) {
+    return true;
+  }
+  switch (mType) {
+    case PanGestureInput::PANGESTURE_START:
+    case PanGestureInput::PANGESTURE_PAN:
+    case PanGestureInput::PANGESTURE_MOMENTUMSTART:
+    case PanGestureInput::PANGESTURE_MOMENTUMPAN:
+      return false;
+    default:
+      return true;
   }
 }
 

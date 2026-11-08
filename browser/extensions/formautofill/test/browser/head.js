@@ -166,6 +166,8 @@ const SAME_ORIGIN_CC_EXP =
   TOP_LEVEL_URL + "../fixtures/autocomplete_cc_exp_embeded.html";
 const SAME_ORIGIN_CC_TYPE =
   TOP_LEVEL_URL + "../fixtures/autocomplete_cc_type_embeded.html";
+const SAME_ORIGIN_CC_CSC =
+  TOP_LEVEL_URL + "../fixtures/autocomplete_cc_csc_embeded.html";
 
 const SAME_SITE_ALL_FIELDS =
   SAME_SITE_URL + "../fixtures/autocomplete_cc_mandatory_embeded.html";
@@ -188,6 +190,8 @@ const CROSS_ORIGIN_CC_EXP =
   CROSS_ORIGIN_URL + "../fixtures/autocomplete_cc_exp_embeded.html";
 const CROSS_ORIGIN_CC_TYPE =
   CROSS_ORIGIN_URL + "../fixtures/autocomplete_cc_type_embeded.html";
+const CROSS_ORIGIN_CC_CSC =
+  CROSS_ORIGIN_URL + "../fixtures/autocomplete_cc_csc_embeded.html";
 
 const CROSS_ORIGIN_2_ALL_FIELDS =
   CROSS_ORIGIN_2_URL +

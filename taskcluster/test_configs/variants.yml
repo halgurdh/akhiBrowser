@@ -242,6 +242,8 @@ geckoview-java-media:
                 # Nightly decodes and encodes with the MediaCodec NDK via ffmpeg in
                 # the RDD/GPU processes, but release still uses the Java MediaCodec
                 # pipeline. Restore the release values until the NDK path ships.
+                - "--setpref=gfx.video.force-aimage-reader-android=false"
+                - "--setpref=gfx.webrender.enable-angle=false"
                 - "--setpref=media.android-media-codec.enabled=true"
                 - "--setpref=media.android-media-codec.preferred=true"
                 - "--setpref=media.ffmpeg.encoder.enabled=false"
@@ -329,20 +331,6 @@ conditioned_profile:
         mozharness:
             extra-options:
                 - "--conditioned-profile"
-
-socketprocess:
-    description: "{description} with socket process enabled"
-    component: "Core::Networking"
-    expiration: "2027-06-01"
-    suffix: "spi"
-    mozinfo: "socketprocess_e10s"
-    when:
-        $eval: '"mochitest-media" in task["try-name"]'
-    merge:
-        mozharness:
-            extra-options:
-                - "--setpref=media.peerconnection.mtransport_process=true"
-                - "--setpref=network.process.enabled=true"
 
 # -
 # Webrender DComp variants for Win10

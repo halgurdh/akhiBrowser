@@ -55,17 +55,18 @@ class SummarizePageMenuItemProvider(
     // engine about it and the menu should not wait for that.
     private val isPageEligible = MutableStateFlow(false)
 
-    override val itemFlow: StateFlow<MenuItem?> =
+    override val itemsFlow: StateFlow<List<MenuItem>> =
         if (target == MenuTarget.CustomizeMenu) {
-            MutableStateFlow(DEFAULT_MENU_ITEM).asStateFlow()
+            MutableStateFlow(listOf(DEFAULT_MENU_ITEM)).asStateFlow()
         } else {
             combine(browserStore.stateFlow, isPageEligible) { state, isEligible ->
-                    state.summarizePageItem(isPageEligible = isEligible)
+                    listOfNotNull(state.summarizePageItem(isPageEligible = isEligible))
                 }
                 .stateIn(
                     scope = scope,
                     started = SharingStarted.Eagerly,
-                    initialValue = browserStore.state.summarizePageItem(isPageEligible = isPageEligible.value),
+                    initialValue =
+                        listOfNotNull(browserStore.state.summarizePageItem(isPageEligible = isPageEligible.value)),
                 )
         }
 

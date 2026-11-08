@@ -26,11 +26,11 @@ import org.mozilla.fenix.components.menu.store.MenuAction
  * @param target [MenuTarget] for which this menu item would be shown for.
  */
 class CustomizeHomepageMenuItemProvider(private val target: MenuTarget) : MenuItemProvider {
-    override val itemFlow: StateFlow<MenuItem?> =
+    override val itemsFlow: StateFlow<List<MenuItem>> =
         if (target == MenuTarget.CustomizeMenu) {
-            MutableStateFlow(DEFAULT_MENU_ITEM)
+            MutableStateFlow(listOf(DEFAULT_MENU_ITEM))
         } else {
-            MutableStateFlow(DEFAULT_MENU_ITEM.copy(onClickEvent = MenuAction.Navigate.CustomizeHomepage))
+            MutableStateFlow(listOf(DEFAULT_MENU_ITEM.copy(onClickEvent = MenuAction.Navigate.CustomizeHomepage)))
         }
 
     override fun handles(event: MenuEvent) = event == MenuAction.Navigate.CustomizeHomepage

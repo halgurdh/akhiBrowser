@@ -91,6 +91,8 @@ import mozilla.components.feature.ipprotection.store.IPProtectionStore
 import mozilla.components.feature.ipprotection.store.state.Authorized
 import mozilla.components.feature.ipprotection.store.state.IPProtectionState
 import mozilla.components.feature.ipprotection.store.state.ProxyActivation
+import mozilla.components.feature.listentopage.settings.ListenEnabledState
+import mozilla.components.feature.listentopage.settings.ListenSettings
 import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.feature.session.TrackingProtectionUseCases
 import mozilla.components.feature.summarize.R as summariesR
@@ -568,25 +570,6 @@ class BrowserToolbarMiddlewareTest {
     @Test
     fun `WHEN clicking the menu button THEN open the menu`() {
         every { navController.currentDestination?.id } returns R.id.browserFragment
-
-        val middleware = buildMiddleware()
-        val toolbarStore = buildStore(middleware)
-        val menuButton = toolbarStore.state.displayState.browserActionsEnd[2] as ActionButtonRes
-
-        toolbarStore.dispatch(menuButton.onClick as BrowserToolbarEvent)
-
-        verify {
-            navController.navigate(
-                BrowserFragmentDirections.actionGlobalMenuDialogFragment(accesspoint = MenuAccessPoint.Browser),
-                null,
-            )
-        }
-    }
-
-    @Test
-    fun `GIVEN menu customization is enabled WHEN clicking the menu button THEN open the customizable menu`() {
-        every { navController.currentDestination?.id } returns R.id.browserFragment
-        settings.isMenuCustomizationEnabled = true
 
         val middleware = buildMiddleware()
         val toolbarStore = buildStore(middleware)
@@ -3045,7 +3028,7 @@ class BrowserToolbarMiddlewareTest {
         val middleware = buildMiddleware()
         val result = middleware.buildAction(toolbarAction = ToolbarAction.Menu) as ActionButtonRes
 
-        assertEquals(iconsR.drawable.mozac_ic_ellipsis_vertical_24, result.drawableResId)
+        assertEquals(iconsR.drawable.mozac_ic_more_vertical_round_24, result.drawableResId)
         assertEquals(R.string.content_description_menu, result.contentDescription)
         assertEquals(ActionButton.State.DEFAULT, result.state)
         assertEquals(MenuClicked(Source.Unknown), result.onClick)
@@ -3061,7 +3044,6 @@ class BrowserToolbarMiddlewareTest {
             }
 
         every { browserScreenState.readerModeStatus } returns readerModeStatus
-        settings.listenToPageFeatureFlagEnabled = false
         val middleware = buildMiddleware()
 
         val result = middleware.buildAction(toolbarAction = ToolbarAction.ReaderMode) as ActionButtonRes
@@ -3081,8 +3063,10 @@ class BrowserToolbarMiddlewareTest {
             }
 
         every { browserScreenState.readerModeStatus } returns readerModeStatus
-        settings.listenToPageFeatureFlagEnabled = true
-        val middleware = buildMiddleware()
+        val middleware =
+            buildMiddleware(
+                listenSettings = ListenSettings.inMemory(available = true, enabled = ListenEnabledState.Enabled)
+            )
 
         val result = middleware.buildAction(toolbarAction = ToolbarAction.ReaderMode) as ActionButtonRes
 
@@ -3090,6 +3074,64 @@ class BrowserToolbarMiddlewareTest {
         assertEquals(R.string.browser_menu_read_or_listen, result.contentDescription)
         assertEquals(ActionButton.State.DEFAULT, result.state)
         assertEquals(ReaderModeClicked(false), result.onClick)
+    }
+
+    @Test
+    fun `GIVEN listen to page blocked in AI Controls WHEN building inactive ReaderMode action THEN uses the default icon`() {
+        val readerModeStatus: ReaderModeStatus =
+            mockk(relaxed = true) {
+                every { isAvailable } returns true
+                every { isActive } returns false
+            }
+
+        every { browserScreenState.readerModeStatus } returns readerModeStatus
+        val middleware =
+            buildMiddleware(
+                listenSettings = ListenSettings.inMemory(available = true, enabled = ListenEnabledState.Disabled)
+            )
+
+        val result = middleware.buildAction(toolbarAction = ToolbarAction.ReaderMode) as ActionButtonRes
+
+        assertEquals(iconsR.drawable.mozac_ic_reader_view_24, result.drawableResId)
+    }
+
+    @Test
+    fun `GIVEN listen to page blocked in AI Controls WHEN building inactive ReaderMode action THEN uses the reader mode description`() {
+        val readerModeStatus: ReaderModeStatus =
+            mockk(relaxed = true) {
+                every { isAvailable } returns true
+                every { isActive } returns false
+            }
+
+        every { browserScreenState.readerModeStatus } returns readerModeStatus
+        settings.listenToPageFeatureFlagEnabled = true
+        val middleware =
+            buildMiddleware(
+                listenSettings = ListenSettings.inMemory(available = true, enabled = ListenEnabledState.Disabled)
+            )
+
+        val result = middleware.buildAction(toolbarAction = ToolbarAction.ReaderMode) as ActionButtonRes
+
+        assertEquals(R.string.browser_menu_read, result.contentDescription)
+    }
+
+    @Test
+    fun `GIVEN listen to page settings not loaded WHEN building ReaderMode action THEN uses the default icon`() {
+        val readerModeStatus: ReaderModeStatus =
+            mockk(relaxed = true) {
+                every { isAvailable } returns true
+                every { isActive } returns false
+            }
+
+        every { browserScreenState.readerModeStatus } returns readerModeStatus
+        val middleware =
+            buildMiddleware(
+                listenSettings = ListenSettings.inMemory(available = true, enabled = ListenEnabledState.Loading)
+            )
+
+        val result = middleware.buildAction(toolbarAction = ToolbarAction.ReaderMode) as ActionButtonRes
+
+        assertEquals(iconsR.drawable.mozac_ic_reader_view_24, result.drawableResId)
     }
 
     @Test
@@ -3101,7 +3143,6 @@ class BrowserToolbarMiddlewareTest {
             }
 
         every { browserScreenState.readerModeStatus } returns readerModeStatus
-        settings.listenToPageFeatureFlagEnabled = false
         val middleware = buildMiddleware()
 
         val result = middleware.buildAction(toolbarAction = ToolbarAction.ReaderMode) as ActionButtonRes
@@ -3121,8 +3162,10 @@ class BrowserToolbarMiddlewareTest {
             }
 
         every { browserScreenState.readerModeStatus } returns readerModeStatus
-        settings.listenToPageFeatureFlagEnabled = true
-        val middleware = buildMiddleware()
+        val middleware =
+            buildMiddleware(
+                listenSettings = ListenSettings.inMemory(available = true, enabled = ListenEnabledState.Enabled)
+            )
 
         val result = middleware.buildAction(toolbarAction = ToolbarAction.ReaderMode) as ActionButtonRes
 
@@ -3130,6 +3173,25 @@ class BrowserToolbarMiddlewareTest {
         assertEquals(R.string.browser_menu_read_close, result.contentDescription)
         assertEquals(ActionButton.State.ACTIVE, result.state)
         assertEquals(ReaderModeClicked(true), result.onClick)
+    }
+
+    @Test
+    fun `GIVEN listen to page blocked in AI Controls WHEN building active ReaderMode action THEN uses the default icon`() {
+        val readerModeStatus: ReaderModeStatus =
+            mockk(relaxed = true) {
+                every { isAvailable } returns true
+                every { isActive } returns true
+            }
+
+        every { browserScreenState.readerModeStatus } returns readerModeStatus
+        val middleware =
+            buildMiddleware(
+                listenSettings = ListenSettings.inMemory(available = true, enabled = ListenEnabledState.Disabled)
+            )
+
+        val result = middleware.buildAction(toolbarAction = ToolbarAction.ReaderMode) as ActionButtonRes
+
+        assertEquals(iconsR.drawable.mozac_ic_reader_view_fill_24, result.drawableResId)
     }
 
     @Test
@@ -4420,7 +4482,7 @@ class BrowserToolbarMiddlewareTest {
         source: Source = Source.AddressBar.BrowserEnd,
     ) =
         ActionButtonRes(
-            drawableResId = iconsR.drawable.mozac_ic_ellipsis_vertical_24,
+            drawableResId = iconsR.drawable.mozac_ic_more_vertical_round_24,
             contentDescription = R.string.content_description_menu,
             highlighted = highlighted,
             onClick = MenuClicked(source),
@@ -4483,6 +4545,7 @@ class BrowserToolbarMiddlewareTest {
         settings: Settings = this.settings,
         summarizationSettingsCache: SummarizationFeatureDiscoveryConfiguration = this.summarizationFeatureSettings,
         translationsFeatureSettings: TranslationsEnabledSettings = this.translationsFeatureSettings,
+        listenSettings: ListenSettings = ListenSettings.inMemory(available = false),
         navController: NavController = this.navController,
         summarizationNavigator: SummarizationNavigator = this.summarizationNavigator,
         browsingModeManager: BrowsingModeManager = this.browsingModeManager,
@@ -4510,6 +4573,7 @@ class BrowserToolbarMiddlewareTest {
             settings = settings,
             summarizationFeatureSettings = summarizationSettingsCache,
             translationsFeatureSettings = translationsFeatureSettings,
+            listenSettings = listenSettings,
             navController = navController,
             summarizationNavigator = summarizationNavigator,
             browsingModeManager = browsingModeManager,

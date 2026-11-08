@@ -12,7 +12,6 @@ import io.mockk.mockk
 import io.mockk.slot
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -50,7 +49,7 @@ class QuitMenuItemProviderTest {
                 onClickEvent = MenuAction.DeleteBrowsingDataAndQuit,
                 state = MenuItemState.WARNING,
             ),
-            provider.itemFlow.value,
+            provider.itemsFlow.value.single(),
         )
     }
 
@@ -58,12 +57,12 @@ class QuitMenuItemProviderTest {
     fun `GIVEN the user keeps their data when quitting WHEN providing the item THEN don't show it`() {
         val provider = createProvider(deletesBrowsingDataOnQuit = false)
 
-        assertNull(provider.itemFlow.value)
+        assertTrue(provider.itemsFlow.value.isEmpty())
     }
 
     @Test
-    fun `GIVEN customize menu target WHEN providing the item THEN show default item`() {
-        val provider = createProvider(deletesBrowsingDataOnQuit = false, target = MenuTarget.CustomizeMenu)
+    fun `GIVEN customize menu target AND deletesBrowsingDataOnQuit is true WHEN providing the item THEN show default item`() {
+        val provider = createProvider(deletesBrowsingDataOnQuit = true, target = MenuTarget.CustomizeMenu)
 
         assertEquals(
             StandardMenuItem(
@@ -72,8 +71,15 @@ class QuitMenuItemProviderTest {
                 icon = MenuItemIconRes(iconsR.drawable.mozac_ic_cross_circle_fill_24),
                 state = MenuItemState.WARNING,
             ),
-            provider.itemFlow.value,
+            provider.itemsFlow.value.single(),
         )
+    }
+
+    @Test
+    fun `GIVEN customize menu target AND deletesBrowsingDataOnQuit is false WHEN providing the item THEN don't show it`() {
+        val provider = createProvider(deletesBrowsingDataOnQuit = false, target = MenuTarget.CustomizeMenu)
+
+        assertTrue(provider.itemsFlow.value.isEmpty())
     }
 
     @Test
@@ -96,7 +102,7 @@ class QuitMenuItemProviderTest {
     fun `WHEN building the item THEN handle all events it can dispatch and no others`() {
         val provider = createProvider(deletesBrowsingDataOnQuit = true)
 
-        val events = requireNotNull(provider.itemFlow.value).reachableEvents()
+        val events = provider.itemsFlow.value.single().reachableEvents()
 
         assertTrue(events.all { provider.handles(it) }, "Not all of $events are handled")
         assertFalse(provider.handles(MenuAction.Navigate.Settings))

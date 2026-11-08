@@ -47,6 +47,10 @@ notes = "Backwards-compatible patching crate for base64 0.21."
 audit-as-crates-io = false
 notes = "Backwards-compatible patching crate for bindgen 0.72."
 
+[policy."bindgen:0.73.1"]
+audit-as-crates-io = true
+notes = "Upstream code with a backported fix"
+
 [policy."bitflags:1.999.999"]
 audit-as-crates-io = false
 notes = "Backwards-compatible patching crate for bitflags 1."
@@ -402,12 +406,6 @@ audit-as-crates-io = false
 notes = "Backwards-compatible patching crate for toml 0.9."
 
 [policy.unicode-bidi]
-audit-as-crates-io = true
-
-[policy.utf16_iter]
-audit-as-crates-io = true
-
-[policy.utf8_iter]
 audit-as-crates-io = true
 
 [policy.viaduct]

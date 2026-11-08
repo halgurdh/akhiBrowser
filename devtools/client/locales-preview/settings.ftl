@@ -224,3 +224,41 @@ devtools-settings-editor-keymap-emacs =
 
 devtools-settings-editor-keymap-sublime =
     .label = Sublime Text
+
+## Advanced settings section.
+
+devtools-settings-advanced =
+    .label = Advanced settings
+
+devtools-settings-advanced-source-maps =
+    .label = Enable Source Maps
+    .title = If you enable this option sources will be mapped in the tools.
+
+devtools-settings-advanced-disable-cache =
+    .label = Disable HTTP Cache (when toolbox is open)
+    .title = Turning this option on will disable the HTTP cache for all tabs that have the toolbox open. Service Workers are not affected by this option.
+
+devtools-settings-advanced-disable-javascript =
+    .label = Disable JavaScript
+    .title = Turning this option on will disable JavaScript for the current tab. If the tab or the toolbox is closed then this setting will be forgotten.
+    .description = Current session only, reloads the page
+
+devtools-settings-advanced-service-workers-http =
+    .label = Enable Service Workers over HTTP (when toolbox is open)
+    .title = Turning this option on will enable the service workers over HTTP for all tabs that have the toolbox open.
+
+devtools-settings-advanced-chrome-debugging =
+    .label = Enable browser chrome and add-on debugging toolboxes
+    .title = Turning this option on will allow you to use various developer tools in browser context (via Tools > Web Developer > Browser Toolbox) and debug add-ons from the Add-ons Manager
+
+devtools-settings-advanced-remote-debugging =
+    .label = Enable remote debugging
+    .title = Turning this option on will allow to debug this browser instance remotely
+
+devtools-settings-advanced-f12 =
+    .label = Use the F12 key to open or close DevTools
+    .title = Turning this option on will bind the F12 key to open or close the DevTools toolbox
+
+devtools-settings-advanced-custom-formatters =
+    .label = Enable custom formatters
+    .title = Turning this option on will allow sites to define custom formatters for DOM objects

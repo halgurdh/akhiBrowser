@@ -34,6 +34,7 @@ import org.mozilla.fenix.e2e.SystemInsetsPaddedFragment
 import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.ext.isTallWindow
 import org.mozilla.fenix.ext.isWideWindow
+import org.mozilla.fenix.ext.nav
 import org.mozilla.fenix.ext.requireComponents
 import org.mozilla.fenix.ext.showToolbar
 import org.mozilla.fenix.settings.settingssearch.PreferenceFileInformation.CustomizationPreferences
@@ -123,6 +124,7 @@ class CustomizationFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFrag
         setupTabStripDisplayCategory()
         setupTabStripLocationCategory()
         setupToolbarLayout()
+        setupMenuCategory()
         updateToolbarShortcut()
 
         // if tab strip is enabled, swipe toolbar to switch tabs should not be enabled so the
@@ -423,6 +425,11 @@ class CustomizationFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFrag
         }
     }
 
+    private fun setupMenuCategory() {
+        val isEnabled = requireComponents.settings.isMenuCustomizationScreenEnabled
+        requirePreference<PreferenceCategory>(R.string.pref_key_customization_category_menu).isVisible = isEnabled
+    }
+
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
         when (preference.key) {
             resources.getString(R.string.pref_key_website_pull_to_refresh) -> {
@@ -430,6 +437,12 @@ class CustomizationFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFrag
             }
             resources.getString(R.string.pref_key_dynamic_toolbar) -> {
                 CustomizationSettings.dynamicToolbar.set(requireComponents.settings.isDynamicToolbarEnabled)
+            }
+            resources.getString(R.string.pref_key_customize_menu) -> {
+                nav(
+                    id = R.id.customizationFragment,
+                    directions = CustomizationFragmentDirections.actionCustomizationFragmentToCustomizeMenuFragment(),
+                )
             }
         }
         return super.onPreferenceTreeClick(preference)

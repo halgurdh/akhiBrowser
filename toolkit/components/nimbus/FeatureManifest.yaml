@@ -148,6 +148,23 @@ search:
         Feature gate for highlight to search, the actions menu shown when text
         is selected on a page. Does not affect the user's own settings for the
         menu or its individual actions.
+    highlightToSearchIgnoredSites:
+      type: string
+      setPref:
+        branch: default
+        pref: browser.highlightToSearch.ignoredSites
+      description: >-
+        Comma-separated sites where the highlight to search actions menu is not
+        shown, because the page has its own menu for selected text. A site also
+        matches its subdomains.
+    highlightToSearchDetectPageMenus:
+      type: boolean
+      setPref:
+        branch: default
+        pref: browser.highlightToSearch.detectPageMenus
+      description: >-
+        Whether the highlight to search actions menu is not shown, or is hidden,
+        when the page shows its own floating menu next to the selected text.
 
 searchConfiguration:
   description: >-
@@ -457,14 +474,16 @@ urlbar:
         picks. If the user's query matches an AMP suggestion and the query is at
         least this many characters long, the suggestion will be shown as a top
         pick. Set to zero to disable.
-    quickSuggestAmpTopPickUseNovaIconSize:
-      type: boolean
+    quickSuggestAmpTopPickScoreForLargeIcon:
+      type: string
       setPref:
         branch: default
-        pref: browser.urlbar.quicksuggest.ampTopPickUseNovaIconSize
+        pref: browser.urlbar.quicksuggest.ampTopPickScoreForLargeIcon
       description: >-
-        Whether or not use the Nova icon size for AMP suggestion.
-        Otherwise, use standard rich-suggestion size.
+        The minimum score a top-pick AMP suggestion must have to be shown with
+        the large-icon UI treatment used for other top picks, as a decimal
+        string (e.g., "1.0"). If it's an empty string or otherwise can't be
+        parsed with parseFloat, the small-icon UI treatment will be used.
     quickSuggestDynamicSuggestionTypes:
       type: string
       setPref:
@@ -715,6 +734,16 @@ urlbar:
         '[["FR",["en-*","fr-*"]],["*",["fr-*"]]]' means France in English or
         French, or a French locale anywhere. An empty value disables
         multilingual embeddings everywhere.
+    semanticHistoryDomainScopedSearch:
+      type: boolean
+      setPref:
+        branch: user
+        pref: browser.urlbar.suggest.semanticHistory.domainScopedSearch
+      description: >-
+        Whether a semantic history search starting with an origin or URL, like
+        "example.com some topic" or "https://example.com/some-topic", only
+        returns pages from that domain and its subdomains, using the rest of
+        the search string as the query. Off by default.
     semanticHistoryInSeparateGroup:
       type: boolean
       setPref:
@@ -1057,10 +1086,7 @@ preonboarding:
 moreFromMozilla:
   description: "New page on about:preferences to suggest more Mozilla products"
   owner: omc-core@mozilla.com
-  hasExposure: true
-  exposureDescription: >-
-    Exposure is sent once per browsing session when the about:preferences URL is
-    first accessed.
+  hasExposure: false
   variables:
     enabled:
       type: boolean
@@ -5125,6 +5151,12 @@ nimbusTelemetry:
         Configuration for the nimbus_targeting_environment telemetry category.
       type: json
 
+    reducedEnrollmentStatusTelemetryEnabled:
+      description: >
+        Whether or not the client should submit reduced enrollment status
+        telemetry.
+      type: boolean
+
   schema:
     uri: resource://nimbus/schemas/NimbusTelemetryFeature.schema.json
     path: toolkit/components/nimbus/schemas/NimbusTelemetryFeature.schema.json
@@ -5467,6 +5499,18 @@ linkPreviews:
         The prefs to set under browser.ml.linkPreview.* with object keys as the
         sub-pref and values objects indicating the desired branch and value
         defaulting to clearing the user branch value.
+
+resourceMonitor:
+  description: Resource Monitor sidebar panel
+  owner: tthorne@mozilla.com
+  hasExposure: false
+  variables:
+    enabled:
+      type: boolean
+      setPref:
+        branch: user
+        pref: browser.resourceMonitor.enabled
+      description: If true, the Resource Monitor sidebar panel is available.
 
 sidebar:
   description: Sidebar feature configuration
@@ -6317,6 +6361,29 @@ smartWindow:
         Enables Smart Page creation entries in the page, tab, and tab group
         context menus. Existing Smart Window and AI Tab eligibility checks
         still apply.
+    authImpl:
+      type: string
+      enum:
+        - ""
+        - guest
+        - fxa
+      description: >-
+        The Smart Window auth provider: "" to use a guest token until the user
+        signs in to a Mozilla account, "guest" to always use a guest token, or
+        "fxa" to require a Mozilla account. Written to
+        browser.smartwindow.auth.impl, replacing any value it has. Not reset
+        on unenrollment: the guest token fallback switches back to FxA.
+    guestMode:
+      type: string
+      setPref:
+        branch: user
+        pref: browser.smartwindow.auth.guest.mode
+      enum:
+        - fetch
+        - tab
+      description: >-
+        How Smart Window obtains a guest token: "fetch" requests it in the
+        background, "tab" opens the guest verification page in a tab.
 
 smartWindowAgentWatch:
   description: >-
@@ -6601,3 +6668,20 @@ nova:
         branch: default
         pref: browser.nova.enabled
       description: Whether Nova is enabled.
+
+# Bug 2072122: Trusted Types readiness experiment only, to be removed.
+trustedTypesReadinessTelemetry:
+  description: >-
+    Recording of the security.trusted_types_readiness Glean metric, which
+    measures per document how ready pages are to adopt Trusted Types.
+  owner: fbraun@mozilla.com
+  hasExposure: false
+  variables:
+    enabled:
+      type: boolean
+      setPref:
+        branch: default
+        pref: dom.security.trusted_types.readiness_telemetry.enabled
+      description: >-
+        Whether the security.trusted_types_readiness metric is recorded at
+        document destruction.

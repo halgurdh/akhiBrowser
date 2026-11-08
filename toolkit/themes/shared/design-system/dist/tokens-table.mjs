@@ -1990,6 +1990,25 @@ export const tokensTable = {
       value: "cubic-bezier(0.2, 0.8, 0.2, 1)",
       name: "--motion-easing-standard",
     },
+    { value: "150ms", name: "--panel-motion-duration-enter" },
+    { value: "120ms", name: "--panel-motion-duration-exit" },
+    { value: "120ms", name: "--panel-motion-duration-fade" },
+    { value: "var(--motion-easing-emphasized)", name: "--panel-motion-easing" },
+    { value: "0.96", name: "--panel-motion-scale" },
+    { value: "-4px", name: "--panel-motion-translate-y" },
+    { value: "200ms", name: "--sidebar-motion-duration-enter" },
+    { value: "160ms", name: "--sidebar-motion-duration-exit" },
+    {
+      value: "var(--motion-easing-emphasized)",
+      name: "--sidebar-motion-easing",
+    },
+    { value: "230ms", name: "--sidebar-panel-motion-duration-enter" },
+    { value: "190ms", name: "--sidebar-panel-motion-duration-exit" },
+    { value: "130ms", name: "--sidebar-panel-content-motion-duration-fade" },
+    {
+      value: "var(--motion-easing-standard)",
+      name: "--sidebar-panel-content-motion-easing-fade",
+    },
   ],
   size: [
     { value: "40px", name: "--size-image-xsmall" },
@@ -2299,7 +2318,7 @@ export const tokensTable = {
     {
       value: {
         default: "color-mix(in srgb, currentColor 69%, transparent)",
-        prefersContrast: "inherit",
+        prefersContrast: "currentColor",
       },
       name: "--text-color-deemphasized",
     },
@@ -4029,7 +4048,7 @@ export const variableLookupTable = {
   },
   "text-color-deemphasized": {
     default: "color-mix(in srgb, currentColor 69%, transparent)",
-    prefersContrast: "inherit",
+    prefersContrast: "currentColor",
   },
   "text-color-disabled": {
     default: "color-mix(in srgb, currentColor 40%, transparent)",
@@ -4685,6 +4704,12 @@ export const variableLookupTable = {
     },
   },
   "panel-footer-text-color": "inherit",
+  "panel-motion-duration-enter": "150ms",
+  "panel-motion-duration-exit": "120ms",
+  "panel-motion-duration-fade": "120ms",
+  "panel-motion-easing": "var(--motion-easing-emphasized)",
+  "panel-motion-scale": "0.96",
+  "panel-motion-translate-y": "-4px",
   "panel-padding": "16px",
   "panel-padding-block": "4px",
   "panel-separator-color": {
@@ -4766,6 +4791,13 @@ export const variableLookupTable = {
       browserTheme: { default: "var(--card-border-color)" },
     },
   },
+  "sidebar-motion-duration-enter": "200ms",
+  "sidebar-motion-duration-exit": "160ms",
+  "sidebar-motion-easing": "var(--motion-easing-emphasized)",
+  "sidebar-panel-motion-duration-enter": "230ms",
+  "sidebar-panel-motion-duration-exit": "190ms",
+  "sidebar-panel-content-motion-duration-fade": "130ms",
+  "sidebar-panel-content-motion-easing-fade": "var(--motion-easing-standard)",
   "table-background-color": {
     light: "#f8f8fa",
     dark: "rgb(35, 34, 43)",

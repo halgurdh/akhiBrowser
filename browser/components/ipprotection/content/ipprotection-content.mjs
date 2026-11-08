@@ -14,17 +14,17 @@ const { ERRORS } = ChromeUtils.importESModule(
   "moz-src:///toolkit/components/ipprotection/IPPProxyManager.sys.mjs"
 );
 
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://browser/content/ipprotection/ipprotection-message-bar.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://browser/content/ipprotection/ipprotection-unauthenticated.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://browser/content/ipprotection/ipprotection-status-card.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://browser/content/ipprotection/ipprotection-status-box.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://global/content/elements/moz-toggle.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://global/content/elements/moz-promo.mjs";
 
 const SITE_RULES_SETTINGS_PANE = "privacy-vpnsiterules";
@@ -505,6 +505,7 @@ export default class IPProtectionContentElement extends MozLitElement {
       !this.state.showSiteInclusionPrompt ||
       !this.state.siteData ||
       this.hasSiteInclusion ||
+      this.hasSiteExclusion ||
       !this.canEnableConnection
     ) {
       return null;

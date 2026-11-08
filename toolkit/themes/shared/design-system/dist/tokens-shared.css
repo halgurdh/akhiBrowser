@@ -455,6 +455,12 @@
     --panel-menuitem-padding: var(--panel-menuitem-padding-block) var(--panel-menuitem-padding-inline);
     --panel-menuitem-padding-block: 8px;
     --panel-menuitem-padding-inline: 8px;
+    --panel-motion-duration-enter: 150ms;
+    --panel-motion-duration-exit: 120ms;
+    --panel-motion-duration-fade: 120ms;
+    --panel-motion-easing: var(--motion-easing-emphasized);
+    --panel-motion-scale: 0.96;
+    --panel-motion-translate-y: -4px;
     --panel-padding: 16px;
     --panel-padding-block: 4px;
     --panel-separator-color: color-mix(in srgb, currentColor 25%, transparent);
@@ -473,6 +479,13 @@
     /** sidebar **/
     --sidebar-background-color: light-dark(white, rgb(28, 27, 34));
     --sidebar-border-color: var(--card-border-color);
+    --sidebar-motion-duration-enter: 200ms;
+    --sidebar-motion-duration-exit: 160ms;
+    --sidebar-motion-easing: var(--motion-easing-emphasized);
+    --sidebar-panel-content-motion-duration-fade: 130ms;
+    --sidebar-panel-content-motion-easing-fade: var(--motion-easing-standard);
+    --sidebar-panel-motion-duration-enter: 230ms;
+    --sidebar-panel-motion-duration-exit: 190ms;
     --sidebar-text-color: light-dark(rgb(21, 20, 26), rgb(249, 249, 250));
 
     /** size **/
@@ -628,7 +641,7 @@
 
       /** text-color **/
       --text-color: CanvasText;
-      --text-color-deemphasized: inherit;
+      --text-color-deemphasized: currentColor;
       --text-color-error: inherit;
       --text-color-list-item-hover: SelectedItemText;
 

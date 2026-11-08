@@ -373,6 +373,14 @@ export const UrlbarShared = {
   // with the `--urlbarview-top-pick-icon-size` CSS variable.
   TOP_PICK_ICON_SIZE: 58,
 
+  // Possible best-match types for results. These types map to the
+  // `top-pick-type` attribute that `UrlbarView` sets on rows.
+  BEST_MATCH_TYPE: {
+    NONE: "",
+    SMALL: "small",
+    LARGE: "large",
+  },
+
   // The number of results by which Page Up/Down move the selection.
   PAGE_UP_DOWN_DELTA: 5,
 
@@ -1888,7 +1896,7 @@ export const UrlbarShared = {
  * @returns {Console}
  */
 function createLoggerChrome(prefix, maxLogLevelPref) {
-  let logger = console.createInstance({ prefix, maxLogLevelPref });
+  let logger = console.createInstance({ logModule: prefix, maxLogLevelPref });
   // Casting from ConsoleInstance to Console. Note that it is technically not a
   // `Console` because it is missing the chrome-only property `createInstance`.
   return /** @type {Console} */ (/** @type {unknown} */ (logger));

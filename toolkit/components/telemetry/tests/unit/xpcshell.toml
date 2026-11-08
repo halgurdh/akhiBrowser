@@ -64,11 +64,6 @@ skip-if = [
   "os == 'android'", # RDD is not a thing on Android?
 ]
 
-["test_SocketScalars.js"]
-run-if = [
-  "socketprocess_networking", # Needs socket process (bug 1716307)
-]
-
 ["test_SubsessionChaining.js"]
 tags = "addons"
 

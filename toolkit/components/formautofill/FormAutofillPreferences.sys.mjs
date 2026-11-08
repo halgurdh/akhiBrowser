@@ -70,6 +70,23 @@ export class FormAutofillPreferences {
   }
 
   /**
+   * Record that the user turned saving security codes on or off.
+   *
+   * @param {boolean} enabled The new state
+   * @param {string} source "settings", "save_prompt" or "update_prompt"
+   */
+  static async recordCvvSavingToggled(enabled, source) {
+    await lazy.formAutofillStorage.initialize();
+    const { withSecurityCode } =
+      await lazy.formAutofillStorage.creditCards.getSavedCounts();
+    Glean.formautofillCreditcards.cvvSavingToggled.record({
+      enabled,
+      source,
+      had_saved_cvv: withSecurityCode > 0,
+    });
+  }
+
+  /**
    * Helper that sets OS Auth from the about:preferences, if authorized.
    *
    * @param  {object} win

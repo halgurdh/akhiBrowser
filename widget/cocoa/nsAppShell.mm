@@ -491,8 +491,7 @@ nsresult nsAppShell::Init() {
   // related initialization that is not needed for these process types.
   bool isNSApplicationProcessType =
       (XRE_GetProcessType() != GeckoProcessType_Content) &&
-      (XRE_GetProcessType() != GeckoProcessType_RDD) &&
-      (XRE_GetProcessType() != GeckoProcessType_Socket);
+      (XRE_GetProcessType() != GeckoProcessType_RDD);
 
   if (isNSApplicationProcessType) {
     // This call initializes NSApplication unless:

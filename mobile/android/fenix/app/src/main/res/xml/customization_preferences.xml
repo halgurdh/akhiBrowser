@@ -118,6 +118,16 @@
         app:iconSpaceReserved="false" />
 
     <androidx.preference.PreferenceCategory
+        android:key="@string/pref_key_customization_category_menu"
+        android:layout="@layout/preference_cat_style"
+        android:title="@string/preferences_menu"
+        app:iconSpaceReserved="false">
+        <androidx.preference.Preference
+            android:key="@string/pref_key_customize_menu"
+            android:title="@string/customize_menu" />
+    </androidx.preference.PreferenceCategory>
+
+    <androidx.preference.PreferenceCategory
         android:layout="@layout/preference_cat_style"
         android:title="@string/preferences_gestures"
         app:iconSpaceReserved="false">

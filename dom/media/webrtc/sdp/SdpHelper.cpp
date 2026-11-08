@@ -205,6 +205,15 @@ void SdpHelper::DisableMsection(Sdp* sdp, SdpMediaSection* msection) {
     case SdpMediaSection::kApplication:
       msection->AddDataChannel("webrtc-datachannel", 0, 0, 0);
       break;
+    case SdpMediaSection::kUnknown:
+      // The format list of an unknown media type is reproduced verbatim, so
+      // it only needs the placeholder when it would otherwise be empty. The
+      // formats are not payload types we can describe with an a=rtpmap, which
+      // is why this does not go through AddCodec.
+      if (msection->GetMediaTypeInfo().unknown->formatString.empty()) {
+        msection->SetUnknownFormatString("19");
+      }
+      break;
     default:
       // We need to have something here to fit the grammar, this seems safe
       // and 19 is a reserved payload type which should not be used by anyone.

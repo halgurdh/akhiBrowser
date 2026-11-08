@@ -285,8 +285,6 @@ class gfxUserFontSet {
   // weight = [100, 900] (multiples of 100)
   // width = [FontWidth::UltraCondensed(), FontWidth::UltraExpanded()]
   // italic style = constants in gfxFontConstants.h, e.g. NS_FONT_STYLE_NORMAL
-  // language override = result of calling
-  // nsLayoutUtils::ParseFontLanguageOverride
   // TODO: support for unicode ranges not yet implemented
   virtual already_AddRefed<gfxUserFontEntry> CreateUserFontEntry(
       nsTArray<gfxFontFaceSrc>&& aFontFaceSrcList,
@@ -617,7 +615,24 @@ class gfxUserFontEntry : public gfxFontEntry {
 
   gfxFont* CreateFontInstance(const gfxFontStyle* aFontStyle) override;
 
-  gfxFontEntry* GetPlatformFontEntry() const { return mPlatformFontEntry; }
+  void SetPlatformFontEntry(RefPtr<gfxFontEntry>&& aFontEntry)
+      MOZ_EXCLUDES(mLock) {
+    mozilla::AutoWriteLock lock(mLock);
+    mPlatformFontEntry = std::move(aFontEntry);
+  }
+
+  already_AddRefed<gfxFontEntry> GetPlatformFontEntry() const
+      MOZ_EXCLUDES(mLock) {
+    mozilla::AutoReadLock lock(mLock);
+    return do_AddRef(mPlatformFontEntry);
+  }
+
+  // Return whether this user font entry's actual platform font is aOther.
+  bool PlatformFontEntryEquals(const gfxFontEntry* aOther) const
+      MOZ_EXCLUDES(mLock) {
+    mozilla::AutoReadLock lock(mLock);
+    return mPlatformFontEntry == aOther;
+  }
 
   // is the font loading or loaded, or did it fail?
   UserFontLoadState LoadState() const { return mUserFontLoadState; }
@@ -819,7 +834,7 @@ class gfxUserFontEntry : public gfxFontEntry {
   bool mUnsupportedFormat;
   mozilla::StyleFontDisplay mFontDisplay;  // timing of userfont fallback
 
-  RefPtr<gfxFontEntry> mPlatformFontEntry;
+  RefPtr<gfxFontEntry> mPlatformFontEntry MOZ_GUARDED_BY(mLock);
   nsTArray<gfxFontFaceSrc> mSrcList;
   uint32_t mCurrentSrcIndex;  // index of src item to be loaded next
   // This field is managed by the nsFontFaceLoader. In the destructor and

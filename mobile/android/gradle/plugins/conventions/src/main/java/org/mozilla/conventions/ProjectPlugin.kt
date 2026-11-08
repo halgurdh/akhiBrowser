@@ -4,11 +4,14 @@
 
 package org.mozilla.conventions
 
+import com.android.build.api.artifact.SingleArtifact
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.dsl.CommonExtension
 import com.android.build.api.variant.ApplicationAndroidComponentsExtension
 import com.android.build.api.variant.FilterConfiguration
 import org.gradle.api.Action
+import org.gradle.api.GradleException
+import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
@@ -35,6 +38,8 @@ import org.gradle.api.specs.Spec
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.Sync
+import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.api.tasks.javadoc.Javadoc
 import org.gradle.api.tasks.testing.Test
 import org.gradle.api.tasks.testing.TestDescriptor
 import org.gradle.api.tasks.testing.TestListener
@@ -42,16 +47,19 @@ import org.gradle.api.tasks.testing.TestOutputEvent
 import org.gradle.api.tasks.testing.TestOutputListener
 import org.gradle.api.tasks.testing.TestResult
 import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.register
 import org.gradle.kotlin.dsl.withType
 import org.gradle.process.CommandLineArgumentProvider
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.mozilla.conventions.ktfmt.configureKtfmt
+import java.io.DataInputStream
+import java.io.EOFException
 import java.io.File
 import java.util.concurrent.Callable
 import java.util.zip.ZipFile
 
 class ProjectPlugin : Plugin<Project> {
-    @Suppress("UNCHECKED_CAST")
     override fun apply(project: Project) {
         val mozilla = project.extensions.create("mozilla", ProjectExtension::class.java)
         mozilla.androidComponentsProject.convention(false)
@@ -61,10 +69,10 @@ class ProjectPlugin : Plugin<Project> {
         mozilla.detektReports.convention(emptyMap())
 
         val extraProperties = project.gradle.extensions.extraProperties
-        val mozconfig = extraProperties["mozconfig"] as Map<String, Any>
+        val mozconfig = extraProperties["mozconfig"] as Map<*, *>
         val topsrcdir = mozconfig["topsrcdir"] as String
         val topobjdir = mozconfig["topobjdir"] as String
-        val substs = mozconfig["substs"] as Map<String, Any>
+        val substs = mozconfig["substs"] as Map<*, *>
         val configureMavenRepositories = extraProperties["configureMavenRepositories"] as groovy.lang.Closure<*>
 
         project.repositories.apply {
@@ -76,6 +84,8 @@ class ProjectPlugin : Plugin<Project> {
         configureJniKeepDebugSymbols(project)
         configureKotlinCompilerMessageReformatting(project)
         configureKotlinWarningsAsErrors(project)
+        configureJvmTarget(project)
+        configureJavacLint(project)
         configureAndroidBuildToolsVersion(project, substs)
         configureAppServicesSubstitution(project, extraProperties, substs)
         configureGleanSubstitution(project, extraProperties)
@@ -83,8 +93,10 @@ class ProjectPlugin : Plugin<Project> {
         configureKtfmt(project, mozilla)
         configureDetekt(project, mozilla)
         configureAndroidComponentsLint(project, mozilla, topsrcdir)
-        configureTestOutputFormatting(project)
+        configureRoomImplementationCheck(project)
+        configureUnitTests(project)
         configurePackagingResourcesExcludes(project)
+        configureBuildMetadata(project)
         registerPrintVariantsTask(project)
         configureNativeLibsForTests(project, substs)
     }
@@ -128,7 +140,7 @@ class ProjectPlugin : Plugin<Project> {
     private fun configureAppServicesSubstitution(
         project: Project,
         extraProperties: org.gradle.api.plugins.ExtraPropertiesExtension,
-        substs: Map<String, Any>,
+        substs: Map<*, *>,
     ) {
         // Only substitute when the a-s subprojects are part of this Gradle build:
         // either :geckoview is included (so the a-s subprojects are too), or we're
@@ -165,7 +177,7 @@ class ProjectPlugin : Plugin<Project> {
     // Extract native libs from libsForTests JARs so transitive .so dependencies
     // (e.g. libmozsqlite3.so needed by libmegazord.so) can be found by the OS
     // dynamic linker during JVM unit tests.
-    private fun configureNativeLibsForTests(project: Project, substs: Map<String, Any>) {
+    private fun configureNativeLibsForTests(project: Project, substs: Map<*, *>) {
         if (substs["DOWNLOAD_ALL_GRADLE_DEPENDENCIES"].isTruthy()) {
             return
         }
@@ -345,7 +357,78 @@ class ProjectPlugin : Plugin<Project> {
         }
     }
 
-    private fun configureAndroidBuildToolsVersion(project: Project, substs: Map<String, Any>) {
+    private fun configureJvmTarget(project: Project) {
+        val javaVersion = JavaVersion.VERSION_17
+        project.pluginManager.withPlugin("com.android.base") {
+            project.extensions.getByType<CommonExtension>().compileOptions.apply {
+                sourceCompatibility = javaVersion
+                targetCompatibility = javaVersion
+            }
+        }
+        project.pluginManager.withPlugin("java") {
+            project.tasks.withType<JavaCompile>().configureEach {
+                options.release.set(javaVersion.majorVersion.toInt())
+            }
+            project.tasks.withType<KotlinCompile>().configureEach {
+                compilerOptions.freeCompilerArgs.add("-Xjdk-release=${javaVersion.majorVersion}")
+            }
+        }
+        project.tasks.withType<KotlinCompile>().configureEach {
+            compilerOptions {
+                jvmTarget.set(JvmTarget.fromTarget(javaVersion.majorVersion))
+            }
+        }
+        if (project.providers.environmentVariable("MOZ_AUTOMATION").isPresent) {
+            val javaMajor = javaVersion.majorVersion.toInt()
+            project.tasks.withType<JavaCompile>().configureEach {
+                val classes = destinationDirectory
+                doLast { checkClassFileVersions(classes.get().asFile, javaMajor) }
+            }
+            project.tasks.withType<KotlinCompile>().configureEach {
+                val classes = destinationDirectory
+                doLast { checkClassFileVersions(classes.get().asFile, javaMajor) }
+            }
+        }
+        project.tasks.withType<Javadoc>().configureEach {
+            options.source = javaVersion.majorVersion
+        }
+    }
+
+    private fun configureJavacLint(project: Project) {
+        project.tasks.withType<JavaCompile>().configureEach {
+            options.compilerArgs.addAll(
+                listOf(
+                    // Turn on all warnings, except...
+                    "-Xlint:all",
+                    // Deprecation, because we do use deprecated API for compatibility.
+                    "-Xlint:-deprecation",
+                    // Serial, because we don't use Java serialization.
+                    "-Xlint:-serial",
+                    // Classfile, because javac has a bug with MethodParameters attributes
+                    // with Java 7. https://bugs.openjdk.java.net/browse/JDK-8190452
+                    "-Xlint:-classfile",
+                    // This-escape, because GeckoView API classes pass `this` out of their constructors.
+                    "-Xlint:-this-escape",
+                ),
+            )
+
+            // In GeckoView java projects only, turn all remaining warnings
+            // into errors unless marked by @SuppressWarnings.
+            val werrorProjects = setOf("annotations", "messaging_example", "port_messaging_example", "test_runner")
+            if (project.name.startsWith("geckoview") || project.name in werrorProjects) {
+                options.compilerArgs.add("-Werror")
+            }
+        }
+        project.pluginManager.withPlugin("com.android.base") {
+            project.tasks.withType<JavaCompile>().configureEach {
+                // AGP's generated BuildConfig.java has a dangling doc comment.
+                // https://issuetracker.google.com/issues/567587949
+                options.compilerArgs.add("-Xlint:-dangling-doc-comments")
+            }
+        }
+    }
+
+    private fun configureAndroidBuildToolsVersion(project: Project, substs: Map<*, *>) {
         val buildToolsVersion = substs["ANDROID_BUILD_TOOLS_VERSION"] as String
         project.pluginManager.withPlugin("com.android.base") {
             project.extensions.getByType<CommonExtension>().buildToolsVersion = buildToolsVersion
@@ -551,20 +634,59 @@ class ProjectPlugin : Plugin<Project> {
         project.pluginManager.withPlugin("com.android.application", action)
     }
 
-    // Translates JUnit test events into Mozilla's TBPL-like textual format that Taskcluster
-    // log parsing expects. See also: testing/mozbase/mozlog/mozlog/formatters/tbplformatter.py
-    private fun configureTestOutputFormatting(project: Project) {
+    private fun configureRoomImplementationCheck(project: Project) {
+        project.pluginManager.withPlugin("com.google.devtools.ksp") {
+            val schemas = project.file("schemas")
+            val kspOutputs = project.layout.buildDirectory.dir("generated/ksp").get().asFile
+            val kspTask = Regex("ksp(\\w+)Kotlin")
+            project.tasks.configureEach {
+                val variant = kspTask.matchEntire(name)?.groupValues?.get(1)?.replaceFirstChar { it.lowercase() }
+                if (variant == null || variant.contains("Test")) return@configureEach
+                doLast {
+                    val missing = missingRoomImplementations(
+                        schemas.listFiles().orEmpty().filter { it.isDirectory }.map { it.name },
+                        File(kspOutputs, variant).walk().filter { it.isFile }.map { it.name }.toList(),
+                    )
+                    if (missing.isNotEmpty()) {
+                        throw GradleException("$path ran but Room generated no implementation for ${missing.joinToString()}")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun configureUnitTests(project: Project) {
+        val automation = project.providers.environmentVariable("MOZ_AUTOMATION").isPresent
+        val fetches = project.providers.environmentVariable("MOZ_FETCHES_DIR")
         project.pluginManager.withPlugin("com.android.base") {
             project.tasks.withType(Test::class.java).configureEach {
                 systemProperty("robolectric.logging", "stdout")
                 systemProperty("logging.test-mode", "true")
                 systemProperty("javax.net.ssl.trustStoreType", "JKS")
+                jvmArgs("--enable-native-access=ALL-UNNAMED")
+                jvmArgs("--add-exports=java.base/jdk.internal.access=ALL-UNNAMED")
+                if (automation) {
+                    systemProperty(
+                        "robolectric.dependency.dir",
+                        File(fetches.get(), "robolectric-android-all").path,
+                    )
+                }
 
                 testLogging.events = emptySet()
 
+                // Translates JUnit test events into Mozilla's TBPL-like textual format that
+                // Taskcluster log parsing expects.
+                // See also: testing/mozbase/mozlog/mozlog/formatters/tbplformatter.py
                 val listener = MozillaTestOutputListener(logger)
                 addTestListener(listener)
                 addTestOutputListener(listener)
+            }
+
+            val libs = project.extensions.getByType(VersionCatalogsExtension::class.java).named("libs")
+            val espresso = libs.findLibrary("androidx-test-espresso-core").get().get()
+            val espressoNotation = "${espresso.module}:${espresso.versionConstraint.requiredVersion}"
+            project.configurations.matching { it.name == "testImplementation" }.configureEach {
+                project.dependencies.constraints.add(name, espressoNotation)
             }
         }
     }
@@ -579,6 +701,24 @@ class ProjectPlugin : Plugin<Project> {
         }
         project.pluginManager.withPlugin("com.android.library", action)
         project.pluginManager.withPlugin("com.android.application", action)
+    }
+
+    /**
+     * Adds the `build-metadata.properties` asset to minified application variants.
+     */
+    private fun configureBuildMetadata(project: Project) {
+        project.pluginManager.withPlugin("com.android.application") {
+            val androidComponents = project.extensions.getByType<ApplicationAndroidComponentsExtension>()
+            androidComponents.onVariants(androidComponents.selector().all()) { variant ->
+                if (!variant.isMinifyEnabled) return@onVariants
+                val task = project.tasks.register<WriteBuildMetadata>(
+                    "writeBuildMetadata${variant.name.replaceFirstChar { it.uppercase() }}",
+                ) {
+                    mappingFile.set(variant.artifacts.get(SingleArtifact.OBFUSCATION_MAPPING_FILE))
+                }
+                variant.sources.assets?.addGeneratedSourceDirectory(task, WriteBuildMetadata::outputDir)
+            }
+        }
     }
 
     private fun registerPrintVariantsTask(project: Project) {
@@ -700,5 +840,35 @@ abstract class ExtractNativeLibsForTests : TransformAction<ExtractNativeLibsForT
                     }
                 }
         }
+    }
+}
+
+/**
+ * Returns the Room databases, named by their exported schema directories (fully qualified class names), that have
+ * no `_Impl` class among [generatedFiles], the file names KSP generated for one variant.
+ */
+internal fun missingRoomImplementations(databases: List<String>, generatedFiles: List<String>): List<String> {
+    val generated = generatedFiles.map { it.substringBeforeLast('.') }
+    return databases.filterNot { database ->
+        val impl = "${database.substringAfterLast('.')}_Impl"
+        generated.any { it == impl || it.endsWith("_$impl") }
+    }
+}
+
+internal fun checkClassFileVersions(dir: File, javaMajor: Int) {
+    // Class file major version 61 is Java 17: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-4.html#jvms-4.1
+    val max = javaMajor + 44
+    val tooNew = dir.walk().filter { it.isFile && it.extension == "class" }.mapNotNull { file ->
+        val version = DataInputStream(file.inputStream()).use {
+            try {
+                if (it.readInt() == 0xCAFEBABE.toInt()) { it.readUnsignedShort(); it.readUnsignedShort() } else null
+            } catch (e: EOFException) {
+                null
+            }
+        } ?: throw GradleException("$file is not a class file")
+        if (version > max) "$file: class file version $version" else null
+    }.toList()
+    if (tooNew.isNotEmpty()) {
+        throw GradleException("Class files newer than version $max (Java $javaMajor):\n" + tooNew.joinToString("\n"))
     }
 }

@@ -37,21 +37,23 @@ class SaveToCollectionMenuItemProvider(
     private val browserStore: BrowserStore,
     private val target: MenuTarget,
 ) : MenuItemProvider {
-    override val itemFlow: StateFlow<MenuItem?> =
+    override val itemsFlow: StateFlow<List<MenuItem>> =
         if (target == MenuTarget.CustomizeMenu) {
-            MutableStateFlow(DEFAULT_MENU_ITEM)
+            MutableStateFlow(listOf(DEFAULT_MENU_ITEM))
         } else {
             MutableStateFlow(
-                if (settings.collections) {
-                    DEFAULT_MENU_ITEM.copy(
-                        onClickEvent =
-                            MenuAction.Navigate.SaveToCollection(
-                                hasCollection = tabCollectionStorage.cachedTabCollections.isNotEmpty()
-                            )
-                    )
-                } else {
-                    null
-                }
+                listOfNotNull(
+                    if (settings.collections) {
+                        DEFAULT_MENU_ITEM.copy(
+                            onClickEvent =
+                                MenuAction.Navigate.SaveToCollection(
+                                    hasCollection = tabCollectionStorage.cachedTabCollections.isNotEmpty()
+                                )
+                        )
+                    } else {
+                        null
+                    }
+                )
             )
         }
 

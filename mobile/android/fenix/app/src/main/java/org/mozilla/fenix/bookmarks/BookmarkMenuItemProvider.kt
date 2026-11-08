@@ -55,18 +55,20 @@ class BookmarkMenuItemProvider(
 ) : MenuItemProvider {
     // Without a page shown there is nothing to bookmark. Knowing whether the shown page already is bookmarked means
     // reading from disk, which the menu should not wait for, so it starts out offered as not bookmarked.
-    private val mutableItem =
-        MutableStateFlow<MenuItem?>(
-            if (target == MenuTarget.CustomizeMenu) {
-                DEFAULT_MENU_ITEM
-            } else {
-                DEFAULT_MENU_ITEM.copy(onClickEvent = MenuAction.AddBookmark).takeIf {
-                    target.browserSessionFrom(browserStore.state) != null
+    private val mutableItems =
+        MutableStateFlow<List<MenuItem>>(
+            listOfNotNull(
+                if (target == MenuTarget.CustomizeMenu) {
+                    DEFAULT_MENU_ITEM
+                } else {
+                    DEFAULT_MENU_ITEM.copy(onClickEvent = MenuAction.AddBookmark).takeIf {
+                        target.browserSessionFrom(browserStore.state) != null
+                    }
                 }
-            }
+            )
         )
 
-    override val itemFlow: StateFlow<MenuItem?> = mutableItem.asStateFlow()
+    override val itemsFlow: StateFlow<List<MenuItem>> = mutableItems.asStateFlow()
 
     init {
         if (target != MenuTarget.CustomizeMenu) {
@@ -74,7 +76,7 @@ class BookmarkMenuItemProvider(
             // is deliberately run on a scope outliving this menu. As such it must not reference this provider, which
             // would then be leaked together with the menu it holds onto while waiting for the bookmarks.
             val url = target.browserSessionFrom(browserStore.state)?.getTabUrl()
-            val mutableItem = mutableItem
+            val mutableItems = mutableItems
             if (url != null) {
                 applicationScope.launch {
                     val guidToEdit =
@@ -84,7 +86,7 @@ class BookmarkMenuItemProvider(
                             .firstOrNull { it.url == url }
                             ?.guid ?: return@launch
 
-                    mutableItem.value = editBookmarkItem(guidToEdit)
+                    mutableItems.value = listOf(editBookmarkItem(guidToEdit))
                 }
             }
         }

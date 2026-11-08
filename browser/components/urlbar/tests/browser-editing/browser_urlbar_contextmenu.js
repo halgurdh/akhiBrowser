@@ -247,6 +247,68 @@ add_task(async function menu_button_on_openable_rows() {
   await PlacesUtils.history.clear();
 });
 
+add_task(async function labels_by_type() {
+  await PlacesTestUtils.addVisits(["https://example.com/"]);
+
+  const TEST_CASES = [
+    {
+      type: UrlbarShared.RESULT_TYPE.URL,
+      expected: [
+        "urlbar-view-context-menu-open-in-tab2",
+        "urlbar-view-context-menu-open-in-container-tab2",
+        "urlbar-view-context-menu-open-in-window2",
+        "urlbar-view-context-menu-open-in-private-window2",
+      ],
+    },
+    {
+      type: UrlbarShared.RESULT_TYPE.SEARCH,
+      expected: [
+        "urlbar-view-context-menu-search-in-tab",
+        "urlbar-view-context-menu-search-in-container-tab",
+        "urlbar-view-context-menu-search-in-window",
+        "urlbar-view-context-menu-search-in-private-window",
+      ],
+    },
+  ];
+
+  await UrlbarTestUtils.promiseAutocompleteResultPopup({
+    value: "example",
+    window,
+    fireInputEvent: true,
+  });
+
+  for (let { type, expected } of TEST_CASES) {
+    info(`Test for ${JSON.stringify({ type })}`);
+    let row;
+    for (let i = 0; i < UrlbarTestUtils.getResultCount(window); i++) {
+      let { element, result } = await UrlbarTestUtils.getDetailsOfResultAt(
+        window,
+        i
+      );
+      if (result.type == type) {
+        row = element.row;
+        break;
+      }
+    }
+    Assert.ok(row, "Found the result");
+
+    let menu = await openContextMenu(row);
+    Assert.deepEqual(
+      [
+        ...menu.querySelectorAll(
+          "[data-open-in][data-l10n-id], [data-open-in] > [data-l10n-id]"
+        ),
+      ].map(element => element.dataset.l10nId),
+      expected,
+      "The menu items are labeled for the result"
+    );
+    menu.hide(undefined, { force: true });
+  }
+
+  gURLBar.view.close();
+  await PlacesUtils.history.clear();
+});
+
 // With the feature gate off, the three-dot menu holds only the result's own
 // commands and a right-click opens nothing.
 add_task(async function feature_gate_off() {
@@ -438,6 +500,70 @@ add_task(async function on_switch_to_tab() {
   await PlacesUtils.history.clear();
 });
 
+add_task(async function menu_trigger_on_reopen() {
+  await PlacesTestUtils.addVisits([
+    "https://example.com/1",
+    "https://example.com/2",
+    "https://example.com/3",
+    "https://example.com/4",
+  ]);
+  await PlacesFrecencyRecalculator.recalculateAnyOutdatedFrecencies();
+
+  await UrlbarTestUtils.promiseAutocompleteResultPopup({
+    value: "example.com/",
+    window,
+    fireInputEvent: true,
+  });
+  Assert.greaterOrEqual(
+    UrlbarTestUtils.getResultCount(window),
+    4,
+    "There are enough results"
+  );
+  // Row B is above row A so that the menu opened on row A doesn't cover it.
+  let rowA = (await UrlbarTestUtils.getDetailsOfResultAt(window, 3)).element
+    .row;
+  let rowB = (await UrlbarTestUtils.getDetailsOfResultAt(window, 1)).element
+    .row;
+
+  info("Open the context menu on A");
+  await openContextMenu(rowA);
+  Assert.ok(rowA.hasAttribute("menu-trigger"), "Row A has menu-trigger");
+  info("Then, open the context menu on B");
+  await openContextMenu(rowB);
+  await new Promise(resolve => requestAnimationFrame(resolve));
+  Assert.ok(rowB.hasAttribute("menu-trigger"), "Row B has menu-trigger");
+  Assert.ok(
+    !rowA.hasAttribute("menu-trigger"),
+    "Row A no longer has menu-trigger"
+  );
+
+  info("Reopen on the same row, away from where the menu was opened");
+  await openContextMenu(rowB);
+  await new Promise(resolve => requestAnimationFrame(resolve));
+  Assert.ok(
+    rowB.hasAttribute("menu-trigger"),
+    "Row B keeps menu-trigger after the menu is reopened on it"
+  );
+  Assert.ok(
+    !rowA.hasAttribute("menu-trigger"),
+    "Row A does not have menu-trigger"
+  );
+
+  let onHidden = BrowserTestUtils.waitForEvent(
+    gURLBar.view.resultMenu,
+    "hidden"
+  );
+  gURLBar.view.resultMenu.hide(undefined, { force: true });
+  await onHidden;
+  Assert.ok(
+    !rowB.hasAttribute("menu-trigger"),
+    "Row B no longer has menu-trigger after the menu is hidden"
+  );
+
+  gURLBar.view.close();
+  await PlacesUtils.history.clear();
+});
+
 // No container item carries an accesskey, so the initial of a name the user
 // chose selects it, cycling among every container that shares the letter.
 add_task(async function container_first_letter_selection() {
@@ -472,6 +598,112 @@ add_task(async function container_first_letter_selection() {
 
   menu.hide(undefined, { force: true });
   gURLBar.view.close();
+});
+
+add_task(async function other_result_not_hovered() {
+  await doTest(
+    {
+      visits: [
+        "https://example.com/1",
+        "https://example.com/2",
+        "https://example.com/3",
+      ],
+      input: "example.com/",
+    },
+    async ({ win }) => {
+      let triggerRow = (await UrlbarTestUtils.getDetailsOfResultAt(win, 2))
+        .element.row;
+      let otherRow = (await UrlbarTestUtils.getDetailsOfResultAt(win, 1))
+        .element.row;
+      info("Mouse over on the other row");
+      EventUtils.synthesizeMouseAtCenter(otherRow, { type: "mousemove" });
+      Assert.ok(otherRow.matches(":hover"), "The other result can be :hover");
+
+      info("Open a context menu for the trigger row");
+      await openContextMenu(triggerRow);
+
+      info("Mouse over on the other row again");
+      EventUtils.synthesizeMouseAtCenter(otherRow, { type: "mousemove" });
+      Assert.ok(
+        !otherRow.matches(":hover"),
+        "The other result can't be :hover"
+      );
+    }
+  );
+});
+
+add_task(async function other_result_not_clickable() {
+  await doTest(
+    {
+      visits: [
+        "https://example.com/1",
+        "https://example.com/2",
+        "https://example.com/3",
+      ],
+      input: "example.com/",
+    },
+    async ({ win }) => {
+      let triggerRow = (await UrlbarTestUtils.getDetailsOfResultAt(win, 2))
+        .element.row;
+      let otherRow = (await UrlbarTestUtils.getDetailsOfResultAt(win, 1))
+        .element.row;
+
+      info("Open a context menu for the trigger row");
+      await openContextMenu(triggerRow);
+
+      info("Try to click on the other row");
+      let previousSelectedRowIndex = win.gURLBar.view.selectedRowIndex;
+      let previousValue = win.gURLBar.value;
+      let onHidden = BrowserTestUtils.waitForEvent(
+        win.gURLBar.view.resultMenu,
+        "hidden"
+      );
+      EventUtils.synthesizeMouseAtCenter(otherRow, {});
+      await onHidden;
+      Assert.ok(true, "The context menu is closed");
+      Assert.equal(
+        win.gURLBar.view.selectedRowIndex,
+        previousSelectedRowIndex,
+        "The selection doesn't change"
+      );
+      Assert.equal(
+        win.gURLBar.value,
+        previousValue,
+        "The input value doesn't change"
+      );
+    }
+  );
+});
+
+add_task(async function other_result_right_click() {
+  await doTest(
+    {
+      visits: [
+        "https://example.com/1",
+        "https://example.com/2",
+        "https://example.com/3",
+      ],
+      input: "example.com/",
+    },
+    async ({ win }) => {
+      let triggerRow = (await UrlbarTestUtils.getDetailsOfResultAt(win, 2))
+        .element.row;
+      let otherRow = (await UrlbarTestUtils.getDetailsOfResultAt(win, 1))
+        .element.row;
+      Assert.ok(!otherRow.hasAttribute("menu-trigger"));
+
+      info("Open a context menu for the trigger row");
+      await openContextMenu(triggerRow);
+      Assert.ok(triggerRow.hasAttribute("menu-trigger"));
+      Assert.ok(!otherRow.hasAttribute("menu-trigger"));
+
+      info("Right-click on the other row");
+      await openContextMenu(otherRow);
+      await new Promise(resolve => requestAnimationFrame(resolve));
+      Assert.ok(!triggerRow.hasAttribute("menu-trigger"));
+      Assert.ok(otherRow.hasAttribute("menu-trigger"));
+    }
+  );
 });
 
 // Returns the menu's items as the command or open-in target each one picks, in
@@ -515,22 +747,15 @@ async function promiseResultWithMenuButton() {
   throw new Error("No result with a menu button");
 }
 
+// Right-clicks the row at its center.
 async function openContextMenu(row) {
   info("Open the context menu");
   let menu = gURLBar.view.resultMenu;
+
   let onShown = BrowserTestUtils.waitForEvent(menu, "shown");
-  EventUtils.synthesizeMouseAtCenter(row, {
-    button: 2,
-    type: "mousedown",
-  });
-  EventUtils.synthesizeMouseAtCenter(row, {
-    button: 2,
-    type: "contextmenu",
-  });
-  EventUtils.synthesizeMouseAtCenter(row, {
-    button: 2,
-    type: "mouseup",
-  });
+  for (let type of ["mousedown", "contextmenu", "mouseup"]) {
+    EventUtils.synthesizeMouseAtCenter(row, { button: 2, type });
+  }
   await onShown;
 
   return menu;
@@ -573,4 +798,27 @@ async function openContainerSubMenuItem(menuItem, userContextId) {
     `The container item for ${userContextId} should have no access key`
   );
   return subMenuItem;
+}
+
+async function doTest({ visits, input }, testFunction) {
+  await PlacesTestUtils.addVisits(visits);
+  await PlacesFrecencyRecalculator.recalculateAnyOutdatedFrecencies();
+
+  await UrlbarTestUtils.promiseAutocompleteResultPopup({
+    value: input,
+    window,
+    fireInputEvent: true,
+  });
+
+  await testFunction({ win: window });
+
+  // Clean up.
+  let menu = gURLBar.view.resultMenu;
+  if (menu.open) {
+    let onHidden = BrowserTestUtils.waitForEvent(menu, "hidden");
+    menu.hide(undefined, { force: true });
+    await onHidden;
+  }
+  gURLBar.view.close();
+  await PlacesUtils.history.clear();
 }

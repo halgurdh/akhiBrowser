@@ -20,12 +20,14 @@ use selectors::parser::PseudoElement as PseudoElementTrait;
 use selectors::{Element, OpaqueElement};
 use servo_arc::{Arc, ArcBorrow};
 use smallvec::SmallVec;
+use std::cell::UnsafeCell;
 use std::collections::{BTreeSet, HashSet};
 use std::fmt::Write;
 use std::iter;
 use std::os::raw::c_void;
 use std::ptr;
 use std::sync::LazyLock;
+use std::sync::atomic::Ordering;
 use style::color::mix::ColorInterpolationMethod;
 use style::color::{AbsoluteColor, ColorComponents, ColorSpace};
 use style::computed_value_flags::ComputedValueFlags;
@@ -229,6 +231,7 @@ pub unsafe extern "C" fn Servo_Initialize(
 
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn Servo_Shutdown() {
+    drop_deferred_data();
     unsafe {
         DUMMY_URL_DATA = ptr::null_mut();
         DUMMY_CHROME_URL_DATA = ptr::null_mut();
@@ -412,8 +415,11 @@ pub extern "C" fn Servo_TraverseSubtree(
 /// if so, frees them.
 #[unsafe(no_mangle)]
 pub extern "C" fn Servo_MaybeGCRuleTree(raw_data: &PerDocumentStyleData) {
+    debug_assert!(is_main_thread());
     let per_doc_data = raw_data.borrow_mut();
-    per_doc_data.stylist.rule_tree().maybe_gc();
+    unsafe {
+        per_doc_data.stylist.rule_tree().root().maybe_gc();
+    }
 }
 
 #[unsafe(no_mangle)]
@@ -1478,9 +1484,65 @@ pub extern "C" fn Servo_Property_IsDiscreteAnimatable(property: NonCustomCSSProp
     }
 }
 
+static mut DEFERRED_ELEMENT_DATA: UnsafeCell<Vec<Box<data::ElementDataWrapper>>> =
+    UnsafeCell::new(Vec::new());
+
+/// Upper bound on the amount of element data waiting to be dropped. Past it,
+/// element data is dropped synchronously.
+const MAX_DEFERRED_ELEMENT_DATA: usize = 20000;
+
+#[inline]
+fn schedule_deferred_data_drop() -> bool {
+    unsafe {
+        bindings::Gecko_ScheduleIdle(Some(drop_deferred_data), 1000 /* ms */)
+    }
+}
+
+/// Clears the element's style data, potentially deferred until drop_deferred_data() runs.
 #[unsafe(no_mangle)]
 pub extern "C" fn Servo_Element_ClearData(element: &RawGeckoElement) {
-    unsafe { GeckoElement(element).clear_data() };
+    debug_assert!(is_main_thread());
+    let Some(data) = (unsafe { GeckoElement(element).take_data() }) else {
+        return;
+    };
+
+    // As narrow of a static borrow as a it can get.
+    // Ideally we'd use something like [1] but that's not stable yet.
+    //
+    // [1]: https://doc.rust-lang.org/edition-guide/rust-2024/static-mut-references.html#unsafecell-with-sync
+    #[allow(static_mut_refs)]
+    {
+        let deferred = unsafe { DEFERRED_ELEMENT_DATA.get_mut() };
+        if deferred.is_empty() && !schedule_deferred_data_drop() {
+            return;
+        }
+        if deferred.len() < MAX_DEFERRED_ELEMENT_DATA {
+            deferred.push(data);
+            return;
+        }
+    }
+
+    drop_deferred_data();
+}
+
+/// Drops the element data detached by Servo_Element_ClearData.
+extern "C" fn drop_deferred_data() {
+    debug_assert!(is_main_thread());
+    // Similarly, as narrow of a borrow as it can get.
+    #[allow(static_mut_refs)]
+    let old = unsafe { std::mem::take(DEFERRED_ELEMENT_DATA.get_mut()) };
+
+    let mut roots_to_gc = HashSet::new();
+    for data in old {
+        let root = data.borrow().styles.primary().rules().root();
+        roots_to_gc.insert(root);
+        drop(data);
+    }
+    for root in roots_to_gc {
+        unsafe {
+            root.maybe_gc();
+        }
+    }
 }
 
 #[unsafe(no_mangle)]
@@ -2673,7 +2735,6 @@ pub extern "C" fn Servo_NestedDeclarationsRule_SetStyle(
 pub extern "C" fn Servo_DeclarationBlock_IsImmutable(
     declarations: &LockedDeclarationBlock,
 ) -> bool {
-    use std::sync::atomic::Ordering;
     // SAFETY: See StyleSource::mark_in_rule_tree. This boolean is conceptually not part of the
     // locked data, and it's a relaxed atomic, so it's sound to read.
     unsafe {
@@ -4856,7 +4917,7 @@ pub unsafe extern "C" fn Servo_ComputedValues_Inherit(
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn Servo_ComputedValues_SpecifiesAnimationsOrTransitions(
+pub extern "C" fn Servo_ComputedValues_NeedsAnimationTraversal(
     values: &ComputedValues,
 ) -> bool {
     let ui = values.get_ui();
@@ -4864,6 +4925,7 @@ pub extern "C" fn Servo_ComputedValues_SpecifiesAnimationsOrTransitions(
         || ui.specifies_transitions()
         || ui.specifies_scroll_timelines()
         || ui.specifies_view_timelines()
+        || ui.specifies_timeline_scope()
 }
 
 #[repr(u8)]
@@ -8358,12 +8420,12 @@ fn relative_selector_invalidated_at(element: GeckoElement, result: &Invalidation
     }
 }
 
-fn add_relative_selector_attribute_dependency<'a>(
+fn add_relative_selector_attribute_dependency<'a, 'b>(
     element: &GeckoElement<'a>,
     scope: &Option<OpaqueElement>,
     invalidation_map: &'a InvalidationMap,
     attribute: &AtomIdent,
-    collector: &mut RelativeSelectorDependencyCollector<'a, GeckoElement<'a>>,
+    collector: &mut RelativeSelectorDependencyCollector<'a, 'b, GeckoElement<'a>>,
 ) {
     match invalidation_map
         .other_attribute_affecting_selectors
@@ -9214,14 +9276,14 @@ pub extern "C" fn Servo_CssUrl_IsLocalRef(url: &url::CssUrl) -> bool {
     url.is_fragment()
 }
 
-fn relative_selector_dependencies_for_id<'a>(
+fn relative_selector_dependencies_for_id<'a, 'b>(
     old_id: *const nsAtom,
     new_id: *const nsAtom,
     element: &GeckoElement<'a>,
     scope: Option<OpaqueElement>,
     quirks_mode: QuirksMode,
     invalidation_map: &'a InvalidationMap,
-    collector: &mut RelativeSelectorDependencyCollector<'a, GeckoElement<'a>>,
+    collector: &mut RelativeSelectorDependencyCollector<'a, 'b, GeckoElement<'a>>,
 ) {
     [old_id, new_id]
         .iter()
@@ -9240,13 +9302,13 @@ fn relative_selector_dependencies_for_id<'a>(
         });
 }
 
-fn relative_selector_dependencies_for_class<'a>(
+fn relative_selector_dependencies_for_class<'a, 'b>(
     classes_changed: &SmallVec<[Atom; 8]>,
     element: &GeckoElement<'a>,
     scope: Option<OpaqueElement>,
     quirks_mode: QuirksMode,
     invalidation_map: &'a InvalidationMap,
-    collector: &mut RelativeSelectorDependencyCollector<'a, GeckoElement<'a>>,
+    collector: &mut RelativeSelectorDependencyCollector<'a, 'b, GeckoElement<'a>>,
 ) {
     classes_changed.iter().for_each(|atom| {
         match invalidation_map.class_to_selector.get(atom, quirks_mode) {
@@ -9260,12 +9322,12 @@ fn relative_selector_dependencies_for_class<'a>(
     });
 }
 
-fn relative_selector_dependencies_for_custom_state<'a>(
+fn relative_selector_dependencies_for_custom_state<'a, 'b>(
     state: *const nsAtom,
     element: GeckoElement<'a>,
     scope: Option<OpaqueElement>,
     invalidation_map: &'a InvalidationMap,
-    collector: &mut RelativeSelectorDependencyCollector<'a, GeckoElement<'a>>,
+    collector: &mut RelativeSelectorDependencyCollector<'a, 'b, GeckoElement<'a>>,
 ) {
     unsafe {
         AtomIdent::with(state, |atom| {
@@ -10786,7 +10848,6 @@ pub unsafe extern "C" fn Servo_Value_Matches_Syntax(
         &mut input,
         &syntax,
         url_data,
-        None,
         AllowComputationallyDependent::Yes,
         /* attr_taint */ Default::default(),
         property_id_ref,
@@ -11536,40 +11597,46 @@ fn compute_arbritrary_substitution_functions(
 
     // Let's check if we have substitution functions (`var()`, `attr()`, `env()`) to handle.
     parser.look_for_arbitrary_substitution_functions(ARBITRARY_SUBSTITUTION_FUNCTIONS);
-    let Ok(variable_value) = VariableValue::parse(
-        &mut parser,
-        Some(&parser_context.namespaces.prefixes),
-        &parser_context.url_data,
-    ) else {
+    let Ok(variable_value) = VariableValue::parse(parser_context, &mut parser) else {
         return None;
     };
 
-    if !parser.seen_arbitrary_substitution_functions() {
+    if !parser.seen_arbitrary_substitution_functions() || !variable_value.has_references() {
         return None;
     }
 
     // Build the attributes Map that ComputedSubstitutionFunctions needs
     let stylist = &data.stylist;
     let mut attribute_tracker = AttributeTracker::new(&element);
+    let mut substitution_functions = custom_properties::ComputedSubstitutionFunctions::new(
+        Some(style.custom_properties().clone()),
+        None,
+    );
     let attributes: style::custom_properties_map::OwnMap = variable_value
         .references
         .refs
         .iter()
         .filter_map(|reference| {
-            let attr = match &reference.function {
-                style::substitution::SubstitutionFunction::Attr(attr) if attr.has_type() => attr,
-                _ => return None,
+            let style::substitution::SubstitutionFunction::Attr(attr) = &reference.function else {
+                return None;
             };
-            let value = attr
-                .value_for_cycle_resolution(&variable_value.url_data, &mut attribute_tracker)
+            let mut replacement_context = style::substitution::SubstitutionReplacementContext::new(
+                None,
+                &substitution_functions,
+                stylist,
+                context,
+                &mut attribute_tracker,
+            );
+            let arg = attr.replace_arg(&variable_value, &mut replacement_context);
+            let arg = arg.value.filter(|arg| arg.has_type())?;
+            let value = arg
+                .name
+                .value_for_cycle_resolution(&mut replacement_context, &variable_value.url_data)
                 .ok()?;
-            Some((attr.name.clone(), Some(value)))
+            Some((arg.name.name.clone(), Some(value)))
         })
         .collect();
-    let substitution_functions = custom_properties::ComputedSubstitutionFunctions::new(
-        Some(style.custom_properties().clone()),
-        Some(attributes),
-    );
+    substitution_functions.attributes = attributes;
 
     let Ok(result) = style::substitution::substitute(
         &variable_value,
@@ -11685,10 +11752,13 @@ pub unsafe extern "C" fn Servo_GetComputationStepsSupportedCSSFunctions(
     out: &mut nsTArray<nsCString>,
 ) {
     use style::properties::ARBITRARY_SUBSTITUTION_FUNCTIONS;
+    use style::substitution::SubstitutionFunctionKind;
     use style::values::specified::calc::MathFunction;
 
     for func in ARBITRARY_SUBSTITUTION_FUNCTIONS {
-        out.push(nsCString::from(*func));
+        if SubstitutionFunctionKind::from_ident(func).is_ok() {
+            out.push(nsCString::from(*func));
+        }
     }
     for func in MathFunction::variants() {
         out.push(nsCString::from(func.as_ref()));
@@ -11713,7 +11783,7 @@ pub unsafe extern "C" fn Servo_GetComputationSteps(
 
     let property = unsafe { property.as_str_unchecked() };
     let string = unsafe { string.as_str_unchecked() };
-    let mut parser_context = dummy_author_style_rule_context();
+    let parser_context = dummy_author_style_rule_context();
     let property_id = PropertyId::parse(&property, &parser_context).ok();
     let mut substituted = None;
     let element = GeckoElement(raw_element);
@@ -11721,56 +11791,52 @@ pub unsafe extern "C" fn Servo_GetComputationSteps(
     let mut context = ContextForSubstitution::new(element, pseudo_type);
     let context = context.computed_context(&data, style);
 
-    let mut parse_node = |parser_context: &ParserContext| {
-        if let Some(s) = compute_arbritrary_substitution_functions(
-            &string,
-            element,
-            style,
-            &data,
-            &parser_context,
-            &context,
-        ) {
-            // We successfully substituted, let's add the initial string to the result array
-            out.push(nsCString::from(string));
-            // …as well as the substituted string.
-            out.push(nsCString::from(&s));
-            substituted = Some(s.clone());
-        };
+    let node = parser_context.with_property_id(
+        property_id.as_ref().map(PropertyIdRef::from),
+        |parser_context| {
+            if let Some(s) = compute_arbritrary_substitution_functions(
+                &string,
+                element,
+                style,
+                &data,
+                &parser_context,
+                &context,
+            ) {
+                // We successfully substituted, let's add the initial string to the result array
+                out.push(nsCString::from(string));
+                // …as well as the substituted string.
+                out.push(nsCString::from(&s));
+                substituted = Some(s.clone());
+            };
 
-        let substituted_str = substituted.as_deref().unwrap_or(&string);
-        let mut parser = Parser::new(substituted_str);
+            let substituted_str = substituted.as_deref().unwrap_or(&string);
+            let mut parser = Parser::new(substituted_str);
 
-        let flags = CalcParseFlags {
-            percentage_context: PercentageContext::allowed(),
-            in_place_operations: CalcNodeParseInPlaceOperations::No,
-            ..Default::default()
-        };
+            let flags = CalcParseFlags {
+                percentage_context: PercentageContext::allowed(),
+                in_place_operations: CalcNodeParseInPlaceOperations::No,
+                ..Default::default()
+            };
 
-        // Initial parsing
-        Some(match parser.next().ok()? {
-            Token::Function(name) => {
-                let math_func = CalcNode::math_function(&parser_context, name).ok()?;
-                CalcNode::parse(&parser_context, &mut parser, math_func, flags).ok()?
-            },
-            Token::Percentage { unit_value, .. } => CalcNode::Leaf(Leaf::Percentage(
-                CalcPercentageLeaf::new(*unit_value, Optional::None),
-            )),
-            Token::Dimension { value, unit, .. } => {
-                let length =
-                    NoCalcLength::parse_dimension_with_context(&parser_context, *value, unit)
-                        .ok()?;
-                CalcNode::Leaf(Leaf::Length(length))
-            },
-            _ => return None,
-        })
-    };
-
-    let node = match property_id {
-        Some(ref id) => {
-            parser_context.with_property_declaration(PropertyIdRef::from(id), parse_node)
+            // Initial parsing
+            Some(match parser.next().ok()? {
+                Token::Function(name) => {
+                    let math_func = CalcNode::math_function(&parser_context, name).ok()?;
+                    CalcNode::parse(&parser_context, &mut parser, math_func, flags).ok()?
+                },
+                Token::Percentage { unit_value, .. } => CalcNode::Leaf(Leaf::Percentage(
+                    CalcPercentageLeaf::new(*unit_value, Optional::None),
+                )),
+                Token::Dimension { value, unit, .. } => {
+                    let length =
+                        NoCalcLength::parse_dimension_with_context(&parser_context, *value, unit)
+                            .ok()?;
+                    CalcNode::Leaf(Leaf::Length(length))
+                },
+                _ => return None,
+            })
         },
-        None => parse_node(&parser_context),
-    };
+    );
     let Some(mut node) = node else {
         return;
     };

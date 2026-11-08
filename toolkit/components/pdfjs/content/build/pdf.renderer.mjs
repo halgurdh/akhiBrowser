@@ -20,8 +20,8 @@
  */
 
 /**
- * pdfjsVersion = 6.5.390
- * pdfjsBuild = ea6cf5c98
+ * pdfjsVersion = 7.0.48
+ * pdfjsBuild = d44cfef28
  */
 
 ;// ./src/shared/util.js
@@ -1825,6 +1825,7 @@ function createCanvasTrackers(canvas, operationsCount, {
 /* unused harmony import specifier */ var image_utils_ImageKind;
 /* unused harmony import specifier */ var image_utils_FeatureTest;
 
+
 function convertToRGBA(params) {
   switch (params.kind) {
     case image_utils_ImageKind.GRAYSCALE_1BPP:
@@ -1887,7 +1888,7 @@ function convertRGBToRGBA({
   let i = 0;
   const len = width * height * 3;
   const byteOffset = src.byteOffset + srcPos;
-  const len32 = byteOffset % 4 === 0 ? Math.floor(len / 4) : 0;
+  const len32 = byteOffset % 4 === 0 ? Math.floor(math_clamp_MathClamp(src.length - srcPos, 0, len) / 4) : 0;
   const src32 = len32 > 0 ? new Uint32Array(src.buffer, byteOffset, len32) : null;
   const alphaMask = FeatureTest.isLittleEndian ? 0xff000000 : 0xff;
   if (FeatureTest.isLittleEndian) {
@@ -4566,24 +4567,25 @@ class CanvasGraphics {
         scaledY = 0;
       }
       const glyphWidth = glyph.isRotated ? glyph.width : width;
+      let characterScaleX = 1;
       if ((font.remeasure || glyph.isRotated) && glyphWidth > 0) {
         measure ??= ctx.measureText(character);
         const measuredWidth = measure.width * 1000 / fontSize * fontSizeScale;
         if (glyphWidth < measuredWidth && this.isFontSubpixelAAEnabled) {
-          const characterScaleX = glyphWidth / measuredWidth;
+          characterScaleX = glyphWidth / measuredWidth;
           if (!restoreNeeded) {
             restoreNeeded = true;
             ctx.save();
           }
           ctx.scale(characterScaleX, 1);
           scaledX /= characterScaleX;
-          if (font.missingFile && (patternFillTransform || patternStrokeTransform)) {
-            glyphPatterns ||= new Map();
-            [ctx.fillStyle, ctx.strokeStyle] = glyphPatterns.getOrInsertComputed(glyph.isRotated ? -characterScaleX : characterScaleX, () => [patternFillTransform ? this.#getTextPattern(current.fillColor, PathType.FILL, opIdx)[0] : ctx.fillStyle, patternStrokeTransform ? this.#getTextPattern(current.strokeColor, PathType.STROKE, opIdx)[0] : ctx.strokeStyle]);
-          }
         } else if (glyphWidth !== measuredWidth) {
           scaledX += (glyphWidth - measuredWidth) / 2000 * fontSize / fontSizeScale;
         }
+      }
+      if (restoreNeeded && font.missingFile && (patternFillTransform || patternStrokeTransform)) {
+        glyphPatterns ||= new Map();
+        [ctx.fillStyle, ctx.strokeStyle] = glyphPatterns.getOrInsertComputed(glyph.isRotated ? -characterScaleX : characterScaleX, () => [patternFillTransform ? this.#getTextPattern(current.fillColor, PathType.FILL, opIdx)[0] : ctx.fillStyle, patternStrokeTransform ? this.#getTextPattern(current.strokeColor, PathType.STROKE, opIdx)[0] : ctx.strokeStyle]);
       }
       if (this.contentVisible && (glyph.isInFont || font.missingFile)) {
         if (simpleFillText && !accent) {
@@ -5642,27 +5644,37 @@ class FontLoader {
     }
     unreachable("Not implemented: loadSystemFont without the Font Loading API.");
   }
+  async #loadFontFace(font) {
+    if (!this.isFontLoadingAPISupported) {
+      return;
+    }
+    const fontFace = font.createNativeFontFace();
+    if (!fontFace) {
+      return;
+    }
+    this.addNativeFontFace(fontFace);
+    try {
+      await fontFace.loaded;
+    } catch (ex) {
+      warn(`Failed to load font '${fontFace.family}': '${ex}'.`);
+      this.removeNativeFontFace(fontFace);
+      if (!font.missingFile) {
+        font.disableFontFace = true;
+        throw ex;
+      }
+    }
+  }
   async bind(font) {
-    if (font.attached || font.missingFile && !font.systemFontInfo) {
+    if (font.attached || font.missingFile && !font.systemFontInfo && !font.generatedFontName) {
       return;
     }
     font.attached = true;
     if (font.systemFontInfo) {
-      await this.loadSystemFont(font);
+      await Promise.all([this.loadSystemFont(font), this.#loadFontFace(font)]);
       return;
     }
     if (this.isFontLoadingAPISupported) {
-      const nativeFontFace = font.createNativeFontFace();
-      if (nativeFontFace) {
-        this.addNativeFontFace(nativeFontFace);
-        try {
-          await nativeFontFace.loaded;
-        } catch (ex) {
-          warn(`Failed to load font '${nativeFontFace.family}': '${ex}'.`);
-          font.disableFontFace = true;
-          throw ex;
-        }
-      }
+      await this.#loadFontFace(font);
       return;
     }
     throw new Error("Not implemented: DOM font loading");
@@ -5690,6 +5702,32 @@ class FontFaceObject {
       Object.assign(this, extra);
     }
   }
+  #getFontFaceProperties() {
+    const {
+      generatedFontName
+    } = this;
+    let family = generatedFontName || this.loadedName;
+    const css = Object.create(null);
+    if (generatedFontName) {
+      css.style = this.italic ? "italic" : "normal";
+      css.weight = "normal";
+      if (this.black) {
+        css.weight = "900";
+      } else if (this.bold) {
+        css.weight = "bold";
+      }
+    } else if (this.cssFontInfo) {
+      family = serializeFontFamily(this.cssFontInfo.fontFamily);
+      css.weight = this.cssFontInfo.fontWeight;
+      if (this.cssFontInfo.italicAngle) {
+        css.style = `oblique ${this.cssFontInfo.italicAngle}deg`;
+      }
+    }
+    return {
+      family,
+      css
+    };
+  }
   createNativeFontFace() {
     const {
       data
@@ -5697,19 +5735,14 @@ class FontFaceObject {
     if (!data || this.disableFontFace) {
       return null;
     }
-    let nativeFontFace;
-    if (!this.cssFontInfo) {
-      nativeFontFace = new FontFace(this.loadedName, data, {});
-    } else {
-      const css = {
-        weight: this.cssFontInfo.fontWeight
-      };
-      if (this.cssFontInfo.italicAngle) {
-        css.style = `oblique ${this.cssFontInfo.italicAngle}deg`;
-      }
-      nativeFontFace = new FontFace(serializeFontFamily(this.cssFontInfo.fontFamily), data, css);
+    const {
+      family,
+      css
+    } = this.#getFontFaceProperties();
+    const nativeFontFace = new FontFace(family, data, css);
+    if (!this.generatedFontName) {
+      this._inspectFont?.(this);
     }
-    this._inspectFont?.(this);
     return nativeFontFace;
   }
   createFontFaceRule() {
@@ -5775,6 +5808,9 @@ class FontFaceObject {
   }
   get fallbackName() {
     return this.#fontData.fallbackName;
+  }
+  get generatedFontName() {
+    return this.#fontData.generatedFontName;
   }
   get loadedName() {
     return this.#fontData.loadedName;
@@ -6217,7 +6253,7 @@ class SYSTEM_FONT_INFO {
 }
 class FONT_INFO {
   static bools = ["black", "bold", "disableFontFace", "fontExtraProperties", "isInvalidPDFjsFont", "isType3Font", "italic", "missingFile", "remeasure", "vertical"];
-  static strings = ["fallbackName", "loadedName"];
+  static strings = ["fallbackName", "generatedFontName", "loadedName"];
   static OFFSET_BBOX = Math.ceil(this.bools.length * 2 / 8);
   static OFFSET_FONT_MATRIX = this.OFFSET_BBOX + 1 + 2 * 4;
   static OFFSET_STRINGS = this.OFFSET_FONT_MATRIX + 1 + 8 * 6;
@@ -6379,8 +6415,11 @@ class FontInfo {
   get fallbackName() {
     return shadow(this, "fallbackName", this.#readString(0));
   }
+  get generatedFontName() {
+    return shadow(this, "generatedFontName", this.#readString(1));
+  }
   get loadedName() {
-    return shadow(this, "loadedName", this.#readString(1));
+    return shadow(this, "loadedName", this.#readString(2));
   }
   #getBufferOffset(index) {
     let offset = FONT_INFO.OFFSET_STRINGS;
@@ -7129,6 +7168,7 @@ class RendererMessageHandler {
   static #fontLoader = new FontLoader({
     ownerDocument: globalThis
   });
+  static #hasMeshPattern = false;
   static #objsMap = new Map();
   static #operatorLists = new Map();
   static #renderTaskStates = new Map();
@@ -7326,8 +7366,19 @@ class RendererMessageHandler {
       pageCache: this.#objsMap,
       shouldCreatePageObjs: true
     });
-    handler.on("commonobj", ([id, type, exportedData]) => this.#commonObjs.has(id) ? null : objectHandler.resolveCommonObject(id, type, exportedData));
+    handler.on("commonobj", ([id, type, exportedData]) => {
+      if (this.#commonObjs.has(id)) {
+        return;
+      }
+      objectHandler.resolveCommonObject(id, type, exportedData);
+      if (type === "Pattern" && this.#commonObjs.get(id)[0] === "Mesh") {
+        this.#hasMeshPattern = true;
+      }
+    });
     handler.on("obj", ([id, pageProxyId, type, imageData]) => {
+      if (type === "Pattern" && imageData[0] === "Mesh") {
+        this.#hasMeshPattern = true;
+      }
       objectHandler.resolveObject(id, pageProxyId, type, imageData);
     });
     handler.on("objFailed", ({
@@ -7427,12 +7478,6 @@ class RendererMessageHandler {
       };
       this.#renderTaskStates.set(renderTaskId, renderTaskState);
       try {
-        if (this.#enableWebGPU) {
-          await initGPU();
-          if (renderTaskState.aborted) {
-            return;
-          }
-        }
         const objs = this.#getPageObjs(pageProxyId);
         const optionalContentConfig = OptionalContentConfig.fromSerializable(data.optionalContentConfig);
         const canvasFactory = this.#canvasFactory ??= new OffscreenCanvasFactory({
@@ -7479,6 +7524,15 @@ class RendererMessageHandler {
           operatorListIdx,
           aborted: true
         };
+      }
+      if (this.#hasMeshPattern && this.#enableWebGPU && !isGPUReady()) {
+        await initGPU();
+        if (renderTaskState.aborted) {
+          return {
+            operatorListIdx,
+            aborted: true
+          };
+        }
       }
       renderTaskState.operatorListIdx = operatorListIdx;
       this.#appendFromSharedOperatorList(renderTaskState, operatorListLength, operationsFilterMask, lastChunk);
@@ -7537,6 +7591,7 @@ class RendererMessageHandler {
     }
     this.#objsMap.clear();
     this.#operatorLists.clear();
+    this.#hasMeshPattern = false;
     this.#commonObjs.clear();
     this.#fontLoader.clear();
     this.#commonObjs = new PDFObjects();
@@ -7551,7 +7606,7 @@ class RendererMessageHandler {
     this.#connection = null;
   }
   static #sendReady(handler) {
-    const workerVersion = "6.5.390";
+    const workerVersion = "7.0.48";
     const testObj = new Uint8Array();
     handler.send("ready", {
       testObj,

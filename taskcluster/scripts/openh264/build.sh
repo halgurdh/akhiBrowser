@@ -137,7 +137,7 @@ PYTHONPATH="$GECKO_PATH/python/mozbuild:$GECKO_PATH/third_party/python/packaging
     python3 -m mozbuild.action.zip \
     -C "$OPENH264_SRC" "$ARTIFACT_ZIP" "${PLUGIN_FILES[@]}"
 
-SYMBOL_ZIP="$PUBLIC_DIR/openh264-v$OPENH264_VERSION-$PLATFORM.symbols.zip"
+SYMBOL_ARCHIVE="$PUBLIC_DIR/openh264-v$OPENH264_VERSION-$PLATFORM.symbols.tar.zst"
 DUMP_SYMS="$MOZ_FETCHES_DIR/dump_syms/dump_syms"
 for f in "${PLUGIN_FILES[@]}"; do
     case "$f" in
@@ -148,7 +148,6 @@ done
 : "${LIBRARY_FILE:?No library file found in build output}"
 
 python3 "$GECKO_PATH/python/mozbuild/mozbuild/action/packagesymbols.py" \
-    --no-binaries \
-    --symbol-zip "$SYMBOL_ZIP" \
+    --symbol-archive "$SYMBOL_ARCHIVE" \
     "$DUMP_SYMS" \
     "$LIBRARY_FILE"

@@ -1127,8 +1127,7 @@ bool nsDocShell::MaybeHandleSubframeHistory(
   // set. To handle this case we check if mCurrentURI is about:blank.
 
   if (mCurrentURI &&
-      (!NS_IsAboutBlank(mCurrentURI) || mLoadingEntry || mActiveEntry) &&
-      !aLoadState->HistoryBehavior()) {
+      (!NS_IsAboutBlank(mCurrentURI) || mLoadingEntry || mActiveEntry)) {
     // This is a pre-existing subframe. If
     // 1. The load of this frame was not originally initiated by session
     //    history directly (i.e. (!shEntry) condition succeeded, but it can
@@ -1139,12 +1138,14 @@ bool nsDocShell::MaybeHandleSubframeHistory(
     // onLoadHandler is loading a new page in this child. Check parent's and
     // self's busy flag and if it is set, we don't want this onLoadHandler
     // load to get in to session history.
-    BusyFlags parentBusy = parentDS->GetBusyFlags();
-    BusyFlags selfBusy = GetBusyFlags();
+    if (!aLoadState->HistoryBehavior()) {
+      BusyFlags parentBusy = parentDS->GetBusyFlags();
+      BusyFlags selfBusy = GetBusyFlags();
 
-    if (parentBusy & BUSY_FLAGS_BUSY || selfBusy & BUSY_FLAGS_BUSY) {
-      aLoadState->SetLoadType(LOAD_NORMAL_REPLACE);
-      aLoadState->ClearLoadIsFromSessionHistory();
+      if (parentBusy & BUSY_FLAGS_BUSY || selfBusy & BUSY_FLAGS_BUSY) {
+        aLoadState->SetLoadType(LOAD_NORMAL_REPLACE);
+        aLoadState->ClearLoadIsFromSessionHistory();
+      }
     }
     return false;
   }
@@ -1221,10 +1222,9 @@ nsDocShell::FirePageHideNotification() {
 
 void nsDocShell::FirePageHideNotificationInternal(
     bool aSkipCheckingDynEntries) {
-  {
-    nsAutoMicroTask mt;
-    SetOngoingNavigation(Nothing());
-  }
+  // https://html.spec.whatwg.org/#deactivate-a-document-for-a-cross-document-navigation
+  // 5.2 Set navigable's ongoing navigation to null.
+  SetOngoingNavigation(Nothing());
 
   if (mDocumentViewer && !mFiredUnloadEvent) {
     // Keep an explicit reference since calling PageHide could release
@@ -1524,6 +1524,8 @@ void nsDocShell::FirePageHideShowNonRecursive(
     }
 
     mFiredUnloadEvent = true;
+
+    ClearNavigationAPIOngoingNavigationForHistoryStep();
 
     MaybeFirePageSwapOnDeactivate(aPageSwapTargetInfo, aNavigationType);
 
@@ -3270,10 +3272,8 @@ nsDocShell::GotoIndex(int32_t aIndex, bool aUserActivation) {
   RefPtr<ChildSHistory> rootSH = GetRootSessionHistory();
   NS_ENSURE_TRUE(rootSH, NS_ERROR_FAILURE);
 
-  ErrorResult rv;
-  rootSH->GotoIndex(aIndex, aIndex - rootSH->Index(), false, aUserActivation,
-                    rv);
-  return rv.StealNSResult();
+  rootSH->GotoIndex(aIndex, aIndex - rootSH->Index(), false, aUserActivation);
+  return NS_OK;
 }
 
 nsresult nsDocShell::LoadURI(nsIURI* aURI,
@@ -3283,7 +3283,7 @@ nsresult nsDocShell::LoadURI(nsIURI* aURI,
   }
   RefPtr<nsDocShellLoadState> loadState;
   nsresult rv = nsDocShellLoadState::CreateFromLoadURIOptions(
-      mBrowsingContext, aURI, aLoadURIOptions, getter_AddRefs(loadState));
+      aURI, aLoadURIOptions, getter_AddRefs(loadState));
   MOZ_ASSERT(rv != NS_ERROR_MALFORMED_URI);
   if (NS_FAILED(rv) || !loadState) {
     return NS_ERROR_FAILURE;
@@ -4185,8 +4185,8 @@ nsresult nsDocShell::ReloadNavigable(
         mBrowsingContext, aReloadFlags,
         [docShell, doc, loadType, browsingContext, currentURI, referrerInfo,
          loadGroup, stopDetector](
-            std::tuple<bool, Maybe<NotNull<RefPtr<nsDocShellLoadState>>>,
-                       Maybe<bool>>&& aResult) MOZ_CAN_RUN_SCRIPT {
+            std::tuple<bool, Maybe<NotNull<RefPtr<nsDocShellLoadState>>>>&&
+                aResult) MOZ_CAN_RUN_SCRIPT {
           auto scopeExit = MakeScopeExit([loadGroup, stopDetector]() {
             if (loadGroup) {
               loadGroup->RemoveRequest(stopDetector, nullptr, NS_OK);
@@ -4203,9 +4203,8 @@ nsresult nsDocShell::ReloadNavigable(
           }
           bool canReload;
           Maybe<NotNull<RefPtr<nsDocShellLoadState>>> loadState;
-          Maybe<bool> reloadingActiveEntry;
 
-          std::tie(canReload, loadState, reloadingActiveEntry) = aResult;
+          std::tie(canReload, loadState) = aResult;
 
           if (!canReload) {
             return;
@@ -4217,7 +4216,7 @@ nsresult nsDocShell::ReloadNavigable(
                 ("nsDocShell %p Reload - LoadHistoryEntry", docShell.get()));
             loadState.ref()->SetNotifiedBeforeUnloadListeners(true);
             docShell->LoadHistoryEntry(MOZ_KnownLive(loadState.ref().get()),
-                                       loadType, reloadingActiveEntry.ref());
+                                       loadType);
           } else {
             MOZ_LOG(gSHLog, LogLevel::Debug,
                     ("nsDocShell %p ReloadDocument", docShell.get()));
@@ -4231,17 +4230,15 @@ nsresult nsDocShell::ReloadNavigable(
     // Parent process
     bool canReload = false;
     Maybe<NotNull<RefPtr<nsDocShellLoadState>>> loadState;
-    Maybe<bool> reloadingActiveEntry;
     if (!mBrowsingContext->IsDiscarded()) {
       mBrowsingContext->Canonical()->NotifyOnHistoryReload(
-          aReloadFlags, canReload, loadState, reloadingActiveEntry);
+          aReloadFlags, canReload, loadState);
     }
     if (canReload) {
       if (loadState.isSome()) {
         MOZ_LOG(gSHLog, LogLevel::Debug,
                 ("nsDocShell %p Reload - LoadHistoryEntry", this));
-        LoadHistoryEntry(MOZ_KnownLive(loadState.ref().get()), loadType,
-                         reloadingActiveEntry.ref());
+        LoadHistoryEntry(MOZ_KnownLive(loadState.ref().get()), loadType);
       } else {
         MOZ_LOG(gSHLog, LogLevel::Debug,
                 ("nsDocShell %p ReloadDocument", this));
@@ -4395,7 +4392,7 @@ nsresult nsDocShell::StopInternal(
       aUnsetOngoingNavigation == UnsetOngoingNavigation::Yes && doc &&
       !doc->ShouldIgnoreOpens() &&
       mOngoingNavigation == Some(OngoingNavigation::NavigationID)) {
-    SetOngoingNavigation(Nothing());
+    ResetOngoingNavigation(Nothing());
   }
 
   if (mLoadType == LOAD_ERROR_PAGE) {
@@ -5814,7 +5811,7 @@ nsDocShell::OnStateChange(nsIWebProgress* aProgress, nsIRequest* aRequest,
     // Is the document stop notification for this document?
     if (aProgress == webProgress.get()) {
       nsCOMPtr<nsIChannel> channel(do_QueryInterface(aRequest));
-      EndPageLoad(aProgress, channel, aStatus);
+      EndPageLoad(channel, aStatus);
     }
   }
   // note that redirect state changes will go through here as well, but it
@@ -6183,7 +6180,7 @@ already_AddRefed<nsIURI> nsDocShell::AttemptURIFixup(
   //
   // First try keyword fixup
   //
-  nsAutoString keywordProviderId, keywordAsSent;
+  nsCOMPtr<nsIURIFixupInfo> keywordInfo;
   if (aStatus == NS_ERROR_UNKNOWN_HOST && aAllowKeywordFixup) {
     // we should only perform a keyword search under the following
     // conditions:
@@ -6239,8 +6236,7 @@ already_AddRefed<nsIURI> nsDocShell::AttemptURIFixup(
           info->GetPreferredURI(getter_AddRefs(newURI));
           info->GetSchemelessInput(outSchemelessInput);
           if (newURI) {
-            info->GetKeywordAsSent(keywordAsSent);
-            info->GetKeywordProviderId(keywordProviderId);
+            keywordInfo = info;
             info->GetPostData(getter_AddRefs(newPostData));
           }
         }
@@ -6281,8 +6277,7 @@ already_AddRefed<nsIURI> nsDocShell::AttemptURIFixup(
     if (doCreateAlternate) {
       newURI = nullptr;
       newPostData = nullptr;
-      keywordProviderId.Truncate();
-      keywordAsSent.Truncate();
+      keywordInfo = nullptr;
       nsCOMPtr<nsIURIFixup> uriFixup = components::URIFixup::Service();
       if (uriFixup) {
         nsCOMPtr<nsIURIFixupInfo> fixupInfo;
@@ -6336,7 +6331,7 @@ already_AddRefed<nsIURI> nsDocShell::AttemptURIFixup(
       if (aNotifyKeywordSearchLoading) {
         // This notification is meant for Firefox Health Report so it
         // can increment counts from the search engine
-        MaybeNotifyKeywordSearchLoading(keywordProviderId, keywordAsSent);
+        MaybeNotifyKeywordSearchLoading(keywordInfo);
       }
       return newURI.forget();
     }
@@ -6427,8 +6422,7 @@ nsresult nsDocShell::FilterStatusForErrorPage(
   return NS_OK;
 }
 
-nsresult nsDocShell::EndPageLoad(nsIWebProgress* /*aProgress*/,
-                                 nsIChannel* aChannel, nsresult aStatus) {
+nsresult nsDocShell::EndPageLoad(nsIChannel* aChannel, nsresult aStatus) {
   MOZ_LOG(gDocShellLeakLog, LogLevel::Debug,
           ("DOCSHELL %p EndPageLoad status: %" PRIx32 "\n", this,
            static_cast<uint32_t>(aStatus)));
@@ -6626,7 +6620,6 @@ nsresult nsDocShell::CreateInitialDocumentViewer(
       principal, partitionedPrincipal, policyContainer, base,
       /* aIsInitialDocument */ true,
       aOpenWindowInfo->CoepToInheritForAboutBlank(),
-      /* aTryToSaveOldPresentation */ true,
       /* aCheckPermitUnload */ false, aWindowActor));
 
   NS_ENSURE_STATE(mDocumentViewer);
@@ -6727,8 +6720,7 @@ nsresult nsDocShell::CreateAboutBlankDocumentViewer(
     nsIPolicyContainer* aPolicyContainer, nsIURI* aBaseURI,
     bool aIsInitialDocument,
     const Maybe<nsILoadInfo::CrossOriginEmbedderPolicy>& aCOEP,
-    bool /*aTryToSaveOldPresentation*/, bool aCheckPermitUnload,
-    WindowGlobalChild* aActor) {
+    bool aCheckPermitUnload, WindowGlobalChild* aActor) {
   RefPtr<Document> blankDoc;
   nsCOMPtr<nsIDocumentViewer> viewer;
   nsresult rv = NS_ERROR_FAILURE;
@@ -6888,18 +6880,18 @@ nsresult nsDocShell::CreateAboutBlankDocumentViewer(
       // same reference) otherwise modifying the new container (such as
       // appending a new policy to CSP) within the new document will be
       // incorrectly propagated to the opening doc.
+      RefPtr policyContainerToInherit = MakeRefPtr<PolicyContainer>();
       if (aPolicyContainer) {
-        RefPtr policyContainerToInherit = MakeRefPtr<PolicyContainer>();
         policyContainerToInherit->InitFromOther(
             PolicyContainer::Cast(aPolicyContainer));
-        blankDoc->SetPolicyContainer(policyContainerToInherit);
-        if (!PolicyContainer::GetCSP(policyContainerToInherit)) {
-          RefPtr newCsp = MakeRefPtr<nsCSPContext>();
-          policyContainerToInherit->SetCSP(newCsp);
-          nsresult rv = newCsp->SetRequestContextWithDocument(blankDoc);
-          if (NS_WARN_IF(NS_FAILED(rv))) {
-            return rv;
-          }
+      }
+      blankDoc->SetPolicyContainer(policyContainerToInherit);
+      if (!PolicyContainer::GetCSP(policyContainerToInherit)) {
+        RefPtr newCsp = MakeRefPtr<nsCSPContext>();
+        policyContainerToInherit->SetCSP(newCsp);
+        nsresult rv = newCsp->SetRequestContextWithDocument(blankDoc);
+        if (NS_WARN_IF(NS_FAILED(rv))) {
+          return rv;
         }
       }
 
@@ -7177,6 +7169,12 @@ nsresult nsDocShell::CreateDocumentViewer(const nsACString& aContentType,
   // it before we do call Embed.
   nsCOMPtr<nsIURI> previousURI = mCurrentURI;
 
+  // A reload's target entry still holds the active document, so the history
+  // step doesn't move away from it.
+  if (!(mLoadType & LOAD_CMD_RELOAD)) {
+    ClearNavigationAPIOngoingNavigationForHistoryStep();
+  }
+
   // https://html.spec.whatwg.org/#fire-the-pageswap-event
   // Fire pageswap without a view transition if no earlier path fired it for
   // this navigation.
@@ -7295,9 +7293,8 @@ nsresult nsDocShell::CreateDocumentViewer(const nsACString& aContentType,
 
     // Create an shistory entry for the old load.
     if (failedURI) {
-      errorOnLocationChangeNeeded =
-          OnNewURI(failedURI, failedChannel, triggeringPrincipal, nullptr,
-                   nullptr, nullptr, false, false);
+      errorOnLocationChangeNeeded = OnNewURI(
+          failedURI, failedChannel, triggeringPrincipal, nullptr, false, false);
     }
 
     mLoadType = LOAD_ERROR_PAGE;
@@ -7313,8 +7310,8 @@ nsresult nsDocShell::CreateDocumentViewer(const nsACString& aContentType,
   bool onLocationChangeNeeded = false;
   if (finalURI) {
     // Pass false for aCloneSHChildren, since we're loading a new page here.
-    onLocationChangeNeeded = OnNewURI(finalURI, aOpenedChannel, nullptr,
-                                      nullptr, nullptr, nullptr, true, false);
+    onLocationChangeNeeded =
+        OnNewURI(finalURI, aOpenedChannel, nullptr, nullptr, true, false);
   }
 
   // We inherit the classification flags from the parent document if the
@@ -8246,29 +8243,37 @@ nsresult nsDocShell::HandleSameDocumentNavigation(
     destinationNavigationAPIState = navigationAPIState;
   }
 
-  if (nsCOMPtr<nsPIDOMWindowInner> window = doc->GetInnerWindow();
-      window && !aState.mHistoryNavBetweenSameDoc) {
-    // https://html.spec.whatwg.org/#navigate-fragid
-    // Step 1
-    if (RefPtr<Navigation> navigation = window->Navigation()) {
-      AutoJSAPI jsapi;
-      if (jsapi.Init(window)) {
-        RefPtr<Element> sourceElement = aLoadState->GetSourceElement();
-        // Step 4
-        RefPtr apiMethodTracker = aLoadState->GetNavigationAPIMethodTracker();
-        bool shouldContinue = navigation->FirePushReplaceReloadNavigateEvent(
-            jsapi.cx(), aLoadState->GetNavigationType(), newURI,
-            /* aIsSameDocument */ true,
-            Some(aLoadState->UserNavigationInvolvement()), sourceElement,
-            /* aFormDataEntryList */ nullptr,
-            /* aNavigationAPIState */ destinationNavigationAPIState,
-            /* aClassicHistoryAPIState */ nullptr, apiMethodTracker);
+  if (nsCOMPtr<nsPIDOMWindowInner> window = doc->GetInnerWindow(); window) {
+    if (!aState.mHistoryNavBetweenSameDoc) {
+      // https://html.spec.whatwg.org/#navigate-fragid
+      // Step 1
+      if (RefPtr<Navigation> navigation = window->Navigation()) {
+        AutoJSAPI jsapi;
+        if (jsapi.Init(window)) {
+          RefPtr<Element> sourceElement = aLoadState->GetSourceElement();
+          // Step 4
+          RefPtr apiMethodTracker = aLoadState->GetNavigationAPIMethodTracker();
+          bool shouldContinue = navigation->FirePushReplaceReloadNavigateEvent(
+              jsapi.cx(), aLoadState->GetNavigationType(), newURI,
+              /* aIsSameDocument */ true,
+              Some(aLoadState->UserNavigationInvolvement()), sourceElement,
+              /* aFormDataEntryList */ nullptr,
+              /* aNavigationAPIState */ destinationNavigationAPIState,
+              /* aClassicHistoryAPIState */ nullptr, apiMethodTracker);
 
-        // Step 5
-        if (!shouldContinue) {
-          return NS_OK;
+          // Step 5
+          if (!shouldContinue) {
+            return NS_OK;
+          }
         }
       }
+    } else if (aLoadState->LoadType() == LOAD_HISTORY) {
+      MaybeFireTraverseHistory(aLoadState);
+    }
+
+    if (mIsBeingDestroyed) {
+      // navigate handler destroyed this docshell.
+      return NS_ERROR_NOT_AVAILABLE;
     }
   }
 
@@ -8370,13 +8375,12 @@ nsresult nsDocShell::HandleSameDocumentNavigation(
   // Note: we'll actually fire onLocationChange later, in order to preserve
   // ordering of HistoryCommit() in the parent vs onLocationChange (bug
   // 1668126)
-  bool locationChangeNeeded = OnNewURI(
-      newURI, nullptr, newURITriggeringPrincipal, newURIPrincipalToInherit,
-      newURIPartitionedPrincipalToInherit, newPolicyContainer, true, true);
+  bool locationChangeNeeded =
+      OnNewURI(newURI, nullptr, newURITriggeringPrincipal,
+               newURIPrincipalToInherit, true, true);
 
   nsCOMPtr<nsIInputStream> postData;
   nsCOMPtr<nsIReferrerInfo> referrerInfo;
-  uint32_t cacheKey = 0;
 
   bool scrollRestorationIsManual = false;
   if (mActiveEntry) {
@@ -8435,17 +8439,13 @@ nsresult nsDocShell::HandleSameDocumentNavigation(
       mActiveEntry->SetLayoutHistoryState(currentLayoutHistoryState);
     }
 
-    if (cacheKey != 0) {
-      mActiveEntry->SetCacheKey(cacheKey);
-    }
-
     // We're passing in mCurrentURI, which could be null. SessionHistoryCommit
     // does require a non-null uri if this is for a refresh load of the same
     // URI, but in that case mCurrentURI won't be null here.
     mBrowsingContext->SessionHistoryCommit(
         *mLoadingEntry, mLoadType, mCurrentURI, previousActiveEntry.get(), true,
         /* No expiration update on the same document loads*/
-        false, cacheKey);
+        false, 0);
     // FIXME Need to set postdata.
 
     // Set the title for the SH entry for this target url so that
@@ -8455,6 +8455,7 @@ nsresult nsDocShell::HandleSameDocumentNavigation(
     SetTitleOnHistoryEntry(false);
   } else {
     Maybe<bool> scrollRestorationIsManual;
+    uint32_t cacheKey = 0;
     if (mActiveEntry) {
       scrollRestorationIsManual.emplace(
           mActiveEntry->GetScrollRestorationIsManual());
@@ -8961,10 +8962,9 @@ nsresult nsDocShell::InternalLoad(nsDocShellLoadState* aLoadState,
       mBrowsingContext->Focus(CallerType::System, IgnoreErrors());
     }
     if (aLoadState->LoadIsFromSessionHistory() &&
-        (mLoadType & LOAD_CMD_HISTORY) &&
-        !aLoadState->IsResumingInterceptedNavigation()) {
-      // We must ensure to not abort intercepted history navigations. See
-      // https://github.com/whatwg/html/issues/12407
+        (mLoadType & LOAD_CMD_HISTORY)) {
+      // https://html.spec.whatwg.org/#apply-the-history-step
+      // 14.10.1 Set navigable's ongoing navigation to null.
       SetOngoingNavigation(Nothing());
     }
     return rv;
@@ -8996,7 +8996,13 @@ nsresult nsDocShell::InternalLoad(nsDocShellLoadState* aLoadState,
 
   // The following steps are from https://html.spec.whatwg.org/#navigate
   // 20. Set the ongoing navigation for navigable to navigationId.
-  SetOngoingNavigation(Some(OngoingNavigation::NavigationID));
+  // Session history loads are history steps, not #navigate, and must not abort
+  // the navigate event that was fired for them.
+  if (aLoadState->LoadIsFromSessionHistory()) {
+    SetOngoingNavigation(Some(OngoingNavigation::NavigationID));
+  } else {
+    ResetOngoingNavigation(Some(OngoingNavigation::NavigationID));
+  }
 
   // 21. If url's scheme is "javascript":
   if (isJavaScript) {
@@ -9010,7 +9016,7 @@ nsresult nsDocShell::InternalLoad(nsDocShellLoadState* aLoadState,
     // Note: We don't queue a task, so instead we run step 3 of
     // https://html.spec.whatwg.org/#navigate-to-a-javascript:-url
     // 3. Set the ongoing navigation for targetNavigable to null.
-    SetOngoingNavigation(Nothing());
+    ResetOngoingNavigation(Nothing());
   }
 
   // 22. If all of the following are true:
@@ -9021,7 +9027,7 @@ nsresult nsDocShell::InternalLoad(nsDocShellLoadState* aLoadState,
   //    * url's scheme is a fetch scheme,
   //    then:
   if (RefPtr<Document> document = GetDocument();
-      !aLoadState->LoadIsFromSessionHistory() && document &&
+      !isDownload && !aLoadState->LoadIsFromSessionHistory() && document &&
       aLoadState->UserNavigationInvolvement() !=
           UserNavigationInvolvement::BrowserUI &&
       !document->IsInitialDocument() &&
@@ -9125,6 +9131,15 @@ nsresult nsDocShell::InternalLoad(nsDocShellLoadState* aLoadState,
     mTiming->NotifyUnloadAccepted(mCurrentURI);
   }
 
+  if (aLoadState->LoadType() == LOAD_HISTORY) {
+    MaybeFireTraverseHistory(aLoadState);
+
+    if (mIsBeingDestroyed) {
+      // navigate handler destroyed this docshell.
+      return NS_ERROR_NOT_AVAILABLE;
+    }
+  }
+
   // In e10s, in the parent process, we refuse to load anything other than
   // "safe" resources that we ship or trust enough to give "special" URLs.
   // Similar check will be performed by the ParentProcessDocumentChannel if in
@@ -9166,6 +9181,11 @@ nsresult nsDocShell::InternalLoad(nsDocShellLoadState* aLoadState,
   if (aLoadState->LoadIsFromSessionHistory() &&
       (mLoadType & LOAD_CMD_HISTORY)) {
     SetOngoingNavigation(Nothing());
+  }
+
+  if (aLoadState->LoadIsFromSessionHistory() &&
+      (aLoadState->LoadType() & LOAD_CMD_HISTORY)) {
+    ClearNavigationAPIOngoingNavigationForHistoryStep();
   }
 
   // Don't stop current network activity for javascript: URL's since they might
@@ -9433,9 +9453,8 @@ nsIPrincipal* nsDocShell::GetInheritedPrincipal(
 /* static */ bool nsDocShell::CreateAndConfigureRealChannelForLoadState(
     BrowsingContext* aBrowsingContext, nsDocShellLoadState* aLoadState,
     LoadInfo* aLoadInfo, nsIInterfaceRequestor* aCallbacks,
-    nsDocShell* /*aDocShell*/, const OriginAttributes& aOriginAttributes,
-    nsLoadFlags aLoadFlags, uint32_t aCacheKey, nsresult& aRv,
-    nsIChannel** aChannel) {
+    const OriginAttributes& aOriginAttributes, nsLoadFlags aLoadFlags,
+    uint32_t aCacheKey, nsresult& aRv, nsIChannel** aChannel) {
   MOZ_ASSERT(aLoadInfo);
 
   nsString srcdoc = VoidString();
@@ -9847,8 +9866,8 @@ nsresult nsDocShell::PerformTrustedTypesPreNavigationCheck(
   MOZ_ASSERT(aWindow);
   RefPtr<nsIContentSecurityPolicy> csp =
       PolicyContainer::GetCSP(aWindow->GetPolicyContainer());
-  if (csp->GetRequireTrustedTypesForDirectiveState() ==
-      RequireTrustedTypesForDirectiveState::NONE) {
+  if (!csp || csp->GetRequireTrustedTypesForDirectiveState() ==
+                  RequireTrustedTypesForDirectiveState::NONE) {
     return NS_OK;
   }
 
@@ -10083,27 +10102,7 @@ nsresult nsDocShell::DoURILoad(nsDocShellLoadState* aLoadState,
                "DoURILoad thinks this is a document and InternalLoad does not");
   }
 
-  // We want to inherit aLoadState->PrincipalToInherit() when:
-  // 1. ChannelShouldInheritPrincipal returns true.
-  // 2. aLoadState->URI() is not data: URI, or data: URI is not
-  //    configured as unique opaque origin.
-  bool inheritPrincipal = false;
-
   nsCOMPtr<nsIURI> uri = aLoadState->URI();
-  if (aLoadState->PrincipalToInherit()) {
-    bool isSrcdoc =
-        aLoadState->HasInternalLoadFlags(INTERNAL_LOAD_FLAGS_IS_SRCDOC);
-    bool inheritAttrs = nsContentUtils::ChannelShouldInheritPrincipal(
-        aLoadState->PrincipalToInherit(), uri,
-        true,  // aInheritForAboutBlank
-        isSrcdoc);
-
-    inheritPrincipal = inheritAttrs && !uri->SchemeIs("data");
-  }
-
-  MOZ_ASSERT_IF(NS_IsAboutBlankAllowQueryAndFragment(uri) &&
-                    aLoadState->PrincipalToInherit(),
-                inheritPrincipal);
   // See https://bugzilla.mozilla.org/show_bug.cgi?id=1736570
   const bool doInitialSyncLoad = ShouldDoInitialAboutBlankSyncLoad(
       uri, aLoadState, aLoadState->PrincipalToInherit());
@@ -10228,17 +10227,10 @@ nsresult nsDocShell::DoURILoad(nsDocShellLoadState* aLoadState,
     return NS_ERROR_FAILURE;
   }
 
-  uint32_t sandboxFlags = mBrowsingContext->GetSandboxFlags();
-  nsSecurityFlags securityFlags =
-      nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_SEC_CONTEXT_IS_NULL;
-
-  if (mLoadType == LOAD_ERROR_PAGE) {
-    securityFlags |= nsILoadInfo::SEC_LOAD_ERROR_PAGE;
-  }
-
-  if (inheritPrincipal) {
-    securityFlags |= nsILoadInfo::SEC_FORCE_INHERIT_PRINCIPAL;
-  }
+  const nsSecurityFlags securityFlags =
+      DocumentLoadListener::SecurityFlagsForLoadInfo(aLoadState);
+  const uint32_t sandboxFlags = DocumentLoadListener::EffectiveSandboxFlags(
+      mBrowsingContext->GetSandboxFlags(), securityFlags);
 
   // Must never have a parent for TYPE_DOCUMENT loads
   MOZ_ASSERT_IF(contentPolicyType == nsIContentPolicy::TYPE_DOCUMENT,
@@ -10344,7 +10336,7 @@ nsresult nsDocShell::DoURILoad(nsDocShellLoadState* aLoadState,
     // DocumentLoadListener will handle this for us (in the parent process).
     mAllowKeywordFixup = false;
   } else if (!CreateAndConfigureRealChannelForLoadState(
-                 mBrowsingContext, aLoadState, loadInfo, this, this,
+                 mBrowsingContext, aLoadState, loadInfo, this,
                  GetOriginAttributes(), loadFlags, cacheKey, rv,
                  getter_AddRefs(channel))) {
     return rv;
@@ -10923,8 +10915,6 @@ nsresult nsDocShell::ScrollToAnchor(bool aCurHasRef, bool aNewHasRef,
 bool nsDocShell::OnNewURI(nsIURI* aURI, nsIChannel* aChannel,
                           nsIPrincipal* aTriggeringPrincipal,
                           nsIPrincipal* aPrincipalToInherit,
-                          nsIPrincipal* /*aPartitionedPrincipalToInherit*/,
-                          nsIPolicyContainer* /*aPolicyContainer*/,
                           bool aAddToGlobalHistory, bool aCloneSHChildren) {
   MOZ_ASSERT(aURI, "uri is null");
   MOZ_ASSERT(!aChannel || !aTriggeringPrincipal, "Shouldn't have both set");
@@ -11599,7 +11589,7 @@ nsresult nsDocShell::LoadHistoryEntry(const LoadingSessionHistoryInfo& aEntry,
 
   loadState->SetPageSwapFired(aPageSwapFired);
 
-  return LoadHistoryEntry(loadState, aLoadType, aEntry.mLoadingCurrentEntry);
+  return LoadHistoryEntry(loadState, aLoadType);
 }
 
 void nsDocShell::MaybeFireTraverseHistory(nsDocShellLoadState* aLoadState) {
@@ -11656,11 +11646,16 @@ nsDocShell::MaybeFireTraversableTraverseHistory(
   if (RefPtr<nsPIDOMWindowInner> activeWindow = GetActiveWindow()) {
     if (RefPtr navigation = activeWindow->Navigation()) {
       if (AutoJSAPI jsapi; jsapi.Init(activeWindow)) {
-        bool shouldContinue = navigation->FireTraverseNavigateEvent(
-            jsapi.cx(), aLoadState, aUserInvolvement);
-
-        if (!shouldContinue) {
-          finalStatus = nsIDocumentViewer::eCanceledByNavigate;
+        switch (navigation->FireTraverseNavigateEvent(jsapi.cx(), aLoadState,
+                                                      aUserInvolvement)) {
+          case Navigation::FinalStatus::Continue:
+            break;
+          case Navigation::FinalStatus::Intercept:
+            finalStatus = nsIDocumentViewer::eInterceptedByNavigate;
+            break;
+          case Navigation::FinalStatus::Prevent:
+            finalStatus = nsIDocumentViewer::eCanceledByNavigate;
+            break;
         }
       }
     }
@@ -11670,8 +11665,7 @@ nsDocShell::MaybeFireTraversableTraverseHistory(
 }
 
 nsresult nsDocShell::LoadHistoryEntry(nsDocShellLoadState* aLoadState,
-                                      uint32_t aLoadType,
-                                      bool /*aLoadingCurrentEntry*/) {
+                                      uint32_t aLoadType) {
   if (!IsNavigationAllowed()) {
     return NS_OK;
   }
@@ -11712,8 +11706,6 @@ nsresult nsDocShell::LoadHistoryEntry(nsDocShellLoadState* aLoadState,
   if (!aLoadState->TriggeringPrincipal()) {
     return NS_ERROR_FAILURE;
   }
-
-  MaybeFireTraverseHistory(aLoadState);
 
   return InternalLoad(aLoadState);  // No nsIRequest
 }
@@ -12801,8 +12793,7 @@ nsresult nsDocShell::OnLinkClickSync(nsIContent* aContent,
   return rv;
 }
 
-nsresult nsDocShell::OnOverLink(nsIContent* aContent, nsIURI* aURI,
-                                const nsAString& /*aTargetSpec*/) {
+nsresult nsDocShell::OnOverLink(nsIContent* aContent, nsIURI* aURI) {
   if (aContent->IsEditable()) {
     return NS_OK;
   }
@@ -13110,24 +13101,23 @@ bool nsDocShell::IsInvisible() { return mInvisible; }
 void nsDocShell::SetInvisible(bool aInvisible) { mInvisible = aInvisible; }
 
 /* static */
-void nsDocShell::MaybeNotifyKeywordSearchLoading(const nsString& aProviderId,
-                                                 const nsString& aKeyword) {
-  if (aProviderId.IsEmpty()) {
+void nsDocShell::MaybeNotifyKeywordSearchLoading(nsIURIFixupInfo* aInfo) {
+  if (!aInfo) {
     return;
   }
-  nsresult rv;
-  nsCOMPtr<nsISupportsString> isupportsString =
-      do_CreateInstance(NS_SUPPORTS_STRING_CONTRACTID, &rv);
-  NS_ENSURE_SUCCESS_VOID(rv);
-
-  rv = isupportsString->SetData(aProviderId);
-  NS_ENSURE_SUCCESS_VOID(rv);
+  nsAutoString providerId;
+  aInfo->GetKeywordProviderId(providerId);
+  if (providerId.IsEmpty()) {
+    return;
+  }
+  nsAutoString keyword;
+  aInfo->GetKeywordAsSent(keyword);
 
   nsCOMPtr<nsIObserverService> obsSvc = services::GetObserverService();
   if (obsSvc) {
     // Note that "keyword-search" refers to a search via the url
     // bar, not a bookmarks keyword search.
-    obsSvc->NotifyObservers(isupportsString, "keyword-search", aKeyword.get());
+    obsSvc->NotifyObservers(aInfo, "keyword-search", keyword.get());
   }
 }
 
@@ -13606,8 +13596,17 @@ void nsDocShell::InformNavigationAPIAboutChildNavigableDestruction() {
   navigation->InformAboutChildNavigableDestruction(jsapi.cx());
 }
 
+// https://html.spec.whatwg.org/#apply-the-history-step step 8.3, for a history
+// step that moves this navigable away from its active document.
+void nsDocShell::ClearNavigationAPIOngoingNavigationForHistoryStep() {
+  if (RefPtr<Navigation> navigation =
+          NavigationOfDocument(GetExtantDocument())) {
+    navigation->ClearOngoingNavigationForHistoryStep();
+  }
+}
+
 // https://html.spec.whatwg.org/#set-the-ongoing-navigation
-void nsDocShell::SetOngoingNavigation(
+void nsDocShell::ResetOngoingNavigation(
     const Maybe<OngoingNavigation>& aOngoingNavigation) {
   // We currently only use #set-the-ongoing-navigation to call,
   // #inform-the-navigation-api-about-aborting-navigation, but really it should

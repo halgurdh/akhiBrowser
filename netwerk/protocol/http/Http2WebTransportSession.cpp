@@ -119,6 +119,14 @@ void Http2WebTransportSessionImpl::GetNegotiatedProtocol(
   aProtocol.Truncate();
 }
 
+// HTTP/2 WebTransport raises stream limits with WT_MAX_STREAMS capsules
+// rather than QUIC MAX_STREAMS frames; not wired up yet.
+void Http2WebTransportSessionImpl::
+    SetAnticipatedConcurrentIncomingUnidirectionalStreams(uint16_t aValue) {}
+
+void Http2WebTransportSessionImpl::
+    SetAnticipatedConcurrentIncomingBidirectionalStreams(uint16_t aValue) {}
+
 void Http2WebTransportSessionImpl::SendDatagram(nsTArray<uint8_t>&& aData,
                                                 uint64_t aTrackingId,
                                                 uint64_t aSendGroupId,

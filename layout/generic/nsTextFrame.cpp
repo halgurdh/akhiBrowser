@@ -4612,7 +4612,8 @@ void nsTextFrame::PropertyProvider::InitTextAutospace() {
   const auto styleTextAutospace = mTextStyle->EffectiveTextAutospace();
   if (TextAutospace::Enabled(styleTextAutospace, mFrame)) {
     mTextAutospace.emplace(styleTextAutospace,
-                           GetFontMetrics()->InterScriptSpacingWidth());
+                           GetFontMetrics()->InterScriptSpacingWidth(
+                               mTextStyle->EffectiveTextAutospaceSize()));
   }
 }
 

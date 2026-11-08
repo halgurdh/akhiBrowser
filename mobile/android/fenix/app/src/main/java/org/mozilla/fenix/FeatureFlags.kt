@@ -27,4 +27,10 @@ object FeatureFlags {
      */
     // AkhiBrowser: Firefox's onboarding is about Mozilla's Terms of Use, marketing data and Sync, none of which apply
     val onboardingFeatureEnabled = false
+
+    /** Enables haptic feedback during onboarding. */
+    val onboardingHapticsEnabled = Config.channel.isNightlyOrDebug
+
+    /** Shows the animated kit illustration instead of the static one on the onboarding terms of use page. */
+    val onboardingKitAnimationEnabled = Config.channel.isNightlyOrDebug
 }

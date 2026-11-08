@@ -47,7 +47,7 @@ const consts = {
       keyCode: KeyEvent.DOM_VK_M,
     },
   ],
-  remappedDisplay: isMac ? "⇧⌥⌘M" : "Ctrl+Shift+Alt+M",
+  remappedDisplay: isMac ? "⌥⇧⌘M" : "Ctrl+Shift+Alt+M",
 
   // A digit key which Option and Shift together remap to a different
   // character. Option+Shift+2 types "€" on macOS. Only the shifted character
@@ -64,7 +64,7 @@ const consts = {
       keyCode: KeyEvent.DOM_VK_2,
     },
   ],
-  remappedDigitDisplay: isMac ? "⇧⌥⌘€" : "Ctrl+Shift+Alt+€",
+  remappedDigitDisplay: isMac ? "⌥⇧⌘€" : "Ctrl+Shift+Alt+€",
 
   // A key whose character takes two UTF-16 code units but is one character
   // as the user sees it: the Hebrew letter shin with a dagesh, U+05E9 U+05BC.

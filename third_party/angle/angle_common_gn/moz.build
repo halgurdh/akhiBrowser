@@ -23,7 +23,7 @@ LOCAL_INCLUDES += [
     "/third_party/angle/include/",
     "/third_party/angle/src/",
     "/third_party/angle/src/common/base/",
-    "/third_party/angle/src/common/third_party/xxhash/",
+    "/third_party/angle/src/common/third_party/xxhash/src/",
     "/tools/profiler/public"
 ]
 
@@ -149,6 +149,10 @@ if CONFIG["OS_TARGET"] == "OpenBSD":
     DEFINES["_LARGEFILE_SOURCE"] = True
     DEFINES["__STDC_CONSTANT_MACROS"] = True
     DEFINES["__STDC_FORMAT_MACROS"] = True
+
+    UNIFIED_SOURCES += [
+        "/third_party/angle/src/common/system_utils_posix.cpp"
+    ]
 
 if CONFIG["OS_TARGET"] == "WINNT":
 

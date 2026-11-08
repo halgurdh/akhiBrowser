@@ -1516,6 +1516,11 @@ class AutofillRecords {
           `"${key}" contains invalid data type: ${typeof record[key]}`
         );
       }
+      // The Rust store would replace a lone surrogate with U+FFFD, so refuse
+      // it in both stores rather than store something the page didn't submit.
+      if (typeof record[key] == "string" && !record[key].isWellFormed()) {
+        throw new Error(`"${key}" contains lone surrogates`);
+      }
       if (!preserveEmptyFields && record[key] === "") {
         delete record[key];
       }
@@ -1745,6 +1750,17 @@ export class CreditCardsBase extends AutofillRecords {
 
   _recordReadProcessor(creditCard) {
     lazy.CreditCardRecord.stripSecurityCodeWhenDisabled(creditCard);
+  }
+
+  /**
+   * @returns {Promise<{total: number, withSecurityCode: number}>}
+   */
+  async getSavedCounts() {
+    const records = this._data.filter(r => !r.deleted);
+    return {
+      total: records.length,
+      withSecurityCode: records.filter(r => r["cc-csc"]).length,
+    };
   }
 
   async computeFields(creditCard) {

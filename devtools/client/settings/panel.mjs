@@ -6,7 +6,7 @@ import { SettingChangedEvent } from "./events.mjs";
 import { callbacks } from "./inventory.mjs";
 
 /**
- * @import { Toolbox } from "../framework/toolbox.js"
+ * @import { Toolbox } from "./types/toolbox.d.ts"
  */
 
 /** The redesigned devtools settings panel. */

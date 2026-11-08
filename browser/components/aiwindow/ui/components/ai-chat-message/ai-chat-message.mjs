@@ -15,11 +15,11 @@ import {
   isSmartPageURL,
 } from "chrome://browser/content/aiwindow/modules/TrustedInternalURLs.mjs";
 import { parseTabGroupMentionId } from "chrome://browser/content/urlbar/SmartbarMentionUtils.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://browser/content/aiwindow/components/ai-chat-card.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://browser/content/aiwindow/components/ai-chat-grid.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://browser/content/aiwindow/components/ai-chat-table.mjs";
 
 // The percent of default favicons allowed to show the
@@ -871,6 +871,22 @@ export class AIChatMessage extends MozLitElement {
           : nothing}
       </span>
     </div>`;
+  }
+
+  /**
+   * The text a localized message shows on screen, or "" when the message
+   * isn't localized or hasn't rendered yet
+   *
+   * @type {string}
+   */
+  get localizedText() {
+    if (!this.messageL10n?.id) {
+      return "";
+    }
+    return (
+      this.shadowRoot?.querySelector(".message-assistant [data-l10n-id]")
+        ?.innerText ?? ""
+    );
   }
 
   render() {

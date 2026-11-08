@@ -4,19 +4,19 @@
 
 import { html, nothing } from "chrome://global/content/vendor/lit.all.mjs";
 import { MozLitElement } from "chrome://global/content/lit-utils.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://global/content/elements/moz-button.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://browser/content/aiwindow/components/agent-monitor-item.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://browser/content/aiwindow/components/monitors-display.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://browser/content/aiwindow/components/monitor-icon.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://global/content/elements/moz-select.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://global/content/elements/moz-textarea.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://global/content/elements/panel-list.mjs";
 
 // Default constants - will be overridden by values from the actor
@@ -574,6 +574,7 @@ export class AITasks extends MozLitElement {
                 .scheduleTypes=${this._constants.SCHEDULE_TYPES}
                 .weekdays=${WEEKDAYS}
                 .canResume=${!this.isMaxMonitorsReached}
+                .activeLimit=${this._constants.TOTAL_NUM_MONITORS}
               ></monitors-display>
             </div>
           </div>`}

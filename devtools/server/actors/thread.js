@@ -2223,8 +2223,8 @@ class ThreadActor extends Actor {
 
       // Find the offsets in the HTML at which inline scripts might start.
       const scriptTagMatches = content.matchAll(/<script[^>]*>/gi);
-      const scriptStartOffsets = [...scriptTagMatches].map(
-        rv => rv.index + rv[0].length
+      const scriptStartOffsets = Array.from(
+        scriptTagMatches.map(rv => rv.index + rv[0].length)
       );
 
       // Find the script tags in this HTML page by parsing a new document from

@@ -88,13 +88,13 @@ wr::ExternalImageId AsyncImagePipelineManager::GetNextExternalImageId() {
 }
 
 void AsyncImagePipelineManager::SetWillGenerateFrame() {
-  MOZ_ASSERT(CompositorThreadHolder::IsInCompositorThread());
+  MOZ_RELEASE_ASSERT(CompositorThreadHolder::IsInCompositorThread());
 
   mWillGenerateFrame = true;
 }
 
 bool AsyncImagePipelineManager::GetAndResetWillGenerateFrame() {
-  MOZ_ASSERT(CompositorThreadHolder::IsInCompositorThread());
+  MOZ_RELEASE_ASSERT(CompositorThreadHolder::IsInCompositorThread());
 
   bool ret = mWillGenerateFrame;
   mWillGenerateFrame = false;
@@ -467,20 +467,17 @@ void AsyncImagePipelineManager::ApplyAsyncImageForPipeline(
       float(aPipeline->mCurrentTexture->GetSize().width),
       float(aPipeline->mCurrentTexture->GetSize().height)};
   computedTransform.rotation = aPipeline->mRotation;
-  params.computed_transform = &computedTransform;
 
-  Maybe<wr::WrSpatialId> referenceFrameId =
-      aPipeline->mDLBuilder.PushStackingContext(
-          params, wr::ToLayoutRect(aPipeline->mScBounds),
-          // This is fine to do unconditionally because we only push images
-          // here.
-          wr::RasterSpace::Screen());
+  wr::WrSpatialId referenceFrameId = aPipeline->mDLBuilder.DefineComputedFrame(
+      wr::ToLayoutPoint(aPipeline->mScBounds.TopLeft()), computedTransform);
+  aPipeline->mDLBuilder.PushStackingContext(
+      params,
+      // This is fine to do unconditionally because we only push images
+      // here.
+      wr::RasterSpace::Screen(), Some(referenceFrameId));
 
   Maybe<wr::SpaceAndClipChainHelper> spaceAndClipChainHelper;
-  if (referenceFrameId) {
-    spaceAndClipChainHelper.emplace(aPipeline->mDLBuilder,
-                                    referenceFrameId.ref());
-  }
+  spaceAndClipChainHelper.emplace(aPipeline->mDLBuilder, referenceFrameId);
 
   if (aPipeline->mCurrentTexture && !keys.IsEmpty()) {
     LayoutDeviceRect rect(0, 0, aPipeline->mCurrentTexture->GetSize().width,
@@ -514,7 +511,7 @@ void AsyncImagePipelineManager::ApplyAsyncImageForPipeline(
   }
 
   spaceAndClipChainHelper.reset();
-  aPipeline->mDLBuilder.PopStackingContext(referenceFrameId.isSome());
+  aPipeline->mDLBuilder.PopStackingContext();
 
   wr::BuiltDisplayList dl;
   aPipeline->mDLBuilder.End(dl);
@@ -667,7 +664,7 @@ void AsyncImagePipelineManager::NotifyPipelinesUpdated(
     RefPtr<const wr::WebRenderPipelineInfo> aInfo,
     wr::RenderedFrameId aLatestFrameId,
     wr::RenderedFrameId aLastCompletedFrameId, RefPtr<Fence>&& aReadFence) {
-  MOZ_ASSERT(wr::RenderThread::IsInRenderThread());
+  MOZ_RELEASE_ASSERT(wr::RenderThread::IsInRenderThread());
   MOZ_ASSERT(mLastCompletedFrameId <= aLastCompletedFrameId.mId);
   MOZ_ASSERT(aLatestFrameId.IsValid());
 
@@ -692,7 +689,7 @@ void AsyncImagePipelineManager::NotifyPipelinesUpdated(
 }
 
 void AsyncImagePipelineManager::ProcessPipelineUpdates() {
-  MOZ_ASSERT(CompositorThreadHolder::IsInCompositorThread());
+  MOZ_RELEASE_ASSERT(CompositorThreadHolder::IsInCompositorThread());
 
   if (mDestroyed) {
     return;

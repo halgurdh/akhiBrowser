@@ -41,7 +41,7 @@ class ForwardMenuItemProviderTest {
         runTest {
             val provider = createProvider(BrowserStore(), backgroundScope)
 
-            assertEquals(expectedItem(canGoForward = false), provider.itemFlow.value)
+            assertEquals(expectedItem(canGoForward = false), provider.itemsFlow.value.single())
         }
 
     @Test
@@ -49,7 +49,7 @@ class ForwardMenuItemProviderTest {
         runTest {
             val provider = createProvider(browserStore(canGoForward = false), backgroundScope)
 
-            assertEquals(expectedItem(canGoForward = false), provider.itemFlow.value)
+            assertEquals(expectedItem(canGoForward = false), provider.itemsFlow.value.single())
         }
 
     @Test
@@ -57,7 +57,7 @@ class ForwardMenuItemProviderTest {
         runTest {
             val provider = createProvider(browserStore(canGoForward = true), backgroundScope)
 
-            assertEquals(expectedItem(canGoForward = true), provider.itemFlow.value)
+            assertEquals(expectedItem(canGoForward = true), provider.itemsFlow.value.single())
         }
 
     @Test
@@ -73,7 +73,7 @@ class ForwardMenuItemProviderTest {
                     onLongClickEvent = null,
                     state = MenuItemState.DEFAULT,
                 )
-            assertEquals(expected, provider.itemFlow.value)
+            assertEquals(expected, provider.itemsFlow.value.single())
         }
 
     @Test
@@ -141,7 +141,7 @@ class ForwardMenuItemProviderTest {
         listOf(BrowserStore(), browserStore(canGoForward = false), browserStore(canGoForward = true)).forEach { store ->
             val provider = createProvider(store, backgroundScope)
 
-            val events = requireNotNull(provider.itemFlow.value).reachableEvents()
+            val events = provider.itemsFlow.value.single().reachableEvents()
 
             assertTrue(events.all { provider.handles(it) }, "Not all of $events are handled")
         }

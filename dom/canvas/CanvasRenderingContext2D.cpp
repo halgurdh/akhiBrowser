@@ -1076,13 +1076,16 @@ NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN(CanvasRenderingContext2D)
     ImplCycleCollectionUnlink(state.patternStyles[Style::FILL]);
     ImplCycleCollectionUnlink(state.gradientStyles[Style::STROKE]);
     ImplCycleCollectionUnlink(state.gradientStyles[Style::FILL]);
-    if (auto* autoSVGFiltersObserver = state.autoSVGFiltersObserver.get()) {
+    if (state.autoSVGFiltersObserver) {
       /*
-       * XXXjwatt: I don't think this is doing anything useful.  All we do under
-       * this function is clear a raw C-style (i.e. not strong) pointer.  That's
-       * clearly not helping in breaking any cycles.
+       * Before we unlink (null out) state.autoSVGFiltersObserver, we have to
+       * deactivate it, since it has a raw pointer back to us, which we don't
+       * want it to use after our impending destruction. (Our destructor will
+       * also attempt to deactivate it, but it won't be able to, since we're
+       * about to proactively null out state.autoSVGFiltersObserver which is
+       * how our destructor would reach it.)
        */
-      autoSVGFiltersObserver->SetIsActive(false);
+      state.autoSVGFiltersObserver->SetIsActive(false);
     }
     ImplCycleCollectionUnlink(state.autoSVGFiltersObserver);
   }
@@ -6820,13 +6823,6 @@ already_AddRefed<ImageData> CanvasRenderingContext2D::GetImageData(
     aSy -= h;
   } else {
     h = aSh;
-  }
-
-  if (w == 0) {
-    w = 1;
-  }
-  if (h == 0) {
-    h = 1;
   }
 
   RecordCanvasUsage(CanvasExtractionAPI::GetImageData, CSSIntSize(w, h));

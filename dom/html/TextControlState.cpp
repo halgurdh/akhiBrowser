@@ -263,6 +263,7 @@ class TextInputSelectionController final : public nsSupportsWeakReference,
   NS_IMETHOD GetSelectionFromScript(RawSelectionType aRawSelectionType,
                                     Selection** aSelection) override;
   Selection* GetSelection(RawSelectionType aRawSelectionType) override;
+  Selection* GetExistingSelection(RawSelectionType aRawSelectionType) override;
   MOZ_CAN_RUN_SCRIPT NS_IMETHOD ScrollSelectionIntoView(
       RawSelectionType aRawSelectionType, SelectionRegion aRegion,
       ControllerScrollFlags aFlags) override;
@@ -414,6 +415,15 @@ TextInputSelectionController::GetSelectionFromScript(
 Selection* TextInputSelectionController::GetSelection(
     RawSelectionType aRawSelectionType) {
   return GetSelection(ToSelectionType(aRawSelectionType));
+}
+
+Selection* TextInputSelectionController::GetExistingSelection(
+    RawSelectionType aRawSelectionType) {
+  if (!mFrameSelection) {
+    return nullptr;
+  }
+  return mFrameSelection->GetExistingSelection(
+      ToSelectionType(aRawSelectionType));
 }
 
 NS_IMETHODIMP

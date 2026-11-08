@@ -337,7 +337,7 @@ export class RustAutofillAdapterBase {
     // refreshes time_last_modified and increments the change counter, which is
     // what an edit means; the with-meta call would replace that counter with a
     // value this side cannot read.
-    await this._update(await this._store(), guid, merged);
+    await this._update(await this._store(), guid, merged, stored);
     await this.#notifyAndRecordCount(guid, sourceSync, action, {
       countChanged: false,
     });
@@ -514,6 +514,11 @@ export class RustAutofillAdapterBase {
         throw new Error(
           `"${key}" contains invalid data type: ${typeof record[key]}`
         );
+      }
+      // Encoding the string for the store would replace a lone surrogate with
+      // U+FFFD, so the stored record wouldn't match the submitted one.
+      if (typeof record[key] == "string" && !record[key].isWellFormed()) {
+        throw new Error(`"${key}" contains lone surrogates`);
       }
       if (!preserveEmptyFields && record[key] === "") {
         delete record[key];

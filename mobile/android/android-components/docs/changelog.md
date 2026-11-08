@@ -4,13 +4,49 @@ title: Changelog
 permalink: /changelog/
 ---
 
-# 161.0 (In Development)
+# 162.0 (In Development)
+* **concept-engine**
+    * Added an optional `title` to `HitResult.IMAGE_SRC`.
+* **support-locale**
+    * Added a new API `LocaleManager#onAttachBaseContext` that applies only the configuration changes for the locale without cached values. Should only be used in `attachBaseContext` overrides for `Application` and `Activity` classes.
+        *  The API, similar to the others in `LocaleManager` assumes `enableSplit` is disabled for App Bundle splits; languages will be in the base package.
+    * ⚠️ **Breaking change**: Renamed `LocaleManager#updateResources` to `LocaleManager#onConfigurationChanged` to make it's API use case clear. Should only be used in `onConfigurationChanged` overrides typically in `Application`, `Activity`, `Fragment` classes.
+* **support-utils**
+    * 🆕 Added `String.validateCreditCardNumber()`, which checks that a credit card number has only digits, matches a known card network and passes the Luhn check. It moved here from Fenix. [Bug 2090313](https://bugzilla.mozilla.org/show_bug.cgi?id=2090313)
+
+# 161.0
+* **browser-state**
+    * Added `TabSessionState.listenToPageActive` and `ListenToPageAction` (`ListenToPageActivated`, `ListenToPageDeactivated`) to track which tab is being read out loud by Listen to Page. [Bug 2072957](https://bugzilla.mozilla.org/show_bug.cgi?id=2072957)
+* **feature-media**
+    * ⚠️ **Breaking change**: Added `MediaSessionDelegate.handleMediaUpdated`, which `MediaSessionFeature` calls instead of the playing, paused or stopped handler when only the media tab's title, URL or icon changed. [Bug 2085570](https://bugzilla.mozilla.org/show_bug.cgi?id=2085570)
+* **lib-installation-blockstore**
+    * New component that checks for app reinstalls. [Bug 2084343](https://bugzilla.mozilla.org/show_bug.cgi?id=2084343)
+* **browser-state**, **feature-search**
+    * 🆕 Added `SearchEngineAccessPoint.partnerCode`, the partner code the access point's URLs were built with, for consumers that need the code itself rather than a search URL. [Bug 2086236](https://bugzilla.mozilla.org/show_bug.cgi?id=2086236)
+* **browser-state**, **feature-search**
+    * 🆕 Added `SearchEngine.accessPoints`, the per search access point URLs and telemetry suffixes a search-config-v3 engine defines, along with the `SearchEngine.accessPoint` extension that resolves one with a fallback to `default`, and `buildSearchUrl` and `buildSuggestionsURL` overloads that take an access point. Engines from a configuration that does not vary by access point are unaffected. [Bug 2075348](https://bugzilla.mozilla.org/show_bug.cgi?id=2075348)
 * **support-ktx**
     * Added `String.toSnakeCase`, which returns a camelCase or PascalCase string in snake_case. [Bug 2084683](https://bugzilla.mozilla.org/show_bug.cgi?id=2084683)
 * **feature-app-links**
     * ⚠️ **Breaking change**: `launchInApp` on `AppLinksInterceptor`, `AppLinksUseCases` and `AppLinksFeature`, and `shouldPrompt` on `AppLinksFeature` now receive the url being opened so the decision can vary by host. [Bug 2083207](https://bugzilla.mozilla.org/show_bug.cgi?id=2083207)
 * **feature-session**
     * `SwipeRefreshFeature` now disables pull-to-refresh while the observed tab is in fullscreen or showing a PDF. [Bug 2054920](https://bugzilla.mozilla.org/show_bug.cgi?id=2054920)
+* **support-utils**
+    * 🆕 Added `BuildMetadata`, which reads the R8/ProGuard mapping UUID and SHA-256 from the `build-metadata.properties` asset written by the `WriteBuildMetadata` Gradle task.
+* **feature-top-sites**
+    * **Breaking change**: Renamed `totalSites` to `targetSitesCount` in `TopSitesConfig` and `TopSitesStorage.getTopSites`, since it is the number of top sites to fill up to rather than a limit. [Bug 2075033](https://bugzilla.mozilla.org/show_bug.cgi?id=2075033)
+    * **Behavior change**: `DefaultTopSitesStorage.getTopSites` now returns all the pinned sites, even beyond `targetSitesCount`. The provided, frecent and default top sites still only fill the slots left within `targetSitesCount`, so the returned list can be longer than `targetSitesCount`. [Bug 2075033](https://bugzilla.mozilla.org/show_bug.cgi?id=2075033)
+* **concept-storage**
+    * Added `cardCvv`, the credit card security code, to `CreditCard`, `NewCreditCardFields` and `UpdatableCreditCardFields`. When `UpdatableCreditCardFields.cardCvv` is null, `CreditCardsAddressesStorage.updateCreditCard` keeps the stored security code, and an empty string removes it. [Bug 2085145](https://bugzilla.mozilla.org/show_bug.cgi?id=2085145)
+    * **Breaking change**: `cardCvv` no longer has a default value in `CreditCard`, `NewCreditCardFields` and `UpdatableCreditCardFields`. Added a required `cardCvv` to `CreditCardEntry`. [Bug 2089057](https://bugzilla.mozilla.org/show_bug.cgi?id=2089057)
+* **browser-engine-gecko**
+    * The credit card security code now passes between GeckoView and `CreditCardEntry`, and the stored security code goes to GeckoView when it fetches credit cards. [Bug 2089057](https://bugzilla.mozilla.org/show_bug.cgi?id=2089057)
+* **service-sync-autofill**
+    * `GeckoCreditCardsAddressesStorageDelegate` saves the security code from `CreditCardEntry`. [Bug 2089057](https://bugzilla.mozilla.org/show_bug.cgi?id=2089057)
+    * `AutofillCreditCardsAddressesStorage` stores and returns the credit card security code. `updateCreditCard` no longer removes a stored security code that the caller did not set. [Bug 2085145](https://bugzilla.mozilla.org/show_bug.cgi?id=2085145)
+* **concept-storage**, **service-sync-logins**
+    * ⚠️ **Breaking change**: `LoginsStorage.delete` no longer returns whether the login existed. The value was unreliable for synced logins and no caller used it.
+    [Bug 2089864](https://bugzilla.mozilla.org/show_bug.cgi?id=2089864)
 
 # 160.0
 * **concept-engine**
@@ -36,6 +72,17 @@ permalink: /changelog/
     * Download filenames from `onExternalResponse` are now validated by Gecko with the same rules as desktop, so `GeckoEngineSession` no longer applies the `String.sanitizeFileName` helper from **support-ktx** to them. [Bug 1822968](https://bugzilla.mozilla.org/show_bug.cgi?id=1822968)
 * **compose-base**
     * 🆕 Added `Slider`, an Acorn implementation of the M3 Slider component for Jetpack Compose. [Bug 2067129](https://bugzilla.mozilla.org/show_bug.cgi?id=2067129)
+* **browser-state**
+    * 🆕 Added `BrowserState.pendingExtensionUpdates`, extension updates waiting for the user to grant new permissions, with actions to update, remove and request the review of them, and the `pendingExtensionUpdatesNeedingAttention` selector. [Bug 2067732](https://bugzilla.mozilla.org/show_bug.cgi?id=2067732)
+* **feature-addons**
+    * ⚠️ **Breaking change**: Extension updates that require new permissions are now reviewed in the app instead of in a system notification. `DefaultAddonUpdater` adds such an update to `BrowserState.pendingExtensionUpdates`, and the app removes it once it answers with `PendingExtensionUpdate.complete`. `AddonsManagerAdapter` shows a banner for it, and `PermissionsDialogFragment` can show its new permissions. [Bug 2067732](https://bugzilla.mozilla.org/show_bug.cgi?id=2067732)
+        * `DefaultAddonUpdater` takes a `BrowserStore` instead of a `NotificationsDelegate`.
+        * `PermissionsDialogFragment.newInstance` takes `mode: PermissionsDialogMode` instead of `forOptionalPermissions`, and an optional `promptInstanceId`.
+        * `AddonsManagerAdapter.bindMessageBars` and `CustomViewHolder.AddonViewHolder` take a new `messageBarUpdateView: ComposeView`, and `bindMessageBars` takes optional `pendingUpdateMessage`, `onReviewUpdateClicked` and `onCancelUpdateClicked`.
+        * Added `AddonsManagerAdapterDelegate.onReviewExtensionUpdateClicked` and `onCancelExtensionUpdateClicked`. Implement them, or the banner's buttons do nothing.
+        * Added the `PendingExtensionUpdateBanner` composable. feature-addons now uses Jetpack Compose and depends on `compose-base`.
+        * Removed `DefaultAddonUpdater.NotificationHandlerService`.
+        * Removed `Addon.permissionToTranslationForUpdate` and the `forUpdate` parameter of `Addon.localizePermissions`.
 
 # 159.0
 * **feature-readerview**

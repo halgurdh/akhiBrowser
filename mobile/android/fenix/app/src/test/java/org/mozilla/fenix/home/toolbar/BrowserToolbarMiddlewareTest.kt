@@ -525,22 +525,6 @@ class BrowserToolbarMiddlewareTest {
     // Testing actions
 
     @Test
-    fun `WHEN clicking the menu button THEN open the menu`() {
-        val navController = navControllerShowingHome()
-        val (_, toolbarStore) = buildMiddlewareAndAddToStore(navController = navController)
-        val menuButton = toolbarStore.state.displayState.browserActionsEnd[1] as ActionButtonRes
-
-        toolbarStore.dispatch(menuButton.onClick as BrowserToolbarEvent)
-
-        verify {
-            navController.navigate(
-                HomeFragmentDirections.actionGlobalMenuDialogFragment(accesspoint = MenuAccessPoint.Home),
-                null,
-            )
-        }
-    }
-
-    @Test
     fun `GIVEN menu customization is enabled WHEN clicking the menu button THEN open the customizable menu`() {
         every { testContext.components.settings.isMenuCustomizationEnabled } returns true
         val navController = navControllerShowingHome()
@@ -912,7 +896,7 @@ class BrowserToolbarMiddlewareTest {
 
         val action = middleware.buildHomeAction(action = HomeToolbarAction.Menu) as ActionButtonRes
 
-        assertEquals(iconsR.drawable.mozac_ic_ellipsis_vertical_24, action.drawableResId)
+        assertEquals(iconsR.drawable.mozac_ic_more_vertical_round_24, action.drawableResId)
         assertEquals(R.string.content_description_menu, action.contentDescription)
         assertEquals(ActionButton.State.DEFAULT, action.state)
         assertEquals(MenuClicked(source = Source.Unknown), action.onClick)
@@ -1775,7 +1759,7 @@ class BrowserToolbarMiddlewareTest {
         source: Source = Source.AddressBar.BrowserEnd,
     ) =
         ActionButtonRes(
-            drawableResId = iconsR.drawable.mozac_ic_ellipsis_vertical_24,
+            drawableResId = iconsR.drawable.mozac_ic_more_vertical_round_24,
             contentDescription = R.string.content_description_menu,
             highlighted = highlighted,
             onClick = MenuClicked(source),

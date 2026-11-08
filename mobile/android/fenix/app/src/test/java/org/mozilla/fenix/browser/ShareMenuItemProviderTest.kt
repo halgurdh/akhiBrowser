@@ -50,7 +50,7 @@ class ShareMenuItemProviderTest {
                 icon = MenuItemIconRes(iconsR.drawable.mozac_ic_share_android_24),
                 onClickEvent = MenuAction.Navigate.Share,
             ),
-            provider.itemFlow.value,
+            provider.itemsFlow.value.single(),
         )
     }
 
@@ -65,7 +65,7 @@ class ShareMenuItemProviderTest {
                 onClickEvent = null,
                 state = MenuItemState.DEFAULT,
             ),
-            provider.itemFlow.value,
+            provider.itemsFlow.value.single(),
         )
     }
 
@@ -176,7 +176,7 @@ class ShareMenuItemProviderTest {
     fun `WHEN building the item THEN handle all events it can dispatch and no others`() {
         val provider = createProvider()
 
-        val events = requireNotNull(provider.itemFlow.value).reachableEvents()
+        val events = provider.itemsFlow.value.single().reachableEvents()
 
         assertTrue(events.all { provider.handles(it) }, "Not all of $events are handled")
         assertFalse(provider.handles(MenuAction.Navigate.Settings))

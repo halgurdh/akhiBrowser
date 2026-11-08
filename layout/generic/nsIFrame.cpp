@@ -34,6 +34,7 @@
 #include "mozilla/ReflowInput.h"
 #include "mozilla/RestyleManager.h"
 #include "mozilla/ResultExtensions.h"
+#include "mozilla/SVGClipPathFrame.h"
 #include "mozilla/SVGIntegrationUtils.h"
 #include "mozilla/SVGMaskFrame.h"
 #include "mozilla/SVGObserverUtils.h"
@@ -2392,7 +2393,8 @@ static nsIFrame* GetActiveSelectionFrame(nsPresContext* aPresContext,
                                          nsIFrame* aFrame) {
   nsIContent* capturingContent = PresShell::GetCapturingContent();
   if (capturingContent) {
-    nsIFrame* activeFrame = aPresContext->GetPrimaryFrameFor(capturingContent);
+    nsIFrame* activeFrame =
+        aPresContext->GetPrimaryOrAreaImageFrameFor(capturingContent);
     return activeFrame ? activeFrame : aFrame;
   }
 
@@ -3136,14 +3138,25 @@ static Maybe<nsRect> ComputeClipForMaskItem(
       combinedClip = Some(ThebesRect(*result));
     }
   } else if (aMaskUsage.ShouldApplyClipPath()) {
-    gfxRect result = SVGUtils::GetBBox(
-        aMaskedFrame,
-        {SVGBBoxFlag::IncludeClipped, SVGBBoxFlag::IncludeFillGeometry,
-         SVGBBoxFlag::IncludeMarkers, SVGBBoxFlag::IncludeStroke,
-         SVGBBoxFlag::DoNotClipToBBoxOfContentInsideClipPath});
+    nsIFrame* firstFrame =
+        nsLayoutUtils::FirstContinuationOrIBSplitSibling(aMaskedFrame);
+    SVGClipPathFrame* clipPathFrame = nullptr;
+    SVGObserverUtils::GetAndObserveClipPath(firstFrame, &clipPathFrame);
+    MOZ_ASSERT(clipPathFrame, "ShouldApplyClipPath needs a clip path");
+    gfxRect result = clipPathFrame
+                         ->GetBBoxForClipPathFrame(
+                             clipPathFrame->GetClipPathTransform(aMaskedFrame))
+                         .ToThebesRect();
     combinedClip = Some(
         ThebesRect((CSSRect::FromUnknownRect(ToRect(result)) * cssToDevScale)
                        .ToUnknownRect()));
+    // The clip path is in the user space of the first continuation, which is
+    // where SVGIntegrationUtils paints it too.
+    if (firstFrame != aMaskedFrame) {
+      devPixelOffsetToUserSpace = nsLayoutUtils::PointToGfxPoint(
+          nsLayoutUtils::ComputeOffsetToUserSpace(aBuilder, firstFrame),
+          devPixelRatio);
+    }
   } else {
     // The code for this case is adapted from ComputeMaskGeometry().
 
@@ -3909,7 +3922,8 @@ void nsIFrame::BuildDisplayListForStackingContext(
   // like a separator between the VTCapture the outside, if it is transformed.
   if (capturedByViewTransition) {
     resultList.AppendNewToTop<nsDisplayViewTransitionCapture>(
-        aBuilder, this, &resultList, nullptr, false);
+        aBuilder, this, &resultList, nullptr,
+        nsDisplayViewTransitionCapture::Kind::Element);
     createdContainer = true;
     MarkAsIsolated();
     // We don't want the capture to be clipped, so we do this _after_ building
@@ -4779,6 +4793,21 @@ void nsIFrame::MarkAbsoluteFramesForDisplayList(
   }
 }
 
+const nsIFrame* nsIFrame::GetGeneratedRootFrame() const {
+  if (!IsGeneratedContentFrame()) {
+    return nullptr;
+  }
+  const nsIFrame* generatedRoot = this;
+  while (true) {
+    auto* parent = nsLayoutUtils::GetParentOrPlaceholderFor(generatedRoot);
+    if (!parent || !parent->IsGeneratedContentFrame()) {
+      break;
+    }
+    generatedRoot = parent;
+  }
+  return generatedRoot;
+}
+
 nsIContent* nsIFrame::GetExplicitEventTargetContent(
     const WidgetEvent* aEvent /* = nullptr */) const {
   // Return the content as-is if this is not a generated content.
@@ -4788,14 +4817,8 @@ nsIContent* nsIFrame::GetExplicitEventTargetContent(
   // If the content is a generated content, it won't handle any events from the
   // DOM point of view. Therefore, let's return the parent of the generated
   // content.
-  const nsIFrame* generatedRoot = this;
-  while (true) {
-    auto* parent = nsLayoutUtils::GetParentOrPlaceholderFor(generatedRoot);
-    if (!parent || !parent->IsGeneratedContentFrame()) {
-      break;
-    }
-    generatedRoot = parent;
-  }
+  const nsIFrame* generatedRoot = GetGeneratedRootFrame();
+  MOZ_ASSERT(generatedRoot);
   // Return the non-generated ancestor.
   return generatedRoot->GetContent()->GetParent();
 }
@@ -5020,6 +5043,16 @@ mozilla::StyleUserSelect nsIFrame::UsedUserSelect(
 Maybe<mozilla::StyleUserSelect> nsIFrame::UsedUserSelectRecurse(
     const nsIFrame* aFrame, nsIFrame::ForSelectionStart aType) {
   if (aFrame->IsGeneratedContentFrame()) {
+    return Some(StyleUserSelect::None);
+  }
+
+  // nsTableColFrame is inserted after nsTableRowGroupFrame and its content is
+  // the corresponding <col> if one exists, or <colgroup> or <table> otherwise.
+  // That means the frame tree order is different from the DOM tree order of
+  // HTML table so that the caret navigation may return start of the <table>
+  // after end of the last cell. Fortunately, it's invisible from user's
+  // selection point of view. So, we should be able to treat it as unselectable.
+  if (aFrame->IsTableColFrame()) {
     return Some(StyleUserSelect::None);
   }
 
@@ -5596,6 +5629,28 @@ nsresult nsIFrame::SelectWordOrLinkAtPoint(
       CaretAssociationHint::After);
 }
 
+nsIFrame::ContentOffsets nsIFrame::GetContentOffsetsFromPointForSelection(
+    const nsPoint& aPoint) {
+  // A text control's own frames use its independent selection, where its
+  // editor's anonymous content belongs.
+  const nsFrameSelection* const frameSelection = GetConstFrameSelection();
+  const Element* const independentSelectionRoot =
+      frameSelection ? frameSelection->GetIndependentSelectionRootElement()
+                     : nullptr;
+  ContentOffsets offsets = GetContentOffsetsFromPoint(
+      aPoint, independentSelectionRoot
+                  ? SKIP_HIDDEN
+                  : SKIP_HIDDEN | IGNORE_NATIVE_ANONYMOUS_SUBTREE);
+  if (offsets.content && independentSelectionRoot &&
+      !independentSelectionRoot->Contains(offsets.content)) {
+    // The text control's independent selection cannot use offsets outside
+    // its editor, e.g. if a press on its padding resolves to an ancestor
+    // with `user-select: all`.
+    return ContentOffsets();
+  }
+  return offsets;
+}
+
 nsresult nsIFrame::SelectByTypeAtPoint(const nsPoint& aPoint,
                                        nsSelectionAmount aBeginAmountType,
                                        nsSelectionAmount aEndAmountType,
@@ -5605,8 +5660,7 @@ nsresult nsIFrame::SelectByTypeAtPoint(const nsPoint& aPoint,
     return NS_OK;
   }
 
-  ContentOffsets offsets = GetContentOffsetsFromPoint(
-      aPoint, SKIP_HIDDEN | IGNORE_NATIVE_ANONYMOUS_SUBTREE);
+  ContentOffsets offsets = GetContentOffsetsFromPointForSelection(aPoint);
   if (!offsets.content) {
     return NS_ERROR_FAILURE;
   }

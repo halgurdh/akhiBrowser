@@ -42,16 +42,16 @@ class ReaderViewMenuItemProvider(
     private val appStore: AppStore,
     scope: CoroutineScope,
 ) : MenuItemProvider {
-    override val itemFlow: StateFlow<MenuItem?> =
+    override val itemsFlow: StateFlow<List<MenuItem>> =
         if (target == MenuTarget.CustomizeMenu) {
-            MutableStateFlow(DEFAULT_MENU_ITEM)
+            MutableStateFlow(listOf(DEFAULT_MENU_ITEM))
         } else {
             browserStore.stateFlow
-                .map { it.customizeReaderViewItem() }
+                .map { listOfNotNull(it.customizeReaderViewItem()) }
                 .stateIn(
                     scope = scope,
                     started = SharingStarted.Eagerly,
-                    initialValue = browserStore.state.customizeReaderViewItem(),
+                    initialValue = listOfNotNull(browserStore.state.customizeReaderViewItem()),
                 )
         }
 

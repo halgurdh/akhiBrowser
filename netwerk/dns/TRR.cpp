@@ -79,8 +79,7 @@ TRR::TRR(AHostResolver* aResolver, nsHostRecord* aRec, enum TrrType aType)
       mTarget(DefaultTarget()) {
   mHost = aRec->host;
   mPB = aRec->pb;
-  MOZ_DIAGNOSTIC_ASSERT(XRE_IsParentProcess() || XRE_IsSocketProcess(),
-                        "TRR must be in parent or socket process");
+  MOZ_DIAGNOSTIC_ASSERT(XRE_IsParentProcess(), "TRR must be in parent process");
 }
 
 // when following CNAMEs
@@ -95,8 +94,7 @@ TRR::TRR(AHostResolver* aResolver, nsHostRecord* aRec, nsCString& aHost,
       mCnameLoop(aLoopCount),
       mOriginSuffix(aRec ? aRec->originSuffix : ""_ns),
       mTarget(DefaultTarget()) {
-  MOZ_DIAGNOSTIC_ASSERT(XRE_IsParentProcess() || XRE_IsSocketProcess(),
-                        "TRR must be in parent or socket process");
+  MOZ_DIAGNOSTIC_ASSERT(XRE_IsParentProcess(), "TRR must be in parent process");
 }
 
 // to verify a domain
@@ -112,8 +110,7 @@ TRR::TRR(AHostResolver* aResolver, nsACString& aHost, enum TrrType aType,
       mOriginSuffix(aOriginSuffix),
       mUseFreshConnection(aUseFreshConnection),
       mTarget(aTarget) {
-  MOZ_DIAGNOSTIC_ASSERT(XRE_IsParentProcess() || XRE_IsSocketProcess(),
-                        "TRR must be in parent or socket process");
+  MOZ_DIAGNOSTIC_ASSERT(XRE_IsParentProcess(), "TRR must be in parent process");
 }
 
 void TRR::HandleTimeout() {
@@ -135,9 +132,8 @@ TRR::Notify(nsITimer* aTimer) {
 
 NS_IMETHODIMP
 TRR::Run() {
-  MOZ_ASSERT_IF(XRE_IsParentProcess() && TRRService::Get(),
+  MOZ_ASSERT_IF(TRRService::Get(),
                 NS_IsMainThread() || TRRService::Get()->IsOnTRRThread());
-  MOZ_ASSERT_IF(XRE_IsSocketProcess(), NS_IsMainThread());
 
   if ((TRRService::Get() == nullptr) || NS_FAILED(SendHTTPRequest())) {
     RecordReason(TRRSkippedReason::TRR_SEND_FAILED);

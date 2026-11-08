@@ -37,7 +37,7 @@ class DownloadsMenuItemProviderTest {
             val provider =
                 DownloadsMenuItemProvider(appStore, target = MenuTarget.BrowserTab, scope = this.backgroundScope)
 
-            assertEquals(expectedItem(isHighlighted = false), provider.itemFlow.value)
+            assertEquals(expectedItem(isHighlighted = false), provider.itemsFlow.value.single())
         }
 
     @Test
@@ -53,7 +53,7 @@ class DownloadsMenuItemProviderTest {
                     icon = MenuItemIconRes(iconsR.drawable.mozac_ic_download_24, isHighlighted = false),
                     onClickEvent = null,
                 ),
-                provider.itemFlow.value,
+                provider.itemsFlow.value.single(),
             )
         }
 
@@ -64,7 +64,7 @@ class DownloadsMenuItemProviderTest {
             val provider =
                 DownloadsMenuItemProvider(appStore, target = MenuTarget.BrowserTab, scope = this.backgroundScope)
 
-            assertEquals(expectedItem(isHighlighted = true), provider.itemFlow.value)
+            assertEquals(expectedItem(isHighlighted = true), provider.itemsFlow.value.single())
         }
 
     @Test
@@ -72,14 +72,14 @@ class DownloadsMenuItemProviderTest {
         val appStore = AppStore(AppState(supportedMenuNotifications = emptySet()))
         val provider = DownloadsMenuItemProvider(appStore, target = MenuTarget.BrowserTab, scope = this.backgroundScope)
 
-        val collectJob = launch { provider.itemFlow.collect {} }
+        val collectJob = launch { provider.itemsFlow.collect {} }
 
-        assertEquals(expectedItem(isHighlighted = false), provider.itemFlow.value)
+        assertEquals(expectedItem(isHighlighted = false), provider.itemsFlow.value.single())
 
         appStore.dispatch(AppAction.MenuNotification.AddMenuNotification(SupportedMenuNotifications.Downloads))
         advanceUntilIdle()
 
-        assertEquals(expectedItem(isHighlighted = true), provider.itemFlow.value)
+        assertEquals(expectedItem(isHighlighted = true), provider.itemsFlow.value.single())
 
         collectJob.cancel()
     }
@@ -110,7 +110,7 @@ class DownloadsMenuItemProviderTest {
         val provider =
             DownloadsMenuItemProvider(AppStore(AppState()), target = MenuTarget.BrowserTab, scope = backgroundScope)
 
-        val events = requireNotNull(provider.itemFlow.value).reachableEvents()
+        val events = provider.itemsFlow.value.single().reachableEvents()
 
         assertTrue(events.all { provider.handles(it) }, "Not all of $events are handled")
         assertFalse(provider.handles(MenuAction.Navigate.History))

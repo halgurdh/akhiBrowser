@@ -47,6 +47,9 @@ pref("extensions.getAddons.browserMappings.url", "https://services.addons.mozill
 // The URL for the privacy policy related to recommended extensions.
 pref("extensions.recommendations.privacyPolicyUrl", "https://www.mozilla.org/privacy/firefox/?utm_source=firefox-browser&utm_medium=firefox-browser&utm_content=privacy-policy-link#addons");
 // The URL for Firefox Color, recommended on the theme page in about:addons.
+// NOTE: the link to Firefox Color is always hidden when Nova is enabled,
+// consider removing it along with cleaning up about:addons parts conditioned
+// on the browser.nova.enabled pref.
 pref("extensions.recommendations.themeRecommendationUrl", "https://color.firefox.com/?utm_source=firefox-browser&utm_medium=firefox-browser&utm_content=theme-footer-link");
 
 pref("extensions.update.autoUpdateDefault", true);
@@ -644,9 +647,11 @@ pref("browser.urlbar.quicksuggest.impressionCaps.sponsoredEnabled", false);
 // at least this many characters long, it will be shown as a top pick.
 pref("browser.urlbar.quicksuggest.ampTopPickCharThreshold", 5);
 
-// Whether or not use the Nova icon size for AMP suggestion.
-// Otherwise, use standard rich-suggestion size.
-pref("browser.urlbar.quicksuggest.ampTopPickUseNovaIconSize", false);
+// The minimum score a top-pick AMP suggestion must have to be shown with the
+// large-icon UI treatment used for other top picks, as a decimal string (e.g.,
+// "1.0"). If it's an empty string or otherwise can't be parsed with parseFloat,
+// the small-icon UI treatment will be used.
+pref("browser.urlbar.quicksuggest.ampTopPickScoreForLargeIcon", "");
 
 // The matching strategy for AMP suggestions. Zero is the usual default
 // exact-keyword strategy. Other values are the integers defined on
@@ -778,7 +783,7 @@ pref("browser.urlbar.contextualSearch.enabled", true);
 pref("browser.urlbar.addons.featureGate", false);
 
 // Feature gate pref for semanticHistory
-#if defined(EARLY_BETA_OR_EARLIER) || defined(MOZ_DEV_EDITION)
+#ifdef NIGHTLY_BUILD
 pref("places.semanticHistory.featureGate", true);
 #else
 pref("places.semanticHistory.featureGate", false);
@@ -914,7 +919,11 @@ pref("browser.urlbar.lastUrlbarSearchSeconds", 0);
 
 // When selecting and hovering over certain types of urlbar results, replace
 // their URLs with strings that explain why they're shown.
+#ifdef NIGHTLY_BUILD
+pref("browser.urlbar.resultExplanations.featureGate", true);
+#else
 pref("browser.urlbar.resultExplanations.featureGate", false);
+#endif
 
 pref("browser.altClickSave", false);
 
@@ -994,10 +1003,6 @@ pref("browser.search.serpEventTelemetryCategorization.enabled", true);
 // experiment info (and not actual SERP categorizations) at startup.
 pref("browser.search.serpMetricsRecordedCounter", 0);
 
-// Search Bar removal from the toolbar for users who haven’t used it in 120
-// days
-pref("browser.search.widget.removeAfterDaysUnused", 120);
-
 // Feature gate for searchbar based on urlbar code.
 pref("browser.search.widget.new", true);
 
@@ -1016,6 +1021,20 @@ pref("browser.highlightToSearch.enabled", true);
 // Which actions the menu offers. Set from the menu's own settings.
 pref("browser.highlightToSearch.search.enabled", true);
 pref("browser.highlightToSearch.copy.enabled", true);
+
+// Comma-separated sites where the menu is not shown because the page has its
+// own menu for selected text. A site also matches its subdomains.
+pref(
+  "browser.highlightToSearch.ignoredSites",
+  "atlassian.net,docs.google.com,read.amazon.com,read.readwise.io,hypothes.is,chatgpt.com,github.com,notion.so,notion.site,office.com,sharepoint.com,canva.com,figma.com"
+);
+
+// Whether the menu is not shown, or is hidden, when the page shows its own
+// floating menu next to the selected text.
+pref("browser.highlightToSearch.detectPageMenus", true);
+
+// Whether the user has seen the feature callout on the actions menu.
+pref("browser.highlightToSearch.callout.seen", false);
 
 // Spin the cursor while the page is loading
 pref("browser.spin_cursor_while_busy", false);
@@ -1179,10 +1198,11 @@ pref("browser.tabs.hoverPreview.showThumbnails", true);
 pref("browser.tabs.groups.enabled", true);
 pref("browser.tabs.groups.hoverPreview.enabled", true);
 pref("browser.tabs.groups.alternateMenu", true);
-// Bug 2052293: temporarily disabled while tab groups move away from the list all tabs menu.
-pref("browser.tabs.groups.onboardingCallouts.enabled", false);
 // Number of times the "Tab group saved" confirmation hint has been shown
 pref("browser.tabs.groups.saveHintShownCount", 0);
+// Whether the hint pointing to the application menu has been shown after
+// removing the Tab Groups button
+pref("browser.tabs.groups.removedHintShown", false);
 
 pref("browser.tabs.groups.smart.enabled", true);
 
@@ -1657,6 +1677,8 @@ pref("browser.places.speculativeConnect.enabled", true);
 // Limit query results in the native macOS menu. Set to 0 to disable the limit.
 // Restart for changes to fully apply to cached queries.
 pref("browser.places.nativeMenu.maxResults", 100);
+// Limit entries in each native bookmark folder menu. Set to 0 to disable.
+pref("browser.places.nativeMenu.maxFolderResults", 500);
 #endif
 
 // if true, use full page zoom instead of text zoom
@@ -1755,13 +1777,6 @@ pref("browser.bookmarks.editDialog.maxRecentFolders", 7);
   pref("security.sandbox.content.write_path_whitelist", "");
   pref("security.sandbox.content.read_path_whitelist", "");
   pref("security.sandbox.content.syscall_whitelist", "");
-  // Introduced as part of bug 1608558.  Linux is currently the only platform
-  // that uses a sandbox level for the socket process.  The following levels
-  // are currently defined:
-  // 0 -> "no sandbox"
-  // 1 -> "sandboxed, allows socket operations and reading necessary certs"
-  // 2 -> default-deny for ioctl
-  pref("security.sandbox.socket.process.level", 2);
 #endif
 
 #if defined(XP_OPENBSD) && defined(MOZ_SANDBOX)
@@ -2122,14 +2137,14 @@ pref("browser.newtabpage.activity-stream.discoverystream.newSponsoredLabel.enabl
 pref("browser.newtabpage.activity-stream.discoverystream.spoc-positions", "2,4,8,13,17,20");
 
 // For both spoc and tiles, count corresponds to the matching placement. So the first placement in an array corresponds to the first count.
-pref("browser.newtabpage.activity-stream.discoverystream.placements.spocs", "newtab_stories_1, newtab_stories_2, newtab_stories_3, newtab_stories_4, newtab_stories_5, newtab_stories_6");
-pref("browser.newtabpage.activity-stream.discoverystream.placements.spocs.counts", "1,1,1,1,1,1");
-pref("browser.newtabpage.activity-stream.discoverystream.placements.contextualSpocs", "newtab_stories_1, newtab_stories_2, newtab_stories_3, newtab_stories_4, newtab_stories_5, newtab_stories_6");
-pref("browser.newtabpage.activity-stream.discoverystream.placements.contextualSpocs.counts", "1, 1, 1, 1, 1, 1");
+pref("browser.newtabpage.activity-stream.discoverystream.placements.spocs", "newtab_stories_1, newtab_stories_2, newtab_stories_3, newtab_stories_4, newtab_stories_5, newtab_stories_6, newtab_stories_7, newtab_stories_8, newtab_stories_9, newtab_stories_10, newtab_stories_11, newtab_stories_12, newtab_billboard");
+pref("browser.newtabpage.activity-stream.discoverystream.placements.spocs.counts", "1,1,1,1,1,1,1,1,1,1,1,1,1");
+pref("browser.newtabpage.activity-stream.discoverystream.placements.contextualSpocs", "newtab_stories_1, newtab_stories_2, newtab_stories_3, newtab_stories_4, newtab_stories_5, newtab_stories_6, newtab_stories_7, newtab_stories_8, newtab_stories_9, newtab_stories_10, newtab_stories_11, newtab_stories_12");
+pref("browser.newtabpage.activity-stream.discoverystream.placements.contextualSpocs.counts", "1,1,1,1,1,1,1,1,1,1,1,1");
 pref("browser.newtabpage.activity-stream.discoverystream.placements.tiles", "newtab_tile_1, newtab_tile_2, newtab_tile_3");
 pref("browser.newtabpage.activity-stream.discoverystream.placements.tiles.counts", "1, 1, 1");
-pref("browser.newtabpage.activity-stream.discoverystream.placements.contextualBanners", "");
-pref("browser.newtabpage.activity-stream.discoverystream.placements.contextualBanners.counts", "");
+pref("browser.newtabpage.activity-stream.discoverystream.placements.contextualBanners", "newtab_billboard");
+pref("browser.newtabpage.activity-stream.discoverystream.placements.contextualBanners.counts", "1");
 
 // This is a 0-based index, for consistency with the other position CSVs,
 // but Contile positions are a 1-based index, so we end up adding 1 to these before using them.
@@ -2420,6 +2435,8 @@ pref("browser.ml.pageAssist.enabled", false);
 pref("browser.smartwindow.enabled", false);
 // Default endpoint for preset models
 pref("browser.smartwindow.endpoint", "https://mlpa-prod-prod-mozilla.freetls.fastly.net/v1");
+pref("browser.smartwindow.auth.impl", "fxa");
+pref("browser.smartwindow.auth.guest.mode", "fetch");
 pref("browser.smartwindow.memories.generateFromHistory", true);
 pref("browser.smartwindow.memories.generateFromConversation", true);
 pref("browser.smartwindow.memories.hasSeenMemories", false);
@@ -2430,13 +2447,12 @@ pref("browser.smartwindow.resumeActivity.enabled", true);
 pref("browser.smartwindow.resumeCards.enabled", true);
 pref("browser.smartwindow.firstrun.autoAdvanceMS", 3000);
 pref("browser.smartwindow.firstrun.hasCompleted", false);
+pref("browser.smartwindow.firstrun.singlePageWithAutoModel", false);
 pref("browser.smartwindow.showThemesNotice", true);
 pref("browser.smartwindow.sidebar.openByDefault", true);
 pref("browser.smartwindow.isDefaultWindow", false);
 pref("browser.smartwindow.firstrun.explainerURL", "https://www.firefox.com/smart-window/?v=product");
 pref("places.semanticHistory.smartwindow.featureGate", false);
-// TODO Bug 2053495: remove with mistral release pref
-pref("browser.smartwindow.mistralRelease", true);
 
 // Semantic distance threshold for Smart Window history search only.
 pref("places.semanticHistory.smartwindow.distanceThreshold", "0.6");
@@ -2470,6 +2486,9 @@ pref("browser.smartwindow.aitab.menus", true);
 #else
 pref("browser.smartwindow.aitab.menus", false);
 #endif
+
+// Off until the model's use of manage_tabs' include_chat_tab is evaluated.
+pref("browser.smartwindow.manageTabs.includeChatTab", false);
 
 // Smart Window Agent
 pref("browser.smartwindow.agent.enabled", true);
@@ -2514,6 +2533,18 @@ pref("browser.smartwindow.conversationHistory.logLevel", "Error");
 pref("browser.smartwindow.conversationStore.logLevel", "Error");
 pref("browser.smartwindow.smartbarMentions.loglevel", "Error");
 pref("browser.smartwindow.telemetryLogLevel", "Error");
+
+pref("browser.widgets.generated.enabled", false);
+pref(
+  "sidebar.newTool.migration.widgets",
+  '{"visibilityPref":"browser.widgets.generated.enabled"}'
+);
+pref("browser.widgets.generated.loglevel", "Warn");
+pref("browser.widgets.generated.endpoint", "");
+pref("browser.widgets.generated.apiKey", "");
+pref("browser.widgets.generated.model", "");
+pref("browser.widgets.generated.maxTurns", 20);
+pref("browser.widgets.generated.localPrompt", false);
 
 // Block insecure active content on https pages
 pref("security.mixed_content.block_active_content", true);
@@ -2888,9 +2919,6 @@ pref("extensions.webcompat.smartblockEmbeds.enabled", true);
 pref("privacy.exposeContentTitleInWindow", true);
 pref("privacy.exposeContentTitleInWindow.pbm", true);
 
-// Run media transport in a separate process?
-pref("media.peerconnection.mtransport_process", true);
-
 // For speculatively warming up tabs to improve perceived
 // performance while using the async tab switcher.
 pref("browser.tabs.remote.warmup.enabled", true);
@@ -2969,6 +2997,9 @@ pref("browser.migrate.canary.enabled", true);
 pref("browser.migrate.chrome.enabled", true);
 // See comments in bug 1340115 on how we got to this number.
 pref("browser.migrate.chrome.history.limit", 2000);
+// Number of recent visits to import per URL from Chrome history, capped at
+// places.frecency.pages.numSampledVisits.
+pref("browser.migrate.chrome.history.visit.limit", 5);
 pref("browser.migrate.chrome.payment_methods.enabled", true);
 pref("browser.migrate.chrome.extensions.enabled", true);
 pref("browser.migrate.chrome.get_permissions.enabled", true);
@@ -3179,6 +3210,10 @@ pref("browser.urlbar.share-button.enabled", false);
 pref("browser.toolbars.tab-groups.enabled", false);
 
 pref("security.certerrors.felt-privacy-v1", true);
+
+#ifdef NIGHTLY_BUILD
+  pref("security.utility_pkcs11_module_process.enabled", true);
+#endif
 
 // Prefs to control the Firefox Account toolbar menu.
 // This pref will surface existing Firefox Account information
@@ -3877,7 +3912,7 @@ pref("toolkit.rust-components.logging.crates", "");
 pref("toolkit.rust-components.logging.internal-level", "Warn");
 
 // Settings Redesign 2025 prefs
-pref("browser.settings-redesign.enabled", true);
+pref("browser.settings-redesign.enabled", true, locked);
 
 // Gates the in-progress Notifications sub-page and its entry card in
 // Permissions and data. Not part of the settings-redesign section scheme, since

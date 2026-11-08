@@ -132,12 +132,6 @@ export class UrlbarParent extends JSWindowActorParent {
       case "RecordSearchForm":
         controller.recordSearchForm(message.data.engineName);
         break;
-      case "RecordSearch":
-        controller.recordSearch(message.data);
-        break;
-      case "RecordSearchInOpenedTab":
-        controller.recordSearchInOpenedTab(message.data.searchData);
-        break;
       case "RecordZeroPrefix":
         controller.recordZeroPrefix(message.data.kind);
         break;
@@ -224,7 +218,8 @@ export class UrlbarParent extends JSWindowActorParent {
           message.data.searchTerms,
           message.data.where,
           message.data.inBackground,
-          message.data.browserId
+          message.data.browserId,
+          message.data.searchData
         );
         break;
       case "OpenSearchForm":
@@ -296,8 +291,8 @@ function sendToChild(actor, name, data) {
  * Parent-side stand-in for UrlbarChildController.
  * Forwards allowed method calls to the real UrlbarChildController.
  *
- * @typedef {Pick<UrlbarChildController,
- *   (typeof UrlbarShared.INVOKABLE_CONTENT_ACTIONS.controller)[number]>
+ * @typedef {VoidMethods<Pick<UrlbarChildController,
+ *   (typeof UrlbarShared.INVOKABLE_CONTENT_ACTIONS.controller)[number]>>
  *   & { input: UrlbarInputProxy, view: UrlbarViewProxy, isProxy: true }}
  *   UrlbarChildControllerProxy
  */
@@ -306,8 +301,8 @@ function sendToChild(actor, name, data) {
  * Parent-side stand-in for UrlbarInput.
  * Forwards allowed method calls to the real UrlbarInput.
  *
- * @typedef {Pick<UrlbarInput,
- *   (typeof UrlbarShared.INVOKABLE_CONTENT_ACTIONS.input)[number]>}
+ * @typedef {VoidMethods<Pick<UrlbarInput,
+ *   (typeof UrlbarShared.INVOKABLE_CONTENT_ACTIONS.input)[number]>>}
  *   UrlbarInputProxy
  */
 
@@ -315,8 +310,8 @@ function sendToChild(actor, name, data) {
  * Parent-side stand-in for UrlbarView.
  * Forwards allowed method calls to the real UrlbarView.
  *
- * @typedef {Pick<UrlbarView,
- *   (typeof UrlbarShared.INVOKABLE_CONTENT_ACTIONS.view)[number]>}
+ * @typedef {VoidMethods<Pick<UrlbarView,
+ *   (typeof UrlbarShared.INVOKABLE_CONTENT_ACTIONS.view)[number]>>}
  *   UrlbarViewProxy
  */
 

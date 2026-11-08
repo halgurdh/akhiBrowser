@@ -16,8 +16,7 @@ let gSanitizeCalls = [];
 let gSanitizeAborted = false;
 // Likewise, opening the real clear-data dialog would block the test on a modal.
 let gShowUICalls = [];
-// "accept", "cancel", or "abort" for a confirmed dialog whose clearing is then
-// aborted because a page refused to close.
+// "accept" or "cancel".
 let gShowUIResult = "accept";
 
 // The toast auto-hides after ~3s, so polling for visibility races with the
@@ -52,11 +51,7 @@ add_setup(function () {
     }
     // The real dialog clears via Sanitizer.sanitize, whose completion is
     // what the widget waits on before showing the toast.
-    Services.obs.notifyObservers(
-      null,
-      "sanitizer-sanitization-complete",
-      gShowUIResult == "abort" ? "aborted" : null
-    );
+    Services.obs.notifyObservers(null, "sanitizer-sanitization-complete");
     return "accept";
   };
   registerCleanupFunction(() => {
@@ -87,6 +82,11 @@ async function awaitAndDismissToast() {
   gHintCalls = [];
 
   let hint = document.getElementById("confirmation-hint");
+  if (hint.state == "hiding") {
+    // A toast asked for while the previous one is still hiding only opens
+    // once that one has finished hiding.
+    await BrowserTestUtils.waitForPopupEvent(hint, "hidden");
+  }
   if (hint.state == "open" || hint.state == "showing") {
     let hidden = BrowserTestUtils.waitForEvent(hint, "popuphidden");
     hint.hidePopup();
@@ -247,6 +247,10 @@ add_task(async function test_confirmClearsWholeSession() {
     "non-private",
     "The replacement window is a normal window."
   );
+  Assert.ok(
+    options.keepPinnedTabs,
+    "The replacement window keeps the pinned tabs."
+  );
 
   // With the real Sanitizer this anchors in the replacement window; here the
   // stub leaves the current window in place, so it anchors in this one.
@@ -274,7 +278,10 @@ function findSettingsTab() {
  */
 async function withChooseFlow(taskFn) {
   await openPanel(window);
-  document.querySelector(SELECTOR_PANEL_CHOOSE_LINK).click();
+  EventUtils.synthesizeMouseAtCenter(
+    document.querySelector(SELECTOR_PANEL_CHOOSE_LINK),
+    {}
+  );
 
   await TestUtils.waitForCondition(
     () => gShowUICalls.length,
@@ -309,10 +316,16 @@ add_task(async function test_chooseOpensClearDataDialog() {
       "clearSiteData",
       "Opens the 'Delete browsing data' dialog."
     );
+    let { triggeringEvent, ...options } = gShowUICalls[0].options;
     Assert.deepEqual(
-      gShowUICalls[0].options,
-      { closeWindowsWithHistory: true, entryPoint: "fire_button" },
-      "Clearing history from the dialog also replaces the windows."
+      options,
+      { entryPoint: "fire_button" },
+      "The dialog keeps the windows open, whatever it deletes."
+    );
+    Assert.equal(
+      triggeringEvent?.target.id,
+      "fire-button-panel-choose-link",
+      "Passes the event of the Choose… link, for the dialog's focus ring."
     );
     Assert.equal(
       gShowUICalls[0].parentWindow,
@@ -367,10 +380,16 @@ add_task(async function test_directFlowSkipsPanel() {
     "clearSiteData",
     "Goes straight to the clear-data dialog."
   );
+  let { triggeringEvent, ...options } = gShowUICalls[0].options;
   Assert.deepEqual(
-    gShowUICalls[0].options,
-    { closeWindowsWithHistory: true, entryPoint: "fire_button" },
-    "Clearing history from the dialog also replaces the windows."
+    options,
+    { entryPoint: "fire_button" },
+    "The dialog keeps the windows open, whatever it deletes."
+  );
+  Assert.equal(
+    triggeringEvent?.target,
+    document.querySelector(SELECTOR_TOOLBAR_BUTTON),
+    "Passes the event that activated the button, for the dialog's focus ring."
   );
   Assert.equal(
     gSanitizeCalls.length,
@@ -466,22 +485,6 @@ add_task(async function test_confirmAbortedRecordsAborted() {
   Assert.equal(gSanitizeCalls.length, 1, "Tried to clear once.");
   Assert.equal(gHintCalls.length, 0, "Nothing was deleted, so no toast.");
   gSanitizeAborted = false;
-});
-
-add_task(async function test_dialogAbortedRecordsAborted() {
-  gShowUICalls = [];
-  gHintCalls = [];
-  gShowUIResult = "abort";
-
-  await withChooseFlow(async () => {});
-  await assertFlowTelemetry({
-    flow: "panel",
-    outcome: "aborted",
-    surface: "dialog",
-    chooseClicked: true,
-  });
-  Assert.equal(gHintCalls.length, 0, "Nothing was deleted, so no toast.");
-  gShowUIResult = "accept";
 });
 
 /**

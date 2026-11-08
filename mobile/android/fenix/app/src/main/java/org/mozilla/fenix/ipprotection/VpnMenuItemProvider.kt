@@ -7,10 +7,8 @@ package org.mozilla.fenix.ipprotection
 import androidx.compose.ui.semantics.Role
 import kotlin.math.roundToLong
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import mozilla.components.compose.base.text.Text
@@ -59,18 +57,14 @@ class VpnMenuItemProvider(
     private val target: MenuTarget,
     scope: CoroutineScope,
 ) : MenuItemProvider {
-    override val itemFlow: StateFlow<MenuItem?> =
-        if (target == MenuTarget.CustomizeMenu) {
-            MutableStateFlow(DEFAULT_MENU_ITEM).asStateFlow()
-        } else {
-            ipProtectionStore.stateFlow
-                .map { it.ipProtectionMenuItem() }
-                .stateIn(
-                    scope = scope,
-                    started = SharingStarted.Eagerly,
-                    initialValue = ipProtectionStore.state.ipProtectionMenuItem(),
-                )
-        }
+    override val itemsFlow: StateFlow<List<MenuItem>> =
+        ipProtectionStore.stateFlow
+            .map { listOfNotNull(it.ipProtectionMenuItem()) }
+            .stateIn(
+                scope = scope,
+                started = SharingStarted.Eagerly,
+                initialValue = listOfNotNull(ipProtectionStore.state.ipProtectionMenuItem()),
+            )
 
     override fun handles(event: MenuEvent) =
         event == MenuAction.IPProtectionToggle || event == MenuAction.Navigate.IPProtectionSettings
@@ -107,9 +101,9 @@ class VpnMenuItemProvider(
             IPProtectionStatus.AwaitingService -> menu.navigate(settingsDirections())
 
             IPProtectionStatus.Activating,
-            IPProtectionStatus.DataLimitReached,
             IPProtectionStatus.ConnectionError -> ipProtectionStore.dispatch(IPProtectionAction.ActivationAction.Toggle)
 
+            IPProtectionStatus.DataLimitReached,
             IPProtectionStatus.Unavailable,
             IPProtectionStatus.Uninitialized -> Unit
         }
@@ -121,7 +115,12 @@ class VpnMenuItemProvider(
     /** IP protection is only offered to the users that are eligible for it. */
     private fun IPProtectionState.ipProtectionMenuItem() =
         when (isEligible) {
-            true -> toMenuState().toMenuItem()
+            true ->
+                when (target) {
+                    MenuTarget.CustomizeMenu -> DEFAULT_MENU_ITEM
+                    else -> toMenuState().toMenuItem()
+                }
+
             else -> null
         }
 
@@ -144,6 +143,11 @@ class VpnMenuItemProvider(
                     onClickEvent = MenuAction.Navigate.IPProtectionSettings,
                     showDivider = true,
                 ),
+            state =
+                when (status) {
+                    IPProtectionStatus.DataLimitReached -> MenuItemState.DISABLED
+                    else -> MenuItemState.DEFAULT
+                },
         )
 
     companion object {

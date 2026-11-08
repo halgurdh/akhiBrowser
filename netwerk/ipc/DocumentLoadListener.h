@@ -181,6 +181,10 @@ class DocumentLoadListener : public nsIInterfaceRequestor,
                            nsDocShellLoadState* aLoadState,
                            bool aSetNavigating);
 
+  static uint32_t SecurityFlagsForLoadInfo(nsDocShellLoadState*);
+  static uint32_t EffectiveSandboxFlags(uint32_t aBaseSandboxFlags,
+                                        nsSecurityFlags);
+
   // Creates a DocumentLoadListener directly in the parent process and opens it,
   // without needing an existing DocumentChannel.
   // If successful, aLoadState will be given a SpeculativeListener, which will
@@ -194,9 +198,9 @@ class DocumentLoadListener : public nsIInterfaceRequestor,
   // nsDocShellLoadState was destroyed without the load being claimed.
   void CleanupParentLoadAttempt();
 
-  // Called to associate a document channel with the DocumentLoadListener when
-  // creation has succeeded.
-  RefPtr<OpenPromise> ClaimParentLoad(Maybe<uint64_t> aChannelId);
+  // Called when the content process's DocumentChannel has connected to this
+  // speculative load. Returns the promise for the load's result.
+  RefPtr<OpenPromise> ClaimParentLoad();
 
   NS_DECL_ISUPPORTS
   NS_DECL_NSIREQUESTOBSERVER
@@ -225,6 +229,10 @@ class DocumentLoadListener : public nsIInterfaceRequestor,
   nsIChannel* GetChannel() const { return mChannel; }
 
   uint32_t GetRedirectChannelId() const { return mRedirectChannelId; }
+
+  const Maybe<uint64_t>& GetDocumentChannelId() const {
+    return mDocumentChannelId;
+  }
 
   nsresult ReportSecurityMessage(const nsAString& aMessageTag,
                                  const nsAString& aMessageCategory) override {

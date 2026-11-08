@@ -33,6 +33,13 @@ declare namespace BrowserWindow {
     paneID?: string,
     extraArgs?: { urlParams?: Record<string, string> }
   ): Promise<void>;
+  function openTrustedLinkIn(
+    url: string,
+    where: string,
+    params?: Parameters<
+      typeof import("resource:///modules/URILoadingHelper.sys.mjs").URILoadingHelper.openLinkIn
+    >[3]
+  ): void;
 
   // browser-init.js
   var gBrowserInit: {
@@ -49,6 +56,7 @@ declare namespace BrowserWindow {
   // browser-customtitlebar.js
   var CustomTitlebar: {
     readonly enabled: boolean;
+    allowedBy(condition: string, allow: boolean): void;
   };
 
   // browser-sidebar.js
@@ -56,6 +64,7 @@ declare namespace BrowserWindow {
     import("moz-src:///browser/components/sidebar/SidebarState.sys.mjs").SidebarStateProps;
 
   var SidebarController: {
+    readonly _positionStart: boolean;
     getUIState(): SidebarStateProps;
     markSessionRestoreStateReceived(): void;
     updateUIState(state?: SidebarStateProps): Promise<void>;
@@ -67,6 +76,8 @@ declare namespace BrowserWindow {
   };
 
   // browser.js
+  var gNavToolbox: XULElement;
+
   const DynamicShortcutTooltip: {
     nodeToTooltipMap: Record<string, string>;
     cache: Map<string, string>;
@@ -84,5 +95,28 @@ declare namespace BrowserWindow {
 
   var FirefoxViewHandler: {
     tab: MozTabbrowserTab | null;
+  };
+
+  var XULBrowserWindow: {
+    status: string;
+    defaultStatus: string;
+    overLink: string;
+    busyUI: boolean;
+  };
+
+  type MousePosListener = {
+    getMouseTargetRect(): {
+      top: number;
+      bottom: number;
+      left: number;
+      right: number;
+    };
+    onMouseEnter?(): void;
+    onMouseLeave?(): void;
+  };
+
+  var MousePosTracker: {
+    addListener(listener: MousePosListener): void;
+    removeListener(listener: MousePosListener): void;
   };
 }

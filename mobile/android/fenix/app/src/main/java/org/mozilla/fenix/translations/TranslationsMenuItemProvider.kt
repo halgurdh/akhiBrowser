@@ -51,12 +51,12 @@ class TranslationsMenuItemProvider(
     scope: CoroutineScope,
     private val isFeatureEnabled: Boolean = FxNimbus.features.translations.value().mainFlowBrowserMenuEnabled,
 ) : MenuItemProvider {
-    override val itemFlow: StateFlow<MenuItem?> =
+    override val itemsFlow: StateFlow<List<MenuItem>> =
         if (target == MenuTarget.CustomizeMenu) {
-            MutableStateFlow(DEFAULT_MENU_ITEM)
+            MutableStateFlow(listOf(DEFAULT_MENU_ITEM))
         } else {
             combine(browserStore.stateFlow, translationsSettings.isEnabled) { state, isEnabled ->
-                    state.translationsItem(isEnabled = isEnabled)
+                    listOfNotNull(state.translationsItem(isEnabled = isEnabled))
                 }
                 .stateIn(
                     scope = scope,
@@ -64,7 +64,7 @@ class TranslationsMenuItemProvider(
                     // Whether the user turned translations off is only known after reading it from disk, until then
                     // they are assumed to still be on - as in the menu this replaces. Nothing is shown anyway for as
                     // long as the engine has not reported that it supports this device.
-                    initialValue = browserStore.state.translationsItem(isEnabled = true),
+                    initialValue = listOfNotNull(browserStore.state.translationsItem(isEnabled = true)),
                 )
         }
 

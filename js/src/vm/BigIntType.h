@@ -424,10 +424,10 @@ class BigInt final : public js::gc::CellWithLengthAndFlags {
       const mozilla::Maybe<MutableHandle<BigInt*>>& remainder,
       bool quotientNegative);
 
-  // Add `multiplicand * multiplier` into `acc`, discarding any carry out of the
-  // top of `acc`.
-  static void multiplyAccumulateDigits(ConstDigits multiplicand,
-                                       Digit multiplier, Digits acc);
+  // Store `multiplicand * multiplier` into `product`, which must have one more
+  // digit than `multiplicand`.
+  static void multiplyDigits(ConstDigits multiplicand, Digit multiplier,
+                             Digits product);
   // Subtract `y` from the low `y.size()` digits of `x`, returning the borrow.
   static Digit inplaceSubDigits(Digits x, ConstDigits y);
   // Add `y` to the low `y.size()` digits of `x`, returning the carry.

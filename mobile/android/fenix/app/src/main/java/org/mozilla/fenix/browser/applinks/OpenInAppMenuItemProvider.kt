@@ -54,20 +54,22 @@ class OpenInAppMenuItemProvider(
     private val settings: Settings,
     scope: CoroutineScope,
 ) : MenuItemProvider {
-    override val itemFlow: StateFlow<MenuItem?> =
+    override val itemsFlow: StateFlow<List<MenuItem>> =
         if (target == MenuTarget.CustomizeMenu) {
-            MutableStateFlow(DEFAULT_MENU_ITEM)
+            MutableStateFlow(listOf(DEFAULT_MENU_ITEM))
         } else {
             combine(browserStore.currentUrl(target), appStore.isOpenInAppHighlighted()) { url, isHighlighted ->
-                    openInAppItem(url = url, isHighlighted = isHighlighted)
+                    listOf(openInAppItem(url = url, isHighlighted = isHighlighted))
                 }
                 .stateIn(
                     scope = scope,
                     started = SharingStarted.Eagerly,
                     initialValue =
-                        openInAppItem(
-                            url = target.browserSessionFrom(browserStore.state)?.content?.url,
-                            isHighlighted = appStore.state.isOpenInAppHighlighted(),
+                        listOf(
+                            openInAppItem(
+                                url = target.browserSessionFrom(browserStore.state)?.content?.url,
+                                isHighlighted = appStore.state.isOpenInAppHighlighted(),
+                            )
                         ),
                 )
         }

@@ -56,7 +56,7 @@ class IPProtectionAlertManagerClass {
   #localizationMessages = null;
   #promptsOpen = false;
   #initialized = false;
-  /** Whether the user already answered an error alert this session. */
+  /** Whether the user already answered the alert for the current error. */
   #errorAlertHandled = false;
 
   #progressListener = {
@@ -182,6 +182,7 @@ class IPProtectionAlertManagerClass {
       case lazy.IPPProxyStates.NOT_READY:
       case lazy.IPPProxyStates.READY: {
         this.#closeAllPrompts();
+        this.#errorAlertHandled = false;
         break;
       }
       case lazy.IPPProxyStates.PAUSED: {

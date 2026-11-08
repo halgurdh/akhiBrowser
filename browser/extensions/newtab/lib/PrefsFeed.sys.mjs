@@ -107,6 +107,10 @@ const PREF_DEFAULTS = [
 
 ChromeUtils.defineLazyGetter(lazy, "logConsole", function () {
   return console.createInstance({
+    logModule: "PrefsFeed",
+    // @backward-compat { version 162 }
+    // Older versions ignore logModule and name the module after the prefix.
+    // Remove prefix: once 162 reaches Release.
     prefix: "PrefsFeed",
     maxLogLevel: Services.prefs.getBoolPref(
       "browser.newtabpage.activity-stream.activationWindow.log",
@@ -385,6 +389,14 @@ export class PrefsFeed {
       Services.prefs
         .getDefaultBranch(this._prefs._branchStr)
         .setIntPref("topSitesRows", valueObj.topSites.topSitesRows);
+    }
+
+    // Write the Recent Activity (highlights) row count to the default branch to
+    // enable experiments with it without overriding an explicit user choice.
+    if (valueObj.highlights?.rows) {
+      Services.prefs
+        .getDefaultBranch(this._prefs._branchStr)
+        .setIntPref("section.highlights.rows", valueObj.highlights.rows);
     }
 
     this._applySpacePrefDefaults(valueObj);

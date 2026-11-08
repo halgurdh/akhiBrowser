@@ -471,7 +471,9 @@ void SharedSurfacesAnimation::Destroy() {
   }
 
   for (const auto& entry : mKeys) {
-    MOZ_RELEASE_ASSERT(!entry.mManager->IsDestroyed());
+    if (entry.mManager->IsDestroyed()) {
+      continue;
+    }
     if (StaticPrefs::image_animated_decode_on_demand_recycle_AtStartup()) {
       entry.mManager->DeregisterAsyncAnimation(entry.mImageKey);
     }
@@ -509,7 +511,10 @@ nsresult SharedSurfacesAnimation::SetCurrentFrame(
   while (i > 0) {
     --i;
     AnimationImageKeyData& entry = mKeys[i];
-    MOZ_RELEASE_ASSERT(!entry.mManager->IsDestroyed());
+    if (entry.mManager->IsDestroyed()) {
+      mKeys.RemoveElementAt(i);
+      continue;
+    }
 
     if (auto* cbc =
             entry.mManager->LayerManager()->GetCompositorBridgeChild()) {
@@ -567,7 +572,10 @@ nsresult SharedSurfacesAnimation::UpdateKey(
   while (i > 0) {
     --i;
     AnimationImageKeyData& entry = mKeys[i];
-    MOZ_RELEASE_ASSERT(!entry.mManager->IsDestroyed());
+    if (entry.mManager->IsDestroyed()) {
+      mKeys.RemoveElementAt(i);
+      continue;
+    }
     if (entry.mManager == aManager) {
       WebRenderBridgeChild* wrBridge = aManager->WrBridge();
       MOZ_RELEASE_ASSERT(wrBridge);
@@ -613,7 +621,10 @@ void SharedSurfacesAnimation::ReleasePreviousFrame(
   while (i > 0) {
     --i;
     AnimationImageKeyData& entry = mKeys[i];
-    MOZ_RELEASE_ASSERT(!entry.mManager->IsDestroyed());
+    if (entry.mManager->IsDestroyed()) {
+      mKeys.RemoveElementAt(i);
+      continue;
+    }
     if (entry.mManager == aManager) {
       size_t k;
       for (k = 0; k < entry.mPendingRelease.Length(); ++k) {

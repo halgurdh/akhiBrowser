@@ -58,6 +58,9 @@ support-files = [
 
 ["browser_print_frame.js"]
 
+["browser_print_image_output.js"]
+support-files = ["file_print_images.html"]
+
 ["browser_print_in_container.js"]
 skip-if = [
   "os == 'win' && os_version == '11.26200' && debug && verify",

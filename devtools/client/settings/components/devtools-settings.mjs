@@ -4,14 +4,19 @@
 
 /// <reference path="./devtools-settings.tagmap.d.ts" />
 
-import { html, nothing } from "chrome://global/content/vendor/lit.all.mjs";
+import {
+  html,
+  nothing,
+  staticHtml,
+  unsafeStatic,
+} from "chrome://global/content/vendor/lit.all.mjs";
 import { MozLitElement } from "chrome://global/content/lit-utils.mjs";
 
 import { conditions, inventory } from "../inventory.mjs";
 
 /**
  * @import { Setting, SettingSection } from "../types/inventory.d.ts"
- * @import { Toolbox } from "../../framework/toolbox.js"
+ * @import { Toolbox } from "../types/toolbox.d.ts"
  */
 
 /** Renders the settings inventory as nested binding elements and controls. */
@@ -31,17 +36,21 @@ export class DevToolsSettings extends MozLitElement {
     if (!toolbox) {
       return nothing;
     }
-    const disabled = setting.disabled
-      ? conditions[setting.disabled]({ toolbox, setting })
-      : false;
-    return html`
-      <devtools-settings-pref
-        pref=${setting.pref}
-        change-action=${setting.changeAction ?? nothing}
-      >
-        ${this.#renderControl(setting, disabled)}
-      </devtools-settings-pref>
-    `;
+    const disabled =
+      "disabled" in setting && setting.disabled
+        ? conditions[setting.disabled]({ toolbox, setting })
+        : false;
+    if ("pref" in setting) {
+      return html`
+        <devtools-settings-pref
+          pref=${setting.pref}
+          change-action=${setting.changeAction ?? nothing}
+        >
+          ${this.#renderControl(setting, disabled)}
+        </devtools-settings-pref>
+      `;
+    }
+    return this.#renderControl(setting, disabled);
   }
 
   /**
@@ -84,6 +93,14 @@ export class DevToolsSettings extends MozLitElement {
             )}
           </moz-select>
         `;
+      case "custom-element": {
+        const tag = unsafeStatic(setting.element);
+        return staticHtml`<${tag}
+          id=${setting.id}
+          l10n-id=${setting.l10nId ?? nothing}
+          .toolbox=${this.#toolbox}
+        ></${tag}>`;
+      }
       default:
         throw new Error(`Unsupported setting type "${type}".`);
     }

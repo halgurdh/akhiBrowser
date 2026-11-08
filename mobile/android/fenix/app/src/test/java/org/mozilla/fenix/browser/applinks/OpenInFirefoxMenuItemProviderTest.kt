@@ -43,7 +43,7 @@ class OpenInFirefoxMenuItemProviderTest {
                 icon = MenuItemIconRes(iconsR.drawable.mozac_ic_external_link_24),
                 onClickEvent = MenuAction.OpenInFirefox,
             ),
-            provider.itemFlow.value,
+            provider.itemsFlow.value.single(),
         )
     }
 
@@ -78,7 +78,7 @@ class OpenInFirefoxMenuItemProviderTest {
                 onClickEvent = MenuAction.OpenInFirefox,
                 state = MenuItemState.DISABLED,
             ),
-            provider.itemFlow.value,
+            provider.itemsFlow.value.single(),
         )
     }
 

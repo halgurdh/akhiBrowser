@@ -5,7 +5,6 @@
 package org.mozilla.fenix.components.menu
 
 import android.content.Context
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.CoroutineScope
 import mozilla.components.browser.state.store.BrowserStore
@@ -39,6 +38,8 @@ import org.mozilla.fenix.components.PermissionStorage
 import org.mozilla.fenix.components.TabCollectionStorage
 import org.mozilla.fenix.components.UseCases
 import org.mozilla.fenix.components.accounts.MozillaAccountMenuItemProvider
+import org.mozilla.fenix.components.menu.configuration.FenixMenuItem
+import org.mozilla.fenix.customtabs.CustomTabAppMenuItemProvider
 import org.mozilla.fenix.downloads.DownloadsMenuItemProvider
 import org.mozilla.fenix.home.CustomizeHomepageMenuItemProvider
 import org.mozilla.fenix.home.topsites.ShortcutMenuItemProvider
@@ -89,7 +90,6 @@ class MenuItemProvidersFactory(
     private val summarizeEligibilityChecker: SummarizationEligibilityChecker,
     private val translationsSettings: TranslationsEnabledSettings,
     private val isAndroidAutomotiveAvailable: Boolean,
-    private val materialAlertDialogBuilder: MaterialAlertDialogBuilder,
     private val quitApplicationDelegate: () -> Unit,
     private val setAsDefaultBrowserDelegate: () -> Unit,
     private val menuViewScope: CoroutineScope,
@@ -242,8 +242,6 @@ class MenuItemProvidersFactory(
                     areShortcutsEnabled = settings.showTopSitesFeature,
                     topSitesUseCases = useCases.topSitesUseCase,
                     appStore = appStore,
-                    settings = settings,
-                    materialAlertDialogBuilder = materialAlertDialogBuilder,
                     scope = menuViewScope,
                     applicationScope = applicationScope,
                 )
@@ -280,6 +278,13 @@ class MenuItemProvidersFactory(
                     appName = context.getString(R.string.app_name),
                     appStore = appStore,
                     target = target,
+                )
+
+            FenixMenuItem.CustomTabAppItems ->
+                CustomTabAppMenuItemProvider(
+                    browserStore = browserStore,
+                    target = target,
+                    context = context,
                 )
 
             FenixMenuItem.SaveAsPdf ->

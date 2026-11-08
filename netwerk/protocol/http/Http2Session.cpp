@@ -15,7 +15,6 @@
 
 #include <algorithm>
 
-#include "AltServiceChild.h"
 #include "CacheControlParser.h"
 #include "Http2Session.h"
 #include "Http2Stream.h"
@@ -2272,14 +2271,6 @@ class UpdateAltSvcEvent : public Runnable {
     uri->GetScheme(originScheme);
     uri->GetHost(originHost);
     uri->GetPort(&originPort);
-
-    if (XRE_IsSocketProcess()) {
-      AltServiceChild::ProcessHeader(
-          mHeader, originScheme, originHost, originPort, mCI->GetUsername(),
-          mCI->GetPrivate(), nullptr, mCI->ProxyInfo(), 0,
-          mCI->GetOriginAttributes(), mCI);
-      return NS_OK;
-    }
 
     AltSvcMapping::ProcessHeader(mHeader, originScheme, originHost, originPort,
                                  mCI->GetUsername(), mCI->GetPrivate(), nullptr,

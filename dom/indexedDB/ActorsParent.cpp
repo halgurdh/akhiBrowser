@@ -6678,7 +6678,7 @@ class DeserializeIndexValueHelper final : public Runnable {
         nullptr};
 
     if (!JS_ReadStructuredClone(
-            aCx, mCloneReadInfo.Data(), JS_STRUCTURED_CLONE_VERSION,
+            aCx, mCloneReadInfo.Data(),
             JS::StructuredCloneScope::DifferentProcessForIndexedDB, aValue,
             JS::CloneDataPolicy(), &callbacks, &mCloneReadInfo)) {
       return NS_ERROR_DOM_DATA_CLONE_ERR;

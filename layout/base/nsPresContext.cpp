@@ -340,6 +340,7 @@ static const char* gExactCallbackPrefs[] = {
     "layout.css.letter-spacing.model",
     "layout.css.ruby.normalize-metrics-factor",
     "layout.css.text-autospace.enabled",
+    "layout.css.text-autospace-size.enabled",
     "layout.css.text-transform.uppercase-eszett.enabled",
     "privacy.trackingprotection.enabled",
     nullptr,
@@ -595,6 +596,7 @@ void nsPresContext::PreferenceChanged(const char* aPrefName) {
   if (prefName.EqualsLiteral(
           "layout.css.text-transform.uppercase-eszett.enabled") ||
       prefName.EqualsLiteral("layout.css.text-autospace.enabled") ||
+      prefName.EqualsLiteral("layout.css.text-autospace-size.enabled") ||
       prefName.EqualsLiteral("layout.css.letter-spacing.model")) {
     changeHint |= NS_STYLE_HINT_REFLOW;
   }
@@ -854,18 +856,6 @@ void nsPresContext::AttachPresShell(mozilla::PresShell* aPresShell) {
   }
 
   UpdateCharSet(doc->GetDocumentCharacterSet());
-}
-
-Maybe<ColorScheme> nsPresContext::GetOverriddenOrEmbedderColorScheme() const {
-  switch (mOverriddenOrEmbedderColorScheme) {
-    case dom::PrefersColorSchemeOverride::Dark:
-      return Some(ColorScheme::Dark);
-    case dom::PrefersColorSchemeOverride::Light:
-      return Some(ColorScheme::Light);
-    case dom::PrefersColorSchemeOverride::None:
-      break;
-  }
-  return Nothing();
 }
 
 void nsPresContext::SetColorSchemeOverride(
@@ -2692,11 +2682,11 @@ bool nsPresContext::CheckForInterrupt(nsIFrame* aFrame) {
   return mHasPendingInterrupt;
 }
 
-nsIFrame* nsPresContext::GetPrimaryFrameFor(nsIContent* aContent) {
+nsIFrame* nsPresContext::GetPrimaryOrAreaImageFrameFor(nsIContent* aContent) {
   MOZ_ASSERT(aContent, "Don't do that");
   if (GetPresShell() &&
       GetPresShell()->GetDocument() == aContent->GetComposedDoc()) {
-    return aContent->GetPrimaryFrame();
+    return nsLayoutUtils::GetPrimaryOrAreaImageFrame(aContent);
   }
   return nullptr;
 }

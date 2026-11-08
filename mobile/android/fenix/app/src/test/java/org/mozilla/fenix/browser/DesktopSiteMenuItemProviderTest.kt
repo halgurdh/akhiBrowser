@@ -9,7 +9,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
@@ -41,7 +40,7 @@ class DesktopSiteMenuItemProviderTest {
     fun `GIVEN there is no selected tab WHEN building the desktop site menu item THEN return null`() = runTest {
         val provider = provider(BrowserStore())
 
-        assertNull(provider.itemFlow.value)
+        assertTrue(provider.itemsFlow.value.isEmpty())
     }
 
     @Test
@@ -57,7 +56,7 @@ class DesktopSiteMenuItemProviderTest {
                     state = MenuItemState.DEFAULT,
                     role = Role.Switch,
                 ),
-                provider.itemFlow.value,
+                provider.itemsFlow.value.single(),
             )
         }
 
@@ -66,7 +65,7 @@ class DesktopSiteMenuItemProviderTest {
         runTest {
             val provider = provider(browserStore(desktopMode = false))
 
-            assertEquals(expectedItem(isDesktopMode = false), provider.itemFlow.value)
+            assertEquals(expectedItem(isDesktopMode = false), provider.itemsFlow.value.single())
         }
 
     @Test
@@ -75,7 +74,7 @@ class DesktopSiteMenuItemProviderTest {
         val browserStore = BrowserStore(BrowserState(customTabs = listOf(customTab)))
         val provider = provider(browserStore, target = MenuTarget.CustomTab("customTabId"))
 
-        assertEquals(expectedItem(isDesktopMode = false), provider.itemFlow.value)
+        assertEquals(expectedItem(isDesktopMode = false), provider.itemsFlow.value.single())
     }
 
     @Test
@@ -83,7 +82,7 @@ class DesktopSiteMenuItemProviderTest {
         runTest {
             val provider = provider(browserStore(desktopMode = true))
 
-            assertEquals(expectedItem(isDesktopMode = true), provider.itemFlow.value)
+            assertEquals(expectedItem(isDesktopMode = true), provider.itemsFlow.value.single())
         }
 
     @Test
@@ -100,7 +99,7 @@ class DesktopSiteMenuItemProviderTest {
                     state = MenuItemState.DISABLED,
                     role = Role.Switch,
                 ),
-                provider.itemFlow.value,
+                provider.itemsFlow.value.single(),
             )
         }
 
@@ -157,7 +156,7 @@ class DesktopSiteMenuItemProviderTest {
         stores.forEach { store ->
             val provider = provider(store)
 
-            val events = requireNotNull(provider.itemFlow.value).reachableEvents()
+            val events = provider.itemsFlow.value.single().reachableEvents()
 
             assertTrue(events.all { provider.handles(it) }, "Not all of $events are handled")
         }

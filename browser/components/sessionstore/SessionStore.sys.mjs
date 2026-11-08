@@ -101,14 +101,10 @@
  * @typedef {object} ClosedTabsOptions
  *   Selects the windows to include closed tabs from.
  * @property {BrowserWindow} [sourceWindow]
- *   The window to include closed tabs from when `closedTabsFromAllWindows` is
- *   false. When `private` is not set, this window's privateness is used.
- *   Defaults to the top window.
- * @property {boolean} [private]
- *   Restricts the query to private windows (true) or to non-private windows
- *   (false). Defaults to the privateness of `sourceWindow`.
- * @property {boolean} [closedTabsFromAllWindows]
- *   Overrides the `browser.sessionstore.closedTabsFromAllWindows` pref.
+ *   The window to include closed tabs from when the
+ *   `browser.sessionstore.closedTabsFromAllWindows` pref is false. Its
+ *   privateness selects private or non-private windows. Defaults to the top
+ *   window.
  * @property {boolean} [closedTabsFromClosedWindows]
  *   Overrides the `browser.sessionstore.closedTabsFromClosedWindows` pref.
  */
@@ -321,6 +317,11 @@ const BROWSER_STARTUP_RESUME_SESSION = 3;
 // Used by SessionHistoryListener.
 const kNoIndex = Number.MAX_SAFE_INTEGER;
 const kLastIndex = Number.MAX_SAFE_INTEGER - 1;
+
+const WARN_LEVEL_FORGET_SAVED_GROUP_REASONS = new Set([
+  "unknown",
+  "deferred-session-restored",
+]);
 
 import { PrivateBrowsingUtils } from "resource://gre/modules/PrivateBrowsingUtils.sys.mjs";
 
@@ -944,6 +945,9 @@ class _SessionStore {
           );
 
           this.#savedGroups = state?.savedGroups ?? [];
+          this.#log.debug(
+            `initSession, loaded ${this.#savedGroups.length} saved groups: [${this.#savedGroups.map(g => g.id).join(", ")}]`
+          );
         } catch (ex) {
           decision.initError = ex.name;
           this.#log.error("The session file is invalid: ", ex);
@@ -4271,30 +4275,25 @@ class _SessionStore {
 
   /**
    * @param {ClosedTabsOptions} [aOptions]
-   * @returns {ClosedTabsOptions}
+   * @returns {Required<ClosedTabsOptions> &
+   *   {private: boolean, closedTabsFromAllWindows: boolean}}
    *   The options with every property filled in.
    */
   #prepareClosedTabOptions(aOptions = {}) {
-    const sourceOptions = Object.assign(
-      {
-        closedTabsFromAllWindows: this.#closedTabsFromAllWindowsEnabled,
-        closedTabsFromClosedWindows: this.#closedTabsFromClosedWindowsEnabled,
-        sourceWindow: null,
-      },
-      aOptions
-    );
-    if (!sourceOptions.sourceWindow) {
-      sourceOptions.sourceWindow = this.#getTopWindow(sourceOptions.private);
-    }
+    const sourceOptions = {
+      closedTabsFromAllWindows: this.#closedTabsFromAllWindowsEnabled,
+      closedTabsFromClosedWindows:
+        aOptions.closedTabsFromClosedWindows ??
+        this.#closedTabsFromClosedWindowsEnabled,
+      sourceWindow: aOptions.sourceWindow || this.#getTopWindow(),
+      private: false,
+    };
     /*
     _getTopWindow may return null on MacOS when the last window has been closed.
     Since private browsing windows are irrelevant after they have been closed we
     don't need to check if it was a private browsing window.
     */
-    if (!sourceOptions.sourceWindow) {
-      sourceOptions.private = false;
-    }
-    if (!sourceOptions.hasOwnProperty("private")) {
+    if (sourceOptions.sourceWindow) {
       sourceOptions.private = PrivateBrowsingUtils.isWindowPrivate(
         sourceOptions.sourceWindow
       );
@@ -4417,7 +4416,7 @@ class _SessionStore {
           ...this.#getClonedDataForWindow(win, w => w.closedGroups ?? [])
         );
       }
-    } else if (sourceOptions.sourceWindow.closedGroups) {
+    } else {
       closedTabGroups.push(
         ...this.#getClonedDataForWindow(
           sourceOptions.sourceWindow,
@@ -4791,8 +4790,11 @@ class _SessionStore {
    *
    * @param {string} savedTabGroupId
    *   The ID of the tab group to remove
+   * @param {string} [reason]
+   *   Why the group is being forgotten, for logging. For example
+   *   "user-deleted" or "reopened".
    */
-  forgetSavedTabGroup(savedTabGroupId) {
+  forgetSavedTabGroup(savedTabGroupId, reason = "unknown") {
     let savedGroupIndex = this.#savedGroups.findIndex(
       savedTabGroup => savedTabGroup.id == savedTabGroupId
     );
@@ -4804,6 +4806,12 @@ class _SessionStore {
     }
 
     let savedGroup = this.#savedGroups[savedGroupIndex];
+    const logLevel = WARN_LEVEL_FORGET_SAVED_GROUP_REASONS.has(reason)
+      ? "warn"
+      : "debug";
+    this.#log[logLevel](
+      `forgetSavedTabGroup, removing ${savedGroup.id} with ${savedGroup.tabs.length} tabs, reason: ${reason}`
+    );
     while (savedGroup.tabs.length) {
       this.#removeClosedTabData({}, savedGroup.tabs, 0);
     }
@@ -4960,6 +4968,16 @@ class _SessionStore {
     this.#windows[this.#windowIds.get(aWindow)]._maybeDontRestoreTabs = true;
   }
 
+  /**
+   * Removes the mark that maybeDontRestoreTabs puts on a window.
+   *
+   * @param {BrowserWindow} aWindow
+   *        Window reference
+   */
+  clearMaybeDontRestoreTabs(aWindow) {
+    delete this.#windows[this.#windowIds.get(aWindow)]._maybeDontRestoreTabs;
+  }
+
   #isLastRestorableWindow() {
     return (
       Object.values(this.#windows).filter(
@@ -4998,7 +5016,7 @@ class _SessionStore {
     this.#trimSavedTabGroupMetadataInClosedWindow(state.windows[0]);
     for (let tabGroup of state.windows[0].groups ?? []) {
       if (this.getSavedTabGroup(tabGroup.id)) {
-        this.forgetSavedTabGroup(tabGroup.id);
+        this.forgetSavedTabGroup(tabGroup.id, "closed-window-reopened");
       }
     }
 
@@ -5563,7 +5581,7 @@ class _SessionStore {
       group => group.removeAfterRestore
     );
     for (let group of groupsToRemove) {
-      this.forgetSavedTabGroup(group.id);
+      this.forgetSavedTabGroup(group.id, "deferred-session-restored");
     }
 
     // Set data that persists between sessions
@@ -6128,8 +6146,9 @@ class _SessionStore {
    *
    * @param {ClosedTabStateData[]} tabData
    *        an array of data to be restored
-   * @param {string} windowId
-   *        The SessionStore id for the window these tabs should be associated with
+   * @param {WindowID|number} windowId
+   *        The SessionStore id for the window these tabs should be associated
+   *        with, or the `closedId` of the closed window they belong to
    * @returns {ClosedTabStateData[]}
    *          The updated tabData array
    */
@@ -6333,8 +6352,17 @@ class _SessionStore {
       const openTabGroupIdsInWindow = new Set(
         tabbrowser.tabGroups.map(group => group.id)
       );
+      const savedGroupIds = new Set(this.#savedGroups.map(group => group.id));
+      const savedGroupsToRemove = savedGroupIds.intersection(
+        openTabGroupIdsInWindow
+      );
+      if (savedGroupsToRemove.size) {
+        this.#log.warn(
+          `restoreWindow, removing ${savedGroupsToRemove.size} saved groups that are open in this window: [${[...savedGroupsToRemove].join(", ")}]`
+        );
+      }
       this.#savedGroups = this.#savedGroups.filter(
-        savedTabGroup => !openTabGroupIdsInWindow.has(savedTabGroup.id)
+        savedTabGroup => !savedGroupsToRemove.has(savedTabGroup.id)
       );
     }
 
@@ -7038,6 +7066,7 @@ class _SessionStore {
     TAB_STATE_FOR_BROWSER.set(browser, TAB_STATE_RESTORING);
     aTab.removeAttribute("pending");
     aTab.removeAttribute("discarded");
+    aTab.removeAttribute("discarded-skip-on-close");
   }
 
   /**
@@ -8495,6 +8524,7 @@ class _SessionStore {
 
     aTab.removeAttribute("pending");
     aTab.removeAttribute("discarded");
+    aTab.removeAttribute("discarded-skip-on-close");
 
     if (previousState == TAB_STATE_RESTORING) {
       if (this.#tabsRestoringCount) {
@@ -8686,9 +8716,22 @@ class _SessionStore {
         return callbacks.onHistoryReload();
       },
 
-      // TODO(bug 2075170): Handle OnHistoryNewEntry as well.
-      OnHistoryNewEntry() {},
+      OnHistoryNewEntry(newURI, oldIndex) {
+        // purgeSessionHistory() re-adds the active entry before purging the
+        // rest, which is bookkeeping rather than a navigation.
+        let shistory = browser.browsingContext?.sessionHistory;
+        let activeEntry =
+          shistory && oldIndex >= 0 ? shistory.getEntryAtIndex(oldIndex) : null;
+        if (activeEntry?.URI.equals(newURI)) {
+          return;
+        }
+
+        this.unregister();
+        // The new entry is added after this notification returns.
+        Services.tm.dispatchToMainThread(callbacks.onHistoryNewEntry);
+      },
       OnHistoryGotoIndex() {},
+      OnHistoryTruncate() {},
       OnHistoryPurge() {},
       OnHistoryReplaceEntry() {},
 
@@ -8759,6 +8802,19 @@ class _SessionStore {
           onHistoryReload: () => {
             this.#restoreTabContentForBrowser(browser);
             return false;
+          },
+
+          onHistoryNewEntry: () => {
+            let shistory = browser.browsingContext?.sessionHistory;
+            if (
+              !shistory ||
+              TAB_STATE_FOR_BROWSER.get(browser) !== TAB_STATE_NEEDS_RESTORE
+            ) {
+              return;
+            }
+            this.#tabStateToRestore.delete(browser.permanentKey);
+            this.#restoreTabContentForBrowser(browser);
+            shistory.reloadCurrentEntry();
           },
 
           // Some foreign code, like an extension, loaded a new URI on the
@@ -9095,6 +9151,9 @@ class _SessionStore {
       return;
     }
     this.#savedGroups.push(savedTabGroupState);
+    this.#log.debug(
+      `recordSavedTabGroupState, saved ${savedTabGroupState.id} with ${savedTabGroupState.tabs.length} tabs`
+    );
     this.#notifyOfSavedTabGroupsChange();
   }
 
@@ -9276,9 +9335,12 @@ class _SessionStore {
       tabGroupData,
       targetWindow
     );
-    this.forgetSavedTabGroup(tabGroupId);
+    this.forgetSavedTabGroup(tabGroupId, "reopened");
 
     group.select();
+    this.#log.debug(
+      `openSavedTabGroup, reopened ${group.id} with ${group.tabs.length} tabs`
+    );
     return group;
   }
 

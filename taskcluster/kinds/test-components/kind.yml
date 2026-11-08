@@ -17,6 +17,7 @@ kind-dependencies:
 
 
 task-defaults:
+    use-gradle-cache: true
     attributes:
         build_platform: android
         build-type: debug

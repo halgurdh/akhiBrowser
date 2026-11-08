@@ -152,12 +152,24 @@ ai-tasks-no-monitors-message = Learn more <a data-l10n-name="smart-window-link">
 ai-tasks-blocked-title = { -smart-window-brand-name } tasks are blocked in AI controls
 ai-task-page-no-alerts = Create a task to track prices or content on pages you choose. You’ll get notified when { -smart-window-brand-name } finds a match.
 ai-task-page-no-alerts-title = Watch what matters
+# Headings for the groups of tasks on the Tasks page.
+ai-tasks-group-monitors-active = Monitors · Active
+ai-tasks-group-monitors-paused = Monitors · Paused
+# Shown next to a group heading.
 # Variables:
-#   $count (number) - The number of tasks currently active
-ai-tasks-alerts-count = { $count ->
-    [one] { $count } task
-   *[other] { $count } tasks
-}
+#   $count (number) - The number of tasks in the group
+#   $limit (number) - The maximum number of tasks the group can hold
+ai-tasks-group-count-of-limit = { $count } of { $limit }
+# Shown next to a group heading.
+# Variables:
+#   $count (number) - The number of tasks in the group
+ai-tasks-group-count = { $count }
+# Button below a group of tasks that shows the rest of the group.
+# Variables:
+#   $count (number) - The number of tasks currently hidden
+ai-tasks-group-show-more = Show { $count } more
+# Button below an expanded group of tasks that hides all but the first few again.
+ai-tasks-group-show-less = Show less
 # Variables:
 #   $count (number) - The number of webpages being watched
 ai-tasks-alert-watching-pages = { $count ->
@@ -345,7 +357,11 @@ ai-tasks-alert-history-error-unknown = Something went wrong on our side and this
 
 # The feature name. It stays here rather than in brandings.ftl until the Smart
 # Page strings are exposed to localization.
--smart-page-brand-name = Smart Page
+-smart-page-brand-name =
+    { $plural-form ->
+        [true] Smart Pages
+       *[false] Smart Page
+    }
 
 # Title given to a generated page when the model returns no title of its own and
 # the user did not say what the page should focus on.
@@ -354,9 +370,12 @@ ai-tab-default-page-title = Generated page
 # Shown in place of a generated page when it can't be displayed, for
 # example because the user deleted it, the address is wrong, or it
 # failed to load.
-aitab-page-error-heading = This page isn’t available anymore.
-# TODO - Bug 2075639: update this string based on UX feedback
-aitab-page-error-description = Some other supplementary string.
+aitab-page-error-heading = This { -smart-page-brand-name } isn’t available
+# Introduces the list of possible reasons the page can’t be displayed.
+aitab-page-error-intro = Here’s what may have happened:
+aitab-page-error-reason-deleted = <strong>The page was deleted.</strong> To create a new one, go to another tab in { -smart-window-brand-name } and ask in the sidebar.
+aitab-page-error-reason-incorrect-link = <strong>The link is incorrect.</strong> Search for the page by name in the address bar.
+aitab-page-error-reason-shared-link = <strong>The link was shared with you.</strong> { -smart-page-brand-name(plural-form: "true") } can’t be shared by link. Ask the sender for a PDF instead.
 
 # Page context menu entry that builds a generated page from the current page.
 main-context-menu-create-aitab =
@@ -557,7 +576,7 @@ aiwindow-resume-card-tab-count =
 aiwindow-resume-card-more = More
     .aria-label = More options for { $text }
 aiwindow-resume-card-open-tabs = Open tabs
-aiwindow-resume-card-snooze = Snooze for now
+aiwindow-resume-card-snooze = Snooze until tomorrow
 # Variables:
 #   $text (String) - The journey title
 aiwindow-resume-card-resume = Resume
@@ -589,3 +608,25 @@ aiwindow-resume-section-empty-no-suggestions-description = When there’s someth
 aiwindow-resume-section-empty-all-dismissed-heading = All caught up
 aiwindow-resume-section-empty-all-dismissed-description = That’s all the suggestions for now. Check back later for more.
 aiwindow-resume-section-hide = Hide for now
+
+## Clarifying question card
+## A card the assistant shows to ask the user a question before it continues
+## (for example, before starting a research report). The user picks one of the
+## listed answers, types their own, or skips.
+
+# Variables:
+#   $current (Number) - The number of the question being shown, starting at 1
+#   $total (Number) - How many questions there are in total
+ai-clarifying-question-progress = Question { $current } of { $total }
+# Badge on the answer the assistant suggests.
+ai-clarifying-question-recommended = Recommended
+# Text box where the user types their own answer instead of picking one.
+ai-clarifying-question-custom-answer =
+    .placeholder = Something else
+    .aria-label = Something else
+ai-clarifying-question-skip =
+    .label = Skip
+ai-clarifying-question-send =
+    .label = Send
+ai-clarifying-question-close =
+    .title = Close questions

@@ -20,7 +20,6 @@ import mozilla.components.compose.menu.ui.MenuItemIconRes
 import mozilla.components.compose.menu.ui.MenuItemState
 import mozilla.components.ui.icons.R as iconsR
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mozilla.fenix.R
@@ -45,7 +44,7 @@ class SaveToCollectionMenuItemProviderTest {
 
         val provider = SaveToCollectionMenuItemProvider(settings, mockk(), browserStore, MenuTarget.BrowserTab)
 
-        assertNull(provider.itemFlow.value)
+        assertTrue(provider.itemsFlow.value.isEmpty())
     }
 
     @Test
@@ -65,7 +64,7 @@ class SaveToCollectionMenuItemProviderTest {
                 MenuTarget.BrowserTab,
             )
 
-        assertEquals(expectedMenuItem(true), provider.itemFlow.value)
+        assertEquals(expectedMenuItem(true), provider.itemsFlow.value.single())
     }
 
     @Test
@@ -85,7 +84,7 @@ class SaveToCollectionMenuItemProviderTest {
                 MenuTarget.BrowserTab,
             )
 
-        assertEquals(expectedMenuItem(false), provider.itemFlow.value)
+        assertEquals(expectedMenuItem(false), provider.itemsFlow.value.single())
     }
 
     @Test
@@ -112,7 +111,7 @@ class SaveToCollectionMenuItemProviderTest {
                 onClickEvent = null,
                 state = MenuItemState.DEFAULT,
             ),
-            provider.itemFlow.value,
+            provider.itemsFlow.value.single(),
         )
     }
 
@@ -148,7 +147,7 @@ class SaveToCollectionMenuItemProviderTest {
         listOf(true, false).forEach { collectionsExist ->
             val provider = createProvider(collectionsExist = collectionsExist)
 
-            val events = requireNotNull(provider.itemFlow.value).reachableEvents()
+            val events = provider.itemsFlow.value.single().reachableEvents()
 
             assertTrue(events.all { provider.handles(it) }, "Not all of $events are handled")
             assertFalse(provider.handles(MenuAction.Navigate.Settings))

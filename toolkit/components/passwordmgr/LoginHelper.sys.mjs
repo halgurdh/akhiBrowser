@@ -551,7 +551,7 @@ export const LoginHelper = {
     // Create a new instance of the ConsoleAPI so we can control the maxLogLevel with a pref.
     let consoleOptions = {
       maxLogLevel: getMaxLogLevel(),
-      prefix: aLogPrefix,
+      logModule: aLogPrefix,
     };
     let logger = console.createInstance(consoleOptions);
 
@@ -1901,7 +1901,7 @@ ChromeUtils.defineLazyGetter(lazy, "log", () => {
     Services.appinfo.processType === Services.appinfo.PROCESS_TYPE_DEFAULT
       ? "Main"
       : "Content";
-  return LoginHelper.createLogger(`LoginHelper(${processName})`);
+  return LoginHelper.createLogger(`LoginHelper.${processName}`);
 });
 
 LoginHelper.init();

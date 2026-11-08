@@ -250,57 +250,67 @@ add_task(async function test_toggling_the_pref_moves_the_profile_both_ways() {
   await s._finalize();
 });
 
-add_task(async function test_a_decrypt_failure_refuses_rather_than_copies() {
-  let { s, guids } = await setupStorageWithCards("cc-mig-partial.json", [
-    "Ann One",
-    "Bob Two",
-  ]);
-  s = await enableRust(s);
-  const before = await Promise.all(guids.map(g => s.creditCards.get(g)));
+add_task(
+  async function test_a_decrypt_failure_skips_the_card_and_still_returns_to_json() {
+    let { s, guids } = await setupStorageWithCards("cc-mig-partial.json", [
+      "Ann One",
+      "Bob Two",
+    ]);
+    s = await enableRust(s);
 
-  // The source is the Rust store here, so it is its key that stops answering.
-  // It answers for the first card and then fails the read of the second. That
-  // number cannot be recovered, so the card must not be copied at all: writing
-  // it with a re-derived number would encrypt the mask in place of the card,
-  // and that damage is permanent where the failure was not.
-  const store = await rustStore();
-  const realGet = store.getCreditCard.bind(store);
-  let calls = 0;
-  store.getCreditCard = async function (guid) {
-    // The first record's export.
-    if (++calls > 1) {
-      throw new CryptoError("decryption failed");
+    // The source is the Rust store here, so it is its key that stops answering.
+    // It answers for the first card and then fails the read of the second. That
+    // number cannot be recovered, so the card must not be copied at all: writing
+    // it with a re-derived number would encrypt the mask in place of the card,
+    // and that damage is permanent where the failure was not.
+    const store = await rustStore();
+    const realGet = store.getCreditCard.bind(store);
+    let calls = 0;
+    store.getCreditCard = async function (guid) {
+      // The first record's export.
+      if (++calls > 1) {
+        throw new CryptoError("decryption failed");
+      }
+      return realGet(guid);
+    };
+    try {
+      s = await disableRust(s);
+    } finally {
+      delete store.getCreditCard;
     }
-    return realGet(guid);
-  };
-  try {
-    s = await disableRust(s);
-  } finally {
-    delete store.getCreditCard;
-  }
 
-  // An incomplete copy does not move the profile.
-  Assert.ok(getBool(ACTIVE_PREF), "the profile is still on the Rust store");
-  const event = migrationEvents().at(-1);
-  Assert.equal(event.extra.result, "error", "reported as a failure");
-  Assert.equal(event.extra.failed, "1", "with the unreadable record failed");
-  // The source cannot read its own numbers back either, so there is nothing to
-  // check the copies against, rather than two copies that gained a number.
-  Assert.equal(event.extra.diverged, "0", "and no copy is judged without one");
-
-  // And both source records are untouched, so a later launch can copy them.
-  for (const [i, name] of ["Ann One", "Bob Two"].entries()) {
-    const after = await s.creditCards.get(guids[i]);
-    Assert.deepEqual(after, before[i], `${name} was not rewritten`);
+    // An incomplete copy back still moves the profile.
+    Assert.ok(!getBool(ACTIVE_PREF), "the profile is back on JSON");
+    const event = migrationEvents().at(-1);
+    Assert.equal(event.extra.result, "error", "reported as a failure");
+    Assert.equal(event.extra.failed, "1", "with the unreadable record failed");
+    // The source cannot read its own numbers back either, so there is nothing to
+    // check the copies against, rather than two copies that gained a number.
     Assert.equal(
-      await rustNumber(guids[i]),
-      NUMBERS[name],
-      `${name}'s number is still readable`
+      event.extra.diverged,
+      "0",
+      "and no copy is judged without one"
     );
-  }
 
-  await s._finalize();
-});
+    // JSON serves the card that failed as it held it before Rust did, and the
+    // Rust records are untouched.
+    for (const [i, name] of ["Ann One", "Bob Two"].entries()) {
+      const after = await s.creditCards.get(guids[i]);
+      Assert.equal(
+        await decryptNumber(after["cc-number-encrypted"]),
+        NUMBERS[name],
+        `JSON serves ${name} with its number`
+      );
+      Assert.equal(
+        await rustNumber(guids[i]),
+        NUMBERS[name],
+        `${name}'s number is still readable`
+      );
+    }
+
+    await s._finalize();
+  }
+);
 
 add_task(async function test_unreadable_numbers_fail_the_attempt() {
   let { s } = await setupStorageWithCards("cc-mig-locked.json", ["Ann One"]);
@@ -484,7 +494,7 @@ add_task(async function test_flipping_the_pref_back_copies_to_json() {
   await s._finalize();
 });
 
-add_task(async function test_an_unreadable_store_starts_without_copying_back() {
+add_task(async function test_an_unreadable_store_still_returns_to_json() {
   let { s, guids } = await setupStorageWithCards("cc-mig-unreadable.json", [
     "Ann One",
   ]);
@@ -502,17 +512,47 @@ add_task(async function test_an_unreadable_store_starts_without_copying_back() {
     delete store.getAllCreditCards;
   }
 
-  Assert.ok(getBool(ACTIVE_PREF), "the profile is left on the Rust store");
-  Assert.equal(migrationEvents().length, before, "and nothing was copied");
+  Assert.ok(!getBool(ACTIVE_PREF), "the profile is back on JSON");
+  const event = migrationEvents()[before];
+  Assert.equal(event?.extra.direction, "to_json", "the copy back was tried");
+  Assert.equal(event.extra.result, "error", "and reported as a failure");
   Assert.equal(
     Services.prefs.getIntPref(ATTEMPTS_PREF, 0),
     0,
     "without spending an attempt"
   );
+  Assert.equal(
+    await decryptNumber(
+      (await s.creditCards.get(guids[0]))["cc-number-encrypted"]
+    ),
+    NUMBERS["Ann One"],
+    "and JSON serves the card it held before Rust did"
+  );
 
-  // Readable again, the next launch copies it back.
-  s = await restart(s);
-  Assert.ok(!getBool(ACTIVE_PREF), "and the next launch copies it back");
+  await s._finalize();
+});
+
+add_task(async function test_a_spent_budget_does_not_block_the_copy_back() {
+  let { s, guids } = await setupStorageWithCards("cc-mig-budget.json", [
+    "Ann One",
+  ]);
+  s = await enableRust(s);
+
+  // The budget only limits copies into Rust.
+  Services.prefs.setIntPref(ATTEMPTS_PREF, MAX_ATTEMPTS);
+  s = await disableRust(s);
+
+  Assert.ok(!getBool(ACTIVE_PREF), "the profile is back on JSON");
+  Assert.equal(
+    migrationEvents().at(-1).extra.attempt,
+    "0",
+    "reported as attempt 0"
+  );
+  Assert.equal(
+    Services.prefs.getIntPref(ATTEMPTS_PREF, 0),
+    MAX_ATTEMPTS,
+    "and the budget is left as it was"
+  );
   Assert.ok(await s.creditCards.get(guids[0]), "with the card");
 
   await s._finalize();
@@ -911,7 +951,7 @@ add_task(async function test_a_zero_expiry_is_not_a_divergence() {
   await s._finalize();
 });
 
-add_task(async function test_a_scrubbed_store_fails_the_copy_back() {
+add_task(async function test_a_scrubbed_store_still_returns_to_json() {
   let { s, guids } = await setupStorageWithCards("cc-mig-scrubbed.json", [
     "Ann One",
     "Bob Two",
@@ -928,7 +968,7 @@ add_task(async function test_a_scrubbed_store_fails_the_copy_back() {
 
   s = await disableRust(s);
 
-  Assert.ok(getBool(ACTIVE_PREF), "the profile is left on the Rust store");
+  Assert.ok(!getBool(ACTIVE_PREF), "the profile is back on JSON");
   const event = migrationEvents()[before];
   Assert.equal(event?.extra.result, "error", "and the copy reported a failure");
   Assert.equal(event.extra.failed, "2", "with both cards failed");
@@ -941,17 +981,21 @@ add_task(async function test_a_scrubbed_store_fails_the_copy_back() {
   );
   Assert.equal(
     Services.prefs.getIntPref(ATTEMPTS_PREF, 0),
-    1,
-    "spending an attempt"
+    0,
+    "without spending an attempt"
   );
 
-  for (const guid of guids) {
+  for (const [i, guid] of guids.entries()) {
     const after = await s.creditCards.get(guid);
-    Assert.ok(after, `${guid} is still in the store that held it`);
+    Assert.equal(
+      await decryptNumber(after["cc-number-encrypted"]),
+      NUMBERS[["Ann One", "Bob Two"][i]],
+      `JSON serves ${guid} with the number it held before Rust did`
+    );
     Assert.equal(
       await rustNumber(guid),
       "",
-      "still scrubbed, and not rewritten with the mask as its number"
+      "Rust is still scrubbed, and not rewritten with the mask as its number"
     );
   }
 

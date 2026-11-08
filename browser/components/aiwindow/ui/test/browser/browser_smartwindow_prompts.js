@@ -12,6 +12,9 @@
 
 "use strict";
 
+// TODO (Bug 2090225): Split tasks into smaller files to reduce the timeout.
+requestLongerTimeout(6);
+
 const lazy = {};
 ChromeUtils.defineESModuleGetters(lazy, {
   AIWindowUI:
@@ -35,6 +38,7 @@ add_setup(async function () {
       ["browser.smartwindow.memories.generateFromConversation", false],
       ["browser.smartwindow.memories.generateFromHistory", false],
       ["browser.smartwindow.resumeCards.enabled", false],
+      ["places.semanticHistory.smartwindow.featureGate", false],
     ],
   });
 });
@@ -291,6 +295,107 @@ describe("sidebar conversation starter prompts", () => {
     });
   });
 
+  it("should cancel the latest starter load after an older load finishes", async () => {
+    await navigateTo("https://example.com", gAiWindow);
+    await TestUtils.waitForCondition(
+      () => getSidebarPromptButtons(gAiWindow).includes("prompt 1"),
+      "Initial starter prompts should be rendered"
+    );
+
+    const sidebarBrowser =
+      gAiWindow.document.getElementById("ai-window-browser");
+    const aiWindow = sidebarBrowser.contentDocument.querySelector("ai-window");
+    const tab = gAiWindow.gBrowser.selectedTab;
+    const sandbox = sinon.createSandbox();
+    const loads = Array.from({ length: 3 }, () => ({
+      entered: Promise.withResolvers(),
+      release: Promise.withResolvers(),
+    }));
+    const generationStarted = Promise.withResolvers();
+    const releaseGeneration = Promise.withResolvers();
+    const formatValues = aiWindow.ownerDocument.l10n.formatValues.bind(
+      aiWindow.ownerDocument.l10n
+    );
+    const loadSystemPrompt = aiWindow.conversation.loadSystemPrompt.bind(
+      aiWindow.conversation
+    );
+    let loadIndex = 0;
+    let olderLoad, newerLoad;
+
+    sandbox
+      .stub(aiWindow.ownerDocument.l10n, "formatValues")
+      .callsFake(async (...args) => {
+        const load = loads[loadIndex++];
+        const values = await formatValues(...args);
+        load.entered.resolve();
+        await load.release.promise;
+        return values;
+      });
+    sandbox
+      .stub(aiWindow.conversation, "loadSystemPrompt")
+      .callsFake(async (...args) => {
+        generationStarted.resolve();
+        await releaseGeneration.promise;
+        return loadSystemPrompt(...args);
+      });
+
+    try {
+      aiWindow.conversation.transientStarterUrl = null;
+      olderLoad = aiWindow.loadStarterPrompts(true, tab);
+      await loads[0].entered.promise;
+
+      aiWindow.conversation.transientStarterUrl = null;
+      newerLoad = aiWindow.loadStarterPrompts(true, tab);
+      await loads[1].entered.promise;
+
+      loads[0].release.resolve();
+      await olderLoad;
+
+      await typeInSmartbar(sidebarBrowser, "Hello world");
+      await submitSmartbar(sidebarBrowser);
+      await generationStarted.promise;
+      Assert.equal(
+        aiWindow.conversationMessageCount,
+        0,
+        "Chat initialization should still be waiting for its system prompt"
+      );
+
+      Assert.ok(aiWindow.isGenerating, "Chat generation is in progress");
+      loads[2].release.resolve();
+      aiWindow.conversation.transientStarterUrl = null;
+      await aiWindow.loadStarterPrompts(true, tab);
+      Assert.equal(
+        loadIndex,
+        2,
+        "No new starter load begins while chat initialization is in progress"
+      );
+
+      loads[1].release.resolve();
+      await newerLoad;
+      await aiWindow.updateComplete;
+      Assert.ok(
+        !aiWindow.showStarters,
+        "The latest starter load should remain canceled after chat submission"
+      );
+      Assert.deepEqual(
+        getSidebarPromptButtons(gAiWindow),
+        [],
+        "Canceled starter prompts should not reappear before messages arrive"
+      );
+    } finally {
+      for (const load of loads) {
+        load.release.resolve();
+      }
+      releaseGeneration.resolve();
+      await Promise.allSettled([olderLoad, newerLoad]);
+      sandbox.restore();
+      await TestUtils.waitForCondition(
+        () => !aiWindow.isGenerating,
+        "Chat generation should finish before closing the window"
+      );
+    }
+  });
+
   describe("when the conversation is empty", () => {
     it("should load new prompts when the tab changes URL", async () => {
       await navigateTo("https://example.com", gAiWindow);
@@ -527,7 +632,7 @@ add_task(
         "Resume pill should show on the tab's initial load"
       );
 
-      resumeActivityStubs.getMemoriesStub.resetHistory();
+      resumeActivityStubs.suggestSpy.resetHistory();
       aiWindow.onCreateNewChatClick();
 
       await TestUtils.waitForCondition(() => {
@@ -541,7 +646,7 @@ add_task(
       }, "Starters should reload without a resume pill after New Chat");
 
       Assert.ok(
-        resumeActivityStubs.getMemoriesStub.notCalled,
+        resumeActivityStubs.suggestSpy.notCalled,
         "New Chat should not re-trigger resume-activity generation"
       );
     } finally {
@@ -890,25 +995,23 @@ add_task(async function test_resume_prompt_click_marks_memory_applied() {
         async ({ browser, buttons }) => {
           buttons[0].click();
 
-          const aiWindowEl = browser.contentDocument.querySelector("ai-window");
-          const aichatBrowser = await TestUtils.waitForCondition(
-            () => aiWindowEl.shadowRoot?.querySelector("#aichat-browser"),
-            "Wait for aichat-browser"
-          );
+          const aichatBrowser = await getAichatBrowser(browser);
 
           await SpecialPowers.spawn(aichatBrowser, [], async () => {
-            const chatContent =
-              content.document.querySelector("ai-chat-content");
+            const chatRoot = await ContentTaskUtils.waitForCondition(
+              () =>
+                content.document.querySelector("ai-chat-content")?.shadowRoot,
+              "Wait for chat content shadow root"
+            );
 
             await ContentTaskUtils.waitForMutationCondition(
-              chatContent.shadowRoot,
+              chatRoot,
               { childList: true, subtree: true },
-              () =>
-                chatContent.shadowRoot.querySelector("assistant-message-footer")
+              () => chatRoot.querySelector("assistant-message-footer")
             );
             let appliedButton;
             await ContentTaskUtils.waitForCondition(() => {
-              const button = chatContent.shadowRoot
+              const button = chatRoot
                 .querySelector("assistant-message-footer")
                 ?.shadowRoot?.querySelector("applied-memories-button");
               // Unwrap the content element so Lit's prototype-backed
@@ -1056,10 +1159,8 @@ add_task(
     try {
       // Existing memories should not override disabled generation prefs.
       const existingMemories = [{ id: "memory-1", memory_summary: "Test" }];
-      const getMemoriesStub = sb
-        .stub(MemoriesManager, "getMemoriesByAttribute")
-        .resolves(existingMemories);
       sb.stub(MemoriesManager, "getAllMemories").resolves(existingMemories);
+      const suggestSpy = sb.spy(JourneyManager, "suggestJourneysToResume");
       win = await openAIWindow();
       const browser = win.gBrowser.selectedBrowser;
       await getPromptButtons(browser);
@@ -1073,7 +1174,7 @@ add_task(
         "Resume pills should not render with both memories prefs off"
       );
       Assert.ok(
-        getMemoriesStub.notCalled,
+        suggestSpy.notCalled,
         "Resume starter generation should not run with both memories prefs off"
       );
     } finally {
@@ -1116,7 +1217,7 @@ add_task(
       );
 
       Assert.ok(
-        resumeActivityStubs.getMemoriesStub.notCalled,
+        resumeActivityStubs.suggestSpy.notCalled,
         "Resume generation should not run when the feature is disabled"
       );
       Assert.deepEqual(
@@ -1162,10 +1263,8 @@ add_task(
     });
 
     try {
-      const getMemoriesStub = sb
-        .stub(MemoriesManager, "getMemoriesByAttribute")
-        .resolves([]);
       sb.stub(MemoriesManager, "getAllMemories").resolves([]);
+      const suggestSpy = sb.spy(JourneyManager, "suggestJourneysToResume");
       win = await openAIWindow();
       const browser = win.gBrowser.selectedBrowser;
       await getPromptButtons(browser);
@@ -1179,7 +1278,7 @@ add_task(
         "Resume pills should not render with no existing memories, even with prefs on"
       );
       Assert.ok(
-        getMemoriesStub.notCalled,
+        suggestSpy.notCalled,
         "Resume starter generation should not run with no existing memories"
       );
     } finally {

@@ -458,8 +458,6 @@ class ContentChild final : public PContentChild,
   mozilla::ipc::IPCResult RecvNetworkLinkTypeChange(const uint32_t& aType);
   uint32_t NetworkLinkType() const { return mNetworkLinkType; }
 
-  mozilla::ipc::IPCResult RecvSocketProcessCrashed();
-
   // Get the directory for IndexedDB files. We query the parent for this and
   // cache the value
   nsString& GetIndexedDBPath();
@@ -563,8 +561,8 @@ class ContentChild final : public PContentChild,
   }
 
   // PURLClassifierChild
-  PURLClassifierChild* AllocPURLClassifierChild(nsIPrincipal* aPrincipal,
-                                                bool* aSuccess);
+  PURLClassifierChild* AllocPURLClassifierChild(
+      NotNull<nsIPrincipal*> aPrincipal, bool* aSuccess);
   bool DeallocPURLClassifierChild(PURLClassifierChild* aActor);
 
   // PURLClassifierLocalChild
@@ -802,8 +800,7 @@ class ContentChild final : public PContentChild,
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
   mozilla::ipc::IPCResult RecvReactivateDocuments(
       const MaybeDiscarded<BrowsingContext>& aContext,
-      const Maybe<SessionHistoryInfo>& aReactivatedEntry,
-      const nsTArray<SessionHistoryInfo>& aNewSHEs,
+      nsTArray<NavigationReactivationData>&& aReactivationData,
       const Maybe<PreviousSessionHistoryInfo>& aPreviousEntryForActivation);
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
   mozilla::ipc::IPCResult RecvFirePageSwap(

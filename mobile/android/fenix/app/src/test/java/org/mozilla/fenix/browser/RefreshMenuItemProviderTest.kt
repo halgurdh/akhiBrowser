@@ -9,7 +9,6 @@ import io.mockk.slot
 import io.mockk.verify
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
@@ -41,7 +40,7 @@ class RefreshMenuItemProviderTest {
     fun `GIVEN there is no selected tab WHEN building the refresh menu item THEN return null`() = runTest {
         val provider = provider(BrowserStore())
 
-        assertNull(provider.itemFlow.value)
+        assertTrue(provider.itemsFlow.value.isEmpty())
     }
 
     @Test
@@ -56,7 +55,7 @@ class RefreshMenuItemProviderTest {
                     onClickEvent = null,
                     state = MenuItemState.DEFAULT,
                 ),
-                provider.itemFlow.value,
+                provider.itemsFlow.value.single(),
             )
         }
 
@@ -70,7 +69,7 @@ class RefreshMenuItemProviderTest {
                 icon = MenuItemIconRes(iconsR.drawable.mozac_ic_cross_24),
                 onClickEvent = MenuAction.Navigate.Stop,
             ),
-            provider.itemFlow.value,
+            provider.itemsFlow.value.single(),
         )
     }
 
@@ -86,7 +85,7 @@ class RefreshMenuItemProviderTest {
                     onClickEvent = MenuAction.Navigate.Reload(bypassCache = false),
                     onLongClickEvent = MenuAction.Navigate.Reload(bypassCache = true),
                 ),
-                provider.itemFlow.value,
+                provider.itemsFlow.value.single(),
             )
         }
 
@@ -145,7 +144,7 @@ class RefreshMenuItemProviderTest {
         listOf(browserStore(loading = true), browserStore(loading = false)).forEach { store ->
             val provider = provider(store)
 
-            val events = requireNotNull(provider.itemFlow.value).reachableEvents()
+            val events = provider.itemsFlow.value.single().reachableEvents()
 
             assertTrue(events.all { provider.handles(it) }, "Not all of $events are handled")
         }

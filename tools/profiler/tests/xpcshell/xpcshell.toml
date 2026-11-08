@@ -47,7 +47,6 @@ skip-if = [
 
 ["test_feature_mainthreadio.js"]
 skip-if = [
-  "os == 'win' && socketprocess_networking",
   "release_or_beta",
   "tsan", # bug 1885381
 ]
@@ -55,7 +54,6 @@ skip-if = [
 ["test_feature_nativeallocations.js"]
 skip-if = [
   "os == 'android' && verify", # bug 1757528
-  "socketprocess_networking",
 ]
 
 ["test_feature_posix_signals.js"]

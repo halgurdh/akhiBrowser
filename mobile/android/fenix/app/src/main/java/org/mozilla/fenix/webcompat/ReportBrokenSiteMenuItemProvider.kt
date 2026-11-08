@@ -57,16 +57,16 @@ class ReportBrokenSiteMenuItemProvider(
     private val fenixBrowserUseCases: FenixBrowserUseCases,
     private val scope: CoroutineScope,
 ) : MenuItemProvider {
-    override val itemFlow: StateFlow<MenuItem?> =
+    override val itemsFlow: StateFlow<List<MenuItem>> =
         if (target == MenuTarget.CustomizeMenu) {
-            MutableStateFlow(DEFAULT_MENU_ITEM)
+            MutableStateFlow(listOf(DEFAULT_MENU_ITEM))
         } else {
             browserStore.stateFlow
-                .map { state -> target.browserSessionFrom(state).reportBrokenSiteItem() }
+                .map { state -> listOfNotNull(target.browserSessionFrom(state).reportBrokenSiteItem()) }
                 .stateIn(
                     scope = scope,
                     started = SharingStarted.Eagerly,
-                    initialValue = target.browserSessionFrom(browserStore.state).reportBrokenSiteItem(),
+                    initialValue = listOfNotNull(target.browserSessionFrom(browserStore.state).reportBrokenSiteItem()),
                 )
         }
 

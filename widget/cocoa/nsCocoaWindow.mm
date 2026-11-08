@@ -731,6 +731,25 @@ static nsMenuItemX* FindMenuItemByElementId(nsMenuX* aMenu,
   return nullptr;
 }
 
+nsMenuItemX* nsCocoaWindow::FindMenuBarItemByElementId(
+    const nsAString& aElementId) {
+  // Not [NSApp mainMenu]: that may belong to a different window, for example
+  // the hidden window's menu bar.
+  RefPtr<nsMenuBarX> menuBar = GetMenuBar();
+  if (!menuBar) {
+    return nullptr;
+  }
+
+  for (uint32_t i = 0; i < menuBar->GetMenuCount(); i++) {
+    if (nsMenuX* menu = menuBar->GetMenuAt(i)) {
+      if (nsMenuItemX* item = FindMenuItemByElementId(menu, aElementId)) {
+        return item;
+      }
+    }
+  }
+  return nullptr;
+}
+
 // Used for testing native menu system structure and event handling.
 nsresult nsCocoaWindow::GetNativeMenuItemKeyEquivalent(
     const nsAString& aElementId, nsAString& aResult) {
@@ -738,19 +757,7 @@ nsresult nsCocoaWindow::GetNativeMenuItemKeyEquivalent(
 
   aResult.Truncate();
 
-  // Not [NSApp mainMenu]: that may belong to a different window, for example
-  // the hidden window's menu bar.
-  RefPtr<nsMenuBarX> menuBar = GetMenuBar();
-  if (!menuBar) {
-    return NS_ERROR_FAILURE;
-  }
-
-  nsMenuItemX* item = nullptr;
-  for (uint32_t i = 0; i < menuBar->GetMenuCount() && !item; i++) {
-    if (nsMenuX* menu = menuBar->GetMenuAt(i)) {
-      item = FindMenuItemByElementId(menu, aElementId);
-    }
-  }
+  RefPtr<nsMenuItemX> item = FindMenuBarItemByElementId(aElementId);
   if (!item) {
     return NS_ERROR_FAILURE;
   }
@@ -787,6 +794,21 @@ nsresult nsCocoaWindow::GetNativeMenuItemKeyEquivalent(
   nsCocoaUtils::GetStringForNSString(keyEquivalent, key);
   result.Append(key);
   aResult = result;
+  return NS_OK;
+
+  NS_OBJC_END_TRY_BLOCK_RETURN(NS_ERROR_FAILURE);
+}
+
+// Used for testing native menu system structure and event handling.
+nsresult nsCocoaWindow::GetNativeMenuItemTitle(const nsAString& aElementId,
+                                               nsAString& aResult) {
+  NS_OBJC_BEGIN_TRY_BLOCK_RETURN;
+
+  RefPtr<nsMenuItemX> item = FindMenuBarItemByElementId(aElementId);
+  if (!item) {
+    return NS_ERROR_FAILURE;
+  }
+  nsCocoaUtils::GetStringForNSString(item->NativeNSMenuItem().title, aResult);
   return NS_OK;
 
   NS_OBJC_END_TRY_BLOCK_RETURN(NS_ERROR_FAILURE);
@@ -1481,8 +1503,8 @@ void nsCocoaWindow::DispatchAPZWheelInputEvent(InputData& aEvent) {
     // Give the swipe tracker a first pass at the event. If a new pan gesture
     // has been started since the beginning of the swipe, the swipe tracker
     // will know to ignore the event.
-    nsEventStatus status =
-        mSwipeTracker->ProcessEvent(aEvent.AsPanGestureInput());
+    nsEventStatus status = mSwipeTracker->ProcessEvent(
+        aEvent.AsPanGestureInput(), SwipeInputSource::Touchpad);
     if (status == nsEventStatus_eConsumeNoDefault) {
       return;
     }
@@ -1501,6 +1523,9 @@ void nsCocoaWindow::DispatchAPZWheelInputEvent(InputData& aEvent) {
         }
 
         event = MayStartSwipe(aEvent.AsPanGestureInput(), result);
+        if (!aEvent.AsPanGestureInput().ShouldDispatchToContentAfterAPZ()) {
+          return;
+        }
         break;
       }
       case SCROLLWHEEL_INPUT: {
@@ -7755,7 +7780,14 @@ already_AddRefed<nsIWidget> nsIWidget::CreateChildWindow() {
   nsCocoaWindow* geckoWidget = [windowDelegate geckoWidget];
   NS_ASSERTION(geckoWidget, "Window delegate not returning a gecko widget!");
 
-  if (RefPtr<nsMenuBarX> geckoMenuBar = geckoWidget->GetMenuBar()) {
+  RefPtr<nsMenuBarX> geckoMenuBar = geckoWidget->GetMenuBar();
+  if (!geckoMenuBar && geckoWidget->IsMediaPiPWindow()) {
+    // The Picture-in-Picture player has no menu bar of its own. Show the hidden
+    // window's, as when no window is main, rather than one with only the
+    // application menu.
+    geckoMenuBar = nsMenuUtilsX::GetHiddenWindowMenuBar();
+  }
+  if (geckoMenuBar) {
     // We do an async paint in order to prevent crashes when macOS is actively
     // enumerating the menu items in `NSApp.mainMenu`.
     geckoMenuBar->PaintAsyncIfNeeded();
@@ -8339,6 +8371,23 @@ static NSMutableSet* gSwizzledFrameViewClasses = nil;
   }
   NSUInteger keep = aStyleMask & NSWindowStyleMaskNonactivatingPanel;
   return [super _validateStyleMask:(aStyleMask & ~keep)] | keep;
+}
+
+// The Picture-in-Picture player is non-activating so that it can float over
+// another application's fullscreen Space (bug 1688932). A click into it should
+// still activate the application like a click into any other window, so that
+// the menu bar and window management follow it.
+- (void)sendEvent:(NSEvent*)anEvent {
+  if (anEvent.type == NSEventTypeLeftMouseDown &&
+      (self.styleMask & NSWindowStyleMaskNonactivatingPanel) &&
+      NSWorkspace.sharedWorkspace.frontmostApplication.processIdentifier !=
+          getpid()) {
+    // Make the player key first, so that it stays key once the application is
+    // active.
+    [self makeKeyWindow];
+    [NSApp activateIgnoringOtherApps:YES];
+  }
+  [super sendEvent:anEvent];
 }
 
 // The frame of a window is implemented using undocumented NSView subclasses.

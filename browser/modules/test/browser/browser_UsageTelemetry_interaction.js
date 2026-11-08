@@ -42,7 +42,6 @@ const AREAS = [
 
 function resetGleanEvents() {
   Services.fog.testResetFOG();
-  GleanPings.prototypeNoCodeEvents.setEnabled(true);
 }
 
 // Checks that the correct number of clicks are registered against the correct

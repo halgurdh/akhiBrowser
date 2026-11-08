@@ -67,4 +67,17 @@ class FakeTabRepository(initialData: TabRepository.Data = TabRepository.Data()) 
         this.excludedFallbackTabIds = excludedFallbackTabIds
         tabFlow.value = tabFlow.value.copy(tabs = tabFlow.value.tabs.filterNot { it.id in tabIds })
     }
+
+    override fun selectTab(tabId: String) {
+        tabFlow.value = tabFlow.value.copy(selectedTabId = tabId)
+    }
+
+    override fun addNewTab(): String {
+        val id = "new-tab-${nextNewTabIndex++}"
+        val newTab = Tab(id = id, url = "https://example.com/$id", title = "", private = false, inactive = false)
+        tabFlow.value = tabFlow.value.copy(tabs = tabFlow.value.tabs + newTab)
+        return id
+    }
+
+    private var nextNewTabIndex = 0
 }

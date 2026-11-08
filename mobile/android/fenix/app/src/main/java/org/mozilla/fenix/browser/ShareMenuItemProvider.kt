@@ -38,11 +38,11 @@ class ShareMenuItemProvider(
     private val target: MenuTarget,
     private val shareUseCases: ShareUseCases,
 ) : MenuItemProvider {
-    override val itemFlow: StateFlow<MenuItem?> =
+    override val itemsFlow: StateFlow<List<MenuItem>> =
         if (target == MenuTarget.CustomizeMenu) {
-            MutableStateFlow(DEFAULT_MENU_ITEM)
+            MutableStateFlow(listOf(DEFAULT_MENU_ITEM))
         } else {
-            MutableStateFlow(DEFAULT_MENU_ITEM.copy(onClickEvent = MenuAction.Navigate.Share))
+            MutableStateFlow(listOf(DEFAULT_MENU_ITEM.copy(onClickEvent = MenuAction.Navigate.Share)))
         }
 
     override fun handles(event: MenuEvent) = event == MenuAction.Navigate.Share

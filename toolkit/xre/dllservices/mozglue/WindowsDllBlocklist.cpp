@@ -309,11 +309,6 @@ static bool ShouldBlockBasedOnBlockInfo(const DllBlockInfo& info,
     return false;
   }
 
-  if ((info.mFlags & DllBlockInfoFlags::SOCKET_PROCESSES_ONLY) &&
-      !(sInitFlags & eDllBlocklistInitFlagIsSocketProcess)) {
-    return false;
-  }
-
   if ((info.mFlags & DllBlockInfoFlags::GPU_PROCESSES_ONLY) &&
       !(sInitFlags & eDllBlocklistInitFlagIsGPUProcess)) {
     return false;

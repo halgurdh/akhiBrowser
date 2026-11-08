@@ -56,6 +56,14 @@ abstract class NimbusPluginExtension {
     abstract val manifestFile: Property<String>
 
     /**
+     * The .fml.yaml files that `manifestFile` loads transitively using `includes` or `import`. Changing one of them
+     * regenerates the code.
+     *
+     * Paths are relative to the project root. This defaults to an empty list.
+     */
+    abstract val manifestDependencies: ListProperty<String>
+
+    /**
      * The mapping between the build variant and the release channel.
      *
      * Variants that are not in this map are used literally.
@@ -97,12 +105,11 @@ class NimbusPlugin : Plugin<Project> {
         // We need to locate our nimbus-fml tool - prior to app-services moving into mozilla-firefox, we
         // download this tool from taskcluster. After the move of app-services, we expect the tool to exist
         // locally having been built by `./mach build`.
-        @Suppress("UNCHECKED_CAST")
-        val mozconfig = project.gradle.extensions.extraProperties["mozconfig"] as? Map<String, Any>
-        @Suppress("UNCHECKED_CAST")
-        val mozconfigSubsts = mozconfig?.get("substs") as? Map<String, Any>
+        val mozconfig = project.gradle.extensions.extraProperties["mozconfig"] as Map<*, *>
+        val topsrcdir = mozconfig["topsrcdir"] as String
+        val mozconfigSubsts = mozconfig["substs"] as Map<*, *>
 
-        if (mozconfigSubsts?.get("MOZ_APPSERVICES_IN_TREE").isTruthy()) {
+        if (mozconfigSubsts["MOZ_APPSERVICES_IN_TREE"].isTruthy()) {
             // This is subtle.  We capture `NIMBUS_FML` in the configuration cache as a `String`.
             // If we access `project.gradle...` in the `provider` `Callable` below, we capture the
             // `Project` in the configuration cache, which is not desirable.
@@ -114,7 +121,7 @@ class NimbusPlugin : Plugin<Project> {
             // Finally: if this process fails, including with an exception, the framework swallows
             // the details and says something like `MissingValueException`, which can be hard to
             // interpret.  Hence, this explanation of the details.
-            val nimbusFmlPath = mozconfigSubsts?.get("NIMBUS_FML") as? String
+            val nimbusFmlPath = mozconfigSubsts["NIMBUS_FML"] as? String
 
             val fmlBinaryString = project.providers.provider {
                 nimbusFmlPath
@@ -127,7 +134,12 @@ class NimbusPlugin : Plugin<Project> {
             }
         } else {
             // building from an app-services artifact.
-            val fmlBinaryProvider = getOrCreateAssembleToolsFmlBinary(project.rootProject, extension.applicationServicesDir)
+            val fmlBinaryProvider = getOrCreateAssembleToolsFmlBinary(
+                project.rootProject,
+                extension.applicationServicesDir,
+                topsrcdir,
+                mozconfigSubsts["NIMBUS_FML_CACHE_DIR"] as? String ?: ".gradle/caches"
+            )
 
             // Gradle tracks the dependency on the `nimbus-fml` binary that the
             // `assembleNimbusTools` task produces implicitly; we don't need an
@@ -182,6 +194,7 @@ class NimbusPlugin : Plugin<Project> {
 
                 configureCommonTaskProperties(this, project, "features${variant.name.replaceFirstChar { it.uppercase() }}")
                 val extension = project.extensions.getByType(NimbusPluginExtension::class.java)
+                manifestDependencies.setFrom(project.files(extension.manifestDependencies))
                 channel.set(extension.channels.getting(variant.name).orElse(variant.name))
                 outputDir.set(project.layout.buildDirectory.dir("generated/source/nimbus/${variant.name}/kotlin"))
             }
@@ -193,22 +206,19 @@ class NimbusPlugin : Plugin<Project> {
     // Everything below here is for downloading a binary.
     private fun getOrCreateAssembleToolsFmlBinary(
         rootProject: Project,
-        applicationServicesDir: Property<String>
+        applicationServicesDir: Property<String>,
+        topsrcdir: String,
+        cacheParent: String
     ): Provider<RegularFile> {
         val taskName = "assembleNimbusTools"
         val propertyName = "nimbus.fmlBinaryProvider"
 
         if (rootProject.extensions.extraProperties.has(propertyName)) {
-            @Suppress("UNCHECKED_CAST")
-            return rootProject.extensions.extraProperties[propertyName] as Provider<RegularFile>
+            return (rootProject.extensions.extraProperties[propertyName] as Provider<*>).map { it as RegularFile }
         }
 
-        val asVersionProvider = getProjectVersionProvider(rootProject)
-        @Suppress("UNCHECKED_CAST")
-        val mozconfig = rootProject.gradle.extensions.extraProperties["mozconfig"] as? Map<String, Any>
-        val topsrcdir = requireNotNull(mozconfig?.get("topsrcdir") as? String) {
-            "topsrcdir not found in mozconfig"
-        }
+        val asVersionProvider = getProjectVersionProvider(rootProject, topsrcdir)
+        val cacheRootPath = File(topsrcdir).resolve(cacheParent).resolve("nimbus-fml").path
         val rootBuildDir = rootProject.layout.buildDirectory
         val rootProjectLayout = rootProject.layout
 
@@ -217,11 +227,12 @@ class NimbusPlugin : Plugin<Project> {
             description = "Fetch the Nimbus FML tools from Application Services"
 
             val relativeCacheRoot = rootProjectLayout.projectDirectory.asFile.toPath()
-                .relativize(File(topsrcdir, ".gradle/caches/nimbus-fml").toPath())
+                .relativize(File(cacheRootPath).toPath())
                 .toString()
             val cacheRoot = rootProjectLayout.projectDirectory.dir(relativeCacheRoot)
 
             cacheRootDir.set(cacheRoot)
+            offline.set(rootProject.gradle.startParameter.isOffline)
             versionCacheDir.set(asVersionProvider.map { version -> cacheRoot.dir(version) })
             fmlBinary.set(rootBuildDir.flatMap { buildDir ->
                 asVersionProvider.zip(platform) { version, plat ->
@@ -263,12 +274,7 @@ class NimbusPlugin : Plugin<Project> {
         return fmlBinaryProvider
     }
 
-    private fun getProjectVersionProvider(rootProject: Project): Provider<String> {
-        @Suppress("UNCHECKED_CAST")
-        val mozconfig = rootProject.gradle.extensions.extraProperties["mozconfig"] as? Map<String, Any>
-        val topsrcdir = requireNotNull(mozconfig?.get("topsrcdir") as? String) {
-            "topsrcdir not found in mozconfig"
-        }
+    private fun getProjectVersionProvider(rootProject: Project, topsrcdir: String): Provider<String> {
         val localPropertiesVersion = if (rootProject.gradle.extensions.extraProperties.has("localProperties.branchBuild.application-services.version")) {
             rootProject.gradle.extensions.extraProperties["localProperties.branchBuild.application-services.version"] as? String
         } else {

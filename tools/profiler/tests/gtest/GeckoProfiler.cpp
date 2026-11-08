@@ -1117,12 +1117,12 @@ TEST(GeckoProfiler, ThreadRegistry_DataAccess)
       int ranTest = 0;
       TRy::WithOffThreadRef(
           profiler_current_thread_id(),
-          [&](TRy::OffThreadRef aOffThreadRef) { ++ranTest; });
+          [&](TRy::OffThreadRef /*aOffThreadRef*/) { ++ranTest; });
       EXPECT_EQ(ranTest, 0);
 
       EXPECT_FALSE(TRy::WithOffThreadRefOr(
           profiler_current_thread_id(),
-          [&](TRy::OffThreadRef aOffThreadRef) {
+          [&](TRy::OffThreadRef /*aOffThreadRef*/) {
             ++ranTest;
             return true;
           },
@@ -1194,12 +1194,13 @@ TEST(GeckoProfiler, ThreadRegistration_RegistrationEdgeCases)
       ASSERT_TRUE(TR::IsRegistered());
 
       int ranTest = 0;
-      TRy::WithOffThreadRef(testThreadId, [&](TRy::OffThreadRef aOffThreadRef) {
-        if (registrationCount % 2000 == 0) {
-          PR_Sleep(PR_MillisecondsToInterval(1));
-        }
-        ++ranTest;
-      });
+      TRy::WithOffThreadRef(testThreadId,
+                            [&](TRy::OffThreadRef /*aOffThreadRef*/) {
+                              if (registrationCount % 2000 == 0) {
+                                PR_Sleep(PR_MillisecondsToInterval(1));
+                              }
+                              ++ranTest;
+                            });
       EXPECT_EQ(ranTest, 1);
 
       if (registrationCount % 1000 == 0) {
@@ -2342,7 +2343,7 @@ class MockClassOfService final : public nsIClassOfService {
     return NS_OK;
   }
 
-  NS_IMETHOD SetClassOfService(mozilla::net::ClassOfService s) override {
+  NS_IMETHOD SetClassOfService(mozilla::net::ClassOfService /*s*/) override {
     return NS_ERROR_NOT_IMPLEMENTED;
   }
 
@@ -4417,15 +4418,15 @@ class GTestStackCollector final : public ProfilerStackCollector {
 
   virtual void SetIsMainThread() { mSetIsMainThread++; }
 
-  virtual void CollectNativeLeafAddr(void* aAddr) { mFrames++; }
-  virtual void CollectJitReturnAddr(void* aAddr) { mFrames++; }
-  virtual void CollectWasmOrSyncJITFrame(JS::ProfilingCategoryPair aCategory,
-                                         const char* aLabel,
-                                         uint32_t aSourceId) {
+  virtual void CollectNativeLeafAddr(void* /*aAddr*/) { mFrames++; }
+  virtual void CollectJitReturnAddr(void* /*aAddr*/) { mFrames++; }
+  virtual void CollectWasmOrSyncJITFrame(
+      JS::ProfilingCategoryPair /*aCategory*/, const char* /*aLabel*/,
+      uint32_t /*aSourceId*/) {
     mFrames++;
   }
   virtual void CollectProfilingStackFrame(
-      const js::ProfilingStackFrame& aFrame) {
+      const js::ProfilingStackFrame& /*aFrame*/) {
     mFrames++;
   }
 

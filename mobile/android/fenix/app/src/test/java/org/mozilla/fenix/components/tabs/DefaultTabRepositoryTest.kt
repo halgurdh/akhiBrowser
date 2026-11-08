@@ -21,6 +21,7 @@ import kotlinx.coroutines.test.runTest
 import mozilla.components.browser.state.action.ContentAction
 import mozilla.components.browser.state.action.CustomTabListAction
 import mozilla.components.browser.state.action.LastAccessAction
+import mozilla.components.browser.state.action.ListenToPageAction
 import mozilla.components.browser.state.action.MediaSessionAction
 import mozilla.components.browser.state.action.TabListAction
 import mozilla.components.browser.state.state.BrowserState
@@ -29,10 +30,14 @@ import mozilla.components.browser.state.state.createCustomTab
 import mozilla.components.browser.state.state.createTab
 import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.concept.engine.mediasession.MediaSession
+import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.feature.tabdata.coordinator.data.Tab
 import mozilla.components.feature.tabdata.coordinator.repository.TabRepository
 import mozilla.components.feature.tabs.TabsUseCases
 import org.junit.Test
+import org.mozilla.fenix.components.AppStore
+import org.mozilla.fenix.components.appstate.AppState
+import org.mozilla.fenix.components.usecases.FenixBrowserUseCases
 import org.mozilla.fenix.ext.maxActiveTime
 
 private const val URL = "https://www.mozilla.org"
@@ -198,6 +203,54 @@ class DefaultTabRepositoryTest {
     }
 
     @Test
+    fun `WHEN a tab is being read out loud THEN it is mapped as having active media`() = runTest {
+        val tab = createTab(url = URL, id = "1", listenToPageActive = true)
+        val emissions = observeTabFlow(BrowserState(tabs = listOf(tab)))
+
+        assertTrue { emissions.last().tabs.single().isMediaActive }
+    }
+
+    @Test
+    fun `GIVEN a tab has paused media WHEN it is being read out loud THEN it is mapped as having active media`() =
+        runTest {
+            val tab =
+                createTab(
+                    url = URL,
+                    id = "1",
+                    mediaSessionState = mediaSessionState(MediaSession.PlaybackState.PAUSED),
+                    listenToPageActive = true,
+                )
+            val emissions = observeTabFlow(BrowserState(tabs = listOf(tab)))
+
+            assertTrue { emissions.last().tabs.single().isMediaActive }
+        }
+
+    @Test
+    fun `WHEN a tab starts being read out loud THEN the updated media state is emitted`() = runTest {
+        val browserStore = BrowserStore(initialState = BrowserState(tabs = listOf(createTab(url = URL, id = "1"))))
+        val emissions = observeTabFlow(browserStore)
+
+        browserStore.dispatch(ListenToPageAction.ListenToPageActivated(tabId = "1"))
+        runCurrent()
+
+        assertEquals(expected = 2, actual = emissions.size)
+        assertTrue { emissions.last().tabs.single().isMediaActive }
+    }
+
+    @Test
+    fun `WHEN a tab stops being read out loud THEN the updated media state is emitted`() = runTest {
+        val tab = createTab(url = URL, id = "1", listenToPageActive = true)
+        val browserStore = BrowserStore(initialState = BrowserState(tabs = listOf(tab)))
+        val emissions = observeTabFlow(browserStore)
+
+        browserStore.dispatch(ListenToPageAction.ListenToPageDeactivated(tabId = "1"))
+        runCurrent()
+
+        assertEquals(expected = 2, actual = emissions.size)
+        assertFalse { emissions.last().tabs.single().isMediaActive }
+    }
+
+    @Test
     fun `GIVEN a tab was created and last accessed before the max active time WHEN it is mapped THEN it is inactive`() =
         runTest {
             val tab = createTab(url = URL, id = "1", createdAt = expiredTime(), lastAccess = expiredTime())
@@ -320,8 +373,22 @@ class DefaultTabRepositoryTest {
                 )
         )
 
-    private fun createRepository(browserStore: BrowserStore): DefaultTabRepository =
-        DefaultTabRepository(browserStore = browserStore, tabsUseCases = TabsUseCases(store = browserStore))
+    private fun createRepository(browserStore: BrowserStore): DefaultTabRepository {
+        val tabsUseCases = TabsUseCases(store = browserStore)
+        return DefaultTabRepository(
+            browserStore = browserStore,
+            tabsUseCases = tabsUseCases,
+            fenixBrowserUseCases =
+                FenixBrowserUseCases(
+                    appStore = AppStore(AppState()),
+                    tabsUseCases = tabsUseCases,
+                    loadUrlUseCase = SessionUseCases(browserStore).loadUrl,
+                    searchUseCases = mockk(relaxed = true),
+                    homepageTitle = "",
+                    profiler = null,
+                ),
+        )
+    }
 
     private fun TestScope.observeTabFlow(initialState: BrowserState): List<TabRepository.Data> =
         observeTabFlow(BrowserStore(initialState = initialState))

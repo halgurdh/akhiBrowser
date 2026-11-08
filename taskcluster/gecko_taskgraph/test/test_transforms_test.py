@@ -6,7 +6,6 @@ Tests for the 'tests.py' transforms
 
 import hashlib
 from functools import partial
-from pprint import pprint
 from types import SimpleNamespace
 
 import mozunit
@@ -276,64 +275,6 @@ def test_set_test_setting(run_transform, task, expected):
     task = list(run_transform(test_transforms.other.set_test_setting, task))[0]
     assert "test-setting" in task
     assert task["test-setting"] == expected
-
-
-def assert_spi_not_disabled(task):
-    extra_options = task["mozharness"]["extra-options"]
-    # The pref to enable this gets set outside of this transform, so only
-    # bother asserting that the pref to disable does not exist.
-    assert (
-        "--setpref=media.peerconnection.mtransport_process=false" not in extra_options
-    )
-    assert "--setpref=network.process.enabled=false" not in extra_options
-
-
-def assert_spi_disabled(task):
-    extra_options = task["mozharness"]["extra-options"]
-    assert "--setpref=media.peerconnection.mtransport_process=false" in extra_options
-    assert "--setpref=media.peerconnection.mtransport_process=true" not in extra_options
-    assert "--setpref=network.process.enabled=false" in extra_options
-    assert "--setpref=network.process.enabled=true" not in extra_options
-
-
-@pytest.mark.parametrize(
-    "task,callback",
-    (
-        pytest.param(
-            {"attributes": {"unittest_variant": "socketprocess"}},
-            assert_spi_not_disabled,
-            id="socketprocess",
-        ),
-        pytest.param(
-            {
-                "attributes": {"unittest_variant": "socketprocess_networking"},
-            },
-            assert_spi_not_disabled,
-            id="socketprocess_networking",
-        ),
-        pytest.param({}, assert_spi_disabled, id="no variant"),
-        pytest.param(
-            {"suite": "cppunit", "attributes": {"unittest_variant": "socketprocess"}},
-            assert_spi_not_disabled,
-            id="excluded suite",
-        ),
-        pytest.param(
-            {"attributes": {"unittest_variant": "no-fission+socketprocess"}},
-            assert_spi_not_disabled,
-            id="composite variant",
-        ),
-    ),
-)
-def test_ensure_spi_disabled_on_all_but_spi(
-    make_test_task, run_transform, task, callback
-):
-    task.setdefault("suite", "mochitest-plain")
-    task = make_test_task(**task)
-    task = list(
-        run_transform(test_transforms.other.ensure_spi_disabled_on_all_but_spi, task)
-    )[0]
-    pprint(task)
-    callback(task)
 
 
 @pytest.fixture(autouse=True)
@@ -891,6 +832,59 @@ def test_perfherder_extra_options(run_transform, make_test_task):
     task = make_test_task(attributes={"unittest_suite": "xpcshell"})
     task = list(run_transform(other.set_perfherder_extra_options, task))[0]
     assert task["worker"]["env"]["PERFHERDER_EXTRA_OPTIONS"] == "xpcshell"
+
+
+@pytest.fixture
+def verify_path_task(monkeypatch):
+    chunk._resolve_tests_under.cache_clear()
+
+    def resolve_tests(paths):
+        def tests(flavor, prefix, count, manifest):
+            return [
+                {
+                    "srcdir_relpath": f"{paths[0]}/{prefix}_{i}.js",
+                    "manifest_relpath": f"{paths[0]}/{manifest}",
+                    "flavor": flavor,
+                }
+                for i in range(count)
+            ]
+
+        return tests("browser-chrome", "browser", 25, "browser/browser.toml") + tests(
+            "xpcshell", "test", 50, "xpcshell.toml"
+        )
+
+    monkeypatch.setattr(chunk.resolver, "resolve_tests", resolve_tests)
+    return {"suite": "test-verify-path", "test-name": "test-verify-path"}
+
+
+def test_test_verify_path_is_sized_from_the_requested_paths(
+    run_transform, verify_path_task
+):
+    params = _make_test_paths_params(["dir"])
+    params["try_mode"] = "try_task_config"
+
+    tasks = list(
+        run_transform(
+            chunk.set_test_verify_path_chunks, verify_path_task, params=params
+        )
+    )
+    assert [t["chunks"] for t in tasks] == [8]
+
+
+@pytest.mark.parametrize(
+    "try_mode,expected", [("try_select", [1]), ("try_task_config", []), (None, [])]
+)
+def test_test_verify_path_without_paths(
+    run_transform, verify_path_task, try_mode, expected
+):
+    params = FakeParameters({"try_task_config": {}, "try_mode": try_mode})
+
+    tasks = list(
+        run_transform(
+            chunk.set_test_verify_path_chunks, verify_path_task, params=params
+        )
+    )
+    assert [t["chunks"] for t in tasks] == expected
 
 
 if __name__ == "__main__":

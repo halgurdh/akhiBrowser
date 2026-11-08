@@ -36,6 +36,7 @@ import org.mozilla.fenix.BuildConfig
 import org.mozilla.fenix.Config
 import org.mozilla.fenix.FeatureFlags
 import org.mozilla.fenix.R
+import org.mozilla.fenix.components.appstate.AppAction
 import org.mozilla.fenix.debugsettings.data.DefaultDebugSettingsRepository
 import org.mozilla.fenix.e2e.SystemInsetsPaddedFragment
 import org.mozilla.fenix.ext.components
@@ -200,11 +201,6 @@ class SecretSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFra
             onPreferenceChangeListener = SharedPreferenceUpdater()
         }
 
-        requirePreference<SwitchPreferenceCompat>(R.string.pref_key_enable_universal_edge_to_edge_wallpapers).apply {
-            isChecked = settings.enableUniversalEdgeToEdgeWallpapers
-            onPreferenceChangeListener = SharedPreferenceUpdater()
-        }
-
         requirePreference<SwitchPreferenceCompat>(R.string.pref_key_show_more_shortcuts).apply {
             isChecked = settings.showMoreShortcuts
             onPreferenceChangeListener = SharedPreferenceUpdater()
@@ -217,7 +213,18 @@ class SecretSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFra
 
         requirePreference<SwitchPreferenceCompat>(R.string.pref_key_enable_homepage_wrexham_widget).apply {
             isChecked = settings.enableHomepageWrexhamWidget
-            onPreferenceChangeListener = SharedPreferenceUpdater()
+            onPreferenceChangeListener =
+                object : SharedPreferenceUpdater() {
+                    override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
+                        val handled = super.onPreferenceChange(preference, newValue)
+                        if (handled) {
+                            preference.context.components.appStore.dispatch(
+                                AppAction.SportsWidgetAction.FeatureEnabledChanged(isEnabled = newValue as Boolean)
+                            )
+                        }
+                        return handled
+                    }
+                }
         }
 
         requirePreference<SwitchPreferenceCompat>(R.string.pref_key_enable_ads_client_for_stories).apply {
@@ -375,7 +382,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFra
 
         requirePreference<SwitchPreferenceCompat>(R.string.pref_key_enable_ip_protection).apply {
             isVisible = Config.channel.isNightlyOrDebug
-            isChecked = settings.isIPProtectionEnabled
+            isChecked = settings.overrideIPProtectionEnabled
             onPreferenceChangeListener = SharedPreferenceUpdater()
         }
 
@@ -388,6 +395,12 @@ class SecretSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFra
         requirePreference<SwitchPreferenceCompat>(R.string.pref_key_enable_import_passwords).apply {
             isVisible = Config.channel.isNightlyOrDebug
             isChecked = settings.importPasswordsFeatureFlagEnabled
+            onPreferenceChangeListener = SharedPreferenceUpdater()
+        }
+
+        requirePreference<SwitchPreferenceCompat>(R.string.pref_key_use_search_config_v3).apply {
+            isVisible = Config.channel.isNightlyOrDebug
+            isChecked = settings.useSearchConfigV3
             onPreferenceChangeListener = SharedPreferenceUpdater()
         }
 
@@ -506,6 +519,12 @@ class SecretSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFra
             onPreferenceChangeListener = SharedPreferenceUpdater()
         }
 
+        requirePreference<SwitchPreferenceCompat>(R.string.pref_key_enable_qwac_ui).apply {
+            isVisible = Config.channel.isNightlyOrDebug
+            isChecked = settings.isQwacUiEnabled
+            onPreferenceChangeListener = SharedPreferenceUpdater()
+        }
+
         // These two are mutually exclusive, which the Settings setters enforce, so they write through Settings
         // rather than SharedPreferenceUpdater and refresh each other to reflect the setter's side effect.
         val powerSavingModeAutoPreference =
@@ -557,7 +576,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFra
         }
 
         requirePreference<SwitchPreferenceCompat>(R.string.pref_key_tab_groups_strip).apply {
-            isVisible = Config.channel.isDebug
+            isVisible = Config.channel.isNightlyOrDebug
             isChecked = settings.tabGroupsStripEnabled
             onPreferenceChangeListener = SharedPreferenceUpdater()
         }
@@ -570,11 +589,6 @@ class SecretSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFra
 
         requirePreference<SwitchPreferenceCompat>(R.string.pref_key_migrate_collections_to_tab_groups).apply {
             isChecked = settings.migrateCollectionsToTabGroupsEnabled
-            onPreferenceChangeListener = SharedPreferenceUpdater()
-        }
-
-        requirePreference<SwitchPreferenceCompat>(R.string.pref_key_private_mode_and_stories_entry_point).apply {
-            isChecked = settings.privateModeAndStoriesEntryPointEnabled
             onPreferenceChangeListener = SharedPreferenceUpdater()
         }
 
@@ -614,34 +628,15 @@ class SecretSettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFra
             onPreferenceChangeListener = SharedPreferenceUpdater()
         }
 
-        requirePreference<SwitchPreferenceCompat>(R.string.pref_key_enable_menu_customization).apply {
-            isVisible = Config.channel.isNightlyOrDebug
-            isChecked = context.components.settings.isMenuCustomizationEnabled
-            onPreferenceChangeListener =
-                object : SharedPreferenceUpdater() {
-                    override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
-                        val enabled = newValue as? Boolean ?: false
-                        requirePreference<SwitchPreferenceCompat>(R.string.pref_key_enable_menu_customization_screen)
-                            .apply {
-                                if (!enabled) {
-                                    isChecked = false
-                                    context.components.settings.isMenuCustomizationScreenEnabled = false
-                                }
-                                isVisible = enabled
-                            }
-                        return super.onPreferenceChange(preference, newValue)
-                    }
-                }
-        }
-
         requirePreference<SwitchPreferenceCompat>(R.string.pref_key_enable_menu_customization_screen).apply {
-            isVisible = Config.channel.isDebug && context.components.settings.isMenuCustomizationEnabled
+            isVisible = Config.channel.isDebug
             isChecked = context.components.settings.isMenuCustomizationScreenEnabled
             onPreferenceChangeListener =
                 object : SharedPreferenceUpdater() {
                     override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
-                        if (!context.components.settings.isMenuCustomizationEnabled) {
-                            return false
+                        val enabled = newValue as? Boolean ?: false
+                        if (enabled) {
+                            context.components.menuCustomizationRepository.warmUp()
                         }
                         return super.onPreferenceChange(preference, newValue)
                     }

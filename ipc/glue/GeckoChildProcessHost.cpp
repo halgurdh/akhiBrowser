@@ -55,7 +55,6 @@
 #include "mozilla/ipc/IOThread.h"
 #include "mozilla/ipc/EnvironmentMap.h"
 #include "mozilla/ipc/NodeController.h"
-#include "mozilla/net/SocketProcessHost.h"
 #include "nsCharSeparatedTokenizer.h"
 #include "nsDirectoryService.h"
 #include "nsDirectoryServiceDefs.h"
@@ -1560,8 +1559,6 @@ RefPtr<ProcessLaunchPromise> IosProcessLauncher::DoLaunch() {
   ExtensionKitProcess::Kind kind = ExtensionKitProcess::Kind::WebContent;
   if (mProcessType == GeckoProcessType_GPU) {
     kind = ExtensionKitProcess::Kind::Rendering;
-  } else if (mProcessType == GeckoProcessType_Socket) {
-    kind = ExtensionKitProcess::Kind::Networking;
   }
 
   DarwinObjectPtr<xpc_object_t> bootstrapMessage =
@@ -1818,15 +1815,6 @@ Result<Ok, LaunchError> WindowsProcessLauncher::DoSetup() {
         mUseSandbox = true;
       }
       break;
-    case GeckoProcessType_Socket:
-      if (!PR_GetEnv("MOZ_DISABLE_SOCKET_PROCESS_SANDBOX")) {
-        if (NS_WARN_IF(
-                !mResults.mSandboxBroker->SetSecurityLevelForSocketProcess())) {
-          return Err(LaunchError("SetSecurityLevelForSocketProcess"));
-        }
-        mUseSandbox = true;
-      }
-      break;
     case GeckoProcessType_Utility:
       if (IsUtilitySandboxEnabled(mUtilitySandbox)) {
         if (!mResults.mSandboxBroker->SetSecurityLevelForUtilityProcess(
@@ -2041,9 +2029,6 @@ bool GeckoChildProcessHost::StartMacSandbox(int aArgc, char** aArgv,
       break;
     case GeckoProcessType_RDD:
       sandboxType = RDDProcessHost::GetMacSandboxType();
-      break;
-    case GeckoProcessType_Socket:
-      sandboxType = net::SocketProcessHost::GetMacSandboxType();
       break;
     case GeckoProcessType_GMPlugin:
       sandboxType = gmp::GMPProcessParent::GetMacSandboxType();

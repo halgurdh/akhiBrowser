@@ -618,7 +618,7 @@ void CodeGeneratorShared::addIC(LInstruction* lir, size_t cacheIndex) {
       new (alloc()) OutOfLineICFallback(lir, cacheIndex, icInfo_.length() - 1);
   addOutOfLineCode(ool, mir);
 
-  masm.bind(ool->rejoin());
+  masm.bindIndirectTarget(ool->rejoin(), TargetKind::ImmJump);
   cache->setRejoinOffset(CodeOffset(ool->rejoin()->offset()));
 }
 
@@ -630,7 +630,7 @@ void CodeGenerator::visitOutOfLineICFallback(OutOfLineICFallback* ool) {
   DataPtr<IonIC> ic(this, cacheIndex);
 
   // Register the location of the OOL path in the IC.
-  ic->setFallbackOffset(CodeOffset(masm.currentOffset()));
+  ic->setFallbackOffset(masm.indirectTarget(TargetKind::Jump));
 
   switch (ic->kind()) {
     case CacheKind::GetProp:
@@ -1964,7 +1964,7 @@ void CodeGenerator::visitTestOAndBranch(LTestOAndBranch* lir) {
   if (intact) {
     assertObjectDoesNotEmulateUndefined(input, temp, lir->mir());
     // Bug 1874905: It would be fantastic if this could be optimized out
-    masm.jump(truthy);
+    jumpToBlock(lir->ifTruthy());
   } else {
     auto* ool = new (alloc()) OutOfLineTestObject();
     addOutOfLineCode(ool, lir->mir());
@@ -1991,7 +1991,7 @@ void CodeGenerator::visitTestVAndBranch(LTestVAndBranch* lir) {
 
   testValueTruthy(input, tempToUnbox, temp, floatTemp, observedTypes, truthy,
                   falsy, ool);
-  masm.jump(truthy);
+  jumpToBlock(lir->ifTruthy());
 }
 
 void CodeGenerator::visitBooleanToString(LBooleanToString* lir) {
@@ -2113,35 +2113,18 @@ void CodeGenerator::visitValueToString(LValueToString* lir) {
   }
 
   // Objects/symbols are only possible when |mir->mightHaveSideEffects()|.
-  if (lir->mir()->mightHaveSideEffects()) {
-    // Object
-    if (lir->mir()->supportSideEffects()) {
-      masm.branchTestObject(Assembler::Equal, tag, ool->entry());
-    } else {
-      // Bail.
-      MOZ_ASSERT(lir->mir()->needsSnapshot());
-      Label bail;
-      masm.branchTestObject(Assembler::Equal, tag, &bail);
-      bailoutFrom(&bail, lir->snapshot());
-    }
-
-    // Symbol
-    if (lir->mir()->supportSideEffects()) {
-      masm.branchTestSymbol(Assembler::Equal, tag, ool->entry());
-    } else {
-      // Bail.
-      MOZ_ASSERT(lir->mir()->needsSnapshot());
-      Label bail;
-      masm.branchTestSymbol(Assembler::Equal, tag, &bail);
-      bailoutFrom(&bail, lir->snapshot());
-    }
+  if (lir->mir()->mightHaveSideEffects() && !lir->mir()->supportSideEffects()) {
+    // Bail.
+    MOZ_ASSERT(lir->mir()->needsSnapshot());
+    Label bail;
+    masm.branchTestObject(Assembler::Equal, tag, &bail);
+    masm.branchTestSymbol(Assembler::Equal, tag, &bail);
+    bailoutFrom(&bail, lir->snapshot());
   }
 
-  // BigInt
-  {
-    // No fastpath currently implemented.
-    masm.branchTestBigInt(Assembler::Equal, tag, ool->entry());
-  }
+  // Any other GC thing is a BigInt, object or symbol, none of which have a
+  // fastpath.
+  masm.branchTestGCThing(Assembler::Equal, tag, ool->entry());
 
   masm.assumeUnreachable("Unexpected type for LValueToString.");
 
@@ -3016,6 +2999,8 @@ static JitCode* GenerateRegExpMatchStubShared(JSContext* cx,
   StackMacroAssembler masm(cx, temp);
   AutoCreatedBy acb(masm, "GenerateRegExpMatchStubShared");
 
+  masm.indirectTarget(TargetKind::Call);
+
 #ifdef JS_USE_LINK_REGISTER
   masm.pushRegs(LinkRegister, FramePointer);
 #else
@@ -3457,6 +3442,8 @@ JitCode* JitZone::generateRegExpSearcherStub(JSContext* cx) {
   StackMacroAssembler masm(cx, temp);
   AutoCreatedBy acb(masm, "JitZone::generateRegExpSearcherStub");
 
+  masm.indirectTarget(TargetKind::Call);
+
 #ifdef JS_USE_LINK_REGISTER
   masm.pushRegs(LinkRegister, FramePointer);
 #else
@@ -3578,6 +3565,8 @@ JitCode* JitZone::generateRegExpExecTestStub(JSContext* cx) {
   JitContext jcx(cx);
   StackMacroAssembler masm(cx, temp);
   AutoCreatedBy acb(masm, "JitZone::generateRegExpExecTestStub");
+
+  masm.indirectTarget(TargetKind::Call);
 
 #ifdef JS_USE_LINK_REGISTER
   masm.pushRegs(LinkRegister, FramePointer);
@@ -4168,7 +4157,7 @@ void CodeGenerator::visitOsrEntry(LOsrEntry* lir) {
 
   // Remember the OSR entry offset into the code buffer.
   masm.flushBuffer();
-  setOsrEntryOffset(masm.size());
+  setOsrEntryOffset(masm.indirectTarget(TargetKind::Jump).offset());
 
   // Allocate the full frame for this function
   // Note we have a new entry here. So we reset MacroAssembler::framePushed()
@@ -6722,7 +6711,8 @@ void JitRuntime::generateIonGenericCallArgumentsShift(
 void JitRuntime::generateIonGenericCallStub(MacroAssembler& masm,
                                             IonGenericCallKind kind) {
   AutoCreatedBy acb(masm, "JitRuntime::generateIonGenericCallStub");
-  ionGenericCallStubOffset_[kind] = startTrampolineCode(masm);
+  ionGenericCallStubOffset_[kind] =
+      startTrampolineCode(masm, TargetKind::ImmCall);
 
   // This code is tightly coupled with visitCallGeneric.
   //
@@ -6861,7 +6851,7 @@ void JitRuntime::generateIonGenericCallStub(MacroAssembler& masm,
 
 void JitRuntime::generateMegamorphicLoadStub(MacroAssembler& masm) {
   AutoCreatedBy acb(masm, "JitRuntime::generateMegamorphicLoadStub");
-  megamorphicLoadStubOffset_ = startTrampolineCode(masm);
+  megamorphicLoadStubOffset_ = startTrampolineCode(masm, TargetKind::ImmCall);
 
   Register obj = CallTempReg3;
   Register id = CallTempReg0;
@@ -6893,7 +6883,8 @@ void JitRuntime::generateMegamorphicLoadStub(MacroAssembler& masm) {
 
 void JitRuntime::generateMegamorphicLoadStubPermissive(MacroAssembler& masm) {
   AutoCreatedBy acb(masm, "JitRuntime::generateMegamorphicLoadStubPermissive");
-  megamorphicLoadStubPermissiveOffset_ = startTrampolineCode(masm);
+  megamorphicLoadStubPermissiveOffset_ =
+      startTrampolineCode(masm, TargetKind::ImmCall);
 
   Register obj = CallTempReg3;
   Register id = CallTempReg0;
@@ -8883,7 +8874,11 @@ bool CodeGenerator::generateBlock(LBlock* current, size_t blockNumber,
     masm.nopAlign(CodeAlignment);
   }
 
-  masm.bind(current->label());
+  if (current->isIndirectJumpTarget()) {
+    masm.bindIndirectTarget(current->label(), TargetKind::Jump);
+  } else {
+    masm.bind(current->label());
+  }
 
   mozilla::Maybe<ScriptCountBlockState> blockCounts;
   if (counts) {
@@ -11135,10 +11130,37 @@ void CodeGenerator::visitWasmStoreSlot(LWasmStoreSlot* ins) {
   MNarrowingOp narrowingOp = ins->narrowingOp();
   Register container = ToRegister(ins->containerRef());
   Address addr(container, ins->offset());
-  AnyRegister src = ToAnyRegister(ins->value());
   if (type != MIRType::Int32) {
     MOZ_RELEASE_ASSERT(narrowingOp == MNarrowingOp::None);
   }
+
+  if (ins->value()->isConstant()) {
+    MOZ_ASSERT(type == MIRType::Int32);
+    Imm32 imm(ToInt32(ins->value()));
+    FaultingCodeRange fcr;
+    switch (narrowingOp) {
+      case MNarrowingOp::None:
+        fcr = masm.store32(imm, addr);
+        EmitSignalNullCheckTrapSite(masm, ins, fcr,
+                                    wasm::TrapMachineInsn::Store32);
+        break;
+      case MNarrowingOp::To16:
+        fcr = masm.store16(imm, addr);
+        EmitSignalNullCheckTrapSite(masm, ins, fcr,
+                                    wasm::TrapMachineInsn::Store16);
+        break;
+      case MNarrowingOp::To8:
+        fcr = masm.store8(imm, addr);
+        EmitSignalNullCheckTrapSite(masm, ins, fcr,
+                                    wasm::TrapMachineInsn::Store8);
+        break;
+      default:
+        MOZ_CRASH();
+    }
+    return;
+  }
+
+  AnyRegister src = ToAnyRegister(ins->value());
 
 #ifdef ENABLE_JIT_SIMD
   if (type == MIRType::Simd128) {
@@ -11438,13 +11460,15 @@ void CodeGenerator::visitWasmLoadElementI64(LWasmLoadElementI64* ins) {
 void CodeGenerator::visitWasmStoreSlotI64(LWasmStoreSlotI64* ins) {
   Register container = ToRegister(ins->containerRef());
   Address addr(container, ins->offset());
-  Register64 value = ToRegister64(ins->value());
   // Either 1 or 2 words.  As above we register both transactions in the
   // 2-word case.
 #ifdef JS_64BIT
-  FaultingCodeRange fcr = masm.store64(value, addr);
+  FaultingCodeRange fcr = ins->value().value().isConstant()
+                              ? masm.store64(Imm64(ToInt64(ins->value())), addr)
+                              : masm.store64(ToRegister64(ins->value()), addr);
   EmitSignalNullCheckTrapSite(masm, ins, fcr, wasm::TrapMachineInsn::Store64);
 #else
+  Register64 value = ToRegister64(ins->value());
   FaultingCodeRangePair fcrp = masm.store64(value, addr);
   EmitSignalNullCheckTrapSite(masm, ins, fcrp.first,
                               wasm::TrapMachineInsn::Store32);
@@ -11912,7 +11936,7 @@ void CodeGenerator::visitPowOfTwoI(LPowOfTwoI* ins) {
   uint32_t base = ins->base();
   MOZ_ASSERT(std::has_single_bit(base));
 
-  uint32_t n = mozilla::FloorLog2(base);
+  uint32_t n = std::countr_zero(base);
   MOZ_ASSERT(n != 0);
 
   // Hacker's Delight, 2nd edition, theorem D2.
@@ -13641,7 +13665,7 @@ void CodeGenerator::visitIsNullOrLikeUndefinedAndBranchT(
   if (intact) {
     // Bug 1874905. Ideally branches like this would be optimized out.
     assertObjectDoesNotEmulateUndefined(input, scratch, lir->mir());
-    masm.jump(ifFalseLabel);
+    jumpToBlock(ifFalse);
   } else {
     auto* ool = new (alloc()) OutOfLineTestObject();
     addOutOfLineCode(ool, lir->cmpMir());
@@ -14467,6 +14491,8 @@ JitCode* JitZone::generateStringConcatStub(JSContext* cx) {
   StackMacroAssembler masm(cx, temp);
   AutoCreatedBy acb(masm, "JitZone::generateStringConcatStub");
 
+  masm.indirectTarget(TargetKind::Call);
+
   Register lhs = CallTempReg0;
   Register rhs = CallTempReg1;
   Register temp1 = CallTempReg2;
@@ -14581,7 +14607,7 @@ JitCode* JitZone::generateStringConcatStub(JSContext* cx) {
 void JitRuntime::generateLazyLinkStub(MacroAssembler& masm) {
   AutoCreatedBy acb(masm, "JitRuntime::generateLazyLinkStub");
 
-  lazyLinkStubOffset_ = startTrampolineCode(masm);
+  lazyLinkStubOffset_ = startTrampolineCode(masm, TargetKind::Call);
 
 #ifdef JS_USE_LINK_REGISTER
   masm.pushRegs(LinkRegister, FramePointer);
@@ -14622,7 +14648,7 @@ void JitRuntime::generateLazyLinkStub(MacroAssembler& masm) {
 void JitRuntime::generateInterpreterStub(MacroAssembler& masm) {
   AutoCreatedBy acb(masm, "JitRuntime::generateInterpreterStub");
 
-  interpreterStubOffset_ = startTrampolineCode(masm);
+  interpreterStubOffset_ = startTrampolineCode(masm, TargetKind::Call);
 
 #ifdef JS_USE_LINK_REGISTER
   masm.pushRegs(LinkRegister, FramePointer);
@@ -14665,7 +14691,8 @@ void JitRuntime::generateInterpreterStub(MacroAssembler& masm) {
 
 void JitRuntime::generateDoubleToInt32ValueStub(MacroAssembler& masm) {
   AutoCreatedBy acb(masm, "JitRuntime::generateDoubleToInt32ValueStub");
-  doubleToInt32ValueStubOffset_ = startTrampolineCode(masm);
+  doubleToInt32ValueStubOffset_ =
+      startTrampolineCode(masm, TargetKind::ImmCall);
 
   Label done;
   masm.branchTestDouble(Assembler::NotEqual, R0, &done);

@@ -215,7 +215,12 @@ class BaseRunner(metaclass=ABCMeta):
         self.process_handler = None
 
     def check_for_crashes(
-        self, dump_directory=None, dump_save_path=None, test_name=None, quiet=False
+        self,
+        dump_directory=None,
+        dump_save_path=None,
+        test_name=None,
+        quiet=False,
+        group=None,
     ):
         """Check for possible crashes and output the stack traces.
 
@@ -223,6 +228,7 @@ class BaseRunner(metaclass=ABCMeta):
         :param dump_save_path: Directory to save the minidump files to
         :param test_name: Name to use in the crash output
         :param quiet: If `True` don't print the PROCESS-CRASH message to stdout
+        :param group: Test group (e.g. manifest) to attribute the crashes to
 
         :returns: Number of crashes which have been detected since the last invocation
         """
@@ -246,6 +252,7 @@ class BaseRunner(metaclass=ABCMeta):
                         self.symbols_path,
                         dump_save_path=dump_save_path,
                         test=test_name,
+                        group=group,
                     )
                 else:
                     self.logger.warning("Can not log crashes without mozcrash")

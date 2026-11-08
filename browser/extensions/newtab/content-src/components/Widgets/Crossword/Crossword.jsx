@@ -14,11 +14,13 @@ import { useSelector } from "react-redux";
 import { actionCreators as ac, actionTypes as at } from "common/Actions.mjs";
 import { useSizeSubmenu } from "../../../lib/utils";
 import {
+  FRAMED_WIDGET_SANDBOX,
   WIDGET_REGISTRY,
+  resolveWidgetFrame,
   resolveWidgetSize,
-  resolveCrosswordEndpoint,
 } from "common/WidgetsRegistry.mjs";
 import { MoveSubmenu } from "../MoveSubmenu";
+import { WidgetHideMenuItem } from "../WidgetPlacement";
 import { useWidgetTelemetry } from "../useWidgetTelemetry";
 import { WidgetMenuButton } from "../WidgetMenuButton";
 import { WidgetMenuPoweredBy } from "../WidgetMenuPoweredBy";
@@ -131,9 +133,14 @@ function Crossword({
   widgetEnabledMap,
 }) {
   const prefs = useSelector(state => state.Prefs.values);
+  const framedWidgets = useSelector(state => state.FramedWidgets);
+  const { src, state: frameState } = resolveWidgetFrame(
+    CROSSWORD_ENTRY,
+    prefs,
+    framedWidgets
+  );
   const widgetSize = resolveWidgetSize(CROSSWORD_ENTRY, prefs);
   const hasInteracted = prefs[PREF_CROSSWORD_INTERACTION];
-  const crosswordEndpoint = resolveCrosswordEndpoint(prefs);
   const iframeRef = useRef(null);
 
   const { impressionRef, recordUserAction, recordEnabled } = useWidgetTelemetry(
@@ -169,11 +176,11 @@ function Crossword({
   // ones.
   const merinoOrigin = useMemo(() => {
     try {
-      return new URL(crosswordEndpoint).origin;
+      return new URL(src).origin;
     } catch {
       return null;
     }
-  }, [crosswordEndpoint]);
+  }, [src]);
 
   // requestId -> action for menu_action commands awaiting a command_ack, so an
   // incoming ack can be matched back to the action the user selected. A
@@ -347,6 +354,10 @@ function Crossword({
     recordUserAction("learn_more", { source: "context_menu" });
   }
 
+  if (frameState === "hidden") {
+    return null;
+  }
+
   return (
     <article
       className={`crossword widget col-4 ${displaySize}-widget`}
@@ -423,9 +434,9 @@ function Crossword({
               widgetEnabledMap={widgetEnabledMap}
             />
 
-            <panel-item
-              data-l10n-id="newtab-widget-menu-hide"
-              onClick={handleCrosswordHide}
+            <WidgetHideMenuItem
+              widgetId="crossword"
+              onHide={handleCrosswordHide}
             />
             <panel-item className="learn-more" onClick={handleLearnMore}>
               Learn more
@@ -439,10 +450,8 @@ function Crossword({
           ref={iframeRef}
           className="crossword-frame"
           title="Crossword"
-          src={crosswordEndpoint}
-          // allow-same-origin is required for the crossword to work, but is
-          // currently under security review to see if it's safe to keep in our codebase right now.
-          sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+          src={src}
+          sandbox={FRAMED_WIDGET_SANDBOX}
         />
       </div>
     </article>

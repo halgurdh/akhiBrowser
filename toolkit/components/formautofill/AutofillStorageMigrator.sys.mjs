@@ -53,6 +53,11 @@ const errorTextOf = e =>
     .replace(GUID_LIKE, "<id>")
     .slice(0, 200);
 
+// Encoding a string for the Rust store replaces each lone surrogate with U+FFFD,
+// so a value is compared in that form: the replacement is not a divergence.
+const wellFormed = value =>
+  typeof value == "string" ? value.toWellFormed() : value;
+
 /**
  * Copy a profile's records from one store to the other, and check field by
  * field that they came out the same. A dry run does the copy only to measure it,
@@ -115,8 +120,8 @@ export class AutofillStorageMigrator {
   }
 
   /**
-   * Whether the real copy now owed -- into Rust, or back to JSON -- has failed
-   * MAX_ATTEMPTS times and will not be tried again. Dry runs are counted
+   * Whether the copy into Rust has failed MAX_ATTEMPTS times and will not be
+   * tried again. A copy back to JSON is not counted, and dry runs are counted
    * separately, on testAttemptsPref.
    *
    * @returns {boolean}
@@ -127,7 +132,18 @@ export class AutofillStorageMigrator {
   }
 
   /**
-   * Copy the records across, unless this profile has spent its attempts.
+   * Whether this copy goes into the Rust store rather than back to JSON. Read
+   * off the target, so it cannot disagree with the copy it describes.
+   *
+   * @returns {boolean}
+   */
+  get #intoRust() {
+    return this.#target instanceof this.config.rustAdapter;
+  }
+
+  /**
+   * Copy the records across, unless this is a copy into Rust and this profile
+   * has spent its attempts. A copy back to JSON is neither refused nor counted.
    *
    * Divergence is measured and reported, not acted on: a complete copy is the
    * only bar. A source written to while a copy into Rust ran fails it too, as
@@ -169,19 +185,24 @@ export class AutofillStorageMigrator {
       }
 
       const { attemptsPref } = this.config;
-      this.#attempt = Services.prefs.getIntPref(attemptsPref, 0);
-      if (this.constructor.attemptsExhausted) {
-        this.logger.warn(
-          `Not migrating: ${this.#attempt} attempts already failed.`
-        );
-        return false;
+      if (this.#intoRust) {
+        this.#attempt = Services.prefs.getIntPref(attemptsPref, 0);
+        if (this.constructor.attemptsExhausted) {
+          this.logger.warn(
+            `Not migrating: ${this.#attempt} attempts already failed.`
+          );
+          return false;
+        }
       }
 
       const { ok } = await this.#migrateAndReport({ wipe });
-      if (ok) {
-        Services.prefs.clearUserPref(attemptsPref);
-      } else {
-        Services.prefs.setIntPref(attemptsPref, this.#attempt + 1);
+
+      if (this.#intoRust) {
+        if (ok) {
+          Services.prefs.clearUserPref(attemptsPref);
+        } else {
+          Services.prefs.setIntPref(attemptsPref, this.#attempt + 1);
+        }
       }
       return ok;
     } catch (e) {
@@ -244,11 +265,8 @@ export class AutofillStorageMigrator {
   _report(result, startedAt) {
     // Read at call time, not held: a Glean category is read-only and each
     // metric lookup returns a fresh object.
-    const { metrics, rustAdapter } = this.config;
-    // Read off the target rather than passed in, so the label cannot disagree
-    // with the copy it describes.
-    const direction =
-      this.#target instanceof rustAdapter ? "to_rust" : "to_json";
+    const { metrics } = this.config;
+    const direction = this.#intoRust ? "to_rust" : "to_json";
     // Joins the run to the divergences it found.
     const runId = Services.uuid.generateUUID().toString();
 
@@ -616,7 +634,11 @@ export class AutofillStorageMigrator {
       ].filter(
         field =>
           this.isStoredField(field) &&
-          this.fieldDiffers(field, record[field], copy[field])
+          this.fieldDiffers(
+            field,
+            wellFormed(record[field]),
+            wellFormed(copy[field])
+          )
       );
       if (!differing.length) {
         continue;
@@ -667,12 +689,12 @@ export class AutofillStorageMigrator {
 }
 
 const addressLogger = console.createInstance({
-  prefix: "AddressStorageMigrator",
+  logModule: "AddressStorageMigrator",
   maxLogLevelPref: "extensions.formautofill.loglevel",
 });
 
 const creditCardLogger = console.createInstance({
-  prefix: "CreditCardStorageMigrator",
+  logModule: "CreditCardStorageMigrator",
   maxLogLevelPref: "extensions.formautofill.loglevel",
 });
 

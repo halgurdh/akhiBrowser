@@ -16,6 +16,7 @@ kind-dependencies:
     - build
 
 task-defaults:
+    use-gradle-cache: true
     attributes:
         build_platform: android
         retrigger: true
@@ -28,6 +29,7 @@ task-defaults:
             - linux64-nimbus-fml
             - android-gradle-dependencies
             - linux64-jdk
+            - android-robolectric-jars
         geckoview:
             - target.maven.zip
     run:

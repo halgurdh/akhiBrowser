@@ -44,17 +44,17 @@ class ForwardMenuItemProvider(
     private val goForward: SessionUseCases.GoForwardUseCase,
     scope: CoroutineScope,
 ) : MenuItemProvider {
-    override val itemFlow: StateFlow<MenuItem?> =
+    override val itemsFlow: StateFlow<List<MenuItem>> =
         if (target == MenuTarget.CustomizeMenu) {
-            MutableStateFlow(DEFAULT_MENU_ITEM).asStateFlow()
+            MutableStateFlow(listOf(DEFAULT_MENU_ITEM)).asStateFlow()
         } else {
             browserStore.stateFlow
                 .distinctUntilChangedBy { target.browserSessionFrom(it)?.content?.canGoForward }
-                .map { target.browserSessionFrom(it).forwardItem() }
+                .map { listOf(target.browserSessionFrom(it).forwardItem()) }
                 .stateIn(
                     scope = scope,
                     started = SharingStarted.Eagerly,
-                    initialValue = target.browserSessionFrom(browserStore.state).forwardItem(),
+                    initialValue = listOf(target.browserSessionFrom(browserStore.state).forwardItem()),
                 )
         }
 

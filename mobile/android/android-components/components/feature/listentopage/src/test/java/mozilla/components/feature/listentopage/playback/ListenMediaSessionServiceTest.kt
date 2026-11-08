@@ -5,6 +5,7 @@
 package mozilla.components.feature.listentopage.playback
 
 import android.app.Activity
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
@@ -13,11 +14,14 @@ import android.os.Looper
 import android.os.Process
 import android.view.KeyEvent
 import androidx.annotation.OptIn
+import androidx.core.app.NotificationCompat
+import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaLibraryInfo
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.CommandButton
+import androidx.media3.session.DefaultMediaNotificationProvider
 import androidx.media3.session.MediaNotification
 import androidx.media3.session.MediaSession
 import androidx.media3.session.SessionCommand
@@ -59,6 +63,28 @@ class ListenMediaSessionServiceTest {
         assertTrue(shadowOf(service).isStoppedBySelf)
     }
 
+    //  Test to cover scenario where Listen to page is opened from a shortcut - bug 2086312
+    @OptIn(UnstableApi::class)
+    @Test
+    fun `test that removing a task excluded from recents leaves the reading playing`() {
+        val service = startReading()
+
+        service.onTaskRemoved(taskExcludedFromRecents())
+
+        assertFalse(shadowOf(service).isStoppedBySelf)
+        assertTrue(service.isPlaybackOngoing)
+    }
+
+    //  Test to cover scenario where Listen to page is opened from a shortcut - bug 2086312
+    @Test
+    fun `test that removing a task excluded from recents ends the service when nothing is playing`() {
+        val service = startService()
+
+        service.onTaskRemoved(null)
+
+        assertTrue(shadowOf(service).isStoppedBySelf)
+    }
+
     @Test
     fun `test that the service ends rather than come back from being killed with nothing to play`() {
         val service = startService()
@@ -86,6 +112,24 @@ class ListenMediaSessionServiceTest {
         service.onStartCommand(mediaButton(), 0, 1)
 
         assertFalse(shadowOf(service).isStoppedBySelf)
+    }
+
+    @OptIn(UnstableApi::class)
+    @Test
+    fun `test that a notification update landing after the playback ended takes the notification away`() {
+        val service = startService()
+        val session = checkNotNull(service.onGetSession(mock()))
+        val notificationManager = testContext.getSystemService(NotificationManager::class.java)
+        service.onTaskRemoved(null)
+
+        val notification =
+            NotificationCompat.Builder(testContext, DefaultMediaNotificationProvider.DEFAULT_CHANNEL_ID)
+                .setSmallIcon(iconsR.drawable.mozac_ic_logo_firefox_24)
+                .build()
+        notificationManager.notify(LISTEN_NOTIFICATION_ID, notification)
+        service.onUpdateNotificationAsync(session, false)
+
+        assertTrue(shadowOf(notificationManager).allNotifications.isEmpty())
     }
 
     @OptIn(UnstableApi::class)
@@ -212,6 +256,34 @@ class ListenMediaSessionServiceTest {
 
     @OptIn(UnstableApi::class)
     private fun startSession(): MediaSession = checkNotNull(startService().onGetSession(mock()))
+
+    /**
+     * A service that media3 has put in the foreground because its session is reading. The session is added the way a
+     * controller binding to the service adds it, and the player is held buffering a seek so that it counts as playing
+     * without any audio to load.
+     */
+    @OptIn(UnstableApi::class)
+    private fun startReading(): ListenMediaSessionService {
+        val service = startService()
+        val session = checkNotNull(service.onGetSession(mock()))
+        service.addSession(session)
+        val player = session.player as SessionPlayer
+
+        player.setMediaItem(MediaItem.fromUri("file:///chunk"))
+        player.playWhenReady = true
+        player.bufferAt(0)
+        shadowOf(Looper.getMainLooper()).idle()
+
+        check(service.isPlaybackOngoing) { "The reading did not bring the service to the foreground" }
+        return service
+    }
+
+    /**
+     * The task of an activity with `excludeFromRecents`, such as the one a launcher shortcut opens the app through,
+     * which Android drops from the recents list once another task is in front of it.
+     */
+    private fun taskExcludedFromRecents() =
+        Intent(Intent.ACTION_VIEW).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
 
     private fun playerAt(speed: Float): Player = mock {
         whenever(this.playbackParameters).thenReturn(PlaybackParameters(speed))

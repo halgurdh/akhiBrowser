@@ -2369,6 +2369,8 @@ XML_SetParamEntityParsing(XML_Parser parser,
 #endif
 }
 
+/* BEGIN MOZILLA CHANGE (unused API) */
+#if 0
 /* The body of XML_SetHashSalt, so that Expat's own tests can reach it
    without tripping the deprecation of the public function. */
 XML_NONTESTING_STATIC int
@@ -2403,6 +2405,8 @@ int XMLCALL
 XML_SetHashSalt(XML_Parser parser, unsigned long hash_salt) {
   return xmlSetHashSalt(parser, hash_salt);
 }
+#endif
+/* END MOZILLA CHANGE */
 
 XML_Bool XMLCALL
 XML_SetHashSalt16Bytes(XML_Parser parser, const uint8_t entropy[16]) {

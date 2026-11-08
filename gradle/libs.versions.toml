@@ -64,6 +64,7 @@ play-billing = "9.1.0"
 play-integrity = "1.6.0"
 play-review = "2.0.2"
 play-services-ads-id = "18.3.0"
+play-services-auth-blockstore = "16.4.0"
 play-services-base = "18.11.1"
 play-services-fido = "21.3.1"
 protobuf = "4.36.1"
@@ -74,21 +75,22 @@ jacoco = "0.8.16"
 kaml = "0.104.0"
 protobuf-plugin = "0.10.0"
 python-envs-plugin = "0.0.31"
-semanticdb-javac = "0.12.0"
-semanticdb-kotlinc = "0.11.0"
+scip-javac = "0.13.2"
+scip-kotlinc = "0.13.2"
 tomlj = "2.2.0"
 
 # Linters
 androidx-lint = "1.0.0"
+checkstyle = "14.3.0"
 # Fix LongParameterList thresholds to preserve behavior when we update from 1.23.8
 # see - https://github.com/detekt/detekt/issues/3679
 detekt = "1.23.8"
-google-java-format = "1.28.0"
+google-java-format = "1.36.1"
 ktfmt = "0.64"
 spotless = "8.10.3"
 
 # Mozilla
-glean = "70.3.0"
+glean = "71.0.0"
 
 # Testing libraries
 androidx-test = "1.7.0"
@@ -113,11 +115,11 @@ disklrucache = "2.0.2"
 jetbrains-markdown = "0.7.18"
 jna = "5.19.1"
 json = "20260814"
-jsoup = "1.23.2"
+jsoup = "1.24.1"
 lottie = "6.7.1"
 okhttp = "5.5.1"
 okio = "3.18.2"
-sentry = "8.58.0"
+sentry = "8.63.0"
 zxing = "3.5.4"
 
 [libraries]
@@ -248,6 +250,7 @@ play-integrity = { module = "com.google.android.play:integrity", version.ref = "
 play-review = { module = "com.google.android.play:review", version.ref = "play-review" }
 play-review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "play-review" }
 play-services-ads-id = { module = "com.google.android.gms:play-services-ads-identifier", version.ref = "play-services-ads-id" }
+play-services-auth-blockstore = { module = "com.google.android.gms:play-services-auth-blockstore", version.ref = "play-services-auth-blockstore" }
 play-services-base = { module = "com.google.android.gms:play-services-base", version.ref = "play-services-base" }
 play-services-fido = { module = "com.google.android.gms:play-services-fido", version.ref = "play-services-fido" }
 protobuf-compiler = { module = "com.google.protobuf:protoc", version.ref = "protobuf" }
@@ -255,8 +258,8 @@ protobuf-javalite = { module = "com.google.protobuf:protobuf-javalite", version.
 
 # Gradle plugins
 kaml = { module = "com.charleskorn.kaml:kaml", version.ref = "kaml" }
-semanticdb-java = { module = "com.sourcegraph:semanticdb-javac", version.ref = "semanticdb-javac" }
-semanticdb-kotlin = { module = "com.github.mozsearch.semanticdb-kotlinc:semanticdb-kotlinc", version.ref = "semanticdb-kotlinc" }
+scip-java = { module = "org.scip-code:scip-javac", version.ref = "scip-javac" }
+scip-kotlin = { module = "org.scip-code:scip-kotlinc", version.ref = "scip-kotlinc" }
 tomlj = { module = "org.tomlj:tomlj", version.ref = "tomlj" }
 
 # Linters

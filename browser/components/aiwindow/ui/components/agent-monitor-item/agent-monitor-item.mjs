@@ -4,21 +4,21 @@
 
 import { html, nothing } from "chrome://global/content/vendor/lit.all.mjs";
 import { MozLitElement } from "chrome://global/content/lit-utils.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://global/content/elements/moz-input-text.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://global/content/elements/moz-input-url.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://global/content/elements/moz-textarea.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://global/content/elements/moz-select.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://global/content/elements/moz-button.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://browser/content/aiwindow/components/monitor-icon.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://browser/content/aiwindow/components/monitor-status-chip.mjs";
-// eslint-disable-next-line import/no-unassigned-import
+// eslint-disable-next-line import-x/no-unassigned-import
 import "chrome://browser/content/aiwindow/components/smartwindow-chip.mjs";
 import { monitorErrorL10nId } from "chrome://browser/content/aiwindow/components/monitor-error-copy.mjs";
 

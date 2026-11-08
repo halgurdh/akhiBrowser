@@ -58,6 +58,7 @@ import mozilla.appservices.places.BookmarkRoot
 import mozilla.components.browser.state.action.MediaSessionAction
 import mozilla.components.browser.state.action.SearchAction
 import mozilla.components.browser.state.action.WebExtensionAction
+import mozilla.components.browser.state.search.SearchAccessPoint
 import mozilla.components.browser.state.search.SearchEngine
 import mozilla.components.browser.state.selector.getNormalOrPrivateTabs
 import mozilla.components.browser.state.selector.selectedTab
@@ -107,6 +108,7 @@ import org.mozilla.fenix.addons.ExtensionsProcessDisabledForegroundController
 import org.mozilla.fenix.automation.AutomatedLaunch
 import org.mozilla.fenix.bindings.ExternalAppLinkStatusBinding
 import org.mozilla.fenix.bindings.HomepageTabBinding
+import org.mozilla.fenix.bindings.PendingExtensionUpdateBinding
 import org.mozilla.fenix.bindings.SummarizeToolbarHighlightBinding
 import org.mozilla.fenix.bookmarks.DesktopFolders
 import org.mozilla.fenix.browser.BrowserFragment
@@ -200,7 +202,6 @@ import org.mozilla.fenix.splashscreen.SplashScreenOperation
 import org.mozilla.fenix.tabhistory.TabHistoryDialogFragment
 import org.mozilla.fenix.theme.DefaultThemeManager
 import org.mozilla.fenix.theme.StatusBarColorManager
-import org.mozilla.fenix.theme.TabStripStatusBarView
 import org.mozilla.fenix.theme.ThemeManager
 import org.mozilla.fenix.translations.TranslationsAIControllableFeatureRegistrar
 import org.mozilla.fenix.translations.TranslationsEnabledSettings
@@ -274,6 +275,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
                             FxNimbus.features.ipProtection.value().dataLimitGigabyte,
                         )
                 ),
+            repository = components.ipProtection.ipProtectionRepository,
         )
     }
 
@@ -292,6 +294,9 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
         DefaultPinnedSitesBinding(
             browserStore = components.core.store,
             topSitesStorage = components.core.topSitesStorage,
+            pinnedSitesStorage = components.core.pinnedSiteStorage,
+            defaultTopSitesProvider = components.core.defaultTopSitesProvider,
+            blocklistHandler = components.blocklistHandler,
             settings = components.settings,
             resources = resources,
             crashReporter = components.analytics.crashReporter,
@@ -335,6 +340,13 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
             appLinksUseCases = components.useCases.appLinksUseCases,
             browserStore = components.core.store,
             appStore = components.appStore,
+        )
+    }
+
+    private val pendingExtensionUpdateBinding by lazy {
+        PendingExtensionUpdateBinding(
+            appStore = components.appStore,
+            browserStore = components.core.store,
         )
     }
 
@@ -564,6 +576,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
                                 loginsStorage = components.core.passwordsStorage,
                                 tabGroupRepository = components.core.tabGroupRepository,
                                 listenStore = components.listenToPage.store,
+                                listenDebugController = components.listenToPage.debugController,
                             )
                         }
                     } else {
@@ -652,6 +665,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
             downloadSnackbar,
             privateBrowsingLockFeature,
             externalAppLinkStatusBinding,
+            pendingExtensionUpdateBinding,
             summarizeToolbarHighlightBinding,
             components.core.summarizationSettingsBinding,
             translationsAIControllableFeatureRegistrar,
@@ -691,13 +705,6 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
             StatusBarColorManager(
                 themeManager = themeManager,
                 activity = this,
-                appStore = components.appStore,
-                settings = components.settings,
-                tabStripStatusBarView =
-                    TabStripStatusBarView(
-                        rootView = window.decorView as ViewGroup,
-                        lifecycle = lifecycle,
-                    ),
             ),
             true,
         )
@@ -1543,6 +1550,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
      * @param flags Flags that will be used when loading the URL (not applied to searches).
      * @param historyMetadata The [HistoryMetadataKey] of the new tab in case this tab was opened from history.
      * @param additionalHeaders The extra headers to use when loading the URL.
+     * @param accessPoint The search access point the search is performed from. Only applies when a search is performed.
      */
     @Deprecated(
         message =
@@ -1560,6 +1568,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
         flags: EngineSession.LoadUrlFlags = EngineSession.LoadUrlFlags.none(),
         historyMetadata: HistoryMetadataKey? = null,
         additionalHeaders: Map<String, String>? = null,
+        accessPoint: String = SearchAccessPoint.DEFAULT,
     ) {
         openToBrowser(from, customTabSessionId)
 
@@ -1570,6 +1579,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
             private = browsingModeManager.mode.isPrivate,
             searchEngine = engine,
             flags = flags,
+            accessPoint = accessPoint,
             historyMetadata = historyMetadata,
             additionalHeaders = additionalHeaders,
         )

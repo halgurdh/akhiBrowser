@@ -78,6 +78,7 @@ def apply_patches(angle_src_dir: Path, patch_dir: Path) -> None:
                 str(patch),
                 "--no-backup-if-mismatch",
                 "--batch",
+                "--forward",
             ]
             result = subprocess.run(command, check=False)
             reject_content = reject_path.read_text()

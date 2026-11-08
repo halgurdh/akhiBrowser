@@ -35,7 +35,9 @@ void VideoBridgeChild::StartupForGPUProcess() {
 /* static */
 void VideoBridgeChild::Open(Endpoint<PVideoBridgeChild>&& aEndpoint) {
   StaticMutexAutoLock lock(sVideoBridgeLock);
-  MOZ_RELEASE_ASSERT(!sVideoBridge || !sVideoBridge->CanSend());
+  // The old bridge may still be able to send: when the compositor process
+  // goes away, the new endpoint can arrive before the old bridge's channel
+  // error has been processed.
   RefPtr<VideoBridgeChild> oldBridge = sVideoBridge.get();
   sVideoBridge = new VideoBridgeChild();
 

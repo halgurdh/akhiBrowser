@@ -96,7 +96,7 @@ nsMenuItemX::nsMenuItemX(nsMenuX* aParent, const nsString& aLabel,
     mNativeMenuItem = [[NSMenuItem separatorItem] retain];
   } else {
     NSString* newCocoaLabelString =
-        nsMenuUtilsX::GetTruncatedCocoaLabel(aLabel);
+        nsMenuUtilsX::GetTruncatedCocoaLabel(aLabel, mContent);
     mNativeMenuItem = [[GeckoNSMenuItem alloc] initWithTitle:newCocoaLabelString
                                                       action:nil
                                                keyEquivalent:@""];
@@ -398,8 +398,7 @@ void nsMenuItemX::SetBadge() {
       return;
     }
     mNativeMenuItem.badge = [[[NSMenuItemBadge alloc]
-        initWithString:nsMenuUtilsX::GetTruncatedCocoaLabel(badgeValue)]
-        autorelease];
+        initWithString:nsCocoaUtils::ToNSString(badgeValue)] autorelease];
   }
 
   NS_OBJC_END_TRY_ABORT_BLOCK;
@@ -410,7 +409,8 @@ void nsMenuItemX::SetTitle() {
 
   nsAutoString newLabel;
   mContent->AsElement()->GetAttr(nsGkAtoms::label, newLabel);
-  mNativeMenuItem.title = nsMenuUtilsX::GetTruncatedCocoaLabel(newLabel);
+  mNativeMenuItem.title =
+      nsMenuUtilsX::GetTruncatedCocoaLabel(newLabel, mContent);
 
   SetAttributedTitle();
   // System Settings assigns shortcuts by title.
@@ -420,11 +420,31 @@ void nsMenuItemX::SetTitle() {
 }
 
 void nsMenuItemX::CopyUserKeyEquivalentToKeyElement() {
-  if (mType == eSeparatorMenuItemType || !mNativeMenuItem.menu) {
+  NS_OBJC_BEGIN_TRY_ABORT_BLOCK;
+
+  if (mType == eSeparatorMenuItemType) {
     return;
+  }
+  if (!mNativeMenuItem.menu) {
+    // A visible item gets here again once it is inserted, but a hidden item
+    // is not in its menu. AppKit applies the assigned shortcut when the item
+    // is added to a menu, and the item keeps it once removed, so add a hidden
+    // item to its menu for a moment. It has to be its own menu, as System
+    // Settings can name the item by its menu path.
+    NSMenu* parentMenu = mMenuParent ? mMenuParent->NativeNSMenu() : nil;
+    if (!mKeyElement || !parentMenu ||
+        !nsMenuUtilsX::NodeIsHiddenOrCollapsed(mContent)) {
+      return;
+    }
+    mNativeMenuItem.hidden = YES;
+    [parentMenu addItem:mNativeMenuItem];
+    [parentMenu removeItem:mNativeMenuItem];
+    mNativeMenuItem.hidden = NO;
   }
   nsMenuGroupOwnerX::CopyUserKeyEquivalentToKeyElement(mNativeMenuItem,
                                                        mContent->AsElement());
+
+  NS_OBJC_END_TRY_ABORT_BLOCK;
 }
 
 void nsMenuItemX::SetAttributedTitle() {
@@ -506,7 +526,7 @@ void nsMenuItemX::SetTooltip() {
     return;
   }
 
-  mNativeMenuItem.toolTip = nsMenuUtilsX::GetTruncatedCocoaLabel(tooltip);
+  mNativeMenuItem.toolTip = nsCocoaUtils::ToNSString(tooltip);
 
   NS_OBJC_END_TRY_ABORT_BLOCK;
 }

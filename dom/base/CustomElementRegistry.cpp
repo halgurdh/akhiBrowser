@@ -514,8 +514,10 @@ CustomElementRegistry::RunCustomElementCreationCallback::Run() {
   ErrorResult er;
   nsDependentAtomString value(mAtom);
   mCallback->Call(value, er);
-  MOZ_ASSERT(NS_SUCCEEDED(er.StealNSResult()),
-             "chrome JavaScript error in the callback.");
+  if (er.Failed()) {
+    mRegistry->mElementCreationCallbacksUpgradeCandidatesMap.Remove(mAtom);
+    return er.StealNSResult();
+  }
 
   RefPtr<CustomElementDefinition> definition =
       mRegistry->mCustomDefinitions.Get(mAtom);

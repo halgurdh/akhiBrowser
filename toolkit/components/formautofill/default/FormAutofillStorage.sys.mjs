@@ -38,7 +38,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
 
 ChromeUtils.defineLazyGetter(lazy, "logger", () =>
   console.createInstance({
-    prefix: "FormAutofillStorage",
+    logModule: "FormAutofillStorage",
     maxLogLevelPref: "extensions.formautofill.loglevel",
   })
 );
@@ -258,8 +258,12 @@ export class FormAutofillStorage extends FormAutofillStorageBase {
    * under it. Such a profile is not dry run either.
    *
    * The serving store is the source, and the target ends up matching it.
-   * rust.active changes only after a complete copy, so a failed one leaves the
-   * profile on the store that still holds everything.
+   * Moving into Rust changes rust.active only after a complete copy, so a
+   * failed one leaves the profile on the store that still holds everything.
+   * Moving back to JSON always changes it once the copy has been tried, even
+   * if the copy failed or the Rust records could not be read: JSON is the
+   * store a profile falls back to, so it must not be kept in Rust. Whatever
+   * did not make it back is served as JSON last held it.
    *
    * A copy into Rust empties Rust first, as a leftover tombstone would block
    * its guid from being inserted again. A copy back keeps what JSON holds and
@@ -335,18 +339,21 @@ export class FormAutofillStorage extends FormAutofillStorageBase {
     // Only an encrypted collection needs to know whether there is anything to
     // copy. The Rust store decrypts every record it reads, so for a copy back
     // this read fails when its key cannot decrypt them -- the token was reset,
-    // or key4.db replaced. That leaves the profile where it is rather than
-    // throwing, which at startup would take autofill down with it.
+    // or key4.db replaced. A copy back goes ahead regardless, to fail and
+    // report in the migrator and still hand the profile back to JSON. Nothing
+    // here throws, which at startup would take autofill down with it.
     let anyRecord;
     if (hasEncryption) {
       try {
         [anyRecord] = await source.getAll({ prompt: false });
       } catch (e) {
         lazy.logger.error(
-          `Not migrating ${collectionName}: its records could not be read.`,
+          `Could not read the ${collectionName} to migrate.`,
           e
         );
-        return;
+        if (intoRust) {
+          return;
+        }
       }
     }
     // A profile with no records has nothing to decrypt and goes ahead.
@@ -397,14 +404,20 @@ export class FormAutofillStorage extends FormAutofillStorageBase {
       intoRust ? Migrator.config.rustAdapter.getInstance() : json
     );
     // A dry run always reports false, so only a completed real copy hands the
-    // profile over.
-    if (!(await copy.maybeRun({ dryRun, wipe: intoRust }))) {
-      if (intoRust && !dryRun && Migrator.attemptsExhausted) {
-        lazy.logger.warn(
-          `Giving up on migrating ${collectionName}: every attempt failed.`
-        );
+    // profile over to Rust. A copy back hands it over either way.
+    const ok = await copy.maybeRun({ dryRun, wipe: intoRust });
+    if (!ok) {
+      if (intoRust) {
+        if (!dryRun && Migrator.attemptsExhausted) {
+          lazy.logger.warn(
+            `Giving up on migrating ${collectionName}: every attempt failed.`
+          );
+        }
+        return;
       }
-      return;
+      lazy.logger.warn(
+        `Serving ${collectionName} from JSON after an incomplete copy back.`
+      );
     }
     Services.prefs.setBoolPref(activePref, enabled);
 

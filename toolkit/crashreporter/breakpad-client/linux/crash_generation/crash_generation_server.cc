@@ -255,6 +255,7 @@ CrashGenerationServer::ClientEvent(short revents)
 
   // Walk the control payload and extract the file descriptor and validated pid.
   pid_t crashing_pid = -1;
+  [[maybe_unused]] uid_t crashing_uid = 0;
   UniqueFd server_endpoint;
   for (struct cmsghdr *hdr = CMSG_FIRSTHDR(&msg); hdr;
        hdr = CMSG_NXTHDR(&msg, hdr)) {
@@ -278,6 +279,7 @@ CrashGenerationServer::ClientEvent(short revents)
       const struct ucred *cred =
           reinterpret_cast<struct ucred*>(CMSG_DATA(hdr));
       crashing_pid = cred->pid;
+      crashing_uid = cred->uid;
     }
   }
 
@@ -313,7 +315,8 @@ CrashGenerationServer::ClientEvent(short revents)
 
   UniqueFd remote_minidump_writer_endpoint;
 
-  if (force_remote_executor_) {
+  // Different UID usually prevents direct ptrace()
+  if (force_remote_executor_ || crashing_uid != getuid()) {
     if (!SendActionToClient(
         server_endpoint.get(),
         crashing_pid,

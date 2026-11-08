@@ -60,6 +60,7 @@
 #include "nsDocShellLoadTypes.h"
 #include "nsExternalHelperAppService.h"
 #include "nsHttpChannel.h"
+#include "nsHttpHandler.h"
 #include "nsIBrowser.h"
 #include "nsIBrowserDOMWindow.h"
 #include "nsICachingChannel.h"
@@ -125,16 +126,18 @@ static void SetNeedToAddURIVisit(nsIChannel* aChannel,
                            aNeedToAddURIVisit);
 }
 
-static auto SecurityFlagsForLoadInfo(nsDocShellLoadState* aLoadState)
-    -> nsSecurityFlags {
-  // TODO: Block copied from nsDocShell::DoURILoad, refactor out somewhere
+nsSecurityFlags DocumentLoadListener::SecurityFlagsForLoadInfo(
+    nsDocShellLoadState* aLoadState) {
   nsSecurityFlags securityFlags =
       nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_SEC_CONTEXT_IS_NULL;
 
   if (aLoadState->LoadType() == LOAD_ERROR_PAGE) {
     securityFlags |= nsILoadInfo::SEC_LOAD_ERROR_PAGE;
   }
-
+  // We want to inherit aLoadState->PrincipalToInherit() when:
+  // 1. ChannelShouldInheritPrincipal returns true.
+  // 2. aLoadState->URI() is not data: URI, or data: URI is not
+  //    configured as unique opaque origin.
   if (aLoadState->PrincipalToInherit()) {
     nsIURI* uri = aLoadState->URI();
     bool isSrcdoc = aLoadState->HasInternalLoadFlags(
@@ -152,16 +155,26 @@ static auto SecurityFlagsForLoadInfo(nsDocShellLoadState* aLoadState)
   return securityFlags;
 }
 
+uint32_t DocumentLoadListener::EffectiveSandboxFlags(
+    uint32_t aBaseSandboxFlags, nsSecurityFlags aSecurityFlags) {
+  if (aSecurityFlags & nsILoadInfo::SEC_LOAD_ERROR_PAGE) {
+    // We don't inherit sandbox flags inside error pages. They are our trusted
+    // documents, and thus get a different principal anyway.
+    return 0;
+  }
+  return aBaseSandboxFlags;
+}
+
 // Construct a LoadInfo object to use when creating the internal channel for a
 // Document/SubDocument load.
 static auto CreateDocumentLoadInfo(CanonicalBrowsingContext* aBrowsingContext,
                                    nsDocShellLoadState* aLoadState)
     -> already_AddRefed<LoadInfo> {
-  uint32_t sandboxFlags = aBrowsingContext->GetSandboxFlags();
+  const auto securityFlags =
+      DocumentLoadListener::SecurityFlagsForLoadInfo(aLoadState);
+  const auto sandboxFlags = DocumentLoadListener::EffectiveSandboxFlags(
+      aBrowsingContext->GetSandboxFlags(), securityFlags);
   RefPtr<LoadInfo> loadInfo;
-
-  auto securityFlags = SecurityFlagsForLoadInfo(aLoadState);
-
   if (aBrowsingContext->GetParent()) {
     loadInfo = LoadInfo::CreateForFrame(
         aBrowsingContext, aLoadState->TriggeringPrincipal(),
@@ -222,11 +235,14 @@ static auto CreateObjectLoadInfo(nsDocShellLoadState* aLoadState,
       WindowGlobalParent::GetByInnerWindowId(aInnerWindowId);
   MOZ_RELEASE_ASSERT(wgp);
 
-  auto securityFlags = SecurityFlagsForLoadInfo(aLoadState);
+  const auto securityFlags =
+      DocumentLoadListener::SecurityFlagsForLoadInfo(aLoadState);
+  const auto sandboxFlags =
+      DocumentLoadListener::EffectiveSandboxFlags(aSandboxFlags, securityFlags);
 
   RefPtr<LoadInfo> loadInfo = LoadInfo::CreateForNonDocument(
       wgp, wgp->DocumentPrincipal(), aContentPolicyType, securityFlags,
-      aSandboxFlags);
+      sandboxFlags);
 
   loadInfo->SetHasValidUserGestureActivation(
       aLoadState->HasValidUserGestureActivation());
@@ -625,6 +641,8 @@ void DocumentLoadListener::ActivateFromPrefetch(
     dom::PrefetchRecordParent* aRec) {
   auto* sourceWGP = static_cast<WindowGlobalParent*>(aRec->Manager());
 
+  aRec->MarkActivated();
+
   // "Copy prefetch cookies": copy cookies from the isolated partition to the
   // destination partition.
   // Spec:
@@ -640,6 +658,14 @@ void DocumentLoadListener::ActivateFromPrefetch(
 
   nsCOMPtr<nsILoadInfo> loadInfo = mChannel->LoadInfo();
   loadInfo->SetActivatedFromNavigationalPrefetch(true);
+
+  // Serve the record's own response rather than whatever entry a cache lookup
+  // of the navigation URL would find.
+  if (nsCOMPtr<nsIURI> cacheURI = aRec->CacheEntryURI()) {
+    if (RefPtr<net::nsHttpChannel> httpChannel = do_QueryObject(mChannel)) {
+      (void)httpChannel->SetNavigationalPrefetchCacheURI(cacheURI);
+    }
+  }
 
   LOG_SPECRULES(
       ("DocumentLoadListener::ActivateFromPrefetch: [%p] activated from "
@@ -1009,9 +1035,8 @@ auto DocumentLoadListener::Open(nsDocShellLoadState* aLoadState,
   }
 
   if (!nsDocShell::CreateAndConfigureRealChannelForLoadState(
-          loadingContext, aLoadState, aLoadInfo, mParentChannelListener,
-          nullptr, attrs, aLoadFlags, aCacheKey, *aRv,
-          getter_AddRefs(mChannel))) {
+          loadingContext, aLoadState, aLoadInfo, mParentChannelListener, attrs,
+          aLoadFlags, aCacheKey, *aRv, getter_AddRefs(mChannel))) {
     LOG(("DocumentLoadListener::Open failed to create channel [this=%p]",
          this));
     mParentChannelListener = nullptr;
@@ -1084,10 +1109,23 @@ auto DocumentLoadListener::Open(nsDocShellLoadState* aLoadState,
   }
 
   nsCOMPtr<nsIIdentChannel> identChannel = do_QueryInterface(mChannel);
-  if (identChannel && aChannelId) {
-    (void)identChannel->SetChannelId(*aChannelId);
+  if (aChannelId) {
+    if (identChannel) {
+      (void)identChannel->SetChannelId(*aChannelId);
+    }
+    mDocumentChannelId = aChannelId;
+  } else {
+    // A load started in the parent opened its channel here, so use that
+    // channel's id. For a speculative load, the content process gives its
+    // DocumentChannel the same id, so the BFCache check can recognize that
+    // request before the load is claimed. A LoadInParent load never gets a
+    // DocumentChannel in content, so there the id matches no request.
+    uint64_t channelId = identChannel ? identChannel->ChannelId() : 0;
+    if (!channelId) {
+      channelId = RefPtr{nsHttpHandler::GetInstance()}->NewChannelId();
+    }
+    mDocumentChannelId = Some(channelId);
   }
-  mDocumentChannelId = aChannelId;
 
   RefPtr<nsHttpChannel> httpChannelImpl = do_QueryObject(mChannel);
   if (httpChannelImpl) {
@@ -1420,11 +1458,6 @@ auto DocumentLoadListener::OpenInParent(nsDocShellLoadState* aLoadState,
     }
   }
 
-  // Loads start in the content process might have exposed a channel id to
-  // observers, so we need to preserve the value in the parent. That can't have
-  // happened here, so Nothing() is fine.
-  Maybe<uint64_t> channelId = Nothing();
-
   // Initial client info is only relevant for subdocument loads, which we're
   // not supporting yet.
   Maybe<dom::ClientInfo> initialClientInfo;
@@ -1442,7 +1475,7 @@ auto DocumentLoadListener::OpenInParent(nsDocShellLoadState* aLoadState,
       Nothing());
 
   nsresult rv;
-  return Open(loadState, loadInfo, loadFlags, cacheKey, channelId,
+  return Open(loadState, loadInfo, loadFlags, cacheKey, Nothing(),
               TimeStamp::Now(), timing, std::move(initialClientInfo), false,
               browsingContext->GetContentParent(), &rv);
 }
@@ -1557,7 +1590,6 @@ bool DocumentLoadListener::SpeculativeLoadInParent(
 
 void DocumentLoadListener::CleanupParentLoadAttempt() {
   LOG(("DocumentLoadListener CleanupParentLoadAttempt [this=%p]", this));
-  MOZ_ASSERT(mDocumentChannelId.isNothing());
 
   // The DocumentLoadListener was not reclaimed from the nsDocShellLoadState, so
   // ClaimParentLoad hasn't been called, and no listeners have been attached to
@@ -1573,11 +1605,7 @@ void DocumentLoadListener::CleanupParentLoadAttempt() {
          "DocumentLoadListener::CleanupParentLoadAttempt"_ns);
 }
 
-auto DocumentLoadListener::ClaimParentLoad(Maybe<uint64_t> aChannelId)
-    -> RefPtr<OpenPromise> {
-  MOZ_ASSERT(mDocumentChannelId.isNothing() && aChannelId.isSome());
-  mDocumentChannelId = aChannelId;
-
+auto DocumentLoadListener::ClaimParentLoad() -> RefPtr<OpenPromise> {
   MOZ_DIAGNOSTIC_ASSERT(mOpenPromise);
   return mOpenPromise;
 }
@@ -3763,14 +3791,15 @@ NS_IMETHODIMP DocumentLoadListener::OnStatus(nsIRequest* aRequest,
   return NS_OK;
 }
 
-NS_IMETHODIMP DocumentLoadListener::EarlyHint(const nsACString& aLinkHeader,
-                                              const nsACString& aReferrerPolicy,
-                                              const nsACString& aCSPHeader) {
+NS_IMETHODIMP DocumentLoadListener::EarlyHint(
+    const nsACString& aLinkHeader, const nsACString& aReferrerPolicy,
+    const nsACString& aCSPHeader,
+    const nsACString& aConnectionAllowlistHeader) {
   LOG(("DocumentLoadListener::EarlyHint.\n"));
   RefPtr<DocumentLoadListener> kungFuDeathGrip(this);
-  mEarlyHintsService.EarlyHint(aLinkHeader, GetChannelCreationURI(), mChannel,
-                               aReferrerPolicy, aCSPHeader,
-                               GetLoadingBrowsingContext());
+  mEarlyHintsService.EarlyHint(
+      aLinkHeader, GetChannelCreationURI(), mChannel, aReferrerPolicy,
+      aCSPHeader, aConnectionAllowlistHeader, GetLoadingBrowsingContext());
   return NS_OK;
 }
 

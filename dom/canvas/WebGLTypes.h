@@ -656,7 +656,7 @@ struct Limits final {
 
   // Exts
   bool astcHdr = false;
-  std::array<uint8_t, 3> _padding;
+  std::array<uint8_t, 3> _padding = {};
   uint32_t maxColorDrawBuffers = 1;
   uint32_t maxMultiviewLayers = 0;
   uint64_t queryCounterBitsTimeElapsed = 0;
@@ -758,7 +758,8 @@ struct InitContextResult final {
   WebGLContextOptions options;
   gl::GLVendor vendor;
   OptionalRenderableFormatBits optionalRenderableFormatBits;
-  std::array<uint8_t, 2> _padding = {};
+  bool supportsDomBlitUploads = true;
+  std::array<uint8_t, 1> _padding = {};
   Limits limits;
   EnumMask<layers::SurfaceDescriptor::Type> uploadableSdTypes;
   // Padded because of "Android 5.0 ARMv7" builds:
@@ -769,7 +770,8 @@ struct InitContextResult final {
 
   auto MutTiedFields() {
     return std::tie(error, options, vendor, optionalRenderableFormatBits,
-                    _padding, limits, uploadableSdTypes, shaderPrecisions);
+                    supportsDomBlitUploads, _padding, limits, uploadableSdTypes,
+                    shaderPrecisions);
   }
 };
 

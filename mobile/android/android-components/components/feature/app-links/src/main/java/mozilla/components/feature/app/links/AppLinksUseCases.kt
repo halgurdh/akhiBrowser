@@ -13,6 +13,7 @@ import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.os.SystemClock
 import android.provider.Browser.EXTRA_APPLICATION_ID
+import android.util.AndroidRuntimeException
 import androidx.annotation.VisibleForTesting
 import androidx.core.net.toUri
 import java.net.URISyntaxException
@@ -102,7 +103,7 @@ class AppLinksUseCases(
         operator fun invoke(url: String): AppLinkRedirect {
             // Absurdly long URLs put unneeded pressure on the system and can even lead to crashes.
             val url = url.trimmed()
-            val urlHash = (url + includeHttpAppLinks + includeHttpAppLinks).hashCode()
+            val urlHash = (url + includeHttpAppLinks + includeInstallAppFallback).hashCode()
             val currentTimeStamp = SystemClock.elapsedRealtime()
             // since redirectCache is mutable, get the latest
             val cache = redirectCache
@@ -283,7 +284,8 @@ class AppLinksUseCases(
                     when (e) {
                         is ActivityNotFoundException,
                         is SecurityException,
-                        is NullPointerException -> {
+                        is NullPointerException,
+                        is AndroidRuntimeException -> {
                             failedToLaunchAction(it.getStringExtra(EXTRA_BROWSER_FALLBACK_URL))
                             Logger.error("failed to start third party app activity", e)
                         }

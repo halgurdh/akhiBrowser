@@ -775,6 +775,11 @@ class nsContentUtils {
    *  Pass a cache object as aIndexCache if you expect to repeatedly call this
    * function with the same value as aBoundary1 or aBoundary2.
    *
+   *  If aAncestorLimiter is non-null, it must be an inclusive ancestor of both
+   * containers in aKind.  Ancestor walks stop there.  Same-container
+   * comparisons only assert containment in debug builds.  Differing-container
+   * comparisons return Nothing if a chain misses the limiter.
+   *
    *  @return -1 if point1 < point2,
    *          1 if point1 > point2,
    *          0 if point1 == point2.
@@ -785,7 +790,8 @@ class nsContentUtils {
   static mozilla::Maybe<int32_t> ComparePoints(
       const mozilla::RangeBoundaryBase<PT1, RT1>& aBoundary1,
       const mozilla::RangeBoundaryBase<PT2, RT2>& aBoundary2,
-      NodeIndexCache* aIndexCache = nullptr);
+      NodeIndexCache* aIndexCache = nullptr,
+      const nsINode* aAncestorLimiter = nullptr);
 
   /**
    * DO NOT USE this method for comparing the points in new code.  this method
@@ -1420,11 +1426,14 @@ class nsContentUtils {
    *   @param aOperation The deprecated operation being reported.
    *   @param aLocation Source location of the operation. Pass the empty
    *          location to omit line and column information.
+   *   @param aParams Parameters for the warning message, as passed to
+   *          Document::WarnOnceAbout.
    */
-  static void ReportDeprecation(nsIGlobalObject* aGlobal, const Document* aDoc,
-                                nsIURI* aURI,
-                                mozilla::dom::DeprecatedOperations aOperation,
-                                const mozilla::JSCallingLocation& aLocation);
+  static void ReportDeprecation(
+      nsIGlobalObject* aGlobal, const Document* aDoc, nsIURI* aURI,
+      mozilla::dom::DeprecatedOperations aOperation,
+      const mozilla::JSCallingLocation& aLocation,
+      const nsTArray<nsString>& aParams = nsTArray<nsString>());
 
   static void ReportEmptyGetElementByIdArg(const Document* aDoc);
 
@@ -1922,19 +1931,6 @@ class nsContentUtils {
                                         mozilla::EventClassID aEventClassID,
                                         EventMessage* aEventMessage);
 
-  /**
-   * Adds aManager to the list of the managers nodes own, which is used for
-   * unmarking gray JS listeners during cycle collection.
-   */
-  static void AddNodeListenerManager(mozilla::EventListenerManager* aManager);
-
-  /**
-   * Removes aManager from that list, if it's in it.  Only for
-   * ~EventListenerManager.
-   */
-  static void RemoveNodeListenerManager(
-      mozilla::EventListenerManager* aManager);
-
   static void AddEntryToDOMArenaTable(nsINode* aNode,
                                       mozilla::dom::DOMArena* aDOMArena);
 
@@ -1943,8 +1939,6 @@ class nsContentUtils {
 
   static already_AddRefed<mozilla::dom::DOMArena> TakeEntryFromDOMArenaTable(
       const nsINode* aNode);
-
-  static void UnmarkGrayJSListenersInCCGenerationDocuments();
 
   static bool IsInitialized() { return sInitialized; }
 
@@ -2302,10 +2296,8 @@ class nsContentUtils {
    *
    * @param aContent the node on which a link was triggered.
    * @param aLinkURI the URI of the link, must be non-null.
-   * @param aTargetSpec the target (like target=, may be empty).
    */
-  static void TriggerLinkMouseOver(nsIContent* aContent, nsIURI* aLinkURI,
-                                   const nsString& aTargetSpec);
+  static void TriggerLinkMouseOver(nsIContent* aContent, nsIURI* aLinkURI);
 
   /**
    * Get the link location.
@@ -3880,7 +3872,8 @@ class nsContentUtils {
   template <TreeKind aKind>
   static mozilla::Maybe<int32_t> ComparePointsWithIndices(
       const nsINode* aParent1, uint32_t aOffset1, const nsINode* aParent2,
-      uint32_t aOffset2, NodeIndexCache* aIndexCache = nullptr);
+      uint32_t aOffset2, NodeIndexCache* aIndexCache = nullptr,
+      const nsINode* aAncestorLimiter = nullptr);
 
   /**
    * Helper method for ComparePoints() and ComparePointsWithIndices(). This

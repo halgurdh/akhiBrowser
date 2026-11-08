@@ -52,21 +52,23 @@ class BackMenuItemProvider(
     private val settings: Settings,
     scope: CoroutineScope,
 ) : MenuItemProvider {
-    override val itemFlow: StateFlow<MenuItem?> =
+    override val itemsFlow: StateFlow<List<MenuItem>> =
         if (target is MenuTarget.CustomizeMenu) {
-            MutableStateFlow(DEFAULT_MENU_ITEM)
+            MutableStateFlow(listOf(DEFAULT_MENU_ITEM))
         } else {
             browserStore.stateFlow
                 .map { state ->
                     target.browserSessionFrom(state)?.canGoBackInHistoryOrToStories() ?: false
                 }
-                .map { it.toMenuItem() }
+                .map { listOf(it.toMenuItem()) }
                 .stateIn(
                     scope = scope,
                     started = SharingStarted.Eagerly,
                     initialValue =
-                        (target.browserSessionFrom(browserStore.state)?.canGoBackInHistoryOrToStories() ?: false)
-                            .toMenuItem(),
+                        listOf(
+                            (target.browserSessionFrom(browserStore.state)?.canGoBackInHistoryOrToStories() ?: false)
+                                .toMenuItem()
+                        ),
                 )
         }
 

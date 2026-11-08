@@ -1060,7 +1060,7 @@ class CustomTabBrowserToolbarMiddlewareTest {
         every { customTab.config.showShareMenuItem } returns false
         val expectedMenuButton =
             ActionButtonRes(
-                drawableResId = iconsR.drawable.mozac_ic_ellipsis_vertical_24,
+                drawableResId = iconsR.drawable.mozac_ic_more_vertical_round_24,
                 contentDescription = R.string.content_description_menu,
                 onClick = MenuClicked,
             )
@@ -1078,7 +1078,7 @@ class CustomTabBrowserToolbarMiddlewareTest {
         every { customTab.config.showShareMenuItem } returns true
         val expectedMenuButton =
             ActionButtonRes(
-                drawableResId = iconsR.drawable.mozac_ic_ellipsis_vertical_24,
+                drawableResId = iconsR.drawable.mozac_ic_more_vertical_round_24,
                 contentDescription = R.string.content_description_menu,
                 onClick = MenuClicked,
             )

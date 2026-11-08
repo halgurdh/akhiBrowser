@@ -32,7 +32,7 @@ class BookmarksScreenMenuItemProviderTest {
                 icon = MenuItemIconRes(iconsR.drawable.mozac_ic_bookmark_tray_fill_24),
                 onClickEvent = MenuAction.Navigate.Bookmarks,
             ),
-            provider.itemFlow.value,
+            provider.itemsFlow.value.single(),
         )
     }
 
@@ -49,7 +49,7 @@ class BookmarksScreenMenuItemProviderTest {
     fun `WHEN building the item THEN handle all events it can dispatch and no others`() {
         val provider = BookmarksScreenMenuItemProvider(target = MenuTarget.BrowserTab)
 
-        val events = requireNotNull(provider.itemFlow.value).reachableEvents()
+        val events = provider.itemsFlow.value.single().reachableEvents()
 
         assertTrue(events.all { provider.handles(it) }, "Not all of $events are handled")
         assertFalse(provider.handles(MenuAction.Navigate.History))

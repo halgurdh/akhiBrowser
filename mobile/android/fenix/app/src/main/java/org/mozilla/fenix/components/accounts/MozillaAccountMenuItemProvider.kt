@@ -69,15 +69,15 @@ class MozillaAccountMenuItemProvider(
             )
             ?.let(::MenuItemIconDrawable)
             ?: MenuItemIconRes(iconsR.drawable.mozac_ic_avatar_warning_circle_fill_multicolor_24)
-    private val mutableItem: MutableStateFlow<MenuItem?>? =
+    private val mutableItems: MutableStateFlow<List<MenuItem>>? =
         if (target == MenuTarget.CustomizeMenu) {
             null
         } else {
-            MutableStateFlow(syncStore.state.toMenuItem())
+            MutableStateFlow(listOf(syncStore.state.toMenuItem()))
         }
 
-    override val itemFlow: StateFlow<MenuItem?> =
-        mutableItem?.asStateFlow() ?: MutableStateFlow(DEFAULT_MENU_ITEM).asStateFlow()
+    override val itemsFlow: StateFlow<List<MenuItem>> =
+        mutableItems?.asStateFlow() ?: MutableStateFlow(listOf(DEFAULT_MENU_ITEM)).asStateFlow()
 
     init {
         if (target != MenuTarget.CustomizeMenu) {
@@ -92,8 +92,8 @@ class MozillaAccountMenuItemProvider(
     }
 
     private suspend fun updateMenuItem(state: SyncState) {
-        val item = mutableItem ?: return
-        item.value = state.toMenuItem()
+        val items = mutableItems ?: return
+        items.value = listOf(state.toMenuItem())
 
         if (state.accountState == AuthenticationProblem) {
             return
@@ -102,7 +102,7 @@ class MozillaAccountMenuItemProvider(
         val avatarUrl = state.account?.avatar?.url ?: return
         val avatar = httpClient.bitmapForUrl(avatarUrl, avatarSize, avatarSize)?.toCircularBitmap() ?: return
 
-        item.value = state.toMenuItem(icon = MenuItemIconBitmap(avatar))
+        items.value = listOf(state.toMenuItem(icon = MenuItemIconBitmap(avatar)))
     }
 
     private fun SyncState.toMenuItem(icon: MenuItemIcon = defaultIcon): MenuItem =
@@ -147,11 +147,6 @@ class MozillaAccountMenuItemProvider(
         private val DEFAULT_MENU_ITEM =
             StandardMenuItem(
                 title = MenuItemTitle(Text.Resource(R.string.browser_menu_sign_in)),
-                summary =
-                    MenuItemSummary(
-                        text = Text.Resource(R.string.browser_menu_sign_in_caption_3),
-                        maxLines = 2,
-                    ),
                 icon = MenuItemIconRes(iconsR.drawable.mozac_ic_avatar_circle_24),
             )
     }

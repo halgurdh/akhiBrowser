@@ -102,6 +102,22 @@ static bool StatementKindIsBraced(StatementKind kind) {
          kind == StatementKind::Finally;
 }
 
+static bool GetInlinableNumber(ParseNode* node, double* initialValue) {
+  bool negate = false;
+
+  if (node->isKind(ParseNodeKind::NegExpr)) {
+    node = node->as<UnaryNode>().kid();
+    negate = true;
+  }
+  if (!node->isKind(ParseNodeKind::NumberExpr)) {
+    return false;
+  }
+
+  double literalValue = node->as<NumericLiteral>().value();
+  *initialValue = negate ? -literalValue : literalValue;
+  return true;
+}
+
 template <class ParseHandler, typename Unit>
 inline typename GeneralParser<ParseHandler, Unit>::FinalParser*
 GeneralParser<ParseHandler, Unit>::asFinalParser() {
@@ -8770,13 +8786,14 @@ GeneralParser<ParseHandler, Unit>::fieldInitializerOpt(
       bool isPrivate = propAtom && handler_.isPrivateName(propName);
       bool isPlainName = propAtom && (isPrivate || !this->parserAtoms().isIndex(
                                                        propAtom, &index));
-      bool isNumberLiteral = initializerExpr->isKind(ParseNodeKind::NumberExpr);
+
+      double literalValue;
+      bool isInlinableNumber =
+          GetInlinableNumber(initializerExpr, &literalValue);
       bool hasMaxInlinedFields =
           classInitializedMembers.inlinableFields.length() >=
           MemberInitializers::MaxInlinedFields;
-      if (isPlainName && isNumberLiteral && !hasMaxInlinedFields) {
-        double literalValue =
-            initializerExpr->template as<NumericLiteral>().value();
+      if (isPlainName && isInlinableNumber && !hasMaxInlinedFields) {
         if (!classInitializedMembers.inlinableFields.append(
                 InlinedField{propAtom, isPrivate, literalValue})) {
           js::ReportOutOfMemory(fc_);

@@ -34,16 +34,18 @@ class MoveToNormalTabsMenuItemProvider(
     private val target: MenuTarget,
     private val migratePrivateTab: TabsUseCases.MigratePrivateTabUseCase,
 ) : MenuItemProvider {
-    override val itemFlow: StateFlow<MenuItem?> =
+    override val itemsFlow: StateFlow<List<MenuItem>> =
         if (target == MenuTarget.CustomizeMenu) {
-            MutableStateFlow(DEFAULT_MENU_ITEM)
+            MutableStateFlow(listOf(DEFAULT_MENU_ITEM))
         } else {
             MutableStateFlow(
-                if (target.browserSessionFrom(browserStore.state)?.content?.private == true) {
-                    DEFAULT_MENU_ITEM.copy(onClickEvent = MenuAction.MoveToNonPrivateTab)
-                } else {
-                    null
-                }
+                listOfNotNull(
+                    if (target.browserSessionFrom(browserStore.state)?.content?.private == true) {
+                        DEFAULT_MENU_ITEM.copy(onClickEvent = MenuAction.MoveToNonPrivateTab)
+                    } else {
+                        null
+                    }
+                )
             )
         }
 

@@ -27,6 +27,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -79,7 +80,6 @@ import mozilla.components.feature.ipprotection.store.state.UsageQuota
 import mozilla.components.feature.ipprotection.store.state.gigabytes
 import mozilla.components.feature.ipprotection.store.state.ipProtectionStatus
 import mozilla.components.feature.ipprotection.store.state.isActivationInFlight
-import mozilla.components.feature.ipprotection.store.state.used
 import mozilla.components.ui.icons.R as iconsR
 import org.mozilla.fenix.R
 import org.mozilla.fenix.compose.list.TextListItem
@@ -288,7 +288,7 @@ private fun DataLimitSection(
     }
 
     LinearProgressIndicator(
-        progress = { if (isDataLimitReached) 1f else (quota.used / quota.max).coerceIn(0f, 1f) },
+        progress = { (quota.remaining / quota.max).coerceIn(0f, 1f) },
         modifier = Modifier.fillMaxWidth().padding(horizontal = FirefoxTheme.layout.space.dynamic200).clip(CircleShape),
         color = MaterialTheme.colorScheme.primary,
         trackColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -396,6 +396,7 @@ private fun VpnToggleRow(
     enabled: Boolean,
     onToggle: (Boolean) -> Unit,
 ) {
+    val colors = ListItemDefaults.colors()
     Row(
         modifier =
             Modifier.fillMaxWidth()
@@ -414,15 +415,15 @@ private fun VpnToggleRow(
         horizontalArrangement = Arrangement.spacedBy(FirefoxTheme.layout.space.static200),
     ) {
         Icon(
-            painter = painterResource(mozilla.components.ui.icons.R.drawable.mozac_ic_globe_24),
+            painter = painterResource(iconsR.drawable.mozac_ic_globe_24),
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurface,
+            tint = if (enabled) colors.leadingIconColor else colors.disabledLeadingIconColor,
         )
         Text(
             text = stringResource(R.string.ip_protection_toggle_label),
             modifier = Modifier.weight(1f),
             style = FirefoxTheme.typography.subtitle1,
-            color = MaterialTheme.colorScheme.onSurface,
+            color = if (enabled) colors.headlineColor else colors.disabledHeadlineColor,
         )
         Switch(
             checked = checked,

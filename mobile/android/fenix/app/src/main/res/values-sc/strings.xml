@@ -75,8 +75,6 @@
   <string name="home_bookmarks_menu_item_remove">Boga</string>
   <!-- About content. %1$s is the name of the app (for example "Firefox"). -->
   <string name="about_content" tools:ignore="BrandUsage">%1$s est prodotu dae Mozilla.</string>
-  <!-- Private Browsing -->
-  <string name="private_browsing_common_myths">Mitos fitianos subra de sa navigatzione privada</string>
   <!--
     Private Browsing
 
@@ -149,6 +147,12 @@
   <string name="home_screen_shortcut_passwords">Craes</string>
   <!-- Shortcut action to open uninstall survey -->
   <string name="home_screen_shortcut_uninstall_survey">Disinstallare, pro ite?</string>
+  <!--
+    Recent Tabs
+
+    Header text on the homescreen for continuing to browse the most recent browser tab
+  -->
+  <string name="recent_tabs_header_2">Sighi</string>
   <!-- Button text for showing all the tabs in the tabs tray -->
   <string name="recent_tabs_show_all">Ammustra totu</string>
   <!-- Text for button in synced tab card that opens synced tabs tray -->
@@ -257,8 +261,6 @@
   <string name="browser_menu_syncing_paused_caption">Sincronizatzione in pàusa</string>
   <!-- Browser menu caption label for an authenticated user -->
   <string name="browser_menu_signed_in_caption">Gesti su chi boles sarvare e sincronizare</string>
-  <!-- Browser menu label that creates a private tab -->
-  <string name="browser_menu_new_private_tab">Ischeda privada noa</string>
   <!-- Browser menu label that navigates to the Password screen -->
   <string name="browser_menu_passwords">Craes</string>
   <!-- Content description (not visible, for screen readers etc.) for the handle used to drag the main menu at the bottom of the screen. -->
@@ -438,18 +440,6 @@
   <string name="onboarding_preferences_dialog_positive_button">Fatu</string>
   <!-- Terms of service onboarding title card label. 'Firefox' intentionally hardcoded here -->
   <string name="onboarding_welcome_to_firefox" tools:ignore="BrandUsage">Bos donamus su benebènnidu a Firefox</string>
-  <!-- Line one of the terms of service onboarding page. %1$s is replaced by an active link, using onboarding_term_of_service_line_one_link_text_2 as text (“Firefox Terms of Use”). -->
-  <string name="onboarding_term_of_service_line_one_2">Si sighis, atzetas is %1$s.</string>
-  <!-- Used as text for the link in onboarding_term_of_service_line_one_2. -->
-  <string name="onboarding_term_of_service_line_one_link_text_2" tools:ignore="BrandUsage">Cunditziones de su servìtziu de Firefox</string>
-  <!-- Line two of the terms of service onboarding page. 'Firefox' is intentionally hardcoded. %1$s is replaced by an active link, using onboarding_term_of_service_line_two_link_text as text (“Privacy Notice”). -->
-  <string name="onboarding_term_of_service_line_two_2" tools:ignore="BrandUsage">Firefox si òcupat de sa riservadesa tua. Àteras informatziones in s’%1$s nostru.</string>
-  <!-- Used as text for the link in onboarding_term_of_service_line_two. -->
-  <string name="onboarding_term_of_service_line_two_link_text">Avisu de riservadesa</string>
-  <!-- Line three of the terms of service onboarding page. 'Firefox' and 'Mozilla' are intentionally hardcoded. %1$s is replaced by an active link using onboarding_term_of_service_line_three_link_text as text (“Manage”). -->
-  <string name="onboarding_term_of_service_line_three" tools:ignore="BrandUsage">Pro agiudare a megiorare su navigadore, Firefox imbiat datos de diagnòsticu e de interatziones cun Mozilla. %1$s</string>
-  <!-- Used as text for the link in onboarding_term_of_service_line_three. -->
-  <string name="onboarding_term_of_service_line_three_link_text">Gesti</string>
   <!-- Terms of use (ToU) onboarding redesign title. -->
   <string name="onboarding_redesign_tou_title" tools:ignore="UnusedResources">Avia su navigadore definitivu pro Android</string>
   <!-- Terms of use (ToU) first subheader. -->
@@ -540,20 +530,6 @@
   <string name="nova_onboarding_set_to_default_title_2">Aberi totu is ligòngios cun riservadesa integrada</string>
   <!-- "Set to default" onboarding button. -->
   <string name="nova_onboarding_set_to_default_button">Cunfigura comente navigadore predefinidu</string>
-  <!-- Toolbar selection onboarding title. -->
-  <string name="nova_onboarding_toolbar_selection_title">Sèbera sa barra de indiritzos tua</string>
-  <!-- Toolbar selection onboarding "top" option label. -->
-  <string name="nova_onboarding_toolbar_selection_top_label">Superiore</string>
-  <!-- Toolbar selection onboarding "bottom" option label. -->
-  <string name="nova_onboarding_toolbar_selection_bottom_label">Inferiore</string>
-  <!-- Theme selection onboarding title. -->
-  <string name="nova_onboarding_theme_selection_title" tools:ignore="UnusedResources">Sèbera unu tema</string>
-  <!-- Theme selection onboarding "automatic" option label. -->
-  <string name="nova_onboarding_theme_selection_automatic_label" tools:ignore="UnusedResources">Automàticu</string>
-  <!-- Theme selection onboarding "light" option label. -->
-  <string name="nova_onboarding_theme_selection_light_label" tools:ignore="UnusedResources">Craru</string>
-  <!-- Theme selection onboarding "dark" option label. -->
-  <string name="nova_onboarding_theme_selection_dark_label" tools:ignore="UnusedResources">Iscuru</string>
   <!-- Sync onboarding button. -->
   <string name="nova_onboarding_sync_button">Avia sa sincronizatzione</string>
   <!-- Marketing onboarding title. -->
@@ -564,8 +540,6 @@
   <string name="nova_onboarding_notifications_title" tools:ignore="BrandUsage,UnusedResources">Is notìficas t’agiudant a èssere prus amparadu cun Firefox</string>
   <!-- Notifications onboarding button. -->
   <string name="nova_onboarding_notifications_button">Ativa is notìficas</string>
-  <!-- "Add search widget" onboarding button. 'Firefox' is intentionally hardcoded. -->
-  <string name="nova_onboarding_add_search_widget_button" tools:ignore="BrandUsage">Agiunghe su widget de Firefox</string>
   <!-- Customize prompt onboarding positive button. -->
   <string name="nova_onboarding_customize_prompt_positive_button" tools:ignore="UnusedResources">Cumintza a personalizare</string>
   <!-- App icon onboarding title. -->
@@ -590,12 +564,6 @@
   <string name="search_widget_text_long">Chirca in rete</string>
   <!-- Content description (not visible, for screen readers etc.): Voice search -->
   <string name="search_widget_voice">Chirca cun sa boghe</string>
-  <!--
-    Preferences
-
-    Title for the settings page
-  -->
-  <string name="settings">Cunfiguratzione</string>
   <!--
     Preferences
 
@@ -848,6 +816,8 @@
     Title for the customize home screen section with privacy report.
   -->
   <string name="customize_toggle_privacy_report">Informe de riservadesa</string>
+  <!-- Title for a customize home screen section. Continue is a section that displays the most recent browser tab, so users can continue browsing where they left off. -->
+  <string name="customize_toggle_continue">Sighi</string>
   <!-- Title for the customize home screen section with bookmarks. -->
   <string name="customize_toggle_bookmarks">Sinnalibros</string>
   <!--
@@ -1093,6 +1063,12 @@
   <string name="preference_simple_toolbar">Sèmplitze</string>
   <!-- Preference for using expanded toolbar -->
   <string name="preference_expanded_toolbar">Ismanniada</string>
+  <!-- Preference for changing where the search bar is positioned on the homepage, shown when the user has set the address bar to be displayed at the top of the screen -->
+  <string name="preferences_homepage_search_location">Positzione de sa barra de chirca in sa pàgina printzipale</string>
+  <!-- Preference for showing the homepage search bar in the middle of the homepage -->
+  <string name="preference_homepage_search_location_middle">In mesu</string>
+  <!-- Preference for showing the homepage search bar at the top of the homepage (combined with the address bar, already displayed at the top) -->
+  <string name="preference_homepage_search_location_top">In artu</string>
   <!-- New tab shortcut in toolbar customization -->
   <string name="toolbar_customize_shortcut_new_tab">Aberi un’ischeda noa</string>
   <!-- Share shortcut in toolbar customization -->
@@ -1356,8 +1332,6 @@
   <string name="close_tab_title">Serra s’ischeda %s</string>
   <!-- Content description (not visible, for screen readers etc.): Opens the open tabs menu when pressed -->
   <string name="open_tabs_menu">Aberi su menù de is ischedas</string>
-  <!-- Open tabs menu item to save tabs to collection -->
-  <string name="tabs_menu_save_to_collection1">Sarva is ischedas in una colletzione</string>
   <!-- Text for the menu button to delete a collection -->
   <string name="collection_delete">Cantzella sa colletzione</string>
   <!-- Text for the menu button to rename a collection -->
@@ -1657,8 +1631,6 @@
   <string name="webcompat_reporter_label_url">URL</string>
   <!-- The error message of the URL text field when an invalid URL has been entered. -->
   <string name="webcompat_reporter_url_error_invalid">Inserta un’URL vàlidu</string>
-  <!-- The button text for the cancel button to leave the Web Compat Reporter feature. -->
-  <string name="webcompat_reporter_cancel">Annulla</string>
   <!-- Text for a snackbar to confirm the successful submission of a WebCompat report. -->
   <string name="webcompat_reporter_success_snackbar_text_2">Informe imbiadu</string>
   <!-- The button text for the preview report button to view a preview of the report. -->
@@ -1989,6 +1961,8 @@
   <string name="menu_print">Imprenta</string>
   <!-- Sub-header in the dialog to share a link to another sync device -->
   <string name="share_device_subheader">Imbia a su dispositivu</string>
+  <!-- Content description for the drag handle that dismisses the Send to Device bottom sheet -->
+  <string name="send_to_devices_bottom_sheet_close_content_description">Serra s’imbiu a unu dispositivu</string>
   <!-- Sub-header in the dialog to share a link to an app from the full list -->
   <string name="share_link_all_apps_subheader">Totu is atziones</string>
   <!-- Sub-header in the dialog to share a link to an app from the most-recent sorted list -->
@@ -2003,6 +1977,8 @@
   <string name="sync_send_to_all">Imbia a totu is dispositivos</string>
   <!-- An option from the share dialog to reconnect to sync -->
   <string name="sync_reconnect">Torra a colllegare a Sync</string>
+  <!-- Label for the button in the share dialog that sends the tab to the selected sync devices -->
+  <string name="sync_send_to_selected_devices">Imbia</string>
   <!-- Text displayed when sync is offline and cannot be accessed -->
   <string name="sync_offline">In foras de lìnia</string>
   <!-- An option to connect additional devices -->
@@ -2025,6 +2001,8 @@
   <string name="sent_from_firefox_template" tools:ignore="UnusedResources">%1$s\n\nImbiadu dae %2$s 🦊 Proa su navigadore mòbile: %3$s</string>
   <!-- A short message template for the shared link with a footer. %1$s is the shared link, %2$s is the app name (e.g. Firefox) and %3$s is a download link for the app. -->
   <string name="sent_from_firefox_template_short" tools:ignore="UnusedResources">%1$s\n\nImbiadu dae %2$s 🦊 %3$s</string>
+  <!-- Send tab to synced devices: Empty state message - Displayed when the user has no synced devices -->
+  <string name="sync_send_tab_empty_state_description" tools:ignore="BrandUsage">Pro imbiare un’ischeda, identìfica·ti in Firefox in un’àteru dispositivu, a su mancu.</string>
   <!--
     Notifications
 
@@ -2077,8 +2055,6 @@
   <string name="qr_scanner_dialog_invalid">Indiritzu web non vàlidu.</string>
   <!-- QR code scanner prompt dialog positive option when there is an error -->
   <string name="qr_scanner_dialog_invalid_ok">AB</string>
-  <!-- Tab collection deletion prompt dialog message. %1$s is the collection name. -->
-  <string name="tab_collection_dialog_message">Seguru chi boles cantzellare %1$s?</string>
   <!-- Sample text for accessibility font size -->
   <string name="accessibility_text_size_sample_text_1">Custu est testu de mustra. Est inoghe pro t’ammustrare comente si bidet su testu cando nde cresches o nde mìnimas sa mannària cun custu paràmetru.</string>
   <!-- Summary for Accessibility Text Size Scaling Preference -->
@@ -2198,6 +2174,17 @@
   <string name="preference_enhanced_tracking_protection">Amparu megioradu contra sa sighidura</string>
   <!-- Text displayed that links to website about enhanced tracking protection -->
   <string name="preference_enhanced_tracking_protection_explanation_learn_more">Àteras informatziones</string>
+  <plurals name="trackers_blocked_count_2">
+    <!--
+      Trackers blocked card on homepage
+
+      Text shown on the trackers blocked card. %d is the number of trackers blocked.
+    -->
+    <item quantity="one">%d sighidore blocadu</item>
+    <item quantity="other">%d sighidores blocados</item>
+  </plurals>
+  <!-- Text shown on the trackers blocked card when no trackers have been blocked yet -->
+  <string name="trackers_blocked_empty">T\'amparamus</string>
   <!-- Preference for enhanced tracking protection for the standard protection settings -->
   <string name="preference_enhanced_tracking_protection_standard_default_1">Istàndard (predefinidu)</string>
   <!-- Preference description for enhanced tracking protection for the standard protection settings -->
@@ -2659,6 +2646,14 @@
   <string name="credit_cards_warning_dialog_set_up_now">Cunfigura immoe</string>
   <!-- Negative button to ignore warning dialog if users have no device authentication set up -->
   <string name="credit_cards_warning_dialog_later">A pustis</string>
+  <!-- Title of the dialog shown on Android Automotive OS (in cars) when users have no device authentication set up and try to access their saved passwords, payment methods, or sign in to their account -->
+  <string name="automotive_authentication_setup_dialog_title">Ampara is datos sensìbiles</string>
+  <!-- Message of the dialog shown on Android Automotive OS (in cars) when users have no device authentication set up and try to access their saved passwords, payment methods, or sign in to their account -->
+  <string name="automotive_authentication_setup_dialog_message">Cunfigura una secuèntzia de blocu, PIN o crae pro amparare is datos sensìbiles tuos de s’atzessu de àtera gente chi impreat sa màchina tua.</string>
+  <!-- Primary button on the dialog shown on Android Automotive OS (in cars). Tapping it directs users to the device settings to set up a device lock -->
+  <string name="automotive_authentication_setup_dialog_set_up_now">Cunfigura immoe</string>
+  <!-- Secondary button of the dialog shown on Android Automotive OS (in cars). Tapping closes the dialogue and cancels the action that triggered the dialogue. -->
+  <string name="automotive_authentication_setup_dialog_cancel">Annulla</string>
   <!-- Title of PIN verification dialog to direct users to re-enter their device credentials to access their credit cards -->
   <string name="credit_cards_biometric_prompt_message_pin">Isbloca su disposivitu tuo</string>
   <!-- Message displayed in biometric prompt for authentication, before allowing users to use their stored payment method information -->
@@ -2801,10 +2796,6 @@
   <string name="browser_menu_remove_from_shortcuts">Boga dae is curtzadòrgios</string>
   <!-- Message in delete confirmation dialog for password -->
   <string name="login_deletion_confirmation_2">Seguru chi boles cantzellare custa crae?</string>
-  <!-- Positive action of a dialog asking to delete -->
-  <string name="dialog_delete_positive">Cantzella</string>
-  <!-- Negative action of a dialog asking to delete login -->
-  <string name="dialog_delete_negative">Annulla</string>
   <!-- The page title for editing a saved password. -->
   <string name="edit_2">Modìfica sa crae</string>
   <!-- The page title for adding new password. -->
@@ -3267,23 +3258,47 @@
     %s is the name of the app (for example "Firefox").
   -->
   <string name="protection_panel_banner_protected_title">%s t’amparat</string>
+  <plurals name="protection_panel_banner_protected_blocked_trackers_description">
+    <!--
+      Description text for the protection panel banner when privacy dashboard is enabled.
+      %1$d is the number of trackers blocked.
+    -->
+    <item quantity="one">%1$d sighidore blocadu in custu situ.</item>
+    <item quantity="other">%1$d sighidores blocados in custu situ.</item>
+  </plurals>
+  <!--
+    Description text for the protection panel banner when privacy dashboard is enabled.
+    and there are no trackers blocked.
+  -->
+  <string name="protection_panel_banner_protected_no_blocked_trackers_description">T\'amparamus.</string>
   <!-- Label text for the Enhanced Tracking Protection toggle. -->
   <string name="protection_panel_etp_toggle_label">Amparu megioradu contra sa sighidura</string>
   <!-- Toggle if Enhanced Tracking Protection is turned on -->
   <string name="protection_panel_etp_toggle_on">Ativu</string>
   <!-- Toggle if Enhanced Tracking Protection is turned off -->
   <string name="protection_panel_etp_toggle_off">Disativadu</string>
-  <!--
-    Text for displaying the total number of trackers blocked in the protection panel.
-    %d is a placeholder for the number of trackers blocked.
-  -->
-  <string name="protection_panel_num_trackers_blocked">Sighiduras blocadas: %d</string>
   <!-- Text for when tracking protection is disabled and no trackers are blocked. -->
   <string name="protection_panel_etp_disabled_no_trackers_blocked">Is sighiduras non sunt blocadas</string>
   <!-- Link text to navigate to privacy and security settings from the protection panel. -->
   <string name="protection_panel_privacy_and_security_settings_2">Cunfiguratziones de riservadesa</string>
   <!-- Title text for the protection panel permissions section. -->
   <string name="protection_panel_permissions_title">Permissos</string>
+  <plurals name="trackers_blocked_panel_total_num_trackers_blocked_2">
+    <!--
+      Text for displaying the total number of trackers blocked in the trackers blocked panel.
+      %1$d is a placeholder for the number of trackers blocked.
+    -->
+    <item quantity="one">%1$d sighidore blocadu in custu situ</item>
+    <item quantity="other">%1$d sighidores blocados in custu situ</item>
+  </plurals>
+  <plurals name="trackers_blocked_panel_num_trackers_blocked_this_week_2">
+    <!--
+      Text for displaying the number of trackers blocked this week in the trackers blocked panel.
+      %1$d is a placeholder for the number of trackers blocked this week.
+    -->
+    <item quantity="one">%1$d sighidore blocadu custa chida</item>
+    <item quantity="other">%1$d sighidores blocados custa chida</item>
+  </plurals>
   <!-- Button text on the clear site data dialog to allow users to confirm they wish to clear the site data. -->
   <string name="clear_site_data_dialog_positive_button_text">Isbòida</string>
   <!-- Button text on the clear site data dialog to allow users to cancel the action and not clear the site data. -->
@@ -3673,4 +3688,6 @@
   <string name="search_settings_google_lens_description">Imbiat immàgines e fotografias a Google pro fàghere chircas visuales.</string>
   <!-- Caption shown under the Google Lens toggle clarifying when the feature is available -->
   <string name="preferences_google_lens_availability_caption">A disponimentu isceti si as ativadu Google e dd’as cunfiguradu comente motore de chirca predefinidu durante sa navigatzione.</string>
+  <!-- Snackbar message shown when an image picked from the gallery or taken with the camera could not be opened or read, so it was never sent to Google Lens. Shown after returning to the camera. -->
+  <string name="lens_camera_image_load_failed_v2">Impossìbile carrigare s’immàgine.</string>
 </resources>

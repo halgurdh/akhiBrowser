@@ -209,9 +209,6 @@ support-files = [
 ["browser_remoteness_change_listeners.js"]
 
 ["browser_resume_bkg_video_on_tab_hover.js"]
-skip-if = [
-  "os == 'linux' && os_version == '24.04' && arch == 'x86_64' && display == 'x11' && debug && socketprocess_networking", # Bug 1775552
-]
 
 ["browser_richlistbox_keyboard.js"]
 

@@ -7,9 +7,11 @@ package org.mozilla.fenix.ui.efficiency.tests
 import org.junit.Test
 import org.mozilla.fenix.customannotations.Critical
 import org.mozilla.fenix.helpers.Constants
+import org.mozilla.fenix.helpers.TestAssetHelper.articleSummaryAsset
 import org.mozilla.fenix.helpers.TestAssetHelper.getGenericAsset
 import org.mozilla.fenix.helpers.TestHelper.restartApp
 import org.mozilla.fenix.ui.efficiency.helpers.BaseTest
+import org.mozilla.fenix.ui.efficiency.selectors.BrowserPageSelectors
 import org.mozilla.fenix.ui.efficiency.selectors.HomeSelectors
 import org.mozilla.fenix.ui.efficiency.selectors.SearchBarSelectors
 import org.mozilla.fenix.ui.efficiency.selectors.SettingsCustomizeSelectors
@@ -139,5 +141,43 @@ class SettingsCustomizeSimpleToolbarTest : BaseTest() {
         on.home.navigateToPage()
         on.browserPage.navigateToPage(firstPage.url.toString())
         on.toolbar.mozVerifyElementsByGroup(ToolbarSelectors.Group.SIMPLE_TOOLBAR_NONE_SHORTCUT_ITEMS)
+    }
+
+    // TestRail link: https://mozilla.testrail.io/index.php?/cases/view/4270858
+    @Critical
+    @Test
+    fun verifyTheSimpleToolbarLayoutSummarizePageShortcutOptionTest() {
+        val defaultWebPage = mockWebServer.articleSummaryAsset
+
+        on.settingsCustomize.navigateToPage().mozClick(SettingsCustomizeSelectors.SHORTCUT_SUMMARIZE_PAGES)
+        on.settingsCustomize.verifyOptionIsSelected(SettingsCustomizeSelectors.SHORTCUT_SUMMARIZE_PAGES)
+        on.home.navigateToPage()
+        on.browserPage.navigateToPage(defaultWebPage.url.toString())
+        on.browserPage.mozVerify(ToolbarSelectors.SIMPLE_TOOLBAR_SUMMARIZE_PAGES_BUTTON)
+        on.browserPage
+            .mozClick(ToolbarSelectors.SIMPLE_TOOLBAR_SUMMARIZE_PAGES_BUTTON)
+            .mozVerifyElementsByGroup(BrowserPageSelectors.Group.SIGN_IN_TO_SUMMARIZE_BOTTOM_SHEET)
+    }
+
+    // TestRail link: https://mozilla.testrail.io/index.php?/cases/view/4270857
+    @Critical
+    @Test
+    fun verifyLongTapShortcutDisplaysEditShortcutTest() {
+        val firstPage = mockWebServer.getGenericAsset(1)
+
+        on.browserPage
+            .navigateToPage(firstPage.url.toString())
+            .mozLongClick(ToolbarSelectors.SIMPLE_TOOLBAR_NEW_TAB_BUTTON)
+            .mozVerify(ToolbarSelectors.EDIT_SHORTCUT_BUTTON)
+            .mozClick(ToolbarSelectors.EDIT_SHORTCUT_BUTTON)
+        on.settingsCustomize.mozVerify(SettingsCustomizeSelectors.SETTINGS_CUSTOMIZE_TITLE)
+        on.settingsCustomize.mozClickByPerformClick(SettingsCustomizeSelectors.SHORTCUT_SHARE)
+        on.settingsCustomize.verifyOptionIsSelected(SettingsCustomizeSelectors.SHORTCUT_SHARE).mozPressBack()
+        on.browserPage
+            .mozVerify(ToolbarSelectors.SIMPLE_TOOLBAR_SHARE_BUTTON)
+            .mozLongClick(ToolbarSelectors.SIMPLE_TOOLBAR_SHARE_BUTTON)
+            .mozVerify(ToolbarSelectors.EDIT_SHORTCUT_BUTTON)
+            .mozClick(ToolbarSelectors.EDIT_SHORTCUT_BUTTON)
+        on.settingsCustomize.mozVerify(SettingsCustomizeSelectors.SETTINGS_CUSTOMIZE_TITLE)
     }
 }

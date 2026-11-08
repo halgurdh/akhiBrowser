@@ -31,7 +31,7 @@ class CustomizeHomepageMenuItemProviderTest {
                 icon = MenuItemIconRes(iconsR.drawable.mozac_ic_home_24),
                 onClickEvent = MenuAction.Navigate.CustomizeHomepage,
             ),
-            provider.itemFlow.value,
+            provider.itemsFlow.value.single(),
         )
     }
 
@@ -49,7 +49,7 @@ class CustomizeHomepageMenuItemProviderTest {
     fun `WHEN building the item THEN handle all events it can dispatch and no others`() {
         val provider = CustomizeHomepageMenuItemProvider(target = MenuTarget.BrowserTab)
 
-        val events = requireNotNull(provider.itemFlow.value).reachableEvents()
+        val events = provider.itemsFlow.value.single().reachableEvents()
 
         assertTrue(events.all { provider.handles(it) }, "Not all of $events are handled")
         assertFalse(provider.handles(MenuAction.Navigate.Settings))

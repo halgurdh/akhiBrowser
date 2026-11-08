@@ -475,7 +475,9 @@ add_task(async function test_turn_on_highlight_menu_not_in_text_field() {
  */
 add_task(async function test_turn_on_highlight_menu_click() {
   Services.fog.testResetFOG();
-  await SpecialPowers.pushPrefEnv({ set: MENU_OFF_PREFS });
+  await SpecialPowers.pushPrefEnv({
+    set: [...MENU_OFF_PREFS, ["browser.highlightToSearch.callout.seen", false]],
+  });
 
   await BrowserTestUtils.withNewTab("data:text/plain,hi", async browser => {
     await selectAllText(browser);
@@ -489,6 +491,10 @@ add_task(async function test_turn_on_highlight_menu_click() {
     );
     contextMenu.activateItem(document.getElementById(TURN_ON_ITEM));
     await menuHidden;
+    Assert.ok(
+      Services.prefs.getBoolPref("browser.highlightToSearch.callout.seen"),
+      "Turning the menu on counts as seeing the callout"
+    );
 
     await TestUtils.waitForCondition(
       () => panel.getAttribute("panelopen") === "true",

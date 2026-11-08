@@ -19,7 +19,7 @@ nserror = { path = "../../../xpcom/rust/nserror" }
 nsstring = { path = "../../../xpcom/rust/nsstring" }
 xpcom = { path = "../../../xpcom/rust/xpcom" }
 thin-vec = { version = "0.2.1", features = ["gecko-ffi"] }
-log = "0.4.0"
+tracing = "0.1"
 qlog = "0.18"
 libc = "0.2.0"
 rustix = { version = "1.1", default-features = false, features = ["fs", "net"] }

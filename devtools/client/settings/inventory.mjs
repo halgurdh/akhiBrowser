@@ -370,6 +370,61 @@ export const inventory = [
       },
     ],
   },
+  {
+    id: "settings-advanced",
+    l10nId: "devtools-settings-advanced",
+    settings: [
+      {
+        id: "settings-advanced-source-maps",
+        l10nId: "devtools-settings-advanced-source-maps",
+        type: "boolean",
+        pref: "devtools.source-map.client-service.enabled",
+      },
+      {
+        id: "settings-advanced-disable-cache",
+        l10nId: "devtools-settings-advanced-disable-cache",
+        type: "boolean",
+        pref: "devtools.cache.disabled",
+      },
+      {
+        id: "settings-advanced-disable-javascript",
+        l10nId: "devtools-settings-advanced-disable-javascript",
+        type: "custom-element",
+        element: "devtools-settings-disable-javascript",
+        hidden: "notTabToolbox",
+      },
+      {
+        id: "settings-advanced-service-workers-http",
+        l10nId: "devtools-settings-advanced-service-workers-http",
+        type: "boolean",
+        pref: "devtools.serviceWorkers.testing.enabled",
+      },
+      {
+        id: "settings-advanced-chrome-debugging",
+        l10nId: "devtools-settings-advanced-chrome-debugging",
+        type: "boolean",
+        pref: "devtools.chrome.enabled",
+      },
+      {
+        id: "settings-advanced-remote-debugging",
+        l10nId: "devtools-settings-advanced-remote-debugging",
+        type: "boolean",
+        pref: "devtools.debugger.remote-enabled",
+      },
+      {
+        id: "settings-advanced-f12",
+        l10nId: "devtools-settings-advanced-f12",
+        type: "boolean",
+        pref: "devtools.f12_enabled",
+      },
+      {
+        id: "settings-advanced-custom-formatters",
+        l10nId: "devtools-settings-advanced-custom-formatters",
+        type: "boolean",
+        pref: "devtools.custom-formatters.enabled",
+      },
+    ],
+  },
 ];
 
 /** @satisfies {Record<string, SettingChangeHandler>} */
@@ -409,6 +464,9 @@ export const conditions = {
     !gDevTools.getDefaultTools().some(tool => tool.id === "antitracking"),
 
   unsupportedTool: ({ toolbox, setting }) => {
+    if (!("pref" in setting)) {
+      throw new Error(`The ${setting.id} setting has no pref.`);
+    }
     const tool = getToolForPref(setting.pref);
     return !tool.isToolSupported(toolbox);
   },
@@ -416,6 +474,9 @@ export const conditions = {
   unsupportedButton: ({ toolbox, setting }) => {
     if (!toolbox) {
       return false;
+    }
+    if (!("pref" in setting)) {
+      throw new Error(`The ${setting.id} setting has no pref.`);
     }
     const button = toolbox.toolbarButtons?.find(
       definition => definition.visibilityswitch === setting.pref
@@ -425,6 +486,9 @@ export const conditions = {
     }
     return !button.isToolSupported(toolbox);
   },
+
+  notTabToolbox: ({ toolbox }) =>
+    !toolbox.commands.descriptorFront.isTabDescriptor,
 };
 
 /** @param {string} pref */

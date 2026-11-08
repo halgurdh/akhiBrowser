@@ -32,11 +32,11 @@ class FindInPageMenuItemProvider(
     private val appStore: AppStore,
     private val target: MenuTarget,
 ) : MenuItemProvider {
-    override val itemFlow: StateFlow<MenuItem?> =
+    override val itemsFlow: StateFlow<List<MenuItem>> =
         if (target == MenuTarget.CustomizeMenu) {
-            MutableStateFlow(DEFAULT_MENU_ITEM)
+            MutableStateFlow(listOf(DEFAULT_MENU_ITEM))
         } else {
-            MutableStateFlow(DEFAULT_MENU_ITEM.copy(onClickEvent = MenuAction.FindInPage))
+            MutableStateFlow(listOf(DEFAULT_MENU_ITEM.copy(onClickEvent = MenuAction.FindInPage)))
         }
 
     override fun handles(event: MenuEvent) = event == MenuAction.FindInPage

@@ -24,6 +24,7 @@
 #include "mozilla/CORSMode.h"
 #include "mozilla/CallState.h"
 #include "mozilla/ContentBlockingNotifier.h"
+#include "mozilla/EnumSet.h"
 #include "mozilla/FlushType.h"
 #include "mozilla/FunctionRef.h"
 #include "mozilla/LinkedList.h"
@@ -276,6 +277,7 @@ class NodeIterator;
 enum class OrientationType : uint8_t;
 enum class PopoverAttributeState : uint8_t;
 enum class SkipTransitionReason : uint8_t;
+enum class PrefersColorSchemeOverride : uint8_t;
 class ProcessingInstruction;
 class Promise;
 struct PropertyDefinition;
@@ -563,6 +565,25 @@ enum class LoadedAsData : uint8_t {
   // The "loaded as data" case: scripting disabled and CSS loader creation made
   // lazy
   AsData,
+};
+
+// Signals for the security.trusted_types_readiness telemetry.
+// Bug 2072122: Trusted Types readiness experiment only, to be removed.
+enum class TrustedTypesReadinessSignal : uint8_t {
+  UsedHTMLSinkWithTrustedHTML,
+  UsedHTMLSinkWithString,
+  UsedWriteSinkWithTrustedHTML,
+  UsedWriteSinkWithString,
+  CreatedPolicy,
+  UsedPolicy,
+  // A library that eases Trusted Types adoption was detected.
+  HasTrustedTypesLibrary,
+  // Script of the page itself ran: a script element, an event handler
+  // attribute or a javascript: URL.
+  RanScript,
+  // Tracks whether React code looked for the DevTools hook via `typeof` while
+  // that global variable did not exist. Finished by DetectTrustedTypesLibrary.
+  LookedUpReactDevToolsHook,
 };
 
 // Document interface.  This is implemented by all document objects in
@@ -2512,6 +2533,13 @@ class Document : public nsINode,
       mozilla::Maybe<RefPtr<mozilla::dom::CustomElementRegistry>>
           aCustomElementRegistry = mozilla::Nothing());
 
+  /**
+   * Returns the window's global registry, retained after disconnection.
+   */
+  CustomElementRegistry* GetGlobalCustomElementRegistry() const {
+    return mGlobalCustomElementRegistry;
+  }
+
   // https://dom.spec.whatwg.org/#effective-global-custom-element-registry
   mozilla::dom::CustomElementRegistry* GetEffectiveGlobalCustomElementRegistry()
       const;
@@ -3533,6 +3561,34 @@ class Document : public nsINode,
     mPageloadEventData.SetDocumentFeature(aFeature);
   }
 
+  // Bug 2072122: Trusted Types readiness experiment only, to be removed.
+  void SetTrustedTypesReadinessSignal(TrustedTypesReadinessSignal aSignal);
+
+  bool HasTrustedTypesReadinessSignal(
+      TrustedTypesReadinessSignal aSignal) const {
+    return mTrustedTypesReadinessSignals.contains(aSignal);
+  }
+
+  // Whether DetectTrustedTypesLibrary is reading the window's globals, so that
+  // its own lookups are not mistaken for a library's.
+  bool IsDetectingTrustedTypesLibrary() const {
+    return mDetectingTrustedTypesLibrary;
+  }
+
+  void RecordTrustedTypesHTMLSink(bool aIsTrustedHTML) {
+    SetTrustedTypesReadinessSignal(
+        aIsTrustedHTML
+            ? TrustedTypesReadinessSignal::UsedHTMLSinkWithTrustedHTML
+            : TrustedTypesReadinessSignal::UsedHTMLSinkWithString);
+  }
+
+  void RecordTrustedTypesWriteSink(bool aIsTrustedHTML) {
+    SetTrustedTypesReadinessSignal(
+        aIsTrustedHTML
+            ? TrustedTypesReadinessSignal::UsedWriteSinkWithTrustedHTML
+            : TrustedTypesReadinessSignal::UsedWriteSinkWithString);
+  }
+
   ContentList* ImageMapList();
 
   // Add aLink to the set of links that need their status resolved.
@@ -4076,6 +4132,17 @@ class Document : public nsINode,
   // effect once per document, and so is called during document destruction.
   void ReportDocumentUseCounters();
 
+  // Bug 2072122: Trusted Types readiness experiment only, to be removed.
+  // Reports the security.trusted_types_readiness telemetry. Called from
+  // ReportDocumentUseCounters so that it is reported exactly once for every
+  // document counted in use.counter.content_documents_destroyed.
+  void ReportTrustedTypesReadiness();
+
+  // Bug 2072122: Trusted Types readiness experiment only, to be removed.
+  // Detects libraries from the window's globals and from Angular's ng-version
+  // attribute on body or one of its first children.
+  void DetectTrustedTypesLibrary();
+
   // Reports largest contentful paint via telemetry. We want the most up to
   // date value for LCP and so this is called during document destruction.
   void ReportLCP();
@@ -4452,15 +4519,10 @@ class Document : public nsINode,
   void OnParsingCompleted();
 
   /**
-   * This method is called when the initial translation
-   * of the document is completed.
-   *
-   * It unblocks the load event if translation was blocking it.
-   *
-   * If the `aL10nCached` is set to `true`, and the document has
-   * a prototype, it will set the `isL10nCached` flag on it.
+   * This method is called when the initial translation of the document is
+   * completed. It unblocks the load event if translation was blocking it.
    */
-  void InitialTranslationCompleted(bool aL10nCached);
+  void InitialTranslationCompleted();
 
   /**
    * Returns whether the document allows localization.
@@ -4634,6 +4696,9 @@ class Document : public nsINode,
   // CSS prefers-color-scheme media feature for this document.
   enum class IgnoreRFP { No, Yes };
   ColorScheme PreferredColorScheme(IgnoreRFP = IgnoreRFP::No) const;
+  // Returns the embedder overridden prefers-color-scheme override.
+  PrefersColorSchemeOverride GetOverriddenOrEmbedderColorScheme(
+      IgnoreRFP = IgnoreRFP::No) const;
   // Returns the initial color-scheme used for this document based on the
   // color-scheme meta tag.
   ColorScheme DefaultColorScheme() const;
@@ -5604,6 +5669,8 @@ class Document : public nsINode,
   // *inner* window object.
   nsCOMPtr<nsIScriptGlobalObject> mScriptGlobalObject;
 
+  RefPtr<CustomElementRegistry> mGlobalCustomElementRegistry;
+
   // If mIsStaticDocument is true, mOriginalDocument points to the original
   // document.
   RefPtr<Document> mOriginalDocument;
@@ -6076,6 +6143,13 @@ class Document : public nsINode,
   // Collection of data used by the pageload event.
   PageloadEventData mPageloadEventData;
 
+  // Bug 2072122: Trusted Types readiness experiment only, to be removed.
+  EnumSet<TrustedTypesReadinessSignal, uint16_t> mTrustedTypesReadinessSignals;
+  // Whether the pref was on when this document was created. Library detection
+  // only runs while it is on, so earlier documents can't report a wrong lib.
+  bool mRecordTrustedTypesReadiness = false;
+  bool mDetectingTrustedTypesLibrary = false;
+
   // Whether AccumulatePageLoadTelemetry() collected metrics, and whether the
   // tab was foreground when the load event started. Background loads are still
   // reported, but are left out of the paint and load timing histograms, as is
@@ -6150,8 +6224,10 @@ class Document : public nsINode,
 
   bool HasPendingInitialTranslation();
 
-  nsRefPtrHashtable<nsRefPtrHashKey<Element>, nsXULPrototypeElement>
-      mL10nProtoElements;
+  using ElementToProtoMap =
+      nsRefPtrHashtable<nsRefPtrHashKey<Element>, nsXULPrototypeElement>;
+  // The map from untranslated elements to their prototype.
+  ElementToProtoMap mUntranslatedL10nProtoElements;
 
   void LoadEventFired();
 

@@ -54,7 +54,6 @@ class nsFontFaceList;
 class nsIImageLoadingContent;
 class nsBlockFrame;
 class nsContainerFrame;
-class nsView;
 class nsIFrame;
 class nsPIDOMWindowOuter;
 class imgIRequest;
@@ -393,6 +392,12 @@ class nsLayoutUtils {
       const nsIFrame* aStyleFrame);
 
   /**
+   * Returns the primary frame of aContent, or the frame of the image using the
+   * image map if aContent is an <area>.  Areas have no frame of their own.
+   */
+  static nsIFrame* GetPrimaryOrAreaImageFrame(const nsIContent* aContent);
+
+  /**
    * Similar to nsIFrame::IsPrimaryFrame except that this will return true
    * for the inner table frame rather than for its wrapper frame.
    */
@@ -465,15 +470,6 @@ class nsLayoutUtils {
    * if aFrame is null.
    */
   static nsIFrame* GetLastSibling(nsIFrame* aFrame);
-
-  /**
-   * FindSiblingViewFor locates the child of aParentView that aFrame's
-   * view should be inserted 'above' (i.e., before in sibling view
-   * order).  This is the first child view of aParentView whose
-   * corresponding content is before aFrame's content (view siblings
-   * are in reverse content order).
-   */
-  static nsView* FindSiblingViewFor(nsView* aParentView, nsIFrame* aFrame);
 
   /**
    * Get the parent of aFrame. If aFrame is the root frame for a document,
@@ -2506,12 +2502,6 @@ class nsLayoutUtils {
                                       nscolor aBackstop);
 
   /**
-   * Returns true if the passed in prescontext needs the dark grey background
-   * that goes behind the page of a print preview presentation.
-   */
-  static bool NeedsPrintPreviewBackground(nsPresContext* aPresContext);
-
-  /**
    * Types used by the helpers for InspectorUtils.getUsedFontFaces.
    * The API returns an array (UsedFontFaceList) that owns the
    * InspectorFontFace instances, but during range traversal we also
@@ -3187,8 +3177,6 @@ class nsLayoutUtils {
                                 mozilla::StyleSystemFont aFontID,
                                 const nsFont& aDefaultVariableFont,
                                 const mozilla::dom::Document* aDocument);
-
-  static uint32_t ParseFontLanguageOverride(const nsAString& aLangTag);
 
   /**
    * Returns true if there are any preferences or overrides that indicate a

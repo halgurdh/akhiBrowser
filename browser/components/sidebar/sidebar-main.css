@@ -75,6 +75,10 @@
     min-height: 4px;
   }
 
+  :host(:not([expanded])) & {
+    margin-inline-end: calc(var(--tab-margin-inline-inner) + var(--tab-collapsed-scrollbar-extra, 0px));
+  }
+
   &:hover {
     background-color: var(--focus-outline-color);
     border-radius: var(--border-radius-medium);
@@ -113,6 +117,7 @@
      * visibly shrink in compact mode to keep the trigger stable. */
     --button-outer-padding-inline: var(--sidebar-launcher-button-padding-inline, var(--space-medium));
     --button-outer-padding-block: var(--space-xxsmall);
+    --button-outer-padding-inline-end: calc(var(--button-outer-padding-inline) + var(--tab-collapsed-scrollbar-extra, 0px));
 
     &:first-of-type {
       --button-outer-padding-block-start: var(--space-small);

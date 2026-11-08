@@ -443,9 +443,6 @@ nsresult ContentAnalysisRequest::GetFileDigest(const nsAString& aFilePath,
   auto closeFile = MakeScopeExit([fd]() { PR_Close(fd); });
   constexpr uint32_t kBufferSize = 1024 * 1024;
   auto buffer = std::make_unique<uint8_t[]>(kBufferSize);
-  if (!buffer) {
-    return NS_ERROR_OUT_OF_MEMORY;
-  }
   PRInt32 bytesRead = PR_Read(fd, buffer.get(), kBufferSize);
   while (bytesRead != 0) {
     if (bytesRead == -1) {
@@ -2957,15 +2954,15 @@ ContentAnalysis::CheckUploadsInBatchMode(
     nsCOMArray<nsIFile>&& aFiles, bool aAutoAcknowledge,
     mozilla::dom::WindowGlobalParent* aWindow,
     nsIContentAnalysisRequest::Reason aReason, nsIURI* aURI /* = nullptr */) {
-  nsresult rv;
   auto contentAnalysis = GetContentAnalysisFromService();
   // Ideally the caller would check all of this before going through the work
   // of building up aFiles, but we'll double-check here.
   if (NS_WARN_IF(!contentAnalysis)) {
-    return FilesAllowedPromise::CreateAndReject(rv, __func__);
+    return FilesAllowedPromise::CreateAndReject(NS_ERROR_NOT_AVAILABLE,
+                                                __func__);
   }
   bool contentAnalysisIsActive = false;
-  rv = contentAnalysis->GetIsActive(&contentAnalysisIsActive);
+  nsresult rv = contentAnalysis->GetIsActive(&contentAnalysisIsActive);
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return FilesAllowedPromise::CreateAndReject(rv, __func__);
   }

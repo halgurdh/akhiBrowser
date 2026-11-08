@@ -14,6 +14,7 @@ import mozilla.components.concept.engine.mediasession.MediaSession
 import mozilla.components.feature.tabdata.coordinator.data.Tab
 import mozilla.components.feature.tabdata.coordinator.repository.TabRepository
 import mozilla.components.feature.tabs.TabsUseCases
+import org.mozilla.fenix.components.usecases.FenixBrowserUseCases
 import org.mozilla.fenix.ext.maxActiveTime
 import org.mozilla.fenix.tabstray.ext.toDisplayTitle
 
@@ -22,10 +23,12 @@ import org.mozilla.fenix.tabstray.ext.toDisplayTitle
  *
  * @param browserStore The [BrowserStore] holding the open tabs to observe.
  * @param tabsUseCases The [TabsUseCases] used to update the open tabs.
+ * @param fenixBrowserUseCases The [FenixBrowserUseCases] used to open new homepage tabs.
  */
 class DefaultTabRepository(
     browserStore: BrowserStore,
     private val tabsUseCases: TabsUseCases,
+    private val fenixBrowserUseCases: FenixBrowserUseCases,
 ) : TabRepository {
 
     override val tabFlow: Flow<TabRepository.Data> =
@@ -49,6 +52,12 @@ class DefaultTabRepository(
     override fun removeTabs(tabIds: List<String>, excludedFallbackTabIds: Set<String>) {
         tabsUseCases.removeTabs.invoke(ids = tabIds, excludedFallbackTabIds = excludedFallbackTabIds)
     }
+
+    override fun selectTab(tabId: String) {
+        tabsUseCases.selectTab.invoke(tabId)
+    }
+
+    override fun addNewTab(): String = fenixBrowserUseCases.addNewHomepageTab(selectTab = false)
 }
 
 private fun TabSessionState.toTab(): Tab =
@@ -59,6 +68,6 @@ private fun TabSessionState.toTab(): Tab =
         private = content.private,
         inactive = !isActive(maxActiveTime = maxActiveTime),
         icon = content.icon,
-        isMediaActive = mediaSessionState?.playbackState == MediaSession.PlaybackState.PLAYING,
+        isMediaActive = mediaSessionState?.playbackState == MediaSession.PlaybackState.PLAYING || listenToPageActive,
         lastAccess = lastAccess,
     )

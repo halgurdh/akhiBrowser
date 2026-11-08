@@ -37,8 +37,6 @@
 #include "mozilla/net/ChannelClassifierUtils.h"
 #include "mozilla/net/DNS.h"
 #include "mozilla/net/NeckoChild.h"
-#include "mozilla/net/PBackgroundDataBridge.h"
-#include "mozilla/net/SocketProcessBridgeChild.h"
 #include "nsCOMPtr.h"
 #include "nsCORSListenerProxy.h"
 #include "nsContentPolicyUtils.h"
@@ -651,7 +649,7 @@ void HttpChannelChild::DoOnStartRequest(nsIRequest* aRequest) {
     }
   }
 
-#if defined(EARLY_BETA_OR_EARLIER) || defined(DEBUG)
+#if defined(NIGHTLY_BUILD) || defined(DEBUG)
   if (nsCOMPtr<nsIThreadRetargetableRequest> req =
           do_QueryInterface(aRequest)) {
     nsCOMPtr<nsISerialEventTarget> target;
@@ -761,8 +759,6 @@ void HttpChannelChild::OnTransportAndData(const nsresult& aChannelStatus,
   DoOnDataAvailable(this, stringStream, aOffset, aData.Length());
   stringStream->Close();
 
-  // TODO: Bug 1523916 backpressure needs to take into account if the data is
-  // coming from the main process or from the socket process via PBackground.
   if (NeedToReportBytesRead()) {
     mUnreportBytesRead += aData.Length();
     if (mUnreportBytesRead >= gHttpHandler->SendWindowSize() >> 2) {
@@ -911,12 +907,9 @@ void HttpChannelChild::SendOnDataFinished(const nsresult& aChannelStatus) {
 void HttpChannelChild::ProcessOnStopRequest(
     const nsresult& aChannelStatus, const ResourceTimingStructArgs& aTiming,
     const nsHttpHeaderArray& aResponseTrailers,
-    nsTArray<ConsoleReportCollected>&& aConsoleReports, bool aFromSocketProcess,
+    nsTArray<ConsoleReportCollected>&& aConsoleReports,
     const TimeStamp& aOnStopRequestStartTime) {
-  LOG(
-      ("HttpChannelChild::ProcessOnStopRequest [this=%p, "
-       "aFromSocketProcess=%d]\n",
-       this, aFromSocketProcess));
+  LOG(("HttpChannelChild::ProcessOnStopRequest [this=%p]\n", this));
   MOZ_ASSERT(OnSocketThread());
   mTransferSize = aTiming.transferSize();
   mEncodedBodySize = aTiming.encodedBodySize();
@@ -932,27 +925,11 @@ void HttpChannelChild::ProcessOnStopRequest(
         }));
   }
   mEventQ->RunOrEnqueue(std::make_unique<NeckoTargetChannelFunctionEvent>(
-      this, [self = UnsafePtr<HttpChannelChild>(this), aChannelStatus, aTiming,
-             aResponseTrailers,
-             consoleReports = CopyableTArray{aConsoleReports.Clone()},
-             aFromSocketProcess]() mutable {
-        self->OnStopRequest(aChannelStatus, aTiming, aResponseTrailers);
-        if (!aFromSocketProcess) {
-          self->DoOnConsoleReport(std::move(consoleReports));
-          self->ContinueOnStopRequest();
-        }
-      }));
-}
-
-void HttpChannelChild::ProcessOnConsoleReport(
-    nsTArray<ConsoleReportCollected>&& aConsoleReports) {
-  LOG(("HttpChannelChild::ProcessOnConsoleReport [this=%p]\n", this));
-  MOZ_ASSERT(OnSocketThread());
-
-  mEventQ->RunOrEnqueue(std::make_unique<NeckoTargetChannelFunctionEvent>(
       this,
-      [self = UnsafePtr<HttpChannelChild>(this),
+      [self = UnsafePtr<HttpChannelChild>(this), aChannelStatus, aTiming,
+       aResponseTrailers,
        consoleReports = CopyableTArray{aConsoleReports.Clone()}]() mutable {
+        self->OnStopRequest(aChannelStatus, aTiming, aResponseTrailers);
         self->DoOnConsoleReport(std::move(consoleReports));
         self->ContinueOnStopRequest();
       }));
@@ -2179,9 +2156,6 @@ HttpChannelChild::ConnectParent(uint32_t registrarId) {
   MOZ_ASSERT(!mSuspendForWaitCompleteRedirectSetup);
   mSuspendForWaitCompleteRedirectSetup = true;
 
-  // Connect to socket process after mEventQ is suspended.
-  MaybeConnectToSocketProcess();
-
   return NS_OK;
 }
 
@@ -2838,8 +2812,6 @@ nsresult HttpChannelChild::ContinueAsyncOpen() {
     mEverHadBgChildAtAsyncOpen = true;
 #endif
   }
-
-  MaybeConnectToSocketProcess();
 
   return NS_OK;
 }
@@ -3721,41 +3693,6 @@ void HttpChannelChild::DoDiagnosticAssertWhenOnStopNotCalledOnDestroy() {
 #ifdef MOZ_DIAGNOSTIC_ASSERT_ENABLED
   mDoDiagnosticAssertWhenOnStopNotCalledOnDestroy = true;
 #endif
-}
-
-void HttpChannelChild::MaybeConnectToSocketProcess() {
-  if (!nsIOService::UseSocketProcess()) {
-    return;
-  }
-
-  if (!StaticPrefs::network_send_ODA_to_content_directly()) {
-    return;
-  }
-
-  RefPtr<HttpBackgroundChannelChild> bgChild;
-  {
-    MutexAutoLock lock(mBgChildMutex);
-    bgChild = mBgChild;
-  }
-  SocketProcessBridgeChild::GetSocketProcessBridge()->Then(
-      GetCurrentSerialEventTarget(), __func__,
-      [bgChild, channelId = ChannelId()](
-          const RefPtr<SocketProcessBridgeChild>& aBridge) {
-        Endpoint<PBackgroundDataBridgeParent> parentEndpoint;
-        Endpoint<PBackgroundDataBridgeChild> childEndpoint;
-        PBackgroundDataBridge::CreateEndpoints(&parentEndpoint, &childEndpoint);
-        aBridge->SendInitBackgroundDataBridge(std::move(parentEndpoint),
-                                              channelId);
-
-        gSocketTransportService->Dispatch(
-            NS_NewRunnableFunction(
-                "HttpBackgroundChannelChild::CreateDataBridge",
-                [bgChild, endpoint = std::move(childEndpoint)]() mutable {
-                  bgChild->CreateDataBridge(std::move(endpoint));
-                }),
-            NS_DISPATCH_NORMAL);
-      },
-      []() { NS_WARNING("Failed to create SocketProcessBridgeChild"); });
 }
 
 NS_IMETHODIMP

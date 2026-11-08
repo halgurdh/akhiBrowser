@@ -62,6 +62,7 @@ import org.mozilla.fenix.ext.WIDE_SCREEN_WIDTH_DP
 import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.ext.getPreferenceKey
 import org.mozilla.fenix.home.pocket.ContentRecommendationsFeatureHelper
+import org.mozilla.fenix.home.topsites.FenixDefaultTopSitesProvider
 import org.mozilla.fenix.home.topsites.TopSitesConfigConstants.TOP_SITES_MAX_COUNT
 import org.mozilla.fenix.nimbus.DefaultBrowserPrompt
 import org.mozilla.fenix.nimbus.FxNimbus
@@ -75,11 +76,9 @@ import org.mozilla.fenix.settings.sitepermissions.AUTOPLAY_BLOCK_ALL
 import org.mozilla.fenix.settings.sitepermissions.AUTOPLAY_BLOCK_AUDIBLE
 import org.mozilla.fenix.tabstray.DefaultTabManagementFeatureHelper
 import org.mozilla.fenix.termsofuse.TOU_VERSION
-import org.mozilla.fenix.utils.Settings.Companion.LONGFOX_PEEK_ANIMATION_MAX_SHOWS
 import org.mozilla.fenix.wallpapers.Wallpaper
 
 private const val AUTOPLAY_USER_SETTING = "AUTOPLAY_USER_SETTING"
-private const val MAX_ANIMATION_FOREGROUND = 5
 
 /**
  * A simple wrapper for SharedPreferences that makes reading preference a little bit easier.
@@ -330,10 +329,6 @@ class Settings(
     private val homescreenSections: Map<HomeScreenSection, Boolean>
         get() = FxNimbus.features.homescreen.value().sectionsEnabled
 
-    /** Indicates whether or not the homepage should use edge to edge background */
-    val enableHomepageEdgeToEdgeBackgroundFeature: Boolean
-        get() = FxNimbus.features.homescreenEdgeToEdgeBackground.value().enabled
-
     var numberOfAppLaunches by
         intPreference(
             appContext.getPreferenceKey(R.string.pref_key_times_app_opened),
@@ -580,12 +575,7 @@ class Settings(
     var currentWallpaperName by
         stringPreference(
             appContext.getPreferenceKey(R.string.pref_key_current_wallpaper),
-            default =
-                if (enableHomepageEdgeToEdgeBackgroundFeature) {
-                    Wallpaper.EdgeToEdge.name
-                } else {
-                    Wallpaper.Default.name
-                },
+            default = Wallpaper.EdgeToEdge.name,
         )
 
     /**
@@ -1798,9 +1788,24 @@ class Settings(
             default = true,
         )
 
-    var defaultTopSitesAdded by
+    /**
+     * Whether default pinned top sites that are included in the application on the first run of the application have
+     * been added.
+     */
+    var defaultPinnedTopSitesAdded by
         booleanPreference(
             appContext.getPreferenceKey(R.string.default_top_sites_added),
+            default = false,
+        )
+
+    /**
+     * Whether the default top sites that the user had already removed have been migrated over to the homescreen
+     * blocklist. This applies to existing users that had their default top sites added to the user-pinned sites storage
+     * before they were served as backfills from [FenixDefaultTopSitesProvider].
+     */
+    var removedDefaultPinnedTopSitesMigrated by
+        booleanPreference(
+            appContext.getPreferenceKey(R.string.pref_key_removed_default_pinned_top_sites_migrated),
             default = false,
         )
 
@@ -2030,6 +2035,13 @@ class Settings(
         booleanPreference(
             appContext.getPreferenceKey(R.string.pref_key_search_widget_installed_2),
             default = false,
+        )
+
+    /** The IDs of the search widgets on the home screen at the last check, used to detect newly added widgets. */
+    var searchWidgetIds by
+        stringSetPreference(
+            appContext.getPreferenceKey(R.string.pref_key_search_widget_ids),
+            default = setOf(),
         )
 
     /** The app version code that last published the generated search bar widget previews. */
@@ -2661,13 +2673,6 @@ class Settings(
             default = { FxNimbus.features.homepageAsNewTab.value().enabled },
         )
 
-    /** Whether the universal edge-to-edge wallpapers treatment is enabled. */
-    var enableUniversalEdgeToEdgeWallpapers by
-        booleanPreference(
-            key = appContext.getPreferenceKey(R.string.pref_key_enable_universal_edge_to_edge_wallpapers),
-            default = { FxNimbus.features.universalEdgeToEdgeWallpapers.value().enabled },
-        )
-
     /** Indicates if the Homepage Search Bar is enabled. */
     var enableHomepageSearchBar by
         booleanPreference(
@@ -2695,6 +2700,10 @@ class Settings(
             key = appContext.getPreferenceKey(R.string.pref_key_show_more_shortcuts),
             default = { FxNimbus.features.showMoreShortcuts.value().enabled },
         )
+
+    /** Indicates if the regional default shortcuts are enabled. */
+    val enableRegionalDefaultShortcuts: Boolean
+        get() = FxNimbus.features.regionalDefaultShortcuts.value().enabled
 
     /** Indicates if the Homepage Weather Widget is enabled. */
     var enableHomepageWeatherWidget by
@@ -2939,7 +2948,7 @@ class Settings(
      *
      * `true` makes the IPProtection UI elements visible across the app, while `false` hides them.
      */
-    var isIPProtectionEnabled by
+    var overrideIPProtectionEnabled by
         booleanPreference(
             key = appContext.getPreferenceKey(R.string.pref_key_enable_ip_protection),
             default = false,
@@ -2972,6 +2981,17 @@ class Settings(
             default = false,
         )
 
+    /**
+     * The reset time of the most recent VPN allowance cycle for which the data limit notice was shown, or `null` if
+     * none has been shown yet. The notice occurs at most one time per cycle.
+     */
+    var ipProtectionLastDataLimitNoticeCycleResetTime: String?
+        get() = preferences.getString(lastDataLimitNoticeCycleResetTimeKey, null)
+        set(value) = preferences.edit { putString(lastDataLimitNoticeCycleResetTimeKey, value) }
+
+    private val lastDataLimitNoticeCycleResetTimeKey =
+        appContext.getPreferenceKey(R.string.pref_key_ip_protection_last_data_limit_notice_cycle_reset_time)
+
     /** Indicates if the IPProtection onboarding bottom sheet feature variable is enabled via Nimbus. */
     val shouldShowIPProtectionOnboardingBottomSheet: Boolean
         get() = FxNimbus.features.ipProtection.value().showOnboardingBottomSheet
@@ -2982,7 +3002,7 @@ class Settings(
      * The flag is backed by a Nimbus `ip-protection` feature, with an option to override it through secret settings.
      */
     val isIPProtectionAvailable: Boolean
-        get() = FxNimbus.features.ipProtection.value().enabled || isIPProtectionEnabled
+        get() = FxNimbus.features.ipProtection.value().enabled || overrideIPProtectionEnabled
 
     /**
      * Tracks how many times the summarize menu item has been shown. Used to control highlight/badge visibility for
@@ -3296,54 +3316,6 @@ class Settings(
             default = { DefaultTabManagementFeatureHelper.openingAnimationEnabled },
         )
 
-    /** Whether the private mode and stories entry point experiment is enabled. */
-    var privateModeAndStoriesEntryPointEnabled by
-        booleanPreference(
-            key = appContext.getPreferenceKey(R.string.pref_key_private_mode_and_stories_entry_point),
-            default = { FxNimbus.features.privateModeAndStoriesEntryPoint.value().enabled },
-        )
-
-    /**
-     * The number of times the app has been brought to the foreground since the news button animation was last shown.
-     */
-    var newsButtonForegroundCount by
-        intPreference(
-            key = appContext.getPreferenceKey(R.string.pref_key_news_button_foreground_count),
-            default = 0,
-        )
-
-    /** The timestamp in milliseconds when the news button animation was last shown. */
-    var newsButtonAnimationLastShownMillis by
-        longPreference(
-            appContext.getPreferenceKey(R.string.pref_key_news_button_animation_last_shown),
-            default = 0L,
-        )
-
-    /** Increments [newsButtonForegroundCount] up to a maximum of 5. */
-    fun incrementNewsButtonForegroundCount() {
-        if (newsButtonForegroundCount < MAX_ANIMATION_FOREGROUND) {
-            newsButtonForegroundCount++
-        }
-    }
-
-    /**
-     * Returns whether the news button animation should be shown. The animation is shown every 5 foreground visits and
-     * at most once per week.
-     */
-    fun shouldShowNewsButtonAnimation(): Boolean {
-        return (newsButtonForegroundCount % MAX_ANIMATION_FOREGROUND == 0) &&
-            (currentTimeMillis() - newsButtonAnimationLastShownMillis >= ONE_WEEK_MS)
-    }
-
-    /**
-     * Records that the news button animation has been shown by updating the last shown timestamp and resetting
-     * [newsButtonForegroundCount].
-     */
-    fun recordNewsButtonAnimationShown() {
-        newsButtonAnimationLastShownMillis = currentTimeMillis()
-        newsButtonForegroundCount = 0
-    }
-
     /** Whether the Tab Groups feature is enabled. */
     var tabGroupsEnabled by
         booleanPreference(
@@ -3405,8 +3377,8 @@ class Settings(
 
     /**
      * User preference (local only) controlling whether the Google Lens integration is active when
-     * [googleLensIntegrationEnabled] is on. When false, the standard QR scanner is used and the "Open with Google Lens"
-     * image context menu entry is hidden.
+     * [googleLensIntegrationEnabled] is on. When false, the toolbar offers the QR scanner instead of Google Lens and
+     * the "Open with Google Lens" image context menu entry is hidden.
      */
     var googleLensIntegrationUserEnabled by
         booleanPreference(
@@ -3455,11 +3427,7 @@ class Settings(
         )
 
     /** Whether customizing the browser menu is allowed. */
-    var isMenuCustomizationEnabled by
-        booleanPreference(
-            key = appContext.getPreferenceKey(R.string.pref_key_enable_menu_customization),
-            default = { false },
-        )
+    val isMenuCustomizationEnabled = true
 
     /** Whether entering the browser menu customization screen is allowed. */
     var isMenuCustomizationScreenEnabled by
@@ -3574,6 +3542,12 @@ class Settings(
         booleanPreference(
             key = appContext.getPreferenceKey(R.string.pref_key_enable_sync_decoupling),
             default = { FxNimbus.features.accountSyncDecouple.value().enabled },
+        )
+
+    var isQwacUiEnabled by
+        booleanPreference(
+            key = appContext.getPreferenceKey(R.string.pref_key_enable_qwac_ui),
+            default = false,
         )
 
     private var powerSavingModeAutoPreference by

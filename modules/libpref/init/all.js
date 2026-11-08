@@ -251,8 +251,8 @@ pref("media.videocontrols.keyboard-tab-to-all-controls", true);
   pref("media.navigator.video.offer_rtcp_rsize", true);
 
   #ifdef NIGHTLY_BUILD
-    pref("media.peerconnection.sdp.parser", "sipcc");
-    pref("media.peerconnection.sdp.alternate_parse_mode", "parallel");
+    pref("media.peerconnection.sdp.parser", "webrtc-sdp");
+    pref("media.peerconnection.sdp.alternate_parse_mode", "never");
     pref("media.peerconnection.sdp.strict_success", false);
   #else
     pref("media.peerconnection.sdp.parser", "sipcc");
@@ -3000,6 +3000,9 @@ pref("signon.signupDetection.confidenceThreshold",     "0.75");
 #endif
 // Kill switch for restoring logins out of a deactivated Rust backend.
 pref("signon.storage.rust.restoreEnabled", true);
+// Stop prompting for the primary password at startup to migrate after this
+// many canceled prompts; 0 means no limit.
+pref("signon.storage.rust.maxPrimaryPasswordDeferrals", 3);
 // The following four prefs are managed by Fx internally:
 pref("signon.storage.rust.active", false);
 pref("signon.storage.rust.migrationAttempts", 0);
@@ -3007,6 +3010,7 @@ pref("signon.storage.rust.restoreAttempts", 0);
 pref("signon.storage.rust.restoreAttemptsVersion", 0);
 pref("signon.storage.rust.restoreVersion", 0);
 pref("signon.storage.rust.restoreTargetVersion", 1);
+pref("signon.storage.rust.primaryPasswordDeferrals", 0);
 
 // Satchel (Form Manager) prefs
 pref("browser.formfill.debug",            false);
@@ -3068,6 +3072,11 @@ pref("network.tcp.keepalive.idle_time", 600); // seconds; 10 mins
   // Timeout for outbound network geolocation provider.
   pref("geo.provider.network.timeout", 60000);
 #endif
+
+// Maximum age, in days, of a response the NetworkGeolocationProvider request
+// cache (which is persisted across browser sessions) may reuse. Clamped to
+// the range 1 to 30.
+pref("geo.provider.network.requestCache.maxAgeDays", 30);
 
 #ifdef XP_MACOSX
   pref("geo.provider.use_corelocation", true);
@@ -3807,13 +3816,6 @@ pref("services.common.log.logger.tokenserverclient", "Debug");
   pref("services.sync.telemetry.submissionInterval", 43200); // 12 hours in seconds
   pref("services.sync.telemetry.maxPayloadCount", 500);
 
-  #ifdef EARLY_BETA_OR_EARLIER
-    // Enable the (fairly costly) client/server validation through early Beta, but
-    // not release candidates or Release.
-    pref("services.sync.engine.bookmarks.validation.enabled", true);
-    pref("services.sync.engine.passwords.validation.enabled", true);
-  #endif
-
   // We consider validation this frequently. After considering validation, even
   // if we don't end up validating, we won't try again unless this much time has passed.
   pref("services.sync.engine.bookmarks.validation.interval", 86400); // 24 hours in seconds
@@ -4160,6 +4162,9 @@ pref("extensions.formautofill.creditCards.ignoreAutocompleteOff", true);
 // "on"/"off" values as the other supported prefs above. Nothing about the CVV
 // (cc-csc) field is offered while this is "off", including the setting that
 // lets the user turn capture on or off.
+// Given that Android also relies on this flag to determine cvv enablement, 
+// do not flip this value for all platforms and instead use platform specific 
+// checks to enable and disable this in a controlled per platform capacity.
 pref("extensions.formautofill.creditCards.cvv.supported", "off");
 // The user's own choice, exposed as a setting once the feature is supported.
 // CVVs are only captured and stored when both prefs are true; see

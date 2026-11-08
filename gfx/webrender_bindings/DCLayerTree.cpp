@@ -667,8 +667,8 @@ void DCLayerTree::CompositorEndFrame() {
     MOZ_RELEASE_ASSERT(surface_it != mDCSurfaces.end());
     const auto surface = surface_it->second.get();
     if (!same) {
-      // Layer compositor expects front to back.
-      mRootVisual->AddVisual(surface->GetRootVisual(), true, nullptr);
+      // WebRender adds surfaces back to front.
+      mRootVisual->AddVisual(surface->GetRootVisual(), false, nullptr);
     }
   }
 
@@ -2392,9 +2392,10 @@ bool DCSurfaceVideo::CalculateSwapChainSize(gfx::Matrix& aTransform) {
   if (profiler_thread_is_being_profiled_for_markers()) {
     nsPrintfCString str(
         "useVpAutoHDR %d gfxVars %d contentIsHDR %d monitor %d driver %d "
-        "charging %d failed %d",
+        "charging %d failed %d isDRM %d",
         useVpAutoHDR, gfx::gfxVars::WebRenderOverlayVpAutoHDR(), contentIsHDR,
-        monitorIsHDR, driverSupportsAutoHDR, powerIsCharging, mVpAutoHDRFailed);
+        monitorIsHDR, driverSupportsAutoHDR, powerIsCharging, mVpAutoHDRFailed,
+        isDRM);
     PROFILER_MARKER_TEXT("DCSurfaceVideo", GRAPHICS, {}, str);
   }
 

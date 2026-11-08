@@ -31,15 +31,17 @@ class PasswordsMenuItemProvider(
     isAutofillSupported: Boolean,
     private val target: MenuTarget,
 ) : MenuItemProvider {
-    override val itemFlow: StateFlow<MenuItem?> =
+    override val itemsFlow: StateFlow<List<MenuItem>> =
         if (target == MenuTarget.CustomizeMenu) {
-            MutableStateFlow(DEFAULT_MENU_ITEM)
+            MutableStateFlow(listOf(DEFAULT_MENU_ITEM))
         } else {
             MutableStateFlow(
-                when (isAutofillSupported) {
-                    true -> DEFAULT_MENU_ITEM.copy(onClickEvent = MenuAction.Navigate.Passwords)
-                    false -> null
-                }
+                listOfNotNull(
+                    when (isAutofillSupported) {
+                        true -> DEFAULT_MENU_ITEM.copy(onClickEvent = MenuAction.Navigate.Passwords)
+                        false -> null
+                    }
+                )
             )
         }
 

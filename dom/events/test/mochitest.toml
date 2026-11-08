@@ -37,6 +37,8 @@ tags = "os_integration"
 ["test_accesskey.html"]
 tags = "os_integration"
 
+["test_accesskey_visibility_content.html"]
+
 ["test_addEventListenerExtraArg.html"]
 
 ["test_all_synthetic_events.html"]
@@ -608,7 +610,6 @@ support-files = ["file_mouse_enterleave.html"]
 skip-if = [
   "http2",
   "http3",
-  "opt", # Bug 1781668
   "os == 'android'", # timeout
   "os == 'linux' && os_version == '22.04' && arch == 'x86_64' && display == 'wayland'", # Bug 1857022
   "verify-standalone",

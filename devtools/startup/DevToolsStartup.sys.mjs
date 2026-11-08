@@ -770,6 +770,10 @@ export class DevToolsStartup {
           this.onBeforeCreated(anchor.ownerDocument);
         },
         onBeforeCreated: doc => {
+          if (doc.documentElement.hasAttribute("mini-window")) {
+            return;
+          }
+
           // The developer toggle needs the "key_toggleToolbox" <key> element.
           // In DEV EDITION, the toggle is added before 1st paint and hookKeyShortcuts() is
           // not called yet when CustomizableUI creates the widget.
@@ -1139,7 +1143,7 @@ export class DevToolsStartup {
     );
     // Ensure loading main devtools module that hooks up into browser UI
     // and initialize all devtools machinery.
-    // eslint-disable-next-line import/no-unassigned-import
+    // eslint-disable-next-line import-x/no-unassigned-import
     require("devtools/client/framework/devtools-browser");
     return require;
   }

@@ -4,16 +4,18 @@
 */
 
 use crate::mars::Environment;
+use crate::non_empty_string::NonEmptyString;
 
-pub struct AdsClientConfig {
+pub(crate) struct AdsClientConfig {
     pub cache_config: Option<AdsCacheConfig>,
     pub environment: Environment,
     #[cfg(feature = "stateful")]
     pub store_config: Option<AdsStoreConfig>,
+    pub user_agent: Option<NonEmptyString>,
 }
 
 #[derive(Clone, Debug)]
-pub struct AdsCacheConfig {
+pub(crate) struct AdsCacheConfig {
     pub db_path: String,
     pub default_cache_ttl_seconds: Option<u64>,
     pub max_size_mib: Option<u64>,
@@ -21,6 +23,6 @@ pub struct AdsCacheConfig {
 
 #[cfg(feature = "stateful")]
 #[derive(Clone, Debug)]
-pub struct AdsStoreConfig {
+pub(crate) struct AdsStoreConfig {
     pub db_path: String,
 }

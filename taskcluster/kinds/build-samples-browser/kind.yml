@@ -17,6 +17,7 @@ kind-dependencies:
 
 task-defaults:
     run-on-repo-type: [hg]
+    use-gradle-cache: true
     attributes:
         build_platform: android
         build-type: regular

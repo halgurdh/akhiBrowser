@@ -890,22 +890,15 @@ BigInt::Digit BigInt::digitDivByMultiplication(Digit high, Digit low,
   return q1;
 }
 
-void BigInt::multiplyAccumulateDigits(ConstDigits multiplicand,
-                                      Digit multiplier, Digits acc) {
-  if (!multiplier) {
-    return;
-  }
+void BigInt::multiplyDigits(ConstDigits multiplicand, Digit multiplier,
+                            Digits product) {
+  MOZ_RELEASE_ASSERT(product.size() == multiplicand.size() + 1);
 
-  size_t n = std::min(multiplicand.size(), acc.size());
-  Digits out = acc.First(n);
-  ConstDigits in = multiplicand.First(n);
   Digit carry = 0;
-  for (size_t i = 0; i < n; i++) {
-    out[i] = digitMulAdd(multiplier, in[i], out[i], carry, &carry);
+  for (size_t i = 0; i < multiplicand.size(); i++) {
+    product[i] = digitMulAdd(multiplicand[i], multiplier, carry, 0, &carry);
   }
-  for (size_t i = n; carry && i < acc.size(); i++) {
-    acc[i] = digitAdd(acc[i], carry, &carry);
-  }
+  product[multiplicand.size()] = carry;
 }
 
 // Both inplaceSubDigits and inplaceAddDigits check the bounds once, by taking
@@ -1003,8 +996,7 @@ void BigInt::divideDigitsInPlace(Digits u, ConstDigits v, Digits q,
     // it from the dividend. If there was "borrow", then the quotient digit
     // was one too high, so we must correct it and undo one subtraction of
     // the (shifted) divisor.
-    std::fill_n(qhatv.data(), qhatv.size(), 0);
-    multiplyAccumulateDigits(v, qhat, qhatv);
+    multiplyDigits(v, qhat, qhatv);
     Digit c = inplaceSubDigits(uj, qhatv);
     if (c) {
       c = inplaceAddDigits(uj, v);
