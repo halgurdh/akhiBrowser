@@ -83,6 +83,7 @@ h1 { font-size: clamp(40px, 6.4vw, 66px); letter-spacing: -.02em; }
 .shot { border-radius: 16px; box-shadow: 0 24px 60px rgba(0, 0, 0, .45); }
 
 .get { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.get .store { flex: 0 0 100%; line-height: 0; }
 .btn {
   display: inline-block;
   padding: 13px 20px;
@@ -196,10 +197,12 @@ footer p + p { margin-top: 8px; }
         <h1 data-t="t2"><span>Filter the web,</span> on your device.</h1>
         <p class="lead" data-t="t3">A private, halal browser for Muslims, built on Firefox. It blocks ads and haram sites, blurs images until they are checked, and takes the music out of videos.</p>
         <div class="get" id="download">
+          <a class="store" href="https://apps.microsoft.com/detail/9n8kmf22z6k4?referrer=appbadge&amp;mode=direct" target="_self"><img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200" alt="Download from the Microsoft Store" data-a="alt:aStore"></a>
           <a class="btn" href="https://github.com/halgurdh/akhiBrowser/releases/latest/download/AkhiBrowser-windows-x64-setup.exe" data-t="t4">Download for Windows<small>64-bit installer, 101 MB</small></a>
           <a class="btn ghost" href="https://github.com/halgurdh/akhiBrowser/releases/latest/download/AkhiBrowser-android-arm64-v8a.apk" data-t="t5">Download for Android<small>64-bit ARM APK, 151 MB</small></a>
         </div>
         <p class="note" data-t="t6"><strong>📲 Available for Android (8.0+) and Windows (64-bit)</strong></p>
+        <p class="note" data-t="tPlay">(Google Play: coming soon, insha'Allah.)</p>
         <p class="note" data-t="t7">(Insha'Allah, it will also be available soon as a standalone extension for Firefox and Chrome.)</p>
         <p class="note" data-t="t8"><strong>Please note:</strong></p>
         <p class="note" data-t="t9">On Windows, SmartScreen may display a warning; if so, click "More info" → "Run anyway."</p>
@@ -393,6 +396,8 @@ footer p + p { margin-top: 8px; }
 "t5": "Download voor Android<small>64-bit ARM APK, 151 MB<\/small>",
 "t6": "<strong>📲 Beschikbaar voor Android (8.0+) en Windows (64-bit)<\/strong>",
 "t7": "(Insha'Allah komt hij binnenkort ook als losse extensie voor Firefox en Chrome.)",
+"tPlay": "(Google Play: binnenkort, insha'Allah.)",
+"aStore": "Downloaden uit de Microsoft Store",
 "t8": "<strong>Let op:<\/strong>",
 "t9": "Krijg je op Windows een SmartScreen-waarschuwing? Klik dan op \"Meer informatie\" → \"Toch uitvoeren\".",
 "t10": "Op Android: tik op het gedownloade bestand → zet \"Toestaan van deze bron\" aan als dat wordt gevraagd → tik op Installeren.",
