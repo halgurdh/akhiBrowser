@@ -51,6 +51,33 @@ ARTICLES = [
 <li><strong>Can you control it?</strong> You should be able to see and change every protection.</li>
 <li><strong>Does it run on your devices?</strong> Check before you commit, especially on an iPhone or a Mac.</li>
 </ul>
+<h2>Halal browser, browser extension or DNS filter?</h2>
+<p>There are three common ways to filter the web, and they work best together:</p>
+<ul>
+<li><strong>A halal browser</strong> filters inside the browser itself: sites, searches, images and video. Its protections are on from the first page and can be locked with a PIN.</li>
+<li><strong>A browser extension</strong> adds filtering to a browser you already use, such as Chrome. It's quick to try, but it can usually be removed or switched off, and it can't change how the browser itself works.</li>
+<li><strong>A DNS or router filter</strong> blocks whole sites for every app on a device or network. It can't look inside a page, so it can't blur an image or remove music from a video.</li>
+</ul>
+<p>For a family, a common setup is a family DNS on the router plus a halal browser on each device, with other browsers removed or blocked. Read <a href="/blog/block-haram-content/">how to block haram content on your phone and computer</a> for the full setup.</p>
+<h2>A checklist for choosing a halal browser</h2>
+<ul>
+<li>Are adult, gambling, alcohol and drug sites blocked from the first page, without setup?</li>
+<li>Is SafeSearch forced on every search engine, including YouTube?</li>
+<li>Are images checked on your device, or sent to a server?</li>
+<li>Can a parent lock the settings with a PIN?</li>
+<li>Does it say plainly what leaves your device?</li>
+<li>Is it still updated? A browser that stops getting updates also stops getting security fixes. SalamWeb, one of the first halal browsers, was discontinued in 2021.</li>
+</ul>
+<p>We compare the options in <a href="/blog/best-halal-browsers/">the best halal browsers in 2026</a>.</p>
+<h2>Frequently asked questions</h2>
+<h3>Is a halal browser only for Muslims?</h3>
+<p>No. Anyone who wants fewer ads, no adult content and more control over images can use one. The name describes the values it's built around.</p>
+<h3>Is a halal browser free?</h3>
+<p>Many are. AkhiBrowser's protections are free, with optional Premium for extra image controls and parent tools.</p>
+<h3>Does a halal browser replace parental controls?</h3>
+<p>It covers the browser. For apps and other browsers, combine it with the controls of the device, such as Google Family Link or Microsoft Family Safety. See <a href="/blog/parental-controls-for-muslim-families/">a simple parental-controls setup</a>.</p>
+<h3>Can a halal browser remove music from videos?</h3>
+<p>Some can. AkhiBrowser <a href="/blog/remove-background-music-from-videos/">removes background music on your device</a>, so the voices stay and the music goes.</p>
 <p>AkhiBrowser is one option, built on Firefox for Windows and Android. Its protections are on from the first page, and <a href="/#privacy">its site lists what leaves your device</a>. You can also read <a href="/compare/kahf-browser/">how it compares with Kahf Browser</a>.</p>""",
         },
         "nl": {
@@ -73,6 +100,33 @@ ARTICLES = [
 <li><strong>Kun je het zelf regelen?</strong> Je moet elke bescherming kunnen zien en wijzigen.</li>
 <li><strong>Werkt hij op jouw apparaten?</strong> Controleer dat vooraf, zeker op een iPhone of Mac.</li>
 </ul>
+<h2>Halal browser, browserextensie of DNS-filter?</h2>
+<p>Er zijn drie gangbare manieren om het web te filteren, en ze werken het best samen:</p>
+<ul>
+<li><strong>Een halal browser</strong> filtert in de browser zelf: sites, zoekopdrachten, afbeeldingen en video. De bescherming staat vanaf de eerste pagina aan en kan op slot met een pincode.</li>
+<li><strong>Een browserextensie</strong> voegt een filter toe aan een browser die je al gebruikt, zoals Chrome. Snel te proberen, maar meestal makkelijk te verwijderen of uit te zetten, en de browser zelf verandert niet.</li>
+<li><strong>Een DNS- of routerfilter</strong> blokkeert hele sites voor elke app op een apparaat of netwerk. Het kan niet in een pagina kijken, dus geen afbeelding wazig maken of muziek uit een video halen.</li>
+</ul>
+<p>Voor een gezin is een gangbare opzet: een gezins-DNS op de router plus een halal browser op elk apparaat, met andere browsers verwijderd of geblokkeerd. Lees <a href="/nl/blog/block-haram-content/">hoe je haram inhoud blokkeert op je telefoon en computer</a>.</p>
+<h2>Checklist voor het kiezen van een halal browser</h2>
+<ul>
+<li>Worden 18+-, gok-, alcohol- en drugssites vanaf de eerste pagina geblokkeerd, zonder instellen?</li>
+<li>Wordt SafeSearch afgedwongen op elke zoekmachine, ook YouTube?</li>
+<li>Worden afbeeldingen op je apparaat gecontroleerd, of naar een server gestuurd?</li>
+<li>Kan een ouder de instellingen vergrendelen met een pincode?</li>
+<li>Staat er duidelijk wat er van je apparaat af gaat?</li>
+<li>Wordt hij nog bijgewerkt? Een browser zonder updates krijgt ook geen beveiligingsfixes meer. SalamWeb, een van de eerste halal browsers, is in 2021 gestopt.</li>
+</ul>
+<p>We vergelijken de opties in <a href="/nl/blog/best-halal-browsers/">de beste halal browsers van 2026</a>.</p>
+<h2>Veelgestelde vragen</h2>
+<h3>Is een halal browser alleen voor moslims?</h3>
+<p>Nee. Iedereen die minder reclame, geen 18+-inhoud en meer controle over afbeeldingen wil, kan er een gebruiken. De naam beschrijft de waarden waarop hij is gebouwd.</p>
+<h3>Is een halal browser gratis?</h3>
+<p>Vaak wel. De bescherming van AkhiBrowser is gratis, met een optionele Premium voor extra afbeeldingsopties en ouderfuncties.</p>
+<h3>Vervangt een halal browser ouderlijk toezicht?</h3>
+<p>Hij dekt de browser. Combineer hem voor apps en andere browsers met het toezicht van het apparaat, zoals Google Family Link of Microsoft Family Safety. Zie <a href="/nl/blog/parental-controls-for-muslim-families/">een eenvoudige opzet voor ouderlijk toezicht</a>.</p>
+<h3>Kan een halal browser muziek uit video's halen?</h3>
+<p>Sommige wel. AkhiBrowser <a href="/nl/blog/remove-background-music-from-videos/">haalt achtergrondmuziek weg op je apparaat</a>: de stemmen blijven, de muziek gaat.</p>
 <p>AkhiBrowser is een van de opties, gebouwd op Firefox voor Windows en Android. De bescherming staat meteen aan en <a href="/#privacy">de site vertelt wat er van je apparaat af gaat</a>. Lees ook <a href="/nl/compare/kahf-browser/">de vergelijking met Kahf Browser</a>.</p>""",
         },
     },
@@ -256,8 +310,81 @@ ARTICLES = [
 <p>AkhiBrowser berekent de gebedstijden op je apparaat voor de stad die je kiest, zonder je locatie te gebruiken. Hij kiest een methode op basis van het land, en je kunt de methode en de Asr-tijd wijzigen in de opties.</p>""",
         },
     },
+    {
+        "slug": "best-halal-browsers",
+        "date": "2026-11-10",
+        "en": {
+            "title": "The best halal browsers in 2026, compared",
+            "description": "An honest comparison of the halal browsers you can use in 2026: AkhiBrowser, Kahf Browser and Tahir Browser, plus what happened to SalamWeb. Platforms, price and features.",
+            "body": """<p>A halal browser blocks haram sites, forces SafeSearch and keeps unwanted images off your screen. In 2026 there are three active options worth knowing. We make one of them, AkhiBrowser, so this page sticks to what each browser states on its own pages, and says plainly where each one fits best.</p>
+<h2>The short answer</h2>
+<ul>
+<li><strong>On Windows, or for parent controls:</strong> AkhiBrowser. Free protections, background music removal, and Family Premium with a PIN, site lists and time limits.</li>
+<li><strong>On a Mac, or for an all-free browser on every platform:</strong> Kahf Browser. Windows, macOS, Android and iOS, free with no in-app purchases.</li>
+<li><strong>On an iPhone:</strong> Tahir Browser or Kahf Browser. AkhiBrowser isn't on iOS yet.</li>
+</ul>
+<h2>AkhiBrowser</h2>
+<p>A halal browser built on Firefox, for Windows now and Android soon. Adult, alcohol, drug, vaping and gambling sites are blocked from the first page, SafeSearch is forced on Google, Bing, DuckDuckGo, Yahoo and YouTube, and images stay blurred until they're checked on your device. It's the only one of the three that removes background music from videos, on your device. The protections are free; Premium adds the choice of who is blurred, and Family Premium adds a parental PIN, site lists, time limits and a pause button.</p>
+<h2>Kahf Browser</h2>
+<p>A Chromium-based browser for Muslims on Windows, macOS, Android and iOS. Its site says it is free on all platforms with no subscriptions or in-app purchases, blocks ads, adult and haram sites with AI filtering and a database, enforces SafeSearch and Safe YouTube, blurs nudity in real time, and includes prayer times and the qibla. Most Chrome extensions work in it.</p>
+<h2>Tahir Browser</h2>
+<p>An iPhone and iPad browser by Ihya Tech. Its App Store listing describes blurring all images or using AI to blur the opposite gender, tap-to-unblur, blocking haram sites, ads and trackers, Islamic reminders, forced SafeSearch and a password or biometric lock on its shield. It's free to download, with optional monthly and yearly plans.</p>
+<h2>What happened to SalamWeb?</h2>
+<p>SalamWeb was one of the first halal browsers and got wide press coverage in 2019. It was discontinued in 2021 and its website is gone, so it's no longer an option. It's a good reminder to choose a browser that's still updated, because updates bring security fixes.</p>
+<h2>Side by side</h2>
+<div class="table"><table>
+<thead><tr><th scope="col"></th><th scope="col">AkhiBrowser</th><th scope="col">Kahf Browser</th><th scope="col">Tahir Browser</th></tr></thead>
+<tbody>
+<tr><th scope="row">Platforms</th><td>Windows; Android soon</td><td>Windows, macOS, Android, iOS</td><td>iPhone, iPad</td></tr>
+<tr><th scope="row">Price</th><td>Protections free; optional Premium</td><td>Free</td><td>Free; optional plans</td></tr>
+<tr><th scope="row">Built on</th><td>Firefox</td><td>Chromium</td><td>iOS WebKit</td></tr>
+<tr><th scope="row">Haram sites blocked</th><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><th scope="row">SafeSearch forced</th><td>Yes, incl. YouTube</td><td>Yes, incl. YouTube</td><td>Yes</td></tr>
+<tr><th scope="row">Image blurring</th><td>Until checked, on your device</td><td>Real time</td><td>All images, or AI by gender</td></tr>
+<tr><th scope="row">Background music removal</th><td>Yes</td><td>Not stated</td><td>Not stated</td></tr>
+<tr><th scope="row">Parental PIN and time limits</th><td>Family Premium</td><td>Not stated</td><td>Lock on shield</td></tr>
+</tbody>
+</table></div>
+<p>&quot;Not stated&quot; means we didn't find it on the browser's own pages, not that it doesn't exist. For a longer table, see <a href="/compare/kahf-browser/">AkhiBrowser and Kahf Browser compared</a> and <a href="/compare/browsers/">AkhiBrowser, Kahf, Brave, Firefox and Chrome compared</a>. New to the idea? Start with <a href="/blog/what-is-a-halal-browser/">what a halal browser is</a>.</p>
+<p>Checked against each browser's own pages on 10 November 2026. Spotted something out of date? Tell us at <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a>.</p>""",
+        },
+        "nl": {
+            "title": "De beste halal browsers van 2026, vergeleken",
+            "description": "Een eerlijke vergelijking van de halal browsers die je in 2026 kunt gebruiken: AkhiBrowser, Kahf Browser en Tahir Browser, plus wat er met SalamWeb gebeurde.",
+            "body": """<p>Een halal browser blokkeert haram sites, dwingt SafeSearch af en houdt ongewenste afbeeldingen van je scherm. In 2026 zijn er drie actieve opties die de moeite waard zijn. Wij maken er een van, AkhiBrowser, dus deze pagina houdt zich aan wat elke browser op de eigen pagina's vermeldt, en zegt eerlijk waar elke browser het best past.</p>
+<h2>Het korte antwoord</h2>
+<ul>
+<li><strong>Op Windows, of voor ouderlijk toezicht:</strong> AkhiBrowser. Gratis bescherming, muziek weghalen uit video's, en Family Premium met pincode, sitelijsten en tijdslimieten.</li>
+<li><strong>Op een Mac, of voor een volledig gratis browser op elk platform:</strong> Kahf Browser. Windows, macOS, Android en iOS, gratis zonder in-app-aankopen.</li>
+<li><strong>Op een iPhone:</strong> Tahir Browser of Kahf Browser. AkhiBrowser is nog niet op iOS.</li>
+</ul>
+<h2>AkhiBrowser</h2>
+<p>Een halal browser op basis van Firefox, nu voor Windows en binnenkort voor Android. 18+-, alcohol-, drugs-, vape- en goksites zijn vanaf de eerste pagina geblokkeerd, SafeSearch wordt afgedwongen op Google, Bing, DuckDuckGo, Yahoo en YouTube, en afbeeldingen blijven wazig tot ze op je apparaat zijn gecontroleerd. Het is de enige van de drie die achtergrondmuziek uit video's haalt, op je apparaat. De bescherming is gratis; Premium laat je kiezen wie wazig wordt, en Family Premium voegt een ouderpincode, sitelijsten, tijdslimieten en een pauzeknop toe.</p>
+<h2>Kahf Browser</h2>
+<p>Een browser voor moslims op basis van Chromium, voor Windows, macOS, Android en iOS. Volgens de eigen site is hij gratis op alle platforms zonder abonnementen of in-app-aankopen, blokkeert hij reclame, 18+- en haram sites met AI en een database, dwingt hij SafeSearch en Safe YouTube af, maakt hij naakt direct wazig, en heeft hij gebedstijden en de qibla. De meeste Chrome-extensies werken erin.</p>
+<h2>Tahir Browser</h2>
+<p>Een browser voor iPhone en iPad van Ihya Tech. De App Store-pagina noemt het wazig maken van alle afbeeldingen of met AI van het andere geslacht, tikken om te tonen, haram sites, reclame en trackers blokkeren, islamitische herinneringen, afgedwongen SafeSearch en een wachtwoord- of biometrisch slot op het schild. Gratis te downloaden, met optionele maand- en jaarabonnementen.</p>
+<h2>Wat is er met SalamWeb gebeurd?</h2>
+<p>SalamWeb was een van de eerste halal browsers en kreeg in 2019 veel aandacht in de pers. De browser is in 2021 gestopt en de website bestaat niet meer. Een goede reden om een browser te kiezen die nog wordt bijgewerkt, want updates brengen beveiligingsfixes.</p>
+<h2>Naast elkaar</h2>
+<div class="table"><table>
+<thead><tr><th scope="col"></th><th scope="col">AkhiBrowser</th><th scope="col">Kahf Browser</th><th scope="col">Tahir Browser</th></tr></thead>
+<tbody>
+<tr><th scope="row">Platforms</th><td>Windows; Android binnenkort</td><td>Windows, macOS, Android, iOS</td><td>iPhone, iPad</td></tr>
+<tr><th scope="row">Prijs</th><td>Bescherming gratis; optioneel Premium</td><td>Gratis</td><td>Gratis; optionele abonnementen</td></tr>
+<tr><th scope="row">Gebouwd op</th><td>Firefox</td><td>Chromium</td><td>iOS WebKit</td></tr>
+<tr><th scope="row">Haram sites geblokkeerd</th><td>Ja</td><td>Ja</td><td>Ja</td></tr>
+<tr><th scope="row">SafeSearch afgedwongen</th><td>Ja, ook YouTube</td><td>Ja, ook YouTube</td><td>Ja</td></tr>
+<tr><th scope="row">Afbeeldingen wazig</th><td>Tot gecontroleerd, op je apparaat</td><td>Direct</td><td>Alle, of met AI per geslacht</td></tr>
+<tr><th scope="row">Achtergrondmuziek weghalen</th><td>Ja</td><td>Niet vermeld</td><td>Niet vermeld</td></tr>
+<tr><th scope="row">Ouderpincode en tijdslimieten</th><td>Family Premium</td><td>Niet vermeld</td><td>Slot op het schild</td></tr>
+</tbody>
+</table></div>
+<p>&quot;Niet vermeld&quot; betekent dat we het niet vonden op de eigen pagina's van de browser, niet dat het niet bestaat. Zie voor een uitgebreidere tabel <a href="/nl/compare/kahf-browser/">AkhiBrowser en Kahf Browser vergeleken</a> en <a href="/nl/compare/browsers/">AkhiBrowser, Kahf, Brave, Firefox en Chrome vergeleken</a>. Nieuw met het idee? Begin bij <a href="/nl/blog/what-is-a-halal-browser/">wat een halal browser is</a>.</p>
+<p>Gecontroleerd op de eigen pagina's van elke browser op 10 november 2026. Iets verouderd? Laat het ons weten via <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a>.</p>""",
+        },
+    },
 ]
-
 _NS_EN = "Not stated"
 _NS_NL = "Niet vermeld"
 
