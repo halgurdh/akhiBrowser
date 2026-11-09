@@ -1,6 +1,8 @@
-# Crash reports are de-obfuscated with the R8 mapping, which needs the line numbers.
--keepattributes SourceFile,LineNumberTable
--renamesourcefileattribute SourceFile
+# Only libraries are obfuscated: the navigation graph, Gecko and others find our classes by name, and renaming them
+# crashes the app at startup.
+-keepnames class org.mozilla.** { *; }
+-keepnames class mozilla.** { *; }
+-keepnames class org.yaml.snakeyaml.** { *; }
 
 ####################################################################################################
 # JNA: the Rust bindings look up native symbols and struct fields by their Java names
