@@ -9,7 +9,7 @@ import html
 import json
 from pathlib import Path
 
-from content import ARTICLES, COMPARE, UI
+from content import ARTICLES, COMPARE, COMPARE_BROWSERS, UI
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://akhibrowser.com"
@@ -58,7 +58,7 @@ def page(lang, path, title, description, body, json_ld=None):
     <a class="brand" href="/"><img src="/assets/akhi.svg" alt="" width="32" height="32"><span><b>Akhi</b>Browser</span></a>
     <span class="links">
       <a href="{url_of(lang, 'blog/')}">{ui['blog']}</a>
-      <a href="{url_of(lang, 'compare/kahf-browser/')}">{ui['compare']}</a>
+      <a href="{url_of(lang, 'compare/browsers/')}">{ui['compare']}</a>
       <a href="/#download">{ui['download']}</a>
       <a href="{url_of(other, path)}" hreflang="{other}" lang="{other}">{other.upper()}</a>
     </span>
@@ -112,23 +112,25 @@ def index_page(lang):
         f"""<li><a href="{url_of(lang, 'blog/' + a['slug'] + '/')}"><h2>{a[lang]['title']}</h2></a><p>{a[lang]['description']}</p></li>"""
         for a in sorted(ARTICLES, key=lambda a: a["date"], reverse=True)
     )
-    compare = COMPARE[lang]
-    items += f"""\n<li><a href="{url_of(lang, 'compare/kahf-browser/')}"><h2>{compare['title']}</h2></a><p>{compare['description']}</p></li>"""
+    for data, path in ((COMPARE_BROWSERS, "compare/browsers/"), (COMPARE, "compare/kahf-browser/")):
+        items += f"""\n<li><a href="{url_of(lang, path)}"><h2>{data[lang]['title']}</h2></a><p>{data[lang]['description']}</p></li>"""
     body = f"""<h1>{ui['blog_title']}</h1>\n<p class="lead">{ui['blog_lead']}</p>\n<ul class="posts">\n{items}\n</ul>"""
     return "blog/", page(lang, "blog/", f"{ui['blog_title']} | AkhiBrowser", ui["blog_lead"], body)
 
 
-def compare_page(lang):
-    text = COMPARE[lang]
+def compare_page(lang, data, path):
+    text = data[lang]
     rows = "\n".join(
-        f"<tr><th scope=\"row\">{row[0]}</th><td>{row[1]}</td><td>{row[2]}</td></tr>" for row in text["rows"]
+        f"<tr><th scope=\"row\">{row[0]}</th>" + "".join(f"<td>{cell}</td>" for cell in row[1:]) + "</tr>"
+        for row in text["rows"]
     )
-    sources = " ".join(f'<a href="{url}">{name}</a>' for name, url in COMPARE["sources"])
+    head = "".join(f'<th scope="col">{name}</th>' for name in text["head"])
+    sources = " ".join(f'<a href="{url}">{name}</a>' for name, url in data["sources"])
     body = f"""<article>
 <h1>{text['title']}</h1>
 <p class="lead">{text['lead']}</p>
 <div class="table"><table>
-<thead><tr><th scope="col">{text['head'][0]}</th><th scope="col">{text['head'][1]}</th><th scope="col">{text['head'][2]}</th></tr></thead>
+<thead><tr>{head}</tr></thead>
 <tbody>
 {rows}
 </tbody>
@@ -137,7 +139,7 @@ def compare_page(lang):
 <p class="note">{text['sources_label']} {sources}</p>
 </article>
 {cta(lang)}"""
-    return "compare/kahf-browser/", page(lang, "compare/kahf-browser/", text["seo_title"], text["description"], body)
+    return path, page(lang, path, text["seo_title"], text["description"], body)
 
 
 def write(lang, path, content):
@@ -149,7 +151,11 @@ def write(lang, path, content):
 def main():
     paths = []
     for lang in ("en", "nl"):
-        builders = [index_page(lang), compare_page(lang)] + [article_page(lang, a) for a in ARTICLES]
+        builders = [
+            index_page(lang),
+            compare_page(lang, COMPARE_BROWSERS, "compare/browsers/"),
+            compare_page(lang, COMPARE, "compare/kahf-browser/"),
+        ] + [article_page(lang, a) for a in ARTICLES]
         for path, content in builders:
             write(lang, path, content)
             paths.append(url_of(lang, path))

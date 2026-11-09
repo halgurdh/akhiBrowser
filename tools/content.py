@@ -335,3 +335,66 @@ COMPARE = {
         "sources_label": "De pagina's van Kahf Browser die we lazen:",
     },
 }
+
+_CWS = "https://chromewebstore.google.com/detail/akhibrowser/ghkpflipnhahpjdnpoclaakbecnopamk"
+
+COMPARE_BROWSERS = {
+    "sources": [
+        ("kahfbrowser.com", "https://kahfbrowser.com/"),
+        ("Brave Shields", "https://brave.com/shields/"),
+        ("Firefox tracking protection", "https://support.mozilla.org/kb/enhanced-tracking-protection-firefox-desktop"),
+        ("Google Family Link", "https://families.google/familylink/"),
+    ],
+    "en": {
+        "seo_title": "Halal browser comparison: AkhiBrowser, Kahf Browser, Brave, Firefox and Chrome",
+        "title": "AkhiBrowser, Kahf Browser, Brave, Firefox and Chrome compared",
+        "description": "Which browser filters haram content, blurs images, removes background music and has parent controls? AkhiBrowser, Kahf Browser, Brave, Firefox and Chrome side by side.",
+        "lead": "What each browser does out of the box, without extra extensions, as each one describes it on its own pages, as of 9 November 2026. We haven't tested Kahf Browser ourselves; see <a href=\"/compare/kahf-browser/\">the detailed comparison with Kahf Browser</a>.",
+        "head": ["", "AkhiBrowser", "Kahf Browser", "Brave", "Firefox", "Chrome"],
+        "rows": [
+            ["Price", "Protections free; optional Premium and Family Premium", "Free", "Free", "Free", "Free"],
+            ["Platforms", f'Windows, Android (coming soon); a lighter <a href="{_CWS}">free Chrome extension</a> now', "Windows, macOS, Android, iOS", "Windows, macOS, Linux, Android, iOS", "Windows, macOS, Linux, Android, iOS", "Windows, macOS, Linux, Android, iOS"],
+            ["Built on", "Firefox", "Chromium", "Chromium", "Firefox's own engine", "Chromium"],
+            ["Ads and trackers", "Blocked, uBlock Origin built in", "Blocked", "Blocked (Shields)", "Trackers blocked; ads need an extension", "Not blocked; ad blockers are limited"],
+            ["Adult and haram sites", "Blocked, from the first page", "Blocked", "No", "No", "No"],
+            ["SafeSearch and YouTube Restricted Mode forced", "Yes", "Yes", "No", "No", "With Family Link supervision"],
+            ["Nudity in images", "Blurred until checked on your device", "Blurred", "No", "No", "No"],
+            ["Choose who to blur, recognize hijab", "Premium", "Not stated", "No", "No", "No"],
+            ["Remove background music from videos", "Free, on your device", "Not stated", "No", "No", "No"],
+            ["Prayer times and verse of the day", "Free", "Prayer times", "No", "No", "No"],
+            ["Parent controls (PIN, site lists, time limits)", "Family Premium", "Not stated", "No", "No", "With Google Family Link"],
+            ["Protections can be turned off by a child", "Not with the parental PIN", "Not stated", "Yes", "Yes", "Depends on Family Link"],
+        ],
+        "after": """<h2>In short</h2>
+<p><strong>Brave, Firefox and Chrome</strong> are good general browsers, but none of them filters haram content or blurs images by itself. You would need extensions, which a child can remove.</p>
+<p><strong>Kahf Browser and AkhiBrowser</strong> are made for Muslims and filter from the start. AkhiBrowser adds background music removal, choosing who to blur, and parent controls with a PIN.</p>
+<p>Spotted something out of date? Tell us at <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a> and we'll correct it. AkhiBrowser isn't affiliated with any of these browsers.</p>""",
+        "sources_label": "Pages we read:",
+    },
+    "nl": {
+        "seo_title": "Halal browsers vergeleken: AkhiBrowser, Kahf Browser, Brave, Firefox en Chrome",
+        "title": "AkhiBrowser, Kahf Browser, Brave, Firefox en Chrome vergeleken",
+        "description": "Welke browser filtert haram inhoud, maakt afbeeldingen wazig, haalt achtergrondmuziek weg en heeft ouderlijk toezicht? AkhiBrowser, Kahf Browser, Brave, Firefox en Chrome naast elkaar.",
+        "lead": "Wat elke browser standaard doet, zonder extra extensies, zoals elk het op de eigen pagina's beschrijft, op 9 november 2026. We hebben Kahf Browser niet zelf getest; zie <a href=\"/nl/compare/kahf-browser/\">de uitgebreide vergelijking met Kahf Browser</a>.",
+        "head": ["", "AkhiBrowser", "Kahf Browser", "Brave", "Firefox", "Chrome"],
+        "rows": [
+            ["Prijs", "Bescherming gratis; optioneel Premium en Family Premium", "Gratis", "Gratis", "Gratis", "Gratis"],
+            ["Platforms", f'Windows, Android (binnenkort); nu al een lichtere <a href="{_CWS}">gratis Chrome-extensie</a>', "Windows, macOS, Android, iOS", "Windows, macOS, Linux, Android, iOS", "Windows, macOS, Linux, Android, iOS", "Windows, macOS, Linux, Android, iOS"],
+            ["Gebouwd op", "Firefox", "Chromium", "Chromium", "De eigen engine van Firefox", "Chromium"],
+            ["Reclame en trackers", "Geblokkeerd, uBlock Origin ingebouwd", "Geblokkeerd", "Geblokkeerd (Shields)", "Trackers geblokkeerd; reclame vraagt een extensie", "Niet geblokkeerd; reclameblokkers zijn beperkt"],
+            ["18+- en haram sites", "Geblokkeerd, vanaf de eerste pagina", "Geblokkeerd", "Nee", "Nee", "Nee"],
+            ["SafeSearch en beperkte modus van YouTube afgedwongen", "Ja", "Ja", "Nee", "Nee", "Met toezicht via Family Link"],
+            ["Naakt in afbeeldingen", "Wazig tot de controle op je apparaat", "Wazig", "Nee", "Nee", "Nee"],
+            ["Kiezen wie wazig wordt, hijab herkennen", "Premium", "Niet vermeld", "Nee", "Nee", "Nee"],
+            ["Achtergrondmuziek uit video's halen", "Gratis, op je apparaat", "Niet vermeld", "Nee", "Nee", "Nee"],
+            ["Gebedstijden en vers van de dag", "Gratis", "Gebedstijden", "Nee", "Nee", "Nee"],
+            ["Ouderlijk toezicht (pincode, sitelijsten, tijdslimieten)", "Family Premium", "Niet vermeld", "Nee", "Nee", "Met Google Family Link"],
+            ["Kan een kind de bescherming uitzetten?", "Niet met de ouderpincode", "Niet vermeld", "Ja", "Ja", "Hangt af van Family Link"],
+        ],
+        "after": """<h2>Kort gezegd</h2>
+<p><strong>Brave, Firefox en Chrome</strong> zijn goede algemene browsers, maar geen van drieën filtert zelf haram inhoud of maakt afbeeldingen wazig. Daarvoor heb je extensies nodig, en die kan een kind verwijderen.</p>
+<p><strong>Kahf Browser en AkhiBrowser</strong> zijn gemaakt voor moslims en filteren vanaf het begin. AkhiBrowser voegt daar achtergrondmuziek weghalen, kiezen wie wazig wordt en ouderlijk toezicht met een pincode aan toe.</p>
+<p>Staat er iets verouderds? Laat het weten via <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a>, dan passen we het aan. AkhiBrowser is niet verbonden aan een van deze browsers.</p>""",
+        "sources_label": "Pagina's die we lazen:",
+    },
+}
