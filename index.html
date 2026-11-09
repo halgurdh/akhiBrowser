@@ -23,9 +23,8 @@
   "description": "A free halal browser for Muslims, built on Firefox: it blocks ads, adult and haram sites, blurs images until they are checked and removes background music from videos, on the device.",
   "applicationCategory": "BrowserApplication",
   "operatingSystem": "Windows 10, Windows 11, Android 8.0",
-  "softwareVersion": "1.1.0",
+  "softwareVersion": "1.2.1",
   "url": "https://akhibrowser.com/",
-  "downloadUrl": "https://github.com/halgurdh/akhiBrowser/releases/latest",
   "image": "https://akhibrowser.com/assets/og.png",
   "inLanguage": ["en", "ar", "fa", "ckb", "ur", "tr", "fr", "de", "nl", "es", "id", "ms"],
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
@@ -98,6 +97,7 @@ h1 { font-size: clamp(40px, 6.4vw, 66px); letter-spacing: -.02em; }
 .btn small { display: block; font-size: 13px; font-weight: 400; }
 .btn.ghost { background: transparent; color: #fff; box-shadow: inset 0 0 0 1.5px var(--gold); }
 .btn.ghost:hover { background: rgba(244, 190, 52, .14); color: #fff; }
+.btn.soon, .btn.soon:hover { background: var(--gold); color: var(--ink); cursor: default; }
 .note { margin-top: 10px; font-size: 14px; color: var(--soft); }
 
 section { padding: 72px 0; border-top: 1px solid var(--line); }
@@ -110,6 +110,8 @@ h2 { font-size: clamp(28px, 3.6vw, 38px); color: var(--gold); }
 
 .split { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
 .demo { margin: 0; max-width: 460px; justify-self: end; }
+.premium-preview { max-width: 520px; margin-top: 28px; }
+.plan-title { margin-top: 32px; color: var(--gold); }
 .demo.first { justify-self: start; order: -1; }
 .demo figcaption { margin-top: 10px; font-size: 14px; color: var(--soft); text-align: center; }
 .stack { position: relative; }
@@ -184,7 +186,7 @@ footer p + p { margin-top: 8px; }
         <a href="#features" data-t="t1">Features</a>
         <a href="#privacy">Privacy</a>
         <a href="#premium">Premium</a>
-        <a href="https://github.com/halgurdh/akhiBrowser">GitHub</a>
+        <a href="/blog/">Blog</a>
       </div>
       <div class="lang" id="lang" role="group" aria-label="Language / Taal" hidden>
         <button type="button" data-lang="nl" lang="nl">NL</button>
@@ -197,19 +199,12 @@ footer p + p { margin-top: 8px; }
         <h1 data-t="t2"><span>Filter the web,</span> on your device.</h1>
         <p class="lead" data-t="t3">A private, halal browser for Muslims, built on Firefox. It blocks ads and haram sites, blurs images until they are checked, and takes the music out of videos.</p>
         <div class="get" id="download">
-          <a class="store" href="https://apps.microsoft.com/detail/9n8kmf22z6k4?referrer=appbadge&amp;mode=direct" target="_self"><img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200" alt="Download from the Microsoft Store" data-a="alt:aStore"></a>
-          <a class="btn" href="https://github.com/halgurdh/akhiBrowser/releases/latest/download/AkhiBrowser-windows-x64-setup.exe" data-t="t4">Download for Windows<small>64-bit installer</small></a>
-          <a class="btn ghost" href="https://github.com/halgurdh/akhiBrowser/releases/latest/download/AkhiBrowser-android-arm64-v8a.apk" data-t="t5">Download for Android<small>64-bit ARM APK</small></a>
+          <span class="btn soon" data-t="t4">Coming soon<small>Android 8.0+ and Windows 64-bit</small></span>
         </div>
-        <p class="note" data-t="t6"><strong>📲 Available for Android (8.0+) and Windows (64-bit)</strong></p>
-        <p class="note" data-t="tPlay">(Google Play: coming soon, insha'Allah.)</p>
         <p class="note" data-t="t7">(Insha'Allah, it will also be available soon as a standalone extension for Firefox and Chrome.)</p>
-        <p class="note" data-t="t8"><strong>Please note:</strong></p>
-        <p class="note" data-t="t9">On Windows, SmartScreen may display a warning; if so, click "More info" → "Run anyway."</p>
-        <p class="note" data-t="t10">On Android: Tap the downloaded file → Enable "Allow from this source" if prompted → Tap Install.</p>
-        <p class="note" data-t="t11">Free. Version 1.1.1. <a href="https://github.com/halgurdh/akhiBrowser/releases/latest">Checksums and all releases</a>.</p>
+        <p class="note" data-t="t11">Free protections.</p>
       </div>
-      <img class="shot" src="assets/settings.png" width="520" height="700" alt="AkhiBrowser's settings: ads and trackers blocked, background music removed, adult content blocked, haram sites blocked and nude images blurred are all on." data-a="alt:a0">
+      <img class="shot" src="assets/settings.png" width="520" height="700" alt="AkhiBrowser's settings: the verse of the day, prayer times, and the five protections, all on: ads and trackers blocked, background music removed, adult content blocked, haram sites blocked and nude images blurred." data-a="alt:a0">
     </div>
   </div>
 </header>
@@ -238,14 +233,19 @@ footer p + p { margin-top: 8px; }
   <section id="features">
     <div class="wrap">
       <h2 data-t="t13">On from the first page</h2>
-      <p class="intro" data-t="t14">All of this is free and built in. Each protection can be turned off in the AkhiBrowser shield, and a parental PIN can lock them on.</p>
+      <p class="intro" data-t="t14">These protections are free and built in. Each can be turned off in the AkhiBrowser shield. Premium features are optional and off until you turn them on.</p>
       <ul class="list">
         <li><h3 data-t="t15">Ads and trackers blocked</h3><p data-t="t16">uBlock Origin is installed for you and kept on, with a built-in blocker of ad, tracker and malware domains underneath it.</p></li>
         <li><h3 data-t="t17">Adult and haram sites blocked</h3><p data-t="t18">Adult, alcohol, drugs, vaping and gambling sites. SafeSearch is forced on Google, Bing, DuckDuckGo and Yahoo, and so is YouTube's Restricted Mode.</p></li>
         <li><h3 data-t="t19">Searches filtered</h3><p data-t="t20">Searches for adult or haram content are blocked in 11 languages. Questions about them stay allowed, like "why is alcohol haram".</p></li>
         <li><h3 data-t="t21">No music</h3><p data-t="t22">Removes background music from videos and keeps the voices, using a speech model that runs on your device.</p></li>
+        <li><h3 data-t="t68">Phishing and scam sites blocked</h3><p data-t="t69">Known phishing and scam sites are stopped before they load, with a button to continue if a site was listed by mistake.</p></li>
+        <li><h3 data-t="t70">Prayer times and a verse a day</h3><p data-t="t71">Prayer times for the city you choose, worked out on your device without your location, and a verse of the Quran each day.</p></li>
+        <li><h3 data-t="t72">Your settings on the start page</h3><p data-t="t73">On computers, new tabs open AkhiBrowser's page with a search box, your most visited sites, the verse of the day and all the settings. You can turn it off.</p></li>
+        <li><h3 data-t="t56">Images checked on your device</h3><p data-t="t57">Images stay blurred until checked. Unsafe images stay blurred; an image that can't be checked is shown.</p></li>
         <li><h3 data-t="t23">12 languages</h3><p data-t="t24">English, Arabic, Persian, Kurdish (Sorani), Urdu, Turkish, French, German, Dutch, Spanish, Indonesian and Malay, right to left where needed.</p></li>
         <li><h3 data-t="t25">Light on old devices</h3><p data-t="t26">Only what's on the screen is checked, and images seen before are answered from a cache. Page loads never wait for the model.</p></li>
+        <li><h3 data-t="t58">Colour-blindness correction</h3><p data-t="t59">An optional, on-device setting makes reds and greens easier to tell apart for the two red-green types of colour blindness.</p></li>
       </ul>
     </div>
   </section>
@@ -254,8 +254,8 @@ footer p + p { margin-top: 8px; }
     <div class="wrap split">
       <div>
         <h2 data-t="t27">Images stay blurred until they're checked</h2>
-        <p class="intro" data-t="t28">An on-device model looks at images, backgrounds, videos and canvases, so nothing flashes on the screen first. Unsafe ones stay blurred.</p>
-        <p class="intro" data-t="t29">With Premium, you choose who to blur: women, men, or both. A person is blurred by what is seen of them, not the whole image: a woman when her hair or body shows, a man from the navel to the knees.</p>
+        <p class="intro" data-t="t28">An on-device model checks images, backgrounds, videos and canvases before they appear, so nothing flashes on screen first. Unsafe images stay blurred.</p>
+        <p class="intro" data-t="t29">Premium adds controls to choose whether to blur women, men or both, and can recognize hijab so a covered woman stays visible. These optional image controls use on-device models.</p>
         <p class="intro" data-t="t30">Filters can miss things, and an image that can't be checked is shown. They don't replace a parent's care.</p>
       </div>
       <figure class="demo">
@@ -343,7 +343,6 @@ footer p + p { margin-top: 8px; }
       <ul class="list">
         <li><h3 data-t="s2">Firefox underneath</h3><p data-t="s3">The same engine and sandbox as Firefox, which keep each website apart from your files and from other sites. Known malware domains are blocked too.</p></li>
         <li><h3 data-t="s4">Signed updates</h3><p data-t="s5">Once a day the browser checks for a new version. On Windows it installs the update after checking its signature. On Android it asks you to install it, and checks the file's checksum first. Firefox security fixes reach you with these updates, so install them when they come.</p></li>
-        <li><h3 data-t="s6">Why Windows warns</h3><p data-t="s7">SmartScreen warns about installers that aren't signed with a paid certificate yet or are still new to it. It doesn't mean something harmful was found. To check a download, compare it with the SHA-256 checksums on the <a href="https://github.com/halgurdh/akhiBrowser/releases/latest">release page</a>.</p></li>
         <li><h3 data-t="s8">What is open source</h3><p data-t="s9">AkhiBrowser is built on Firefox. Our changes to Firefox, and every file under Firefox's license (MPL), are public on <a href="https://github.com/halgurdh/akhiBrowser">GitHub</a>. The protections themselves, the AkhiBrowser extension, Premium and its license service, are our own code and not public, as with most paid apps. What the browser sends, and to whom, is listed under <a href="#privacy">Privacy</a>.</p></li>
       </ul>
       <p class="note" data-t="s10">Found a security problem? Tell us at <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a>.</p>
@@ -353,17 +352,32 @@ footer p + p { margin-top: 8px; }
   <section id="premium">
     <div class="wrap">
       <h2 data-t="t47">Premium, if you want it</h2>
-      <p class="intro" data-t="t48">Nudity blurring and every other protection above stays free. Premium adds blurring women, men or both; Recognize hijab, which shows a woman who is covered instead of blurring every woman; a parental PIN; and optional parent controls to block chosen sites, allow only approved sites, set time limits with bedtime and school hours, and see a summary of blocked pages without addresses. That data stays on the device.</p>
+      <p class="intro" data-t="t48">Every protection above stays free. Premium is for you: more control over images and a calmer web. Family Premium is for parents: everything in Premium, plus the parent controls, on up to ten devices. Each feature is off until you turn it on, and its data stays on the device.</p>
       <p class="intro" data-t="t48b">Premium is only in the AkhiBrowser browser, with a license key. The free AkhiBrowser extension for Chrome and Firefox has the free protections above, without Premium. The browser also brings what an extension can't: no telemetry, studies or crash reports to Mozilla, uBlock Origin built in, and strict tracking protection.</p>
-      <figure class="demo" style="max-width:520px;margin-top:28px">
-        <img class="shot" src="assets/premium.png" width="520" height="1147" alt="Premium settings: plans, a license key field, blur women or men, treat persons of unclear gender as women, recognize hijab, block sites of your choice, allow only approved sites, time limits and schedules, no private tabs, activity summary, limit social media feeds and parental PIN." data-a="alt:a8">
+      <figure class="demo premium-preview">
+        <img class="shot" src="assets/premium.png" width="520" height="550" alt="The Premium plans in AkhiBrowser's settings: Free, Family Premium (recommended), Premium and Lifetime Premium, with their prices and features." data-a="alt:a8">
       </figure>
+      <h3 class="plan-title" data-t="t82">Premium, for you</h3>
+      <ul class="list">
+        <li><h3 data-t="t60">Choose who to blur</h3><p data-t="t61">Blur women, men or both. Recognize hijab can leave covered women visible.</p></li>
+        <li><h3 data-t="t74">Strict mode</h3><p data-t="t75">Every image and video stays blurred until you tap it, on all sites or the ones you choose.</p></li>
+        <li><h3 data-t="t76">Prayer pause</h3><p data-t="t77">Social media, video and game sites, or all sites, pause for a few minutes after each prayer time.</p></li>
+        <li><h3 data-t="t78">A calmer web</h3><p data-t="t79">YouTube without recommendations, Shorts or autoplay, comments hidden, and profanity masked in the text of pages.</p></li>
+      </ul>
+      <h3 class="plan-title" data-t="t83">Family Premium, for parents</h3>
+      <ul class="list">
+        <li><h3 data-t="t62">Parent controls</h3><p data-t="t63">Set a PIN, block chosen sites, allow only approved sites, schedule bedtime and school hours, or set a daily browsing limit.</p></li>
+        <li><h3 data-t="t64">Activity summary</h3><p data-t="t65">See the last seven days of blocked pages by reason, without page addresses. The summary stays on your device.</p></li>
+        <li><h3 data-t="t66">Limit social feeds</h3><p data-t="t67">Hide short-video feeds and set a daily limit on social websites in AkhiBrowser, not in social-media apps.</p></li>
+        <li><h3 data-t="t80">Pause the internet, back up the settings</h3><p data-t="t81">Pause browsing now with the PIN, and move the parent controls to another device in a file locked with the PIN.</p></li>
+      </ul>
       <div class="plans">
-        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/monthly" data-t="t49">Monthly</a>
-        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/yearly" data-t="t50">Yearly</a>
-        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/lifetime" data-t="t51">Lifetime</a>
+        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/monthly" data-t="t49">Premium monthly<small>€3.33 a month</small></a>
+        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/yearly" data-t="t50">Premium yearly<small>€35.00 a year</small></a>
+        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/lifetime" data-t="t51">Lifetime Premium<small>€99.99 once</small></a>
+        <a class="btn" href="https://akhi-license.akhibrowser.workers.dev/buy/family" data-t="t85">Family Premium<small>€49.99 a year</small></a>
       </div>
-      <p class="note" data-t="t52">Paid through Stripe, which shows the price before you pay. You get a license key, with no account, to enter in the browser's settings.</p>
+      <p class="note" data-t="t52">In a Google Play build, Premium is bought through Google Play. In other builds, Stripe shows the price before you pay; you get a license key without creating an account. A Premium key works on up to three devices at a time, a Family key on up to ten. Bought Premium or Lifetime before version 1.2.1? You keep the parent controls you had.</p>
       <div class="cancel" id="cancel">
         <h3 data-t="c0">How to cancel a subscription</h3>
         <ol>
@@ -376,12 +390,19 @@ footer p + p { margin-top: 8px; }
       </div>
     </div>
   </section>
+
+  <section id="roadmap">
+    <div class="wrap">
+      <h2 data-t="t87">Roadmap: iPhone and Mac</h2>
+      <p class="intro" data-t="t88">AkhiBrowser is for Windows and Android today. iOS and macOS versions are to be announced, with no date yet. Our goal is to start on them once 100 families are on Family Premium.</p>
+    </div>
+  </section>
 </main>
 
 <footer>
   <div class="wrap">
     <p data-t="t53">AkhiBrowser is built on <a href="https://www.firefox.com/">Firefox</a>, and is not made or endorsed by Mozilla. Background music removal builds on <a href="https://github.com/mohamedsadiqaguenaou/NoMusic">NoMusic</a> by Mohamed Sadiq.</p>
-    <p><a href="https://github.com/halgurdh/akhiBrowser" data-t="t54">Source on GitHub</a> &middot; <a href="#accessibility" data-t="x11">Accessibility</a> &middot; <a href="https://www.youtube.com/@akhibrowser">YouTube</a> &middot; <a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md">Privacy</a> &middot; <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a></p>
+    <p><a href="https://github.com/halgurdh/akhiBrowser" data-t="t54">Source on GitHub</a> &middot; <a href="#accessibility" data-t="x11">Accessibility</a> &middot; <a href="/blog/">Blog</a> &middot; <a href="/compare/kahf-browser/" data-t="t86">Compare with Kahf Browser</a> &middot; <a href="https://www.youtube.com/@akhibrowser">YouTube</a> &middot; <a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md">Privacy</a> &middot; <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a></p>
   </div>
 </footer>
 
@@ -392,19 +413,12 @@ footer p + p { margin-top: 8px; }
 "t1": "Functies",
 "t2": "<span>Filter het web,<\/span> op je eigen apparaat.",
 "t3": "Een halal browser voor moslims die je privacy respecteert, gebouwd op Firefox. Hij houdt reclame en haram sites tegen, houdt afbeeldingen wazig tot ze zijn gecontroleerd en haalt de muziek uit video's.",
-"t4": "Download voor Windows<small>64-bit installer<\/small>",
-"t5": "Download voor Android<small>64-bit ARM APK<\/small>",
-"t6": "<strong>📲 Beschikbaar voor Android (8.0+) en Windows (64-bit)<\/strong>",
+"t4": "Binnenkort beschikbaar<small>Android 8.0+ en Windows 64-bit<\/small>",
 "t7": "(Insha'Allah komt hij binnenkort ook als losse extensie voor Firefox en Chrome.)",
-"tPlay": "(Google Play: binnenkort, insha'Allah.)",
-"aStore": "Downloaden uit de Microsoft Store",
-"t8": "<strong>Let op:<\/strong>",
-"t9": "Krijg je op Windows een SmartScreen-waarschuwing? Klik dan op \"Meer informatie\" → \"Toch uitvoeren\".",
-"t10": "Op Android: tik op het gedownloade bestand → zet \"Toestaan van deze bron\" aan als dat wordt gevraagd → tik op Installeren.",
-"t11": "Gratis. Versie 1.1.1. <a href=\"https://github.com/halgurdh/akhiBrowser/releases/latest\">Checksums en alle versies<\/a>.",
+"t11": "Gratis bescherming.",
 "t12": "Zo werkt het",
 "t13": "Meteen aan, vanaf de eerste pagina",
-"t14": "Dit alles is gratis en zit er standaard in. Je kunt elke bescherming uitzetten via het AkhiBrowser-schild. Met een ouderpincode zorg je dat ze aan blijven.",
+"t14": "Deze bescherming zit er gratis bij. Je kunt elk onderdeel uitzetten via het AkhiBrowser-schild. Premium is optioneel en staat uit tot je het zelf aanzet.",
 "t15": "Geen reclame en trackers",
 "t16": "uBlock Origin wordt voor je geïnstalleerd en blijft aan. Daaronder houdt AkhiBrowser zelf ook nog bekende reclame-, tracker- en malwaresites tegen.",
 "t17": "Geen 18+- en haram sites",
@@ -419,7 +433,7 @@ footer p + p { margin-top: 8px; }
 "t26": "Alleen wat op je scherm staat wordt gecontroleerd, en afbeeldingen die al eerder langskwamen hoeven niet opnieuw. Pagina's hoeven nooit op de controle te wachten.",
 "t27": "Afbeeldingen blijven wazig tot ze zijn gecontroleerd",
 "t28": "Je apparaat bekijkt zelf afbeeldingen, achtergronden en video's, zodat er niets eerst even in beeld flitst. Is iets niet in orde, dan blijft het wazig.",
-"t29": "Met Premium kies je wie wazig wordt: vrouwen, mannen of allebei. Het gaat om wat er van iemand te zien is, niet om de hele afbeelding: bij een vrouw als haar haar of lichaam zichtbaar is, bij een man van navel tot knieën.",
+"t29": "Premium laat je kiezen of je vrouwen, mannen of allebei wazig maakt. Met Hijab herkennen blijft een bedekte vrouw zichtbaar. Deze optionele beeldcontrole gebruikt modellen op je eigen apparaat.",
 "t30": "Filters kunnen iets missen, en een afbeelding die niet te controleren is, wordt gewoon getoond. Ze vervangen dus niet de aandacht van een ouder.",
 "t31": "Voorbeelden",
 "t32": "Dit zie je bij een geblokkeerde site",
@@ -440,25 +454,55 @@ footer p + p { margin-top: 8px; }
 "t55": "<strong>Websiteanalyse.<\/strong> Deze site laadt Google Tag Manager. Google ontvangt het IP-adres en technische informatie over het verzoek; analysetags die in GTM zijn ingeschakeld kunnen ook paginaweergaven en gebeurtenissen verzamelen. Zie <a href=\"https:\/\/policies.google.com\/privacy\">Googles privacybeleid<\/a>.",
 "t47": "Premium, als je dat wilt",
 "t48b": "Premium zit alleen in de AkhiBrowser-browser, met een licentiesleutel. De gratis AkhiBrowser-extensie voor Chrome en Firefox heeft de gratis bescherming hierboven, zonder Premium. De browser geeft ook wat een extensie niet kan: geen telemetrie, onderzoeken of crashrapporten naar Mozilla, uBlock Origin ingebouwd en strikte bescherming tegen volgen.",
-"t48": "Naakt wazig maken en alle andere bescherming hierboven blijven gratis. Premium voegt vrouwen, mannen of allebei wazig maken toe, en Hijab herkennen: een bedekte vrouw blijft dan zichtbaar, in plaats van dat elke vrouw wazig wordt. Je krijgt ook een ouderpincode en optioneel ouderlijk toezicht: gekozen sites blokkeren, alleen goedgekeurde sites toestaan, tijdslimieten met bedtijd en schooluren, en een overzicht van geblokkeerde pagina's zonder adressen. Die gegevens blijven op het apparaat.",
-"t49": "Per maand",
-"t50": "Per jaar",
-"t51": "Levenslang",
-"t52": "Je betaalt via Stripe en ziet de prijs voordat je betaalt. Je krijgt een licentiesleutel, zonder account, en vult die in bij de instellingen van de browser.",
-"t53": "AkhiBrowser is gebouwd op <a href=\"https://www.firefox.com/\">Firefox<\/a>, maar is niet gemaakt of goedgekeurd door Mozilla. Het weghalen van achtergrondmuziek bouwt voort op <a href=\"https://github.com/mohamedsadiqaguenaou/NoMusic\">NoMusic<\/a> van Mohamed Sadiq.",
-"t54": "Broncode op GitHub",
 "s0": "Is het veilig?",
 "s1": "AkhiBrowser is Firefox met filters erbij. Wat je online veilig houdt, komt van Firefox.",
 "s2": "Firefox eronder",
 "s3": "Dezelfde engine en sandbox als Firefox, die elke website gescheiden houden van je bestanden en van andere sites. Bekende malwaredomeinen worden ook tegengehouden.",
 "s4": "Ondertekende updates",
 "s5": "Eén keer per dag kijkt de browser of er een nieuwe versie is. Op Windows installeert hij de update nadat hij de handtekening heeft gecontroleerd. Op Android vraagt hij je om te installeren, en controleert hij eerst de checksum van het bestand. Beveiligingsfixes van Firefox krijg je met deze updates, dus installeer ze als ze komen.",
-"s6": "Waarom Windows waarschuwt",
-"s7": "SmartScreen waarschuwt voor installers die nog niet met een betaald certificaat zijn ondertekend of die het nog niet goed kent. Dat betekent niet dat er iets schadelijks is gevonden. Wil je een download controleren? Vergelijk hem met de SHA-256-checksums op de <a href=\"https://github.com/halgurdh/akhiBrowser/releases/latest\">releasepagina<\/a>.",
 "s8": "Wat is open source",
 "s9": "AkhiBrowser is gebouwd op Firefox. Onze wijzigingen aan Firefox, en alle bestanden onder de licentie van Firefox (MPL), staan openbaar op <a href=\"https://github.com/halgurdh/akhiBrowser\">GitHub<\/a>. De bescherming zelf, de AkhiBrowser-extensie, Premium en de licentieservice, is onze eigen code en niet openbaar, zoals bij de meeste betaalde apps. Wat de browser verstuurt en naar wie, staat bij <a href=\"#privacy\">Privacy<\/a>.",
 "s10": "Een beveiligingsprobleem gevonden? Laat het ons weten via <a href=\"mailto:support@akhibrowser.com\">support@akhibrowser.com<\/a>.",
-"a0": "De instellingen van AkhiBrowser: reclame en trackers geblokkeerd, achtergrondmuziek weg, 18+-inhoud geblokkeerd, haram sites geblokkeerd en naaktbeelden wazig staan allemaal aan.",
+"t48": "Alles hierboven blijft gratis. Premium is voor jezelf: meer controle over afbeeldingen en een rustiger web. Family Premium is voor ouders: alles uit Premium, plus ouderlijk toezicht, op maximaal tien apparaten. Elke functie staat uit tot je hem aanzet, en de gegevens blijven op je apparaat.",
+"t49": "Premium per maand<small>€3,33 per maand<\/small>",
+"t50": "Premium per jaar<small>€35,00 per jaar<\/small>",
+"t51": "Levenslang Premium<small>€99,99 eenmalig<\/small>",
+"t52": "In de Google Play-versie koop je Premium via Google Play. In andere versies zie je de prijs bij Stripe voordat je betaalt. Je krijgt een licentiesleutel zonder account. Een Premium-sleutel werkt op maximaal drie apparaten tegelijk, een Family-sleutel op maximaal tien. Premium of Levenslang gekocht vóór versie 1.2.1? Dan houd je het ouderlijk toezicht dat je had.",
+"t53": "AkhiBrowser is gebouwd op <a href=\"https://www.firefox.com/\">Firefox<\/a>, maar is niet gemaakt of goedgekeurd door Mozilla. Het weghalen van achtergrondmuziek bouwt voort op <a href=\"https://github.com/mohamedsadiqaguenaou/NoMusic\">NoMusic<\/a> van Mohamed Sadiq.",
+"t54": "Broncode op GitHub",
+"t56": "Afbeeldingen op je apparaat gecontroleerd",
+"t57": "Afbeeldingen blijven wazig tot ze zijn gecontroleerd. Onveilige afbeeldingen blijven wazig; een afbeelding die niet kan worden gecontroleerd, wordt getoond.",
+"t58": "Kleurcorrectie",
+"t59": "Een optionele instelling op je apparaat maakt rood en groen beter uit elkaar te houden bij de twee soorten rood-groenblindheid.",
+"t60": "Kies wie wazig wordt",
+"t61": "Maak vrouwen, mannen of allebei wazig. Met Hijab herkennen kunnen bedekte vrouwen zichtbaar blijven.",
+"t62": "Ouderlijk toezicht",
+"t63": "Stel een pincode in, blokkeer gekozen sites, sta alleen goedgekeurde sites toe, plan bedtijd en schooluren of stel een dagelijkse limiet in.",
+"t64": "Activiteitenoverzicht",
+"t65": "Bekijk per reden hoeveel pagina's er de afgelopen zeven dagen zijn geblokkeerd, zonder adressen. Het overzicht blijft op je apparaat.",
+"t66": "Beperk sociale feeds",
+"t67": "Verberg korte video's en stel een dagelijkse limiet in voor sociale websites in AkhiBrowser, niet in sociale apps.",
+"t68": "Geen phishing- en oplichtingssites",
+"t69": "Bekende phishing- en oplichtingssites gaan niet open, met een knop om toch door te gaan als een site per ongeluk op de lijst staat.",
+"t70": "Gebedstijden en elke dag een vers",
+"t71": "Gebedstijden voor de stad die je kiest, berekend op je apparaat zonder je locatie, en elke dag een vers uit de Koran.",
+"t72": "Je instellingen op de startpagina",
+"t73": "Op computers openen nieuwe tabbladen de pagina van AkhiBrowser met een zoekveld, je meest bezochte sites, het vers van de dag en alle instellingen. Je kunt het uitzetten.",
+"t74": "Strenge modus",
+"t75": "Elke afbeelding en video blijft wazig tot je erop tikt, op alle sites of op de sites die je kiest.",
+"t76": "Gebedspauze",
+"t77": "Sociale media, video- en gamesites, of alle sites, pauzeren een paar minuten na elke gebedstijd.",
+"t78": "Een rustiger web",
+"t79": "YouTube zonder aanbevelingen, Shorts of automatisch afspelen, reacties verborgen, en scheldwoorden onleesbaar in de tekst van pagina's.",
+"t80": "Internet pauzeren, instellingen bewaren",
+"t81": "Pauzeer het surfen meteen met de pincode, en zet het ouderlijk toezicht over naar een ander apparaat in een bestand dat met de pincode is beveiligd.",
+"t82": "Premium, voor jezelf",
+"t83": "Family Premium, voor ouders",
+"t86": "Vergelijk met Kahf Browser",
+"t87": "Roadmap: iPhone en Mac",
+"t88": "AkhiBrowser is er nu voor Windows en Android. Versies voor iOS en macOS volgen later, nog zonder datum. Ons doel is eraan te beginnen zodra 100 gezinnen Family Premium hebben.",
+"t85": "Family Premium<small>€49,99 per jaar<\/small>",
+"a0": "De instellingen van AkhiBrowser: het vers van de dag, gebedstijden en de vijf beschermingen, allemaal aan: reclame en trackers geblokkeerd, achtergrondmuziek weg, 18+-inhoud geblokkeerd, haram sites geblokkeerd en naaktbeelden wazig.",
 "a1": "Promovideo van AkhiBrowser, 35 seconden",
 "a2": "Korte video van AkhiBrowser: zij stopten er muziek in, dus wij haalden het eruit, 19 seconden",
 "a3": "Een wazig landschap met het label: Checking on your device.",
@@ -467,7 +511,7 @@ footer p + p { margin-top: 8px; }
 "a5": "Een pagina met de tekst: This page is blocked. AkhiBrowser blokkeert sites over alcohol, drugs en gokken. Daaronder een vers uit de Koran, 2:219, in het Arabisch en Engels, met een link naar quran.com.",
 "a6": "Een geluidsgolf van stemmen, met het label: Background music: removed.",
 "a7": "De startpagina van AkhiBrowser op Android: een zoekbalk, het AkhiBrowser-logo en het label: You're protected.",
-"a8": "Premium-instellingen: abonnementen, een veld voor de licentiesleutel, vrouwen of mannen wazig maken, personen van onduidelijk geslacht als vrouw behandelen, hidjab herkennen, gekozen sites blokkeren, alleen goedgekeurde sites toestaan, tijdslimieten en schema's, geen privétabbladen, activiteitenoverzicht, social-mediafeeds beperken en ouderlijke pincode.",
+"a8": "De Premium-abonnementen in de instellingen van AkhiBrowser: Gratis, Family Premium (aanbevolen), Premium en Levenslang Premium, met hun prijzen en functies.",
 "a9": "Korte video van AkhiBrowser: je wilt gewoon een les online kijken, NoMusic haalt de achtergrondmuziek weg en laat de stem staan, 21 seconden",
 "c0": "Zo zeg je je abonnement op",
 "c1": "Open het AkhiBrowser-schild in de werkbalk. Op Android: menu, dan Extensies, dan AkhiBrowser.",
