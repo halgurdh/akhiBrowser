@@ -145,7 +145,7 @@ private fun BrowserState.extensionActions(tab: SessionState): List<Pair<Action, 
         }
 
 private fun WebExtensionState.toMenuAction(
-    tab: SessionState,
+    tab: SessionState?,
     isPageAction: Boolean,
 ): Pair<Action, WebExtensionMenuAction>? {
     val action = resolveAction(tab, isPageAction) ?: return null
@@ -180,3 +180,31 @@ private fun WebExtensionState.resolveAction(
 
     return action?.copyWithOverride(override)
 }
+
+/**
+ * AkhiBrowser: the browser actions of the extensions built into the app, for the home screen. There is no tab there,
+ * and the extensions manager doesn't list built-in extensions, so AkhiBrowser's own would be out of reach.
+ *
+ * @param isPrivate Whether the home screen is the private one.
+ * @param iconSize The size in pixels in which to load the icon of each action.
+ */
+fun Flow<BrowserState>.builtInBrowserActions(isPrivate: Boolean, iconSize: Int): Flow<List<WebExtensionMenuAction>> =
+    distinctUntilChangedBy { it.extensions }.map { state ->
+        state.builtInActions(isPrivate).map { (action, menuAction) ->
+            menuAction.copy(icon = action.loadIcon?.invoke(iconSize))
+        }
+    }
+
+/** [builtInBrowserActions] without their icons, known right away. */
+fun BrowserState.builtInBrowserActionsWithoutIcons(isPrivate: Boolean): List<WebExtensionMenuAction> =
+    builtInActions(isPrivate).map { (_, menuAction) -> menuAction }
+
+/** The browser action of a built-in extension the user clicked on the home screen. */
+fun BrowserState.findBuiltInBrowserAction(extensionId: String): Action? =
+    extensions[extensionId]?.takeIf { it.isBuiltIn }?.resolveAction(tab = null, isPageAction = false)
+
+private fun BrowserState.builtInActions(isPrivate: Boolean): List<Pair<Action, WebExtensionMenuAction>> =
+    extensions.values
+        .filter { it.isBuiltIn && (it.allowedInPrivateBrowsing || !isPrivate) }
+        .sortedBy { it.name }
+        .mapNotNull { it.toMenuAction(tab = null, isPageAction = false) }

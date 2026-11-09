@@ -20,7 +20,7 @@ import mozilla.components.support.base.log.logger.Logger
 object AkhiExtension {
     private val logger = Logger("akhi")
 
-    private const val EXTENSION_ID = "akhi@akhibrowser.org"
+    internal const val EXTENSION_ID = "akhi@akhibrowser.org"
     private const val EXTENSION_URL = "resource://android/assets/extensions/akhi/"
 
     private const val PREFERENCES = "akhi"

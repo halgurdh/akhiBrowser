@@ -44,6 +44,8 @@ import mozilla.components.support.ktx.android.util.dpToPx
 import mozilla.components.ui.icons.R as iconsR
 import org.mozilla.fenix.NavGraphDirections
 import org.mozilla.fenix.R
+import org.mozilla.fenix.components.AkhiExtension
+import org.mozilla.fenix.components.AkhiHomeCard
 import org.mozilla.fenix.components.AppStore
 import org.mozilla.fenix.components.menu.MenuHost
 import org.mozilla.fenix.components.menu.MenuItemProvider
@@ -92,7 +94,12 @@ class ExtensionsMenuItemProvider(
             ExtensionsStatus(
                 isProcessDisabled = browserStore.state.extensionsProcessDisabled,
                 hasInstalledExtensions = browserStore.state.extensions.values.any { !it.isBuiltIn },
-                actions = browserStore.state.webExtensionMenuActionsWithoutIcons { target.browserSessionFrom(this) },
+                actions =
+                    if (target == MenuTarget.Home) {
+                        browserStore.state.builtInBrowserActionsWithoutIcons(appStore.state.mode.isPrivate)
+                    } else {
+                        browserStore.state.webExtensionMenuActionsWithoutIcons { target.browserSessionFrom(this) }
+                    },
                 pendingUpdates =
                     if (target is MenuTarget.CustomTab) {
                         // A custom tab offers no way to act on an update.
@@ -107,8 +114,7 @@ class ExtensionsMenuItemProvider(
 
     override val itemsFlow: StateFlow<List<MenuItem>> =
         when (target) {
-            MenuTarget.Home ->
-                MutableStateFlow<List<MenuItem>>(listOf(extensions.value.toExtensionsManagerMenuItem(context)))
+            MenuTarget.Home -> extensions.mapToMenuItem(viewLifecycleScope) { it.toHomeMenuItem(context) }
             MenuTarget.CustomizeMenu -> MutableStateFlow<List<MenuItem>>(listOf(DEFAULT_MENU_ITEM))
             MenuTarget.BrowserTab -> extensions.mapToMenuItem(viewLifecycleScope) { it.toMenuItem(target, context) }
             is MenuTarget.CustomTab ->
@@ -116,9 +122,17 @@ class ExtensionsMenuItemProvider(
         }
 
     init {
-        if (target != MenuTarget.Home && target != MenuTarget.CustomizeMenu) {
+        if (target == MenuTarget.Home) {
+            viewLifecycleScope.launch { observeBuiltInActions() }
+        } else if (target != MenuTarget.CustomizeMenu) {
             observeExtensions(viewLifecycleScope, applicationScope)
         }
+    }
+
+    private suspend fun observeBuiltInActions() {
+        browserStore.stateFlow
+            .builtInBrowserActions(isPrivate = appStore.state.mode.isPrivate, iconSize = actionIconSize)
+            .collect { actions -> extensions.update { it.copy(actions = actions) } }
     }
 
     private fun observeExtensions(viewLifecycleScope: CoroutineScope, applicationScope: CoroutineScope) {
@@ -235,12 +249,24 @@ class ExtensionsMenuItemProvider(
     private fun clickExtensionAction(event: MenuAction.WebExtensionActionClicked, menu: MenuHost) {
         if (isCustomTab) return
 
+        // AkhiBrowser: without a tab its popup can't open, so its settings open in one
+        if (target == MenuTarget.Home && event.extensionId == AkhiExtension.EXTENSION_ID &&
+            AkhiHomeCard.openSettings(context)
+        ) {
+            menu.navigate(NavGraphDirections.actionGlobalBrowser(null))
+            return
+        }
+
         val extensionAction =
-            browserStore.state.findWebExtensionMenuAction(
-                extensionId = event.extensionId,
-                isPageAction = event.isPageAction,
-            ) {
-                target.browserSessionFrom(this)
+            if (target == MenuTarget.Home) {
+                browserStore.state.findBuiltInBrowserAction(event.extensionId)
+            } else {
+                browserStore.state.findWebExtensionMenuAction(
+                    extensionId = event.extensionId,
+                    isPageAction = event.isPageAction,
+                ) {
+                    target.browserSessionFrom(this)
+                }
             } ?: return
 
         menu.dismiss()
@@ -253,6 +279,25 @@ class ExtensionsMenuItemProvider(
             summary = if (isProcessDisabled) null else pendingUpdateSummary,
             onClickEvent = MenuAction.Navigate.ManageExtensions,
         )
+
+    /** AkhiBrowser: the built-in extensions' buttons, then the extensions manager. */
+    private fun ExtensionsStatus.toHomeMenuItem(context: Context): MenuItem =
+        if (isProcessDisabled || actions.isEmpty()) {
+            toExtensionsManagerMenuItem(context)
+        } else {
+            ExpandableMenuItem(
+                title = MenuItemTitle(Text.Resource(R.string.browser_menu_extensions)),
+                onClickEvent = MenuAction.OnExtensionsMenuClicked,
+                subMenuItems =
+                    actions.map { it.toMenuItem(menuTarget = MenuTarget.Home, ownedBy = null) } +
+                        StandardMenuItem(
+                            title = MenuItemTitle(Text.Resource(R.string.browser_menu_manage_extensions)),
+                            onClickEvent = MenuAction.Navigate.ManageExtensions,
+                        ),
+                icon = icon(context),
+                summary = pendingUpdateSummary,
+            )
+        }
 
     private fun ExtensionsStatus.toCustomTabMenuItem(menuTarget: MenuTarget, context: Context): MenuItem =
         when {

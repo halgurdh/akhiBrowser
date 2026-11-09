@@ -2,12 +2,20 @@
 
 Last updated: 07-11-2026
 
-This policy covers the AkhiBrowser browser for Android and Windows, and the AkhiBrowser extension for Firefox and
-Chrome. AkhiBrowser is made by Halgurd Hussein. It has no account of its own, no ads and no analytics. We do not sell or
-share data. We, the makers, receive nothing about you or the sites you visit.
+This policy covers the AkhiBrowser website, browser for Android and Windows, and extension for Firefox and Chrome.
+AkhiBrowser is made by Halgurd Hussein. The browser and extensions have no account of their own, no ads and no
+analytics. We do not sell data.
 
-The browser and the extension do their work on your device, but they have to contact a few services. This page lists
-them all.
+The browser and extension do their work on your device, but they have to contact a few services. The website loads
+Google Tag Manager. This page lists those services.
+
+## The website (akhibrowser.com)
+
+When you visit the website, it loads Google Tag Manager (`GTM-N2MF3XPS`) from Google. Google receives your IP address
+and technical request information. Analytics tags enabled in the container may also collect page views and events,
+depending on its configuration. Google's handling of this information is covered by
+[Google's privacy policy](https://policies.google.com/privacy). The tag loads when the page loads; the website does not
+currently show a consent prompt.
 
 ## The browser (Android and Windows)
 

@@ -20,11 +20,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -38,7 +35,11 @@ import mozilla.components.concept.engine.EngineSession
 import mozilla.components.concept.engine.webextension.MessageHandler
 import org.json.JSONArray
 import org.json.JSONObject
+import org.mozilla.fenix.BrowserDirection
+import org.mozilla.fenix.HomeActivity
 import org.mozilla.fenix.R
+import org.mozilla.fenix.ext.asActivity
+import org.mozilla.fenix.ext.components
 import java.time.LocalDate
 
 /**
@@ -75,6 +76,26 @@ internal object AkhiHomeCard {
                 content.value = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE).getString(CONTENT, null)
             }
         }
+    }
+
+    /**
+     * Opens AkhiBrowser's settings page in a tab, at [section] (a group of settings.html) when given. The home screen
+     * has no tab for the extension's popup, so its card and menu open the page itself.
+     *
+     * @return false while the extension hasn't sent the page's address yet.
+     */
+    fun openSettings(context: Context, section: String? = null): Boolean {
+        load(context)
+        val url = content.value
+            ?.let { runCatching { JSONObject(it).optString("settingsUrl") }.getOrNull() }
+            ?.takeIf { it.isNotEmpty() }
+            ?: return false
+        context.components.useCases.tabsUseCases.selectOrAddTab(
+            url = if (section != null) "$url#$section" else url,
+            private = context.components.appStore.state.mode.isPrivate,
+            ignoreFragment = true,
+        )
+        return true
     }
 
     private class Time(val name: String, val label: String, val at: Long)
@@ -127,11 +148,17 @@ internal object AkhiHomeCard {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
+            val open = { section: String? ->
+                val activity = context.asActivity() as? HomeActivity
+                if (activity != null && openSettings(activity, section)) {
+                    activity.openToBrowser(BrowserDirection.FromHome)
+                }
+            }
             if (day != null) {
-                Times(card.getString("prayerTitle"), card.getString("city"), day, now)
+                Times(card.getString("prayerTitle"), card.getString("city"), day, now) { open("prayer") }
             }
             if (verse != null) {
-                Verse(card.getString("verseTitle"), verse)
+                Verse(card.getString("verseTitle"), verse) { open(null) }
             }
         }
     }
@@ -150,9 +177,15 @@ internal object AkhiHomeCard {
         }
     }
 
+    /** A tap opens the prayer times in the extension's settings. */
     @Composable
-    private fun Times(title: String, city: String, day: List<Time>, now: Long) {
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    private fun Times(title: String, city: String, day: List<Time>, now: Long, onClick: () -> Unit) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
             Title(R.drawable.akhi_salah_mosque, "$title · $city")
             val next = day.firstOrNull { it.at > now }
             Row(modifier = Modifier.fillMaxWidth()) {
@@ -182,30 +215,21 @@ internal object AkhiHomeCard {
         }
     }
 
-    /** A tap shows the whole verse with its Arabic: the text of the Quran is never left cut off. */
+    /** A tap opens the settings, which show the whole verse with its Arabic: the Quran is never left cut off. */
     @Composable
-    private fun Verse(title: String, verse: JSONObject) {
-        var isOpen by rememberSaveable { mutableStateOf(false) }
+    private fun Verse(title: String, verse: JSONObject, onClick: () -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { isOpen = !isOpen },
+                .clickable(onClick = onClick),
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Title(R.drawable.akhi_salah_mushaf, "$title · ${verse.getString("ref")}")
-            if (isOpen) {
-                Text(
-                    text = verse.getString("arabic"),
-                    modifier = Modifier.fillMaxWidth(),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
-            }
             Text(
                 text = verse.getString("meaning"),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = if (isOpen) Int.MAX_VALUE else COLLAPSED_VERSE_LINES,
+                maxLines = COLLAPSED_VERSE_LINES,
                 overflow = TextOverflow.Ellipsis,
             )
         }

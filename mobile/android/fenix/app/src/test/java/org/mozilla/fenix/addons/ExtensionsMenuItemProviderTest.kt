@@ -531,6 +531,25 @@ class ExtensionsMenuItemProviderTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
+    fun `GIVEN a built-in extension WHEN building the item for home THEN offer its action and the extensions manager`() =
+        runTest {
+            val builtIn = extension("builtin").copy(isBuiltIn = true)
+            val provider = provider(browserStoreWith(builtIn, extension(INSTALLED_ID)), MenuTarget.Home)
+
+            runCurrent()
+
+            val item = provider.itemsFlow.value.single() as ExpandableMenuItem
+            assertEquals(
+                listOf(
+                    MenuAction.WebExtensionActionClicked(extensionId = "builtin", isPageAction = false),
+                    MenuAction.Navigate.ManageExtensions,
+                ),
+                item.subMenuItems.map { it.onClickEvent },
+            )
+        }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
     fun `GIVEN the menu was opened from home WHEN building the item THEN don't query the extensions`() = runTest {
         provider(browserStoreWith(extension(INSTALLED_ID)), MenuTarget.Home)
 
