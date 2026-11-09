@@ -79,6 +79,7 @@ h1 { font-size: clamp(40px, 6.4vw, 66px); letter-spacing: -.02em; }
 .btn small { display: block; font-size: 13px; font-weight: 400; }
 .btn.ghost { background: transparent; color: #fff; box-shadow: inset 0 0 0 1.5px var(--gold); }
 .btn.ghost:hover { background: rgba(244, 190, 52, .14); color: #fff; }
+.btn.soon, .btn.soon:hover { background: var(--gold); color: var(--ink); cursor: default; }
 .note { margin-top: 10px; font-size: 14px; color: var(--soft); }
 
 section { padding: 72px 0; border-top: 1px solid var(--line); }
@@ -161,7 +162,6 @@ footer p + p { margin-top: 8px; }
         <a href="#privacy">Privacy</a>
         <a href="#premium">Premium</a>
         <a href="/blog/">Blog</a>
-        <a href="https://github.com/halgurdh/akhiBrowser">GitHub</a>
       </div>
       <div class="lang" id="lang" role="group" aria-label="Language / Taal" hidden>
         <button type="button" data-lang="nl" lang="nl">NL</button>
@@ -174,15 +174,10 @@ footer p + p { margin-top: 8px; }
         <h1 data-t="t2"><span>Filter the web,</span> on your device.</h1>
         <p class="lead" data-t="t3">A private browser for Muslims, built on Firefox. It blocks ads and haram sites, blurs images until they are checked, and takes the music out of videos.</p>
         <div class="get" id="download">
-          <a class="btn" href="https://github.com/halgurdh/akhiBrowser/releases/latest/download/AkhiBrowser-windows-x64-setup.exe" data-t="t4">Download for Windows<small>64-bit installer</small></a>
-          <a class="btn ghost" href="https://github.com/halgurdh/akhiBrowser/releases/latest/download/AkhiBrowser-android-arm64-v8a.apk" data-t="t5">Download for Android<small>64-bit ARM APK</small></a>
+          <span class="btn soon" data-t="t4">Coming soon<small>Android 8.0+ and Windows 64-bit</small></span>
         </div>
-        <p class="note" data-t="t6"><strong>📲 Available for Android (8.0+) and Windows (64-bit)</strong></p>
         <p class="note" data-t="t7">(Insha'Allah, it will also be available soon as a standalone extension for Firefox and Chrome.)</p>
-        <p class="note" data-t="t8"><strong>Please note:</strong></p>
-        <p class="note" data-t="t9">On Windows, SmartScreen may display a warning; if so, click "More info" → "Run anyway."</p>
-        <p class="note" data-t="t10">On Android: Tap the downloaded file → Enable "Allow from this source" if prompted → Tap Install.</p>
-        <p class="note" data-t="t11">Free protections. Version 1.2.1. <a href="https://github.com/halgurdh/akhiBrowser/releases/latest">Portable version, checksums and all releases</a>.</p>
+        <p class="note" data-t="t11">Free protections.</p>
       </div>
       <img class="shot" src="assets/settings.png" width="520" height="700" alt="AkhiBrowser's settings: the verse of the day, prayer times, and the five protections, all on: ads and trackers blocked, background music removed, adult content blocked, haram sites blocked and nude images blurred." data-a="alt:a0">
     </div>
@@ -367,7 +362,7 @@ footer p + p { margin-top: 8px; }
 <footer>
   <div class="wrap">
     <p data-t="t53">AkhiBrowser is built on <a href="https://www.firefox.com/">Firefox</a>, and is not made or endorsed by Mozilla. Background music removal builds on <a href="https://github.com/mohamedsadiqaguenaou/NoMusic">NoMusic</a> by Mohamed Sadiq.</p>
-    <p><a href="https://github.com/halgurdh/akhiBrowser" data-t="t54">Source on GitHub</a> &middot; <a href="#accessibility" data-t="x11">Accessibility</a> &middot; <a href="/blog/">Blog</a> &middot; <a href="/compare/kahf-browser/" data-t="t86">Compare with Kahf Browser</a> &middot; <a href="https://www.youtube.com/@akhibrowser">YouTube</a> &middot; <a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY-ANDROID.md">Privacy</a> &middot; <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a></p>
+    <p><a href="https://github.com/halgurdh/akhiBrowser" data-t="t54">Source on GitHub</a> &middot; <a href="#accessibility" data-t="x11">Accessibility</a> &middot; <a href="/blog/">Blog</a> &middot; <a href="/compare/kahf-browser/" data-t="t86">Compare with Kahf Browser</a> &middot; <a href="https://www.youtube.com/@akhibrowser">YouTube</a> &middot; <a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md">Privacy</a> &middot; <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a></p>
   </div>
 </footer>
 
@@ -378,14 +373,9 @@ footer p + p { margin-top: 8px; }
 "t1": "Functies",
 "t2": "<span>Filter het web,<\/span> op je eigen apparaat.",
 "t3": "Een browser voor moslims die je privacy respecteert, gebouwd op Firefox. Hij houdt reclame en haram sites tegen, houdt afbeeldingen wazig tot ze zijn gecontroleerd en haalt de muziek uit video's.",
-"t4": "Download voor Windows<small>64-bit installer<\/small>",
-"t5": "Download voor Android<small>64-bit ARM APK<\/small>",
-"t6": "<strong>📲 Beschikbaar voor Android (8.0+) en Windows (64-bit)<\/strong>",
+"t4": "Binnenkort beschikbaar<small>Android 8.0+ en Windows 64-bit<\/small>",
 "t7": "(Insha'Allah komt hij binnenkort ook als losse extensie voor Firefox en Chrome.)",
-"t8": "<strong>Let op:<\/strong>",
-"t9": "Krijg je op Windows een SmartScreen-waarschuwing? Klik dan op \"Meer informatie\" → \"Toch uitvoeren\".",
-"t10": "Op Android: tik op het gedownloade bestand → zet \"Toestaan van deze bron\" aan als dat wordt gevraagd → tik op Installeren.",
-"t11": "Gratis bescherming. Versie 1.2.1. <a href=\"https://github.com/halgurdh/akhiBrowser/releases/latest\">Portable versie, checksums en alle versies<\/a>.",
+"t11": "Gratis bescherming.",
 "t12": "Zo werkt het",
 "t13": "Meteen aan, vanaf de eerste pagina",
 "t14": "Deze bescherming zit er gratis bij. Je kunt elk onderdeel uitzetten via het AkhiBrowser-schild. Premium is optioneel en staat uit tot je het zelf aanzet.",
