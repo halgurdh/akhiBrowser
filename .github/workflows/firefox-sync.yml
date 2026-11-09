@@ -1,0 +1,70 @@
+# Merges Mozilla's main into the branch firefox-daily every day at 00:00 UTC, and at once when CISA's list of exploited
+# vulnerabilities gets a Firefox entry (checked every 2 hours). Nothing reaches main or a release from here: a build
+# takes firefox-daily when it's ready. A conflict, or something AkhiBrowser removed coming back, stops it with an issue.
+name: Firefox sync
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+    - cron: "30 */2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+          filter: blob:none
+
+      - name: A Firefox entry new on the list?
+        id: urgent
+        if: github.event.schedule == '30 */2 * * *'
+        run: |
+          base=$(git fetch -q https://github.com/mozilla-firefox/firefox.git main && git log -1 --format=%cs "$(git merge-base HEAD FETCH_HEAD)")
+          count=$(curl -fsSL https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json |
+            jq --arg base "$base" '[.vulnerabilities[] | select(.vendorProject == "Mozilla" and (.product | test("firefox"; "i")) and .dateAdded > $base)] | length')
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+
+      - name: Merge
+        id: merge
+        if: github.event.schedule != '30 */2 * * *' || steps.urgent.outputs.count != '0'
+        run: |
+          git config user.name "AkhiBrowser sync"
+          git config user.email "support@akhibrowser.com"
+          before=$(git rev-parse HEAD)
+          git fetch -q https://github.com/mozilla-firefox/firefox.git main
+          if git merge-base --is-ancestor FETCH_HEAD HEAD; then
+            echo "Nothing new."
+            exit 0
+          fi
+          if ! git merge --no-edit -m "Merge Firefox main into AkhiBrowser" FETCH_HEAD; then
+            { echo "### The merge has conflicts"; git diff --name-only --diff-filter=U | sed 's/^/- /'; } > report.md
+            echo "failed=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if ! python3 .github/scripts/firefox_sync_guard.py "$before" > report.md; then
+            echo "failed=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git push --force origin HEAD:refs/heads/firefox-daily
+          echo "merged=true" >> "$GITHUB_OUTPUT"
+
+      - name: Say what stopped it
+        if: steps.merge.outputs.failed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue create --title "Firefox sync stopped on $(date -u +%F)" --body-file report.md
+
+      - name: Say what's urgent
+        if: steps.merge.outputs.merged == 'true' && github.event.schedule == '30 */2 * * *'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue create --title "Exploited Firefox bug: firefox-daily has the latest code, build it" --body-file report.md

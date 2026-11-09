@@ -47,6 +47,18 @@
 
     <!-- Needed to post notifications on devices with Android 13 and later-->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- AkhiAppBlock: Family, the APK only, taken out for Google Play in src/play/AndroidManifest.xml -->
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+    </queries>
 
     <!-- Needed for uploading media files on devices with Android 13 and later. -->
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
@@ -773,6 +785,31 @@
             android:name=".downloads.DownloadService"
             android:foregroundServiceType="dataSync"
             android:exported="false" />
+
+        <service
+            android:name=".components.AkhiAppBlockService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Parental control: blocks the apps a parent chose" />
+        </service>
+
+        <activity
+            android:name=".components.AkhiAppBlockActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:taskAffinity=""
+            android:theme="@android:style/Theme.DeviceDefault.NoActionBar" />
+
+        <receiver
+            android:name=".components.AkhiAppBlockBoot"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
         <receiver
             android:name="org.mozilla.gecko.search.SearchWidgetProvider"

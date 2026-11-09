@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- icons/quran/mushaf.svg of Salah Icons, converted to a vector drawable. Icons by SalahIcons.com, CC BY 4.0. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="240"
+    android:viewportHeight="240">
+    <path
+        android:pathData="M32.0,120.0a88.0,88.0 0 1,0 176.0,0a88.0,88.0 0 1,0 -176.0,0Z"
+        android:fillColor="#E4F1EA" />
+    <path
+        android:pathData="M62.0,182.0a58.0,4.0 0 1,0 116.0,0a58.0,4.0 0 1,0 -116.0,0Z"
+        android:fillColor="#B7DCC8" />
+    <path
+        android:pathData="M90 62L78 62Q73 62 73 68L73 168Q73 174 78 174L90 174L162 174Q167 174 167 169L167 67Q167 62 162 62L90 62Z"
+        android:fillColor="#B7DCC8"
+        android:strokeColor="#2F6B4F"
+        android:strokeWidth="2.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M78 62H162"
+        android:strokeColor="#2F6B4F"
+        android:strokeWidth="2.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M85 62V174"
+        android:strokeColor="#2F6B4F"
+        android:strokeWidth="2.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M117.21 96.79L104.79 96.79L104.79 109.21L96 118L104.79 126.79L104.79 139.21L117.21 139.21L126 148L134.79 139.21L147.21 139.21L147.21 126.79L156 118L147.21 109.21L147.21 96.79L134.79 96.79L126 88L117.21 96.79Z"
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#2F6B4F"
+        android:strokeWidth="2.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M121.61 107.39L115.39 107.39L115.39 113.61L111 118L115.39 122.39L115.39 128.61L121.61 128.61L126 133L130.39 128.61L136.61 128.61L136.61 122.39L141 118L136.61 113.61L136.61 107.39L130.39 107.39L126 103L121.61 107.39Z"
+        android:fillColor="#B7DCC8"
+        android:strokeColor="#2F6B4F"
+        android:strokeWidth="2.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

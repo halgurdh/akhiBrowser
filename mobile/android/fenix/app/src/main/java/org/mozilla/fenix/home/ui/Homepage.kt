@@ -60,6 +60,7 @@ import org.mozilla.fenix.components.appstate.AppAction
 import org.mozilla.fenix.components.appstate.AppAction.ShortcutAction
 import org.mozilla.fenix.components.appstate.setup.checklist.SetupChecklistState
 import org.mozilla.fenix.components.components
+import org.mozilla.fenix.components.AkhiHomeCard
 import org.mozilla.fenix.compose.MessageCard
 import org.mozilla.fenix.compose.home.HomeSectionHeader
 import org.mozilla.fenix.ext.components
@@ -247,6 +248,12 @@ internal fun Homepage(
                                     Spacer(Modifier.height(FirefoxTheme.layout.space.static500))
                                 }
                             }
+
+                            AkhiHomeCard.Card(
+                                Modifier
+                                    .padding(horizontal = horizontalMargin)
+                                    .padding(bottom = FirefoxTheme.layout.space.static400),
+                            )
 
                             if (topSiteState != null) {
                                 TopSitesSection(

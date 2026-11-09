@@ -35,6 +35,8 @@ object AkhiExtension {
             onSuccess = {
                 logger.debug("Installed AkhiBrowser webextension: ${it.id}")
                 it.registerBackgroundMessageHandler(AkhiStore.NATIVE_APP, AkhiStore(context))
+                it.registerBackgroundMessageHandler(AkhiHomeCard.NATIVE_APP, AkhiHomeCard.Messages(context))
+                it.registerBackgroundMessageHandler(AkhiAppBlock.NATIVE_APP, AkhiAppBlock.Messages(context))
             },
             onError = { throwable -> logger.error("Failed to install AkhiBrowser webextension", throwable) },
         )
