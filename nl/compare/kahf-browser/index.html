@@ -33,7 +33,7 @@
       <a href="/nl/blog/">Blog</a>
       <a href="/nl/compare/browsers/">Vergelijk</a>
       <a href="/#download">AkhiBrowser downloaden</a>
-      <a href="/compare/kahf-browser/" hreflang="en" lang="en">EN</a>
+      <span class="lang" role="group" aria-label="Taal"><span aria-current="page" lang="nl">NL</span><a href="/compare/kahf-browser/" hreflang="en" lang="en">EN</a></span>
     </span>
   </nav>
 </header>
@@ -75,6 +75,8 @@
 </main>
 <footer class="wrap">
   <p>AkhiBrowser is gebouwd op <a href="https://www.firefox.com/">Firefox</a>, maar is niet gemaakt of goedgekeurd door Mozilla. Filters kunnen iets missen en vervangen niet de aandacht van een ouder. <a href="/">Home</a> · <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a></p>
+  <p>&copy; <span data-year>2026</span> AkhiBrowser</p>
 </footer>
+<script>document.querySelectorAll("[data-year]").forEach(n => n.textContent = new Date().getFullYear());</script>
 </body>
 </html>

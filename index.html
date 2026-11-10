@@ -405,6 +405,7 @@ footer p + p { margin-top: 8px; }
   <div class="wrap">
     <p data-t="t53">AkhiBrowser is built on <a href="https://www.firefox.com/">Firefox</a>, and is not made or endorsed by Mozilla. Background music removal builds on <a href="https://github.com/mohamedsadiqaguenaou/NoMusic">NoMusic</a> by Mohamed Sadiq.</p>
     <p><a href="https://github.com/halgurdh/akhiBrowser" data-t="t54">Source on GitHub</a> &middot; <a href="#accessibility" data-t="x11">Accessibility</a> &middot; <a href="/blog/what-is-a-halal-browser/" data-t="hb1">What is a halal browser?</a> &middot; <a href="/blog/best-halal-browsers/" data-t="hb2">Best halal browsers</a> &middot; <a href="/blog/">Blog</a> &middot; <a href="/compare/kahf-browser/" data-t="t86">Compare with Kahf Browser</a> &middot; <a href="/compare/browsers/" data-t="t89">Compare browsers</a> &middot; <a href="https://www.youtube.com/@akhibrowser">YouTube</a> &middot; <a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md">Privacy</a> &middot; <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a></p>
+    <p>&copy; <span data-year>2026</span> AkhiBrowser</p>
   </div>
 </footer>
 
@@ -585,6 +586,7 @@ footer p + p { margin-top: 8px; }
     });
   }
   document.getElementById("lang").hidden = false;
+  for (const node of document.querySelectorAll("[data-year]")) node.textContent = new Date().getFullYear();
 })();
 </script>
 </body>

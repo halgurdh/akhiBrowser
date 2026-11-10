@@ -34,7 +34,7 @@
       <a href="/blog/">Blog</a>
       <a href="/compare/browsers/">Compare</a>
       <a href="/#download">Get AkhiBrowser</a>
-      <a href="/nl/blog/parental-controls-for-muslim-families/" hreflang="nl" lang="nl">NL</a>
+      <span class="lang" role="group" aria-label="Language"><a href="/nl/blog/parental-controls-for-muslim-families/" hreflang="nl" lang="nl">NL</a><span aria-current="page" lang="en">EN</span></span>
     </span>
   </nav>
 </header>
@@ -64,6 +64,8 @@
 </main>
 <footer class="wrap">
   <p>AkhiBrowser is built on <a href="https://www.firefox.com/">Firefox</a>, and is not made or endorsed by Mozilla. Filters can miss things, and they don't replace a parent's care. <a href="/">Home</a> · <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a></p>
+  <p>&copy; <span data-year>2026</span> AkhiBrowser</p>
 </footer>
+<script>document.querySelectorAll("[data-year]").forEach(n => n.textContent = new Date().getFullYear());</script>
 </body>
 </html>
