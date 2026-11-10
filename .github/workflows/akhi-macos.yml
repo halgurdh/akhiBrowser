@@ -12,7 +12,7 @@ permissions:
   contents: read
 
 env:
-  MOZCONFIG: browser/branding/akhi/mozconfigs/akhi-desktop
+  MOZCONFIG: browser/branding/akhi/mozconfigs/akhi-macos-arm64
   MOZBUILD_STATE_PATH: ${{ github.workspace }}/.mozbuild
 
 jobs:
@@ -51,4 +51,4 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.AKHI_SUBMODULES_TOKEN }}
         run: |
-          gh release create "macos-build-${{ github.run_number }}" obj-akhi-desktop/dist/*.dmg             --repo halgurdh/akhi-extension --draft --title "macOS build ${{ github.run_number }}"             --notes "Unsigned, from ${{ github.sha }}"
+          gh release create "macos-build-${{ github.run_number }}" obj-akhi-macos-arm64/dist/*.dmg             --repo halgurdh/akhi-extension --draft --title "macOS build ${{ github.run_number }}"             --notes "Unsigned, from ${{ github.sha }}"
