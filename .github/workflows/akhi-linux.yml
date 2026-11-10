@@ -64,6 +64,7 @@ jobs:
           GH_TOKEN: ${{ secrets.AKHI_SUBMODULES_TOKEN }}
         run: |
           df -h /
+          mkdir -p artifacts
           tar -C artifacts -cJf build-logs.tar.xz .
           files=(build-logs.tar.xz)
           for f in obj-akhi-linux-x64/dist/release/*.tar.xz; do [ -f "$f" ] && files+=("$f"); done
