@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Builds the blog and comparison pages, the sitemap and robots.txt from tools/content.py.
 
-To add an article: add an entry to ARTICLES in content.py with its English and Dutch text, then run
+To add an article: add an entry to ARTICLES in content.py with its English and Dutch text, and its Arabic
+text to content_ar.py, then run
 
     python tools/build_pages.py
 """
@@ -21,25 +22,62 @@ GTM = """<script async src="https://www.googletagmanager.com/gtm.js?id=GTM-N2MF3
 </script>"""
 
 
+LANGS = ("en", "nl", "ar")
+LANG_NAMES = {"en": "English", "nl": "Nederlands", "ar": "العربية"}
+LANG_LABEL = {"en": "Language", "nl": "Taal", "ar": "اللغة"}
+YEAR = "2026"
+# keeps the year current; a choice in the language menu opens that page and is remembered for the home page
+SCRIPT = """<script>
+document.querySelectorAll("[data-year]").forEach(n => n.textContent = new Date().getFullYear());
+document.title = document.title.replace("%s", new Date().getFullYear());
+const menu = document.getElementById("lang");
+menu.addEventListener("change", () => {
+  try { localStorage.setItem("lang", menu.selectedOptions[0].lang); } catch (err) {}
+  location.href = menu.value;
+});
+// coming back with the Back button shows this page's language again
+addEventListener("pageshow", () => { menu.value = menu.querySelector("[selected]").value; });
+</script>""" % YEAR
+
+
 def url_of(lang, path):
-    return f"/{path}" if lang == "en" else f"/nl/{path}"
+    return f"/{path}" if lang == "en" else f"/{lang}/{path}"
+
+
+def live(text):
+    """Text shown on the page, with the year kept current by the script."""
+    return text.replace("{YEAR}", f"<span data-year>{YEAR}</span>")
+
+
+def plain(text):
+    """Text for the title, meta tags and structured data."""
+    return text.replace("{YEAR}", YEAR)
+
+
+def lang_menu(lang, path):
+    options = "".join(
+        f'<option value="{url_of(code, path)}" lang="{code}"{" selected" if code == lang else ""}>{name}</option>'
+        for code, name in LANG_NAMES.items()
+    )
+    return f'<select class="lang" id="lang" aria-label="{LANG_LABEL[lang]}">{options}</select>'
 
 
 def page(lang, path, title, description, body, json_ld=None):
     ui = UI[lang]
-    other = "nl" if lang == "en" else "en"
+    title, description = plain(title), plain(description)
     canonical = SITE + url_of(lang, path)
     ld = f'<script type="application/ld+json">{json.dumps(json_ld, ensure_ascii=False)}</script>\n' if json_ld else ""
+    alternates = "\n".join(f'<link rel="alternate" hreflang="{code}" href="{SITE + url_of(code, path)}">' for code in LANGS)
+    direction = ' dir="rtl"' if lang == "ar" else ""
     return f"""<!doctype html>
-<html lang="{lang}">
+<html lang="{lang}"{direction}>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(description)}">
 <link rel="canonical" href="{canonical}">
-<link rel="alternate" hreflang="en" href="{SITE + url_of('en', path)}">
-<link rel="alternate" hreflang="nl" href="{SITE + url_of('nl', path)}">
+{alternates}
 <link rel="alternate" hreflang="x-default" href="{SITE + url_of('en', path)}">
 <meta name="theme-color" content="#03282e">
 <meta property="og:title" content="{html.escape(title)}">
@@ -60,7 +98,7 @@ def page(lang, path, title, description, body, json_ld=None):
       <a href="{url_of(lang, 'blog/')}">{ui['blog']}</a>
       <a href="{url_of(lang, 'compare/browsers/')}">{ui['compare']}</a>
       <a href="/#download">{ui['download']}</a>
-      <a href="{url_of(other, path)}" hreflang="{other}" lang="{other}">{other.upper()}</a>
+      {lang_menu(lang, path)}
     </span>
   </nav>
 </header>
@@ -69,7 +107,9 @@ def page(lang, path, title, description, body, json_ld=None):
 </main>
 <footer class="wrap">
   <p>{ui['footer']}</p>
+  <p>&copy; <span data-year>{YEAR}</span> AkhiBrowser</p>
 </footer>
+{SCRIPT}
 </body>
 </html>
 """
@@ -86,8 +126,8 @@ def article_page(lang, article):
     ld = {
         "@context": "https://schema.org",
         "@type": "Article",
-        "headline": text["title"],
-        "description": text["description"],
+        "headline": plain(text["title"]),
+        "description": plain(text["description"]),
         "datePublished": article["date"],
         "dateModified": article["date"],
         "inLanguage": lang,
@@ -98,9 +138,9 @@ def article_page(lang, article):
     }
     body = f"""<article>
 <p class="crumb"><a href="{url_of(lang, 'blog/')}">{UI[lang]['blog']}</a></p>
-<h1>{text['title']}</h1>
+<h1>{live(text['title'])}</h1>
 <p class="date"><time datetime="{article['date']}">{article['date']}</time></p>
-{text['body']}
+{live(text['body'])}
 </article>
 {cta(lang)}"""
     return path, page(lang, path, f"{text['title']} | AkhiBrowser", text["description"], body, ld)
@@ -109,7 +149,7 @@ def article_page(lang, article):
 def index_page(lang):
     ui = UI[lang]
     items = "\n".join(
-        f"""<li><a href="{url_of(lang, 'blog/' + a['slug'] + '/')}"><h2>{a[lang]['title']}</h2></a><p>{a[lang]['description']}</p></li>"""
+        f"""<li><a href="{url_of(lang, 'blog/' + a['slug'] + '/')}"><h2>{live(a[lang]['title'])}</h2></a><p>{live(a[lang]['description'])}</p></li>"""
         for a in sorted(ARTICLES, key=lambda a: a["date"], reverse=True)
     )
     for data, path in ((COMPARE_BROWSERS, "compare/browsers/"), (COMPARE, "compare/kahf-browser/")):
@@ -150,7 +190,7 @@ def write(lang, path, content):
 
 def main():
     paths = []
-    for lang in ("en", "nl"):
+    for lang in LANGS:
         builders = [
             index_page(lang),
             compare_page(lang, COMPARE_BROWSERS, "compare/browsers/"),

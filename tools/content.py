@@ -1,4 +1,6 @@
-"""The text of the blog and comparison pages, in English and Dutch. See build_pages.py."""
+"""The text of the blog and comparison pages, in English and Dutch (Arabic is in content_ar.py). See build_pages.py.
+
+{YEAR} stands for the current year: the build writes it as a span that a script keeps up to date."""
 
 UI = {
     "en": {
@@ -68,7 +70,7 @@ ARTICLES = [
 <li>Does it say plainly what leaves your device?</li>
 <li>Is it still updated? A browser that stops getting updates also stops getting security fixes. SalamWeb, one of the first halal browsers, was discontinued in 2021.</li>
 </ul>
-<p>We compare the options in <a href="/blog/best-halal-browsers/">the best halal browsers in 2026</a>.</p>
+<p>We compare the options in <a href="/blog/best-halal-browsers/">the best halal browsers in {YEAR}</a>.</p>
 <h2>Frequently asked questions</h2>
 <h3>Is a halal browser only for Muslims?</h3>
 <p>No. Anyone who wants fewer ads, no adult content and more control over images can use one. The name describes the values it's built around.</p>
@@ -117,7 +119,7 @@ ARTICLES = [
 <li>Staat er duidelijk wat er van je apparaat af gaat?</li>
 <li>Wordt hij nog bijgewerkt? Een browser zonder updates krijgt ook geen beveiligingsfixes meer. SalamWeb, een van de eerste halal browsers, is in 2021 gestopt.</li>
 </ul>
-<p>We vergelijken de opties in <a href="/nl/blog/best-halal-browsers/">de beste halal browsers van 2026</a>.</p>
+<p>We vergelijken de opties in <a href="/nl/blog/best-halal-browsers/">de beste halal browsers van {YEAR}</a>.</p>
 <h2>Veelgestelde vragen</h2>
 <h3>Is een halal browser alleen voor moslims?</h3>
 <p>Nee. Iedereen die minder reclame, geen 18+-inhoud en meer controle over afbeeldingen wil, kan er een gebruiken. De naam beschrijft de waarden waarop hij is gebouwd.</p>
@@ -314,9 +316,9 @@ ARTICLES = [
         "slug": "best-halal-browsers",
         "date": "2026-11-10",
         "en": {
-            "title": "The best halal browsers in 2026, compared",
-            "description": "An honest comparison of the halal browsers you can use in 2026: AkhiBrowser, Kahf Browser and Tahir Browser, plus what happened to SalamWeb. Platforms, price and features.",
-            "body": """<p>A halal browser blocks haram sites, forces SafeSearch and keeps unwanted images off your screen. In 2026 there are three active options worth knowing. We make one of them, AkhiBrowser, so this page sticks to what each browser states on its own pages, and says plainly where each one fits best.</p>
+            "title": "The best halal browsers in {YEAR}, compared",
+            "description": "An honest comparison of the halal browsers you can use in {YEAR}: AkhiBrowser, Kahf Browser and Tahir Browser, plus what happened to SalamWeb. Platforms, price and features.",
+            "body": """<p>A halal browser blocks haram sites, forces SafeSearch and keeps unwanted images off your screen. In {YEAR} there are three active options worth knowing. We make one of them, AkhiBrowser, so this page sticks to what each browser states on its own pages, and says plainly where each one fits best.</p>
 <h2>The short answer</h2>
 <ul>
 <li><strong>On Windows, or for parent controls:</strong> AkhiBrowser. Free protections, background music removal, and Family Premium with a PIN, site lists and time limits.</li>
@@ -349,9 +351,9 @@ ARTICLES = [
 <p>Checked against each browser's own pages on 10 November 2026. Spotted something out of date? Tell us at <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a>.</p>""",
         },
         "nl": {
-            "title": "De beste halal browsers van 2026, vergeleken",
-            "description": "Een eerlijke vergelijking van de halal browsers die je in 2026 kunt gebruiken: AkhiBrowser, Kahf Browser en Tahir Browser, plus wat er met SalamWeb gebeurde.",
-            "body": """<p>Een halal browser blokkeert haram sites, dwingt SafeSearch af en houdt ongewenste afbeeldingen van je scherm. In 2026 zijn er drie actieve opties die de moeite waard zijn. Wij maken er een van, AkhiBrowser, dus deze pagina houdt zich aan wat elke browser op de eigen pagina's vermeldt, en zegt eerlijk waar elke browser het best past.</p>
+            "title": "De beste halal browsers van {YEAR}, vergeleken",
+            "description": "Een eerlijke vergelijking van de halal browsers die je in {YEAR} kunt gebruiken: AkhiBrowser, Kahf Browser en Tahir Browser, plus wat er met SalamWeb gebeurde.",
+            "body": """<p>Een halal browser blokkeert haram sites, dwingt SafeSearch af en houdt ongewenste afbeeldingen van je scherm. In {YEAR} zijn er drie actieve opties die de moeite waard zijn. Wij maken er een van, AkhiBrowser, dus deze pagina houdt zich aan wat elke browser op de eigen pagina's vermeldt, en zegt eerlijk waar elke browser het best past.</p>
 <h2>Het korte antwoord</h2>
 <ul>
 <li><strong>Op Windows, of voor ouderlijk toezicht:</strong> AkhiBrowser. Gratis bescherming, muziek weghalen uit video's, en Family Premium met pincode, sitelijsten en tijdslimieten.</li>
@@ -525,3 +527,12 @@ COMPARE_BROWSERS = {
         "sources_label": "Pagina's die we lazen:",
     },
 }
+
+# Arabic
+import content_ar  # noqa: E402
+
+UI["ar"] = content_ar.UI
+for _article in ARTICLES:
+    _article["ar"] = content_ar.ARTICLES[_article["slug"]]
+COMPARE["ar"] = content_ar.COMPARE
+COMPARE_BROWSERS["ar"] = content_ar.COMPARE_BROWSERS

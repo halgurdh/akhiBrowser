@@ -8,6 +8,7 @@
 <link rel="canonical" href="https://akhibrowser.com/blog/why-prayer-times-differ/">
 <link rel="alternate" hreflang="en" href="https://akhibrowser.com/blog/why-prayer-times-differ/">
 <link rel="alternate" hreflang="nl" href="https://akhibrowser.com/nl/blog/why-prayer-times-differ/">
+<link rel="alternate" hreflang="ar" href="https://akhibrowser.com/ar/blog/why-prayer-times-differ/">
 <link rel="alternate" hreflang="x-default" href="https://akhibrowser.com/blog/why-prayer-times-differ/">
 <meta name="theme-color" content="#03282e">
 <meta property="og:title" content="Why prayer times differ between apps and mosques | AkhiBrowser">
@@ -34,7 +35,7 @@
       <a href="/blog/">Blog</a>
       <a href="/compare/browsers/">Compare</a>
       <a href="/#download">Get AkhiBrowser</a>
-      <span class="lang" role="group" aria-label="Language"><a href="/nl/blog/why-prayer-times-differ/" hreflang="nl" lang="nl">NL</a><span aria-current="page" lang="en">EN</span></span>
+      <select class="lang" id="lang" aria-label="Language"><option value="/blog/why-prayer-times-differ/" lang="en" selected>English</option><option value="/nl/blog/why-prayer-times-differ/" lang="nl">Nederlands</option><option value="/ar/blog/why-prayer-times-differ/" lang="ar">العربية</option></select>
     </span>
   </nav>
 </header>
@@ -71,6 +72,16 @@
   <p>AkhiBrowser is built on <a href="https://www.firefox.com/">Firefox</a>, and is not made or endorsed by Mozilla. Filters can miss things, and they don't replace a parent's care. <a href="/">Home</a> · <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a></p>
   <p>&copy; <span data-year>2026</span> AkhiBrowser</p>
 </footer>
-<script>document.querySelectorAll("[data-year]").forEach(n => n.textContent = new Date().getFullYear());</script>
+<script>
+document.querySelectorAll("[data-year]").forEach(n => n.textContent = new Date().getFullYear());
+document.title = document.title.replace("2026", new Date().getFullYear());
+const menu = document.getElementById("lang");
+menu.addEventListener("change", () => {
+  try { localStorage.setItem("lang", menu.selectedOptions[0].lang); } catch (err) {}
+  location.href = menu.value;
+});
+// coming back with the Back button shows this page's language again
+addEventListener("pageshow", () => { menu.value = menu.querySelector("[selected]").value; });
+</script>
 </body>
 </html>

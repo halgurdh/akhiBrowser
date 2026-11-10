@@ -8,6 +8,7 @@
 <link rel="canonical" href="https://akhibrowser.com/nl/blog/block-haram-content/">
 <link rel="alternate" hreflang="en" href="https://akhibrowser.com/blog/block-haram-content/">
 <link rel="alternate" hreflang="nl" href="https://akhibrowser.com/nl/blog/block-haram-content/">
+<link rel="alternate" hreflang="ar" href="https://akhibrowser.com/ar/blog/block-haram-content/">
 <link rel="alternate" hreflang="x-default" href="https://akhibrowser.com/blog/block-haram-content/">
 <meta name="theme-color" content="#03282e">
 <meta property="og:title" content="Zo blokkeer je haram inhoud op je telefoon en computer | AkhiBrowser">
@@ -34,7 +35,7 @@
       <a href="/nl/blog/">Blog</a>
       <a href="/nl/compare/browsers/">Vergelijk</a>
       <a href="/#download">AkhiBrowser downloaden</a>
-      <span class="lang" role="group" aria-label="Taal"><span aria-current="page" lang="nl">NL</span><a href="/blog/block-haram-content/" hreflang="en" lang="en">EN</a></span>
+      <select class="lang" id="lang" aria-label="Taal"><option value="/blog/block-haram-content/" lang="en">English</option><option value="/nl/blog/block-haram-content/" lang="nl" selected>Nederlands</option><option value="/ar/blog/block-haram-content/" lang="ar">العربية</option></select>
     </span>
   </nav>
 </header>
@@ -61,6 +62,16 @@
   <p>AkhiBrowser is gebouwd op <a href="https://www.firefox.com/">Firefox</a>, maar is niet gemaakt of goedgekeurd door Mozilla. Filters kunnen iets missen en vervangen niet de aandacht van een ouder. <a href="/">Home</a> · <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a></p>
   <p>&copy; <span data-year>2026</span> AkhiBrowser</p>
 </footer>
-<script>document.querySelectorAll("[data-year]").forEach(n => n.textContent = new Date().getFullYear());</script>
+<script>
+document.querySelectorAll("[data-year]").forEach(n => n.textContent = new Date().getFullYear());
+document.title = document.title.replace("2026", new Date().getFullYear());
+const menu = document.getElementById("lang");
+menu.addEventListener("change", () => {
+  try { localStorage.setItem("lang", menu.selectedOptions[0].lang); } catch (err) {}
+  location.href = menu.value;
+});
+// coming back with the Back button shows this page's language again
+addEventListener("pageshow", () => { menu.value = menu.querySelector("[selected]").value; });
+</script>
 </body>
 </html>

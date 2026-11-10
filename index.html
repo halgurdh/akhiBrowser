@@ -141,7 +141,7 @@ video { display: block; width: 100%; height: auto; border-radius: 14px; backgrou
 
 .cancel { margin-top: 36px; padding-top: 28px; border-top: 1px solid var(--line); max-width: 42em; }
 .cancel h3 { font-size: 21px; }
-.cancel ol { margin: 14px 0 0; padding-left: 1.4em; color: var(--soft); }
+.cancel ol { margin: 14px 0 0; padding-inline-start: 1.4em; color: var(--soft); }
 .cancel li + li { margin-top: 6px; }
 .plans { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
 
@@ -149,11 +149,27 @@ footer { border-top: 1px solid var(--line); padding: 36px 0 48px; font-size: 14p
 footer p + p { margin-top: 8px; }
 
 .nav-end { display: flex; align-items: center; gap: 22px; }
-.lang { display: flex; flex: none; border-radius: 8px; box-shadow: inset 0 0 0 1.5px var(--gold); overflow: hidden; }
+.lang {
+  flex: none;
+  appearance: none;
+  padding-block: 6px;
+  padding-inline: 11px 30px;
+  border: 0;
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 1.5px var(--gold);
+  background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23f4be34' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 11px center;
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
 .lang[hidden] { display: none; }
-.lang button { appearance: none; border: 0; padding: 6px 11px; background: transparent; color: #fff; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
-.lang button[aria-pressed="true"] { background: var(--gold); color: var(--ink); }
-.lang button:focus-visible { outline: 3px solid #fff; outline-offset: -3px; }
+.lang:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.lang option { background: var(--ink); color: #fff; }
+[dir="rtl"] .lang { background-position: left 11px center; }
+[dir="rtl"] body { font-family: "Segoe UI", Tahoma, "Noto Sans Arabic", system-ui, sans-serif; }
+[dir="rtl"] h1 { letter-spacing: 0; }
 
 @media (max-width: 820px) {
   .hero, .split { grid-template-columns: minmax(0, 1fr); gap: 40px; }
@@ -186,14 +202,15 @@ footer p + p { margin-top: 8px; }
       <div class="nav-end"><div class="links">
         <a href="#watch" data-t="t0">Watch</a>
         <a href="#features" data-t="t1">Features</a>
-        <a href="#privacy">Privacy</a>
+        <a href="#privacy" data-t="n0">Privacy</a>
         <a href="#premium">Premium</a>
-        <a href="/blog/">Blog</a>
+        <a href="/blog/" data-t="n1">Blog</a>
       </div>
-      <div class="lang" id="lang" role="group" aria-label="Language / Taal" hidden>
-        <button type="button" data-lang="nl" lang="nl">NL</button>
-        <button type="button" data-lang="en" lang="en">EN</button>
-      </div>
+      <select class="lang" id="lang" aria-label="Language · Taal · اللغة" hidden>
+        <option value="en" lang="en">English</option>
+        <option value="nl" lang="nl">Nederlands</option>
+        <option value="ar" lang="ar">العربية</option>
+      </select>
       </div>
     </nav>
     <div class="hero">
@@ -407,7 +424,7 @@ footer p + p { margin-top: 8px; }
 <footer>
   <div class="wrap">
     <p data-t="t53">AkhiBrowser is built on <a href="https://www.firefox.com/">Firefox</a>, and is not made or endorsed by Mozilla. Background music removal builds on <a href="https://github.com/mohamedsadiqaguenaou/NoMusic">NoMusic</a> by Mohamed Sadiq.</p>
-    <p><a href="https://github.com/halgurdh/akhiBrowser" data-t="t54">Source on GitHub</a> &middot; <a href="#accessibility" data-t="x11">Accessibility</a> &middot; <a href="/blog/what-is-a-halal-browser/" data-t="hb1">What is a halal browser?</a> &middot; <a href="/blog/best-halal-browsers/" data-t="hb2">Best halal browsers</a> &middot; <a href="/blog/">Blog</a> &middot; <a href="/compare/kahf-browser/" data-t="t86">Compare with Kahf Browser</a> &middot; <a href="/compare/browsers/" data-t="t89">Compare browsers</a> &middot; <a href="https://www.youtube.com/@akhibrowser">YouTube</a> &middot; <a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md">Privacy</a> &middot; <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a></p>
+    <p><a href="https://github.com/halgurdh/akhiBrowser" data-t="t54">Source on GitHub</a> &middot; <a href="#accessibility" data-t="x11">Accessibility</a> &middot; <a href="/blog/what-is-a-halal-browser/" data-t="hb1">What is a halal browser?</a> &middot; <a href="/blog/best-halal-browsers/" data-t="hb2">Best halal browsers</a> &middot; <a href="/blog/" data-t="n1">Blog</a> &middot; <a href="/compare/kahf-browser/" data-t="t86">Compare with Kahf Browser</a> &middot; <a href="/compare/browsers/" data-t="t89">Compare browsers</a> &middot; <a href="https://www.youtube.com/@akhibrowser">YouTube</a> &middot; <a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md" data-t="n0">Privacy</a> &middot; <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a></p>
     <p>&copy; <span data-year>2026</span> AkhiBrowser</p>
   </div>
 </footer>
@@ -544,52 +561,193 @@ footer p + p { margin-top: 8px; }
 "x10": "Werkt er iets niet voor jou? Laat het ons weten via <a href=\"mailto:support@akhibrowser.com\">support@akhibrowser.com<\/a>.",
 "x11": "Toegankelijkheid"
 };
-  const META_NL = {
-    title: "AkhiBrowser: halal browser voor moslims, houdt haram tegen",
-    description: "AkhiBrowser is een gratis halal browser voor moslims, op basis van Firefox, die reclame, 18+- en haram sites tegenhoudt, afbeeldingen wazig houdt tot ze zijn gecontroleerd en de muziek uit video's haalt. Alles gebeurt op je eigen apparaat.",
+  const AR = {
+"t0": "شاهد",
+"t1": "الميزات",
+"n0": "الخصوصية",
+"n1": "المدونة",
+"t2": "<span>المتصفح الحلال<\/span> الذي يرشّح الإنترنت على جهازك.",
+"hb1": "ما هو المتصفح الحلال؟",
+"hb2": "أفضل المتصفحات الحلال",
+"t3": "متصفح حلال للمسلمين يحترم خصوصيتك، مبني على Firefox. يحجب الإعلانات والمواقع المحرمة، ويموّه الصور حتى تُفحص، ويزيل الموسيقى من الفيديوهات.",
+"t4": "Android: قريبًا<small>Android 8.0 أو أحدث<\/small>",
+"t4b": "iOS وmacOS: قريبًا<small>اطّلع على خارطة الطريق<\/small>",
+"aStore": "حمّله من Microsoft Store",
+"t7": "احصل على إضافة Chrome<small>مجانية، متوفرة الآن<\/small>",
+"t7b": "الإضافة نسخة أخف ومجانية: تحجب المواقع الإباحية والمحرمة، وتموّه الصور، وتزيل الموسيقى الخلفية، لكن ليس فيها Premium ولا رقابة أبوية ولا حاجب إعلانات خاص بها، ويمكن إزالتها.",
+"t11": "الحماية مجانية.",
+"t12": "شاهده وهو يعمل",
+"t13": "مفعّلة من الصفحة الأولى",
+"t14": "هذه الحماية مجانية ومدمجة. يمكن إيقاف كل واحدة منها من درع AkhiBrowser. ميزات Premium اختيارية ومتوقفة حتى تفعّلها.",
+"t15": "حجب الإعلانات وأدوات التتبع",
+"t16": "يُثبَّت uBlock Origin لك ويبقى مفعّلًا، وتحته حاجب مدمج لنطاقات الإعلانات والتتبع والبرمجيات الخبيثة.",
+"t17": "حجب المواقع الإباحية والمحرمة",
+"t18": "مواقع الإباحية والخمر والمخدرات والتدخين الإلكتروني والقمار. ويُفرض SafeSearch على Google وBing وDuckDuckGo وYahoo، وكذلك الوضع المقيّد في YouTube.",
+"t19": "ترشيح عمليات البحث",
+"t20": "عمليات البحث عن المحتوى الإباحي أو المحرم محجوبة بـ 11 لغة. أما الأسئلة عنها فتبقى مسموحة، مثل «لماذا الخمر حرام».",
+"t21": "بلا موسيقى",
+"t22": "يزيل الموسيقى الخلفية من الفيديوهات ويُبقي الأصوات، باستخدام نموذج كلام يعمل على جهازك.",
+"t23": "12 لغة",
+"t24": "الإنجليزية والعربية والفارسية والكردية (السورانية) والأردية والتركية والفرنسية والألمانية والهولندية والإسبانية والإندونيسية والملايوية، من اليمين إلى اليسار حيث يلزم.",
+"t25": "خفيف على الأجهزة القديمة",
+"t26": "لا يُفحص إلا ما يظهر على الشاشة، والصور التي سبق فحصها تُجاب من ذاكرة مؤقتة. ولا ينتظر تحميلُ الصفحات النموذجَ أبدًا.",
+"t27": "تبقى الصور مموّهة حتى تُفحص",
+"t28": "نموذج على الجهاز يفحص الصور والخلفيات والفيديوهات وعناصر canvas قبل أن تظهر، فلا يومض شيء على الشاشة أولًا. والصور غير الآمنة تبقى مموّهة.",
+"t29": "يضيف Premium أدوات لاختيار تمويه النساء أو الرجال أو كليهما، ويستطيع التعرّف على الحجاب فتبقى المرأة المحجبة ظاهرة. أدوات الصور الاختيارية هذه تستخدم نماذج على الجهاز.",
+"t30": "قد تفوت المرشّحاتِ بعضُ الأشياء، والصورة التي لا يمكن فحصها تُعرض. وهي لا تغني عن رعاية الوالدين.",
+"t31": "صور توضيحية",
+"t32": "ما يظهر عند حجب موقع",
+"t33": "يُحجب قبل أن يُحمَّل",
+"t34": "مواقع الإباحية والخمر والمخدرات والتدخين الإلكتروني والقمار تتوقف هنا، وكذلك الصفحات التي تصف نفسها بأنها للبالغين.",
+"t35": "تبقى الأصوات، وتذهب الموسيقى",
+"t36": "ميزة بلا موسيقى تنقّي صوت الفيديو أثناء مشاهدتك، على جهازك. وتستخدم الهواتف والحواسيب البطيئة نموذجًا خفيفًا، لتواكب الأجهزة القديمة.",
+"t37": "رسم توضيحي",
+"t38": "على هاتفك أيضًا",
+"t39": "الحماية نفسها على Android، دون مربعات أو قصص مموّلة في الصفحة الرئيسية. لتغييرها، افتح القائمة، ثم الإضافات، ثم AkhiBrowser.",
+"t40": "ما الذي يغادر جهازك",
+"t41": "سجلّك وصفحاتك وصورك تبقى على جهازك. لا يصلنا شيء، ولا تذهب إلى Mozilla أي بيانات قياس أو دراسات أو تقارير أعطال. ومع ذلك لا بد للمتصفح أن يتواصل مع بعض الخدمات، وهذه هي كلها:",
+"t42": "<strong>أسماء المواقع، إلى Cloudflare.<\/strong> لحجب المواقع الإباحية على مستوى الشبكة، يبحث المتصفح عن الأسماء عبر DNS العائلي من Cloudflare، فترى Cloudflare أسماء المواقع التي تزورها.",
+"t43": "<strong>التنزيلات.<\/strong> uBlock Origin من addons.mozilla.org، وقوائم حجب الإعلانات، وبرامج ترميز الفيديو من Mozilla وCisco وGoogle.",
+"t44": "<strong>التحقق من التحديثات.<\/strong> مرة في اليوم، يسأل المتصفح GitHub إن كان هناك إصدار جديد.",
+"t45": "<strong>مفتاح Premium، إن أدخلته.<\/strong> يُتحقق منه عبر خادم التراخيص لدينا، مع معرّف تثبيت عشوائي، حتى يعمل المفتاح على 3 أجهزة في الوقت نفسه. لا يحتفظ الخادم بأسماء ولا عناوين بريد ولا بيانات تصفح.",
+"t46": "<a href=\"https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md\">سياسة الخصوصية (بالإنجليزية)<\/a>",
+"t55": "<strong>تحليلات الموقع.<\/strong> يحمّل هذا الموقع Google Tag Manager. تتلقى Google عنوان IP للاتصال ومعلومات تقنية عن الطلب؛ وقد تجمع أيضًا وسوم التحليلات المفعّلة في حاوية GTM مشاهدات الصفحات والأحداث. انظر <a href=\"https:\/\/policies.google.com\/privacy\">سياسة خصوصية Google<\/a>.",
+"t47": "Premium، إن أردته",
+"t48": "كل حماية مذكورة أعلاه تبقى مجانية. Premium لك أنت: تحكم أكبر في الصور وإنترنت أهدأ. وFamily Premium للوالدين: كل ما في Premium، مع أدوات الرقابة الأبوية، على ما يصل إلى عشرة أجهزة. كل ميزة متوقفة حتى تفعّلها، وبياناتها تبقى على الجهاز.",
+"t48b": "Premium متوفر فقط في متصفح AkhiBrowser، بمفتاح ترخيص. إضافة AkhiBrowser المجانية لـ Chrome وFirefox فيها الحماية المجانية المذكورة أعلاه، دون Premium. ويقدّم المتصفح أيضًا ما لا تستطيعه الإضافة: لا بيانات قياس ولا دراسات ولا تقارير أعطال إلى Mozilla، وuBlock Origin مدمج، وحماية صارمة من التتبع.",
+"s0": "هل هو آمن؟",
+"s1": "AkhiBrowser هو Firefox مع مرشّحات مضافة. والأجزاء التي تحميك على الإنترنت تأتي من Firefox.",
+"s2": "Firefox في الأساس",
+"s3": "المحرّك نفسه وبيئة العزل نفسها في Firefox، اللذان يفصلان كل موقع عن ملفاتك وعن المواقع الأخرى. ونطاقات البرمجيات الخبيثة المعروفة محجوبة أيضًا.",
+"s4": "تحديثات موقّعة",
+"s5": "مرة في اليوم يتحقق المتصفح من وجود إصدار جديد. على Windows يثبّت التحديث بعد التحقق من توقيعه. وعلى Android يطلب منك تثبيته، ويتحقق أولًا من المجموع الاختباري للملف. تصلك إصلاحات أمان Firefox مع هذه التحديثات، فثبّتها عندما تصل.",
+"s8": "ما الذي هو مفتوح المصدر",
+"s9": "AkhiBrowser مبني على Firefox. تعديلاتنا على Firefox، وكل ملف تحت رخصة Firefox (MPL)، علنية على <a href=\"https://github.com/halgurdh/akhiBrowser\">GitHub<\/a>. أما الحماية نفسها، أي إضافة AkhiBrowser وPremium وخدمة التراخيص، فهي شيفرتنا الخاصة وغير علنية، كما في معظم التطبيقات المدفوعة. ما يرسله المتصفح، وإلى من، مذكور تحت <a href=\"#privacy\">الخصوصية<\/a>.",
+"s10": "وجدت مشكلة أمنية؟ أخبرنا على <a href=\"mailto:support@akhibrowser.com\">support@akhibrowser.com<\/a>.",
+"t49": "Premium شهري<small>3.33 € شهريًا<\/small>",
+"t50": "Premium سنوي<small>35.00 € سنويًا<\/small>",
+"t51": "Premium مدى الحياة<small>99.99 € مرة واحدة<\/small>",
+"t52": "في نسخة Google Play، يُشترى Premium عبر Google Play. وفي النسخ الأخرى، يعرض Stripe السعر قبل أن تدفع، وتحصل على مفتاح ترخيص دون إنشاء حساب. يعمل مفتاح Premium على ما يصل إلى ثلاثة أجهزة في الوقت نفسه، ومفتاح Family على ما يصل إلى عشرة. اشتريت Premium أو Premium مدى الحياة قبل الإصدار 1.2.1؟ تحتفظ بأدوات الرقابة الأبوية التي كانت لديك.",
+"t53": "AkhiBrowser مبني على <a href=\"https://www.firefox.com/\">Firefox<\/a>، وليس من صنع Mozilla ولا تعتمده. تعتمد إزالة الموسيقى الخلفية على <a href=\"https://github.com/mohamedsadiqaguenaou/NoMusic\">NoMusic<\/a> من Mohamed Sadiq.",
+"t54": "الشيفرة المصدرية على GitHub",
+"t56": "فحص الصور على جهازك",
+"t57": "تبقى الصور مموّهة حتى تُفحص. الصور غير الآمنة تبقى مموّهة، والصورة التي لا يمكن فحصها تُعرض.",
+"t58": "تصحيح عمى الألوان",
+"t59": "إعداد اختياري على الجهاز يجعل التمييز بين الأحمر والأخضر أسهل، لنوعَي عمى الألوان الأحمر والأخضر.",
+"t60": "اختر من يُموَّه",
+"t61": "موّه النساء أو الرجال أو كليهما. ويمكن للتعرّف على الحجاب أن يُبقي النساء المحجبات ظاهرات.",
+"t62": "الرقابة الأبوية",
+"t63": "عيّن رمز PIN، واحجب مواقع مختارة، واسمح بالمواقع المعتمدة فقط، وحدّد وقت النوم وساعات الدراسة، أو ضع حدًا يوميًا للتصفح.",
+"t64": "ملخص النشاط",
+"t65": "اطّلع على الصفحات المحجوبة في الأيام السبعة الأخيرة بحسب السبب، دون عناوين الصفحات. يبقى الملخص على جهازك.",
+"t66": "تقييد خلاصات التواصل",
+"t67": "أخفِ خلاصات الفيديوهات القصيرة وضع حدًا يوميًا لمواقع التواصل الاجتماعي في AkhiBrowser، لا في تطبيقات التواصل الاجتماعي.",
+"t68": "حجب مواقع التصيد والاحتيال",
+"t69": "مواقع التصيد والاحتيال المعروفة تتوقف قبل أن تُحمَّل، مع زر للمتابعة إن أُدرج موقع بالخطأ.",
+"t70": "مواقيت الصلاة وآية كل يوم",
+"t71": "مواقيت الصلاة للمدينة التي تختارها، تُحسب على جهازك دون موقعك، وآية من القرآن كل يوم.",
+"t72": "إعداداتك في صفحة البداية",
+"t73": "على الحواسيب، تفتح علامات التبويب الجديدة صفحة AkhiBrowser مع مربع بحث، والمواقع التي تزورها أكثر، وآية اليوم، وكل الإعدادات. يمكنك إيقافها.",
+"t74": "الوضع الصارم",
+"t75": "كل صورة وفيديو يبقى مموّهًا حتى تنقر عليه، على كل المواقع أو على المواقع التي تختارها.",
+"t76": "استراحة الصلاة",
+"t77": "مواقع التواصل الاجتماعي والفيديو والألعاب، أو كل المواقع، تتوقف بضع دقائق بعد كل وقت صلاة.",
+"t78": "إنترنت أهدأ",
+"t79": "YouTube دون توصيات أو Shorts أو تشغيل تلقائي، والتعليقات مخفية، والألفاظ النابية محجوبة في نصوص الصفحات.",
+"t80": "أوقف الإنترنت مؤقتًا، واحفظ نسخة من الإعدادات",
+"t81": "أوقف التصفح الآن برمز PIN، وانقل أدوات الرقابة الأبوية إلى جهاز آخر في ملف مقفل برمز PIN.",
+"t82": "Premium، لك أنت",
+"t83": "Family Premium، للوالدين",
+"t85": "Family Premium<small>49.99 € سنويًا<\/small>",
+"t86": "مقارنة مع Kahf Browser",
+"t89": "مقارنة المتصفحات",
+"t87": "خارطة الطريق: iPhone وMac",
+"t88": "AkhiBrowser متوفر اليوم لنظامي Windows وAndroid. سيُعلن عن نسختي iOS وmacOS لاحقًا، دون موعد بعد. هدفنا أن نبدأ العمل عليهما عندما تشترك 100 أسرة في Family Premium.",
+"a0": "إعدادات AkhiBrowser: آية اليوم، ومواقيت الصلاة، والحمايات الخمس كلها مفعّلة: حجب الإعلانات وأدوات التتبع، وإزالة الموسيقى الخلفية، وحجب المحتوى الإباحي، وحجب المواقع المحرمة، وتمويه الصور العارية.",
+"a1": "فيديو ترويجي لـ AkhiBrowser، 35 ثانية",
+"a2": "مقطع قصير لـ AkhiBrowser: وضعوا الموسيقى، فأزلناها، 19 ثانية",
+"a3": "منظر طبيعي مموّه مع العبارة: Checking on your device.",
+"a4": "المنظر نفسه، واضحًا، مع العبارة: Checked: shown.",
+"a10": "صورة شخص تبقى مموّهة، مع العبارة: Checked: hidden.",
+"a5": "صفحة تقول: This page is blocked. يحجب AkhiBrowser مواقع الخمر والمخدرات والقمار. وتحتها آية من القرآن، 2:219، بالعربية والإنجليزية، مع رابط إلى quran.com.",
+"a6": "موجة صوتية لأصوات، مع العبارة: Background music: removed.",
+"a7": "الصفحة الرئيسية لـ AkhiBrowser على Android: شريط بحث، وشعار AkhiBrowser، والعبارة: You're protected.",
+"a8": "خطط Premium في إعدادات AkhiBrowser: مجاني، وFamily Premium (موصى به)، وPremium، وPremium مدى الحياة، مع أسعارها وميزاتها.",
+"a9": "مقطع قصير لـ AkhiBrowser: تريد فقط مشاهدة محاضرة على الإنترنت، فتزيل NoMusic الموسيقى الخلفية وتُبقي الصوت، 21 ثانية",
+"c0": "كيف تلغي الاشتراك",
+"c1": "افتح درع AkhiBrowser في شريط الأدوات. على Android: القائمة، ثم الإضافات، ثم AkhiBrowser.",
+"c2": "تحت Premium، اضغط إدارة الاشتراك. يفتح هذا اشتراكك على Stripe.",
+"c3": "اختر الإلغاء، ثم أكّد.",
+"c4": "ينتهي Premium بعد ذلك، وتبقى كل الحماية المجانية تعمل. الشراء مدى الحياة ليس اشتراكًا، فلا شيء لإلغائه.",
+"c5": "لا تستطيع الوصول إلى المتصفح؟ راسل <a href=\"mailto:support@akhibrowser.com\">support@akhibrowser.com<\/a> من عنوان البريد الذي دفعت به.",
+"x0": "إمكانية الوصول",
+"x1": "لمن لديهم عمى ألوان أو ضعف في السمع، ولكل من يحتاج إلى مساعدة أكثر قليلًا على الإنترنت.",
+"x2": "عمى الألوان",
+"x3": "فعّل تصحيح عمى الألوان من درع AkhiBrowser. يعدّل ألوان صفحات الويب ليسهل التمييز بين الأحمر والأخضر، لنوعَي عمى الألوان الأحمر والأخضر. وهو متوقف افتراضيًا، ولا يساعد في عمى الألوان الأزرق والأصفر.",
+"x4": "ضعف السمع",
+"x5": "ميزة بلا موسيقى تزيل الموسيقى الخلفية من الفيديوهات وتُبقي الأصوات، مما قد يجعل متابعة الكلام أسهل. لا تُنشئ ترجمة نصية بنفسها، والترجمة التي يوفرها الموقع تبقى تعمل كالمعتاد.",
+"x6": "من Firefox",
+"x7": "تبقى أدوات Firefox نفسها في المتصفح، مثل دعم قارئات الشاشة وتكبير الصفحة ووضع القراءة. لم نختبرها بشكل منفصل في AkhiBrowser.",
+"x8": "هذه الصفحة",
+"x9": "تعمل بلوحة المفاتيح، ولصورها أوصاف نصية، والصورة المتحركة تبقى ثابتة إن طلبت من جهازك تقليل الحركة. ليس للفيديوهات ترجمة نصية بعد، لكنها تعرض رسالتها نصًا على الشاشة، وهذه الصفحة تقول الشيء نفسه.",
+"x10": "هل هناك شيء لا يعمل معك؟ أخبرنا على <a href=\"mailto:support@akhibrowser.com\">support@akhibrowser.com<\/a>.",
+"x11": "إمكانية الوصول"
+};
+  const DICTS = { nl: NL, ar: AR };
+  const META = {
+    nl: {
+      title: "AkhiBrowser: halal browser voor moslims, houdt haram tegen",
+      description: "AkhiBrowser is een gratis halal browser voor moslims, op basis van Firefox, die reclame, 18+- en haram sites tegenhoudt, afbeeldingen wazig houdt tot ze zijn gecontroleerd en de muziek uit video's haalt. Alles gebeurt op je eigen apparaat.",
+    },
+    ar: {
+      title: "AkhiBrowser: متصفح حلال للمسلمين، يحجب الحرام ويموّه الصور",
+      description: "AkhiBrowser متصفح حلال مجاني للمسلمين، مبني على Firefox. يحجب الإعلانات والمواقع الإباحية والمحرمة، ويموّه الصور حتى تُفحص، ويزيل الموسيقى الخلفية من الفيديوهات، وكل ذلك على جهازك.",
+    },
   };
+  const LANGS = ["en", "nl", "ar"];
   const description = document.querySelector('meta[name="description"]');
-  const META_EN = { title: document.title, description: description.content };
+  META.en = { title: document.title, description: description.content };
   const textNodes = [...document.querySelectorAll("[data-t]")].map(node => [node, node.innerHTML]);
   const attrNodes = [...document.querySelectorAll("[data-a]")].map(node => {
     const [name, key] = node.dataset.a.split(":");
     return [node, name, key, node.getAttribute(name)];
   });
-  const buttons = [...document.querySelectorAll("[data-lang]")];
+  // links to the blog and comparison pages go to the pages in the chosen language
+  const pageLinks = [...document.querySelectorAll('a[href^="/blog/"], a[href^="/compare/"]')].map(node => [node, node.getAttribute("href")]);
+  const menu = document.getElementById("lang");
 
   function show(lang) {
-    const isNl = lang === "nl";
+    const dict = DICTS[lang] || {};
     document.documentElement.lang = lang;
-    document.title = (isNl ? META_NL : META_EN).title;
-    description.content = (isNl ? META_NL : META_EN).description;
+    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+    document.title = META[lang].title;
+    description.content = META[lang].description;
     for (const [node, en] of textNodes) {
-      node.innerHTML = isNl ? NL[node.dataset.t] : en;
+      node.innerHTML = dict[node.dataset.t] ?? en;
     }
     for (const [node, name, key, en] of attrNodes) {
-      node.setAttribute(name, isNl ? NL[key] : en);
+      node.setAttribute(name, dict[key] ?? en);
     }
-    for (const button of buttons) {
-      button.setAttribute("aria-pressed", String(button.dataset.lang === lang));
+    for (const [node, href] of pageLinks) {
+      node.setAttribute("href", lang === "en" ? href : `/${lang}${href}`);
     }
+    menu.value = lang;
   }
 
   let saved = null;
   try {
     saved = localStorage.getItem("lang");
   } catch (e) {}
-  // the time zone stands in for the country: asking a service about the visitor's IP address would tell it who visits
-  const inNetherlands = Intl.DateTimeFormat().resolvedOptions().timeZone === "Europe/Amsterdam";
-  const prefersDutch = (navigator.languages || [navigator.language]).some(l => /^nl/i.test(l));
-  show(saved === "nl" || saved === "en" ? saved : inNetherlands || prefersDutch ? "nl" : "en");
-  for (const button of buttons) {
-    button.addEventListener("click", () => {
-      show(button.dataset.lang);
-      try {
-        localStorage.setItem("lang", button.dataset.lang);
-      } catch (e) {}
-    });
-  }
-  document.getElementById("lang").hidden = false;
+  // otherwise the first of the device's languages that the page has, and English if there is none
+  const device = (navigator.languages || [navigator.language]).map(l => String(l).slice(0, 2).toLowerCase()).find(l => LANGS.includes(l));
+  show(LANGS.includes(saved) ? saved : device || "en");
+  menu.addEventListener("change", () => {
+    show(menu.value);
+    try {
+      localStorage.setItem("lang", menu.value);
+    } catch (e) {}
+  });
+  menu.hidden = false;
   for (const node of document.querySelectorAll("[data-year]")) node.textContent = new Date().getFullYear();
 })();
 </script>
