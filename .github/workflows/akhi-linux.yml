@@ -48,6 +48,16 @@ jobs:
       - name: Build and package
         run: python3 browser/branding/akhi/tools/build_linux.py > artifacts/build.log 2>&1
 
+      - name: Smoke test
+        continue-on-error: true
+        run: |
+          tar -C "$RUNNER_TEMP" -xJf obj-akhi-linux-x64/dist/release/AkhiBrowser-linux-x64.tar.xz
+          python3 browser/branding/akhi/tools/smoke_test.py --binary "$RUNNER_TEMP/akhibrowser/akhibrowser" \
+            --out artifacts/smoke > artifacts/smoke.log 2>&1
+          result=$?
+          grep -E ": (ok|missing)$|doesn't start" artifacts/smoke.log
+          exit $result
+
       - name: Upload to a private draft release
         if: always()
         env:

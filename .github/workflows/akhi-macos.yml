@@ -48,6 +48,20 @@ jobs:
       - name: Build and package
         run: python3 browser/branding/akhi/tools/build_macos.py > artifacts/build.log 2>&1
 
+      - name: Smoke test
+        continue-on-error: true
+        run: |
+          mount=$(mktemp -d)
+          hdiutil attach -nobrowse -readonly -mountpoint "$mount" obj-akhi-macos-arm64/dist/release/AkhiBrowser-macos-arm64.dmg
+          ditto "$mount/AkhiBrowser.app" "$RUNNER_TEMP/AkhiBrowser.app"
+          hdiutil detach "$mount"
+          defaults read "$RUNNER_TEMP/AkhiBrowser.app/Contents/Info" CFBundleIdentifier | tee artifacts/bundle-id.txt
+          python3 browser/branding/akhi/tools/smoke_test.py --binary "$RUNNER_TEMP/AkhiBrowser.app/Contents/MacOS/akhibrowser" \
+            --out artifacts/smoke > artifacts/smoke.log 2>&1
+          result=$?
+          grep -E ": (ok|missing)$|doesn't start" artifacts/smoke.log
+          exit $result
+
       - name: Upload to a private draft release
         if: always()
         env:
