@@ -147,7 +147,7 @@ video { display: block; width: 100%; height: auto; border-radius: 14px; backgrou
 .plan-school { margin-top: 12px; }
 .affiliate { display: grid; gap: 12px; max-width: 32em; margin-top: 24px; }
 .affiliate label { display: grid; gap: 6px; font-size: 15px; }
-.affiliate input, .affiliate textarea { font: inherit; padding: 10px 12px; border-radius: 10px; border: 1.5px solid var(--line); background: rgba(0, 0, 0, .18); color: #fff; }
+.affiliate input, .affiliate textarea, .affiliate select { font: inherit; padding: 10px 12px; border-radius: 10px; border: 1.5px solid var(--line); background: rgba(0, 0, 0, .18); color: #fff; }
 .affiliate .btn { justify-self: start; border: 0; cursor: pointer; font: inherit; font-weight: 650; }
 .affiliate .trap { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .plan-school .btn { display: block; text-align: center; }
@@ -439,8 +439,41 @@ footer p + p { margin-top: 8px; }
         <label><span data-t="af5">School, mosque or organisation (optional)</span><input name="organisation" maxlength="200" autocomplete="organization"></label>
         <label><span data-t="af6">How will you recommend AkhiBrowser?</span><textarea name="about" rows="3" maxlength="2000"></textarea></label>
         <label class="trap" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAF9TRz9CNNAJX1Cg" data-action="affiliate" data-theme="dark" data-language="auto"></div>
         <button class="btn" type="submit" data-t="af7">Apply</button>
-        <p class="note" data-t="af8">We email you your own link within a few days. Your details are only used for this.</p>
+        <p class="note" data-t="af8">We email you your own link within a few days. Your details are only used for this. To keep robots out, the form loads Cloudflare Turnstile once you start filling it in.</p>
+      </form>
+    </div>
+  </section>
+
+  <section id="money">
+    <div class="wrap">
+      <h2 data-t="mm1">How we make money</h2>
+      <p class="intro" data-t="mm2">AkhiBrowser is free, shows no ads, and never sells or shares what you do. This is how it pays for itself, every way of it:</p>
+      <ul class="list">
+        <li><h3 data-t="mm3">Premium</h3><p data-t="mm4">Optional paid features for you, for families, and for schools and mosques. Most of the money comes from here.</p></li>
+        <li><h3 data-t="mm5">Search partners</h3><p data-t="mm6">When a search engine has a partner contract with us, a search you start in AkhiBrowser carries our partner code, and the engine gives us a small share of what it earns. Only the code is added: nothing about you or your search comes to us.</p></li>
+        <li><h3 data-t="mm7">Partner shops, only if you choose</h3><p data-t="mm8">Off unless you turn it on: when you go to a partner shop yourself, we add our code and the shop gives us a small share. You pay the same, and a link from another site keeps its own code.</p></li>
+        <li><h3 data-t="mm9">Tips on our start page</h3><p data-t="mm10">Now and then a tip with an affiliate link, always labelled as one. We never change the links of other websites.</p></li>
+        <li><h3 data-t="mm11">Affiliates, sponsors and partners</h3><p data-t="mm12">People who bring in schools and mosques get 20% of their payments. Sponsors and organisations can support AkhiBrowser, but never get your data or a say in what is blocked.</p></li>
+      </ul>
+      <p class="note" data-t="mm13">What we never do: show ads, sell or share your browsing, track you across sites, or let money change what is blocked.</p>
+      <h3 class="plan-title" data-t="mm14">Become a sponsor or partner</h3>
+      <form class="affiliate" action="https://akhi-license.akhibrowser.workers.dev/partner" method="post">
+        <label><span data-t="mm15">Your name</span><input name="name" required maxlength="100" autocomplete="name"></label>
+        <label><span data-t="mm16">Email address</span><input name="email" type="email" required maxlength="200" autocomplete="email"></label>
+        <label><span data-t="mm17">Organisation</span><input name="organisation" maxlength="200" autocomplete="organization"></label>
+        <label><span data-t="mm18">What kind of partner?</span><select name="kind">
+          <option value="sponsor" data-t="mm19">Sponsor</option>
+          <option value="ecosystem" data-t="mm20">Ecosystem partner: an Islamic app, school platform or organisation</option>
+          <option value="search" data-t="mm21">Search engine</option>
+          <option value="shop" data-t="mm22">Shop</option>
+        </select></label>
+        <label><span data-t="mm23">What do you propose?</span><textarea name="about" rows="3" maxlength="2000"></textarea></label>
+        <label class="trap" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAF9TRz9CNNAJX1Cg" data-action="partner" data-theme="dark" data-language="auto"></div>
+        <button class="btn" type="submit" data-t="mm24">Send</button>
+        <p class="note" data-t="mm25">We answer within a few days. A partnership has to keep AkhiBrowser private: no data of our users is ever part of it.</p>
       </form>
     </div>
   </section>
@@ -456,7 +489,7 @@ footer p + p { margin-top: 8px; }
 <footer>
   <div class="wrap">
     <p data-t="t53">AkhiBrowser is built on <a href="https://www.firefox.com/">Firefox</a>, and is not made or endorsed by Mozilla. Background music removal builds on <a href="https://github.com/mohamedsadiqaguenaou/NoMusic">NoMusic</a> by Mohamed Sadiq.</p>
-    <p><a href="https://github.com/halgurdh/akhiBrowser" data-t="t54">Source on GitHub</a> &middot; <a href="#accessibility" data-t="x11">Accessibility</a> &middot; <a href="/blog/what-is-a-halal-browser/" data-t="hb1">What is a halal browser?</a> &middot; <a href="/blog/best-halal-browsers/" data-t="hb2">Best halal browsers</a> &middot; <a href="/blog/" data-t="n1">Blog</a> &middot; <a href="/compare/kahf-browser/" data-t="t86">Compare with Kahf Browser</a> &middot; <a href="/compare/browsers/" data-t="t89">Compare browsers</a> &middot; <a href="https://www.youtube.com/@akhibrowser">YouTube</a> &middot; <a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md" data-t="n0">Privacy</a> &middot; <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a></p>
+    <p><a href="https://github.com/halgurdh/akhiBrowser" data-t="t54">Source on GitHub</a> &middot; <a href="#accessibility" data-t="x11">Accessibility</a> &middot; <a href="/blog/what-is-a-halal-browser/" data-t="hb1">What is a halal browser?</a> &middot; <a href="/blog/best-halal-browsers/" data-t="hb2">Best halal browsers</a> &middot; <a href="/blog/" data-t="n1">Blog</a> &middot; <a href="/compare/kahf-browser/" data-t="t86">Compare with Kahf Browser</a> &middot; <a href="/compare/browsers/" data-t="t89">Compare browsers</a> &middot; <a href="https://www.youtube.com/@akhibrowser">YouTube</a> &middot; <a href="#money" data-t="mm1">How we make money</a> &middot; <a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md" data-t="n0">Privacy</a> &middot; <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a></p>
     <p>&copy; <span data-year>2026</span> AkhiBrowser</p>
   </div>
 </footer>
@@ -581,7 +614,32 @@ footer p + p { margin-top: 8px; }
 "af5": "School, moskee of organisatie (optioneel)",
 "af6": "Hoe ga je AkhiBrowser aanraden?",
 "af7": "Aanmelden",
-"af8": "We mailen je binnen een paar dagen je eigen link. Je gegevens gebruiken we alleen hiervoor.",
+"af8": "We mailen je binnen een paar dagen je eigen link. Je gegevens gebruiken we alleen hiervoor. Tegen robots laadt het formulier Cloudflare Turnstile zodra je het gaat invullen.",
+"mm1": "Hoe we geld verdienen",
+"mm2": "AkhiBrowser is gratis, toont geen reclame en verkoopt of deelt nooit wat je doet. Zo betaalt hij zichzelf, op alle manieren:",
+"mm3": "Premium",
+"mm4": "Optionele betaalde functies voor jezelf, voor gezinnen en voor scholen en moskeeën. Het meeste geld komt hiervandaan.",
+"mm5": "Zoekpartners",
+"mm6": "Als een zoekmachine een partnercontract met ons heeft, krijgt een zoekopdracht die je in AkhiBrowser begint onze partnercode mee, en de zoekmachine geeft ons een klein deel van wat hij verdient. Alleen de code wordt toegevoegd: niets over jou of je zoekopdracht komt bij ons.",
+"mm7": "Partnerwinkels, alleen als jij dat kiest",
+"mm8": "Uit tenzij je het aanzet: als je zelf naar een partnerwinkel gaat, voegen we onze code toe en geeft de winkel ons een klein deel. Je betaalt hetzelfde, en een link van een andere site houdt zijn eigen code.",
+"mm9": "Tips op onze startpagina",
+"mm10": "Af en toe een tip met een affiliatelink, altijd als zodanig aangegeven. We veranderen nooit links op andere websites.",
+"mm11": "Affiliates, sponsors en partners",
+"mm12": "Mensen die scholen en moskeeën aanbrengen krijgen 20% van hun betalingen. Sponsors en organisaties kunnen AkhiBrowser steunen, maar krijgen nooit je gegevens of zeggenschap over wat er geblokkeerd wordt.",
+"mm13": "Wat we nooit doen: reclame tonen, je surfgedrag verkopen of delen, je volgen over sites heen, of geld laten bepalen wat er geblokkeerd wordt.",
+"mm14": "Word sponsor of partner",
+"mm15": "Je naam",
+"mm16": "E-mailadres",
+"mm17": "Organisatie",
+"mm18": "Wat voor partner?",
+"mm19": "Sponsor",
+"mm20": "Ecosysteempartner: een islamitische app, schoolplatform of organisatie",
+"mm21": "Zoekmachine",
+"mm22": "Winkel",
+"mm23": "Wat stel je voor?",
+"mm24": "Versturen",
+"mm25": "We antwoorden binnen een paar dagen. Een samenwerking moet AkhiBrowser privé houden: gegevens van onze gebruikers horen er nooit bij.",
 "a0": "De instellingen van AkhiBrowser: het vers van de dag, gebedstijden en de vijf beschermingen, allemaal aan: reclame en trackers geblokkeerd, achtergrondmuziek weg, 18+-inhoud geblokkeerd, haram sites geblokkeerd en naaktbeelden wazig.",
 "a1": "Promovideo van AkhiBrowser, 35 seconden",
 "a2": "Korte video van AkhiBrowser: zij stopten er muziek in, dus wij haalden het eruit, 19 seconden",
@@ -728,7 +786,32 @@ footer p + p { margin-top: 8px; }
 "af5": "المدرسة أو المسجد أو المؤسسة (اختياري)",
 "af6": "كيف ستنصح بـ AkhiBrowser؟",
 "af7": "تقديم الطلب",
-"af8": "نرسل إليك رابطك الخاص بالبريد خلال أيام قليلة. لا نستخدم بياناتك إلا لهذا الغرض.",
+"af8": "نرسل إليك رابطك الخاص بالبريد خلال أيام قليلة. لا نستخدم بياناتك إلا لهذا الغرض. لمنع الروبوتات، يحمّل النموذج Cloudflare Turnstile عندما تبدأ في تعبئته.",
+"mm1": "كيف نكسب المال",
+"mm2": "AkhiBrowser مجاني، ولا يعرض إعلانات، ولا يبيع ما تفعله أو يشاركه أبدًا. هكذا يغطي تكاليفه، بكل الطرق:",
+"mm3": "Premium",
+"mm4": "ميزات مدفوعة اختيارية لك وللأسر وللمدارس والمساجد. يأتي معظم المال من هنا.",
+"mm5": "شركاء البحث",
+"mm6": "عندما يكون لمحرك بحث عقد شراكة معنا، يحمل البحث الذي تبدؤه في AkhiBrowser رمز الشراكة الخاص بنا، ويمنحنا المحرك حصة صغيرة مما يكسبه. يُضاف الرمز فقط: لا يصلنا شيء عنك أو عن بحثك.",
+"mm7": "متاجر شريكة، فقط إن اخترت ذلك",
+"mm8": "متوقف ما لم تفعّله: عندما تذهب بنفسك إلى متجر شريك، نضيف رمزنا ويمنحنا المتجر حصة صغيرة. تدفع السعر نفسه، والرابط القادم من موقع آخر يحتفظ برمزه.",
+"mm9": "نصائح في صفحة البداية",
+"mm10": "بين حين وآخر نصيحة برابط تسويق بالعمولة، موسومة دائمًا بذلك. لا نغيّر روابط المواقع الأخرى أبدًا.",
+"mm11": "المسوّقون والرعاة والشركاء",
+"mm12": "من يجلب مدارس ومساجد يحصل على 20% من دفعاتهم. يمكن للرعاة والمؤسسات دعم AkhiBrowser، لكنهم لا يحصلون أبدًا على بياناتك ولا على رأي فيما يُحظر.",
+"mm13": "ما لا نفعله أبدًا: عرض الإعلانات، أو بيع تصفحك أو مشاركته، أو تتبعك عبر المواقع، أو ترك المال يغيّر ما يُحظر.",
+"mm14": "كن راعيًا أو شريكًا",
+"mm15": "اسمك",
+"mm16": "البريد الإلكتروني",
+"mm17": "المؤسسة",
+"mm18": "أي نوع من الشراكة؟",
+"mm19": "راعٍ",
+"mm20": "شريك في المنظومة: تطبيق إسلامي أو منصة مدرسية أو مؤسسة",
+"mm21": "محرك بحث",
+"mm22": "متجر",
+"mm23": "ما الذي تقترحه؟",
+"mm24": "إرسال",
+"mm25": "نرد خلال أيام قليلة. يجب أن تُبقي الشراكة AkhiBrowser خاصًا: بيانات مستخدمينا لا تكون جزءًا منها أبدًا.",
 "t86": "مقارنة مع Kahf Browser",
 "t89": "مقارنة المتصفحات",
 "t87": "خارطة الطريق: iPhone وMac",
@@ -819,6 +902,26 @@ footer p + p { margin-top: 8px; }
   });
   menu.hidden = false;
   for (const node of document.querySelectorAll("[data-year]")) node.textContent = new Date().getFullYear();
+})();
+</script>
+<script>
+// Cloudflare Turnstile, the check against robots on the forms: loaded only once someone starts filling one in
+(function () {
+  let loaded = false;
+  function load() {
+    if (loaded) {
+      return;
+    }
+    loaded = true;
+    const script = document.createElement("script");
+    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+    script.async = true;
+    document.head.append(script);
+  }
+  for (const form of document.querySelectorAll("form.affiliate")) {
+    form.addEventListener("focusin", load);
+    form.addEventListener("pointerdown", load);
+  }
 })();
 </script>
 <script>
