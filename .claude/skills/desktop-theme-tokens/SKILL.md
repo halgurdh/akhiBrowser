@@ -68,7 +68,7 @@ before and after, then diff the two maps.
 `tokens-platform.css`, in-content reads `tokens-shared.css` plus
 `tokens-brand.css`; the brand or platform sheet overrides shared values, and a
 shared value may reference a name only that sheet defines. The bundled
-[`scripts/token-resolve.py`](scripts/token-resolve.py) pairs them and reports
+`scripts/token-resolve.py` pairs them and reports
 each realm separately.
 
 The generated sheets are checked in, so reading one token's current value needs
@@ -246,8 +246,8 @@ goes into that surface's own component token, since the shared token's JSON
 changes every surface. The rule covers design tokens (§2's `isDesignToken`
 check); a sheet-local custom property is not one, whatever its casing suggests.
 In review, ask for this move before discussing the override's media query or
-comment. Under a condition with no key (e.g. a platform media feature such as
-`-moz-windows-mica`, a `[uidensity]` attribute), or one that combines a keyless
+comment. Under a condition with no key (e.g. a `-moz-platform` or other
+platform media feature, a `[uidensity]` attribute), or one that combines a keyless
 condition with a keyed one, the value stays in the consumer sheet; scope it with
 the token layer's own conditions, plus `prefers-contrast` and `forced-colors`
 where that layer has them as separate layers, so the unlayered rule does not
@@ -330,8 +330,7 @@ When a raw value becomes a token, take the token the property type's
 (`Size` maps `0.75rem` to the 12px `--size-item-xsmall`). Don't take a larger
 one that renders nearer the original at chrome's smaller root: the whole scale
 shrinks together, so compensating at one call site breaks its rank against the
-spacing around it. Delete a `stylelint-disable-next-line … use-design-tokens`
-above a declaration you convert; the rule wanted a token there.
+spacing around it.
 
 Measure; the system font varies. Before quoting what a rem token computes to,
 read §1 "One launch sweeps every platform's root size" in

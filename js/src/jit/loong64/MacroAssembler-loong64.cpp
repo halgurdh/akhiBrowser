@@ -1069,6 +1069,18 @@ Address MacroAssemblerLOONG64Compat::computeScaledAddress(
   return Address(scratch, address.offset);
 }
 
+Address MacroAssemblerLOONG64Compat::computeAbsoluteAddress(
+    AbsoluteAddress address, UseScratchRegisterScope& temps) {
+  const int64_t value = mozilla::BitwiseCast<int64_t>(address.addr);
+  const int64_t low12 = mozilla::BitwiseCast<int64_t>(
+                            mozilla::BitwiseCast<uint64_t>(value) << 52) >>
+                        52;
+  const Register scratch = temps.Acquire();
+  ma_li(scratch, ImmWord(mozilla::BitwiseCast<uint64_t>(value) -
+                         mozilla::BitwiseCast<uint64_t>(low12)));
+  return Address(scratch, low12);
+}
+
 void MacroAssemblerLOONG64::ma_pop(Register r) {
   MOZ_ASSERT(r != StackPointer);
   as_ld_d(r, StackPointer, 0);
@@ -1467,8 +1479,7 @@ FaultingCodeRange MacroAssemblerLOONG64::ma_fst_d(FloatRegister src,
   return fcr;
 }
 
-FaultingCodeRange MacroAssemblerLOONG64::ma_vld(FloatRegister vd,
-                                                Address address) {
+FaultingCodeRange MacroAssemblerLOONG64::ma_vld(VRegister vd, Address address) {
   int32_t offset = address.offset;
   Register base = address.base;
   js::wasm::FaultingCodeRange fcr;
@@ -1487,8 +1498,7 @@ FaultingCodeRange MacroAssemblerLOONG64::ma_vld(FloatRegister vd,
   return fcr;
 }
 
-FaultingCodeRange MacroAssemblerLOONG64::ma_vst(FloatRegister vd,
-                                                Address address) {
+FaultingCodeRange MacroAssemblerLOONG64::ma_vst(VRegister vd, Address address) {
   int32_t offset = address.offset;
   Register base = address.base;
   js::wasm::FaultingCodeRange fcr;
@@ -1994,16 +2004,23 @@ void MacroAssemblerLOONG64::ma_b(Register lhs, Imm32 imm, Label* label,
   } else {
     UseScratchRegisterScope temps(asMasm());
     Register scratch = temps.Acquire();
+    MOZ_ASSERT(lhs != scratch);
     switch (c) {
       case Equal:
       case NotEqual:
-        MOZ_ASSERT(lhs != scratch);
+      case Above:
+      case AboveOrEqual:
+      case Below:
+      case BelowOrEqual:
+      case GreaterThan:
+      case GreaterThanOrEqual:
+      case LessThan:
+      case LessThanOrEqual:
         ma_li(scratch, imm);
         ma_b(lhs, scratch, label, c, jumpKind);
         break;
       default:
-        Condition cond = ma_cmp(scratch, lhs, imm, c);
-        asMasm().branchWithCode(getBranchCode(scratch, cond), label, jumpKind);
+        MOZ_CRASH("Invalid condition.");
     }
   }
 }
@@ -2672,7 +2689,7 @@ FaultingCodeRange MacroAssemblerLOONG64::wasmLoadImpl(
         const Register scratch = temps.Acquire();
         as_add_d(scratch, memoryBase, ptr);
         fcr = FaultingCodeRange(currentOffset());
-        as_vldrepl_b(output.fpu(), scratch, 0);
+        as_vldrepl_b(output.fpu().toV(), scratch, 0);
       } else {
         as_ldx_bu(output.gpr(), ptr, memoryBase);
       }
@@ -2686,7 +2703,7 @@ FaultingCodeRange MacroAssemblerLOONG64::wasmLoadImpl(
         const Register scratch = temps.Acquire();
         as_add_d(scratch, memoryBase, ptr);
         fcr = FaultingCodeRange(currentOffset());
-        as_vldrepl_h(output.fpu(), scratch, 0);
+        as_vldrepl_h(output.fpu().toV(), scratch, 0);
       } else {
         as_ldx_hu(output.gpr(), ptr, memoryBase);
       }
@@ -2706,14 +2723,14 @@ FaultingCodeRange MacroAssemblerLOONG64::wasmLoadImpl(
         const Register scratch = temps.Acquire();
         as_add_d(scratch, memoryBase, ptr);
         fcr = FaultingCodeRange(currentOffset());
-        as_vldrepl_w(output.fpu(), scratch, 0);
+        as_vldrepl_w(output.fpu().toV(), scratch, 0);
       } else if (access.isZeroExtendSimd128Load()) {
         UseScratchRegisterScope temps(asMasm());
         const Register scratch = temps.Acquire();
-        as_vldi(output.fpu(), 0);
+        as_vldi(output.fpu().toV(), 0);
         fcr = FaultingCodeRange(currentOffset());
         as_ldx_wu(scratch, ptr, memoryBase);
-        as_vinsgr2vr_w(output.fpu(), scratch, 0);
+        as_vinsgr2vr_w(output.fpu().toV(), scratch, 0);
       } else {
         as_fldx_s(output.fpu(), ptr, memoryBase);
       }
@@ -2724,7 +2741,7 @@ FaultingCodeRange MacroAssemblerLOONG64::wasmLoadImpl(
         const Register scratch = temps.Acquire();
         as_add_d(scratch, memoryBase, ptr);
         fcr = FaultingCodeRange(currentOffset());
-        as_vldrepl_d(output.fpu(), scratch, 0);
+        as_vldrepl_d(output.fpu().toV(), scratch, 0);
       } else if (access.isWidenSimd128Load()) {
         as_fldx_d(output.fpu(), ptr, memoryBase);
         switch (access.widenSimdOp()) {
@@ -2752,16 +2769,16 @@ FaultingCodeRange MacroAssemblerLOONG64::wasmLoadImpl(
       } else if (access.isZeroExtendSimd128Load()) {
         UseScratchRegisterScope temps(asMasm());
         const Register scratch = temps.Acquire();
-        as_vldi(output.fpu(), 0);
+        as_vldi(output.fpu().toV(), 0);
         fcr = FaultingCodeRange(currentOffset());
         as_ldx_d(scratch, ptr, memoryBase);
-        as_vinsgr2vr_d(output.fpu(), scratch, 0);
+        as_vinsgr2vr_d(output.fpu().toV(), scratch, 0);
       } else {
         as_fldx_d(output.fpu(), ptr, memoryBase);
       }
       break;
     case Scalar::Simd128:
-      as_vldx(output.fpu(), ptr, memoryBase);
+      as_vldx(output.fpu().toV(), ptr, memoryBase);
       break;
     default:
       MOZ_CRASH("unexpected array type");
@@ -2806,7 +2823,7 @@ FaultingCodeRange MacroAssemblerLOONG64::wasmLoadImpl(
           offset = 0;
         }
         fcr = FaultingCodeRange(currentOffset());
-        as_vldrepl_b(output.fpu(), base, static_cast<uint32_t>(offset));
+        as_vldrepl_b(output.fpu().toV(), base, static_cast<uint32_t>(offset));
       } else {
         fcr = ma_load(output.gpr(), address, SizeByte, ZeroExtend);
       }
@@ -2828,7 +2845,7 @@ FaultingCodeRange MacroAssemblerLOONG64::wasmLoadImpl(
           offset = 0;
         }
         fcr = FaultingCodeRange(currentOffset());
-        as_vldrepl_h(output.fpu(), base, static_cast<uint32_t>(offset));
+        as_vldrepl_h(output.fpu().toV(), base, static_cast<uint32_t>(offset));
       } else {
         fcr = ma_load(output.gpr(), address, SizeHalfWord, ZeroExtend);
       }
@@ -2856,7 +2873,7 @@ FaultingCodeRange MacroAssemblerLOONG64::wasmLoadImpl(
           offset = 0;
         }
         fcr = FaultingCodeRange(currentOffset());
-        as_vldrepl_d(output.fpu(), base, static_cast<uint32_t>(offset));
+        as_vldrepl_d(output.fpu().toV(), base, static_cast<uint32_t>(offset));
       } else if (access.isWidenSimd128Load()) {
         fcr = ma_fld_d(output.fpu(), address);
         switch (access.widenSimdOp()) {
@@ -2884,9 +2901,9 @@ FaultingCodeRange MacroAssemblerLOONG64::wasmLoadImpl(
       } else if (access.isZeroExtendSimd128Load()) {
         UseScratchRegisterScope temps(asMasm());
         const Register scratch = temps.Acquire();
-        as_vldi(output.fpu(), 0);
+        as_vldi(output.fpu().toV(), 0);
         fcr = ma_load(scratch, address, SizeDouble, ZeroExtend);
-        as_vinsgr2vr_d(output.fpu(), scratch, 0);
+        as_vinsgr2vr_d(output.fpu().toV(), scratch, 0);
       } else {
         fcr = ma_fld_d(output.fpu(), address);
       }
@@ -2905,19 +2922,19 @@ FaultingCodeRange MacroAssemblerLOONG64::wasmLoadImpl(
           offset = 0;
         }
         fcr = FaultingCodeRange(currentOffset());
-        as_vldrepl_w(output.fpu(), base, static_cast<uint32_t>(offset));
+        as_vldrepl_w(output.fpu().toV(), base, static_cast<uint32_t>(offset));
       } else if (access.isZeroExtendSimd128Load()) {
         UseScratchRegisterScope temps(asMasm());
         const Register scratch = temps.Acquire();
-        as_vldi(output.fpu(), 0);
+        as_vldi(output.fpu().toV(), 0);
         fcr = ma_load(scratch, address, SizeWord, ZeroExtend);
-        as_vinsgr2vr_w(output.fpu(), scratch, 0);
+        as_vinsgr2vr_w(output.fpu().toV(), scratch, 0);
       } else {
         fcr = ma_fld_s(output.fpu(), address);
       }
       break;
     case Scalar::Simd128:
-      fcr = ma_vld(output.fpu(), address);
+      fcr = ma_vld(output.fpu().toV(), address);
       break;
     default:
       MOZ_CRASH("unexpected array type");
@@ -2987,7 +3004,7 @@ FaultingCodeRange MacroAssemblerLOONG64::wasmStoreImpl(
       as_fstx_s(value.fpu(), ptr, memoryBase);
       break;
     case Scalar::Simd128:
-      as_vstx(value.fpu(), ptr, memoryBase);
+      as_vstx(value.fpu().toV(), ptr, memoryBase);
       break;
     default:
       MOZ_CRASH("unexpected array type");
@@ -3028,7 +3045,7 @@ FaultingCodeRange MacroAssemblerLOONG64::wasmStoreImpl(
       fcr = ma_fst_s(value.fpu(), address);
       break;
     case Scalar::Simd128:
-      fcr = ma_vst(value.fpu(), address);
+      fcr = ma_vst(value.fpu().toV(), address);
       break;
     default:
       MOZ_CRASH("unexpected array type");
@@ -3094,16 +3111,16 @@ FaultingCodeRange MacroAssemblerLOONG64::wasmStoreLane(
   FaultingCodeRange fcr(currentOffset());
   switch (laneSize) {
     case 1:
-      as_vstelm_b(src, scratch, si8, laneIndex);
+      as_vstelm_b(src.toV(), scratch, si8, laneIndex);
       break;
     case 2:
-      as_vstelm_h(src, scratch, si8, laneIndex);
+      as_vstelm_h(src.toV(), scratch, si8, laneIndex);
       break;
     case 4:
-      as_vstelm_w(src, scratch, si8, laneIndex);
+      as_vstelm_w(src.toV(), scratch, si8, laneIndex);
       break;
     case 8:
-      as_vstelm_d(src, scratch, si8, laneIndex);
+      as_vstelm_d(src.toV(), scratch, si8, laneIndex);
       break;
     default:
       MOZ_CRASH("unsupported lane size");
@@ -6009,9 +6026,7 @@ FaultingCodeRange MacroAssemblerLOONG64Compat::load32(const BaseIndex& address,
 void MacroAssemblerLOONG64Compat::load32(AbsoluteAddress address,
                                          Register dest) {
   UseScratchRegisterScope temps(asMasm());
-  Register scratch = temps.Acquire();
-  movePtr(ImmPtr(address.addr), scratch);
-  load32(Address(scratch, 0), dest);
+  load32(computeAbsoluteAddress(address, temps), dest);
 }
 
 void MacroAssemblerLOONG64Compat::load32(wasm::SymbolicAddress address,
@@ -6035,9 +6050,7 @@ FaultingCodeRange MacroAssemblerLOONG64Compat::loadPtr(const BaseIndex& src,
 void MacroAssemblerLOONG64Compat::loadPtr(AbsoluteAddress address,
                                           Register dest) {
   UseScratchRegisterScope temps(asMasm());
-  Register scratch = temps.Acquire();
-  movePtr(ImmPtr(address.addr), scratch);
-  loadPtr(Address(scratch, 0), dest);
+  loadPtr(computeAbsoluteAddress(address, temps), dest);
 }
 
 void MacroAssemblerLOONG64Compat::loadPtr(wasm::SymbolicAddress address,
@@ -6094,9 +6107,7 @@ FaultingCodeRange MacroAssemblerLOONG64Compat::store16(
 void MacroAssemblerLOONG64Compat::store32(Register src,
                                           AbsoluteAddress address) {
   UseScratchRegisterScope temps(asMasm());
-  Register scratch = temps.Acquire();
-  movePtr(ImmPtr(address.addr), scratch);
-  store32(src, Address(scratch, 0));
+  store32(src, computeAbsoluteAddress(address, temps));
 }
 
 FaultingCodeRange MacroAssemblerLOONG64Compat::store32(Register src,
@@ -6171,9 +6182,7 @@ FaultingCodeRange MacroAssemblerLOONG64Compat::storePtr(
 
 void MacroAssemblerLOONG64Compat::storePtr(Register src, AbsoluteAddress dest) {
   UseScratchRegisterScope temps(asMasm());
-  Register scratch = temps.Acquire();
-  movePtr(ImmPtr(dest.addr), scratch);
-  storePtr(src, Address(scratch, 0));
+  storePtr(src, computeAbsoluteAddress(dest, temps));
 }
 
 void MacroAssemblerLOONG64Compat::testNullSet(Condition cond,

@@ -615,7 +615,7 @@ void nsSHistory::WalkContiguousEntriesInOrder(
     return;
   }
 
-  nsCOMPtr<nsIURI> targetURI = entry->GetURIOrInheritedForAboutBlank();
+  nsCOMPtr<nsIURI> targetURI = entry->GetURIOrInheritedForAboutBlankOrSrcdoc();
   AutoTArray<SessionHistoryEntry*, 16> previousEntries;
 
   // Walk backward to find the entries that have the same origin as the
@@ -624,7 +624,8 @@ void nsSHistory::WalkContiguousEntriesInOrder(
   while (RefPtr previousEntry =
              shistory->FindLeftmostAdjacentContiguousEntryFor(
                  current, SearchDirection::Left)) {
-    nsCOMPtr<nsIURI> uri = previousEntry->GetURIOrInheritedForAboutBlank();
+    nsCOMPtr<nsIURI> uri =
+        previousEntry->GetURIOrInheritedForAboutBlankOrSrcdoc();
     if (NS_FAILED(nsContentUtils::GetSecurityManager()->CheckSameOriginURI(
             targetURI, uri, false, false))) {
       break;
@@ -647,7 +648,7 @@ void nsSHistory::WalkContiguousEntriesInOrder(
   // input entry.
   while ((entry = shistory->FindLeftmostAdjacentContiguousEntryFor(
               entry, SearchDirection::Right))) {
-    nsCOMPtr<nsIURI> uri = entry->GetURIOrInheritedForAboutBlank();
+    nsCOMPtr<nsIURI> uri = entry->GetURIOrInheritedForAboutBlankOrSrcdoc();
     if (NS_FAILED(nsContentUtils::GetSecurityManager()->CheckSameOriginURI(
             targetURI, uri, false, false))) {
       break;
@@ -677,7 +678,7 @@ void nsSHistory::WalkClosestContiguousEntriesFrom(
     return;
   }
 
-  nsCOMPtr<nsIURI> targetURI = entry->GetURIOrInheritedForAboutBlank();
+  nsCOMPtr<nsIURI> targetURI = entry->GetURIOrInheritedForAboutBlankOrSrcdoc();
 
   // Walk backward to find the entries that have the same origin as the
   // input entry.
@@ -686,7 +687,7 @@ void nsSHistory::WalkClosestContiguousEntriesFrom(
                entry, SearchDirection::Left);
        current; current = shistory->FindClosestAdjacentContiguousEntryFor(
                     current, SearchDirection::Left)) {
-    nsCOMPtr<nsIURI> uri = current->GetURIOrInheritedForAboutBlank();
+    nsCOMPtr<nsIURI> uri = current->GetURIOrInheritedForAboutBlankOrSrcdoc();
     if (NS_FAILED(nsContentUtils::GetSecurityManager()->CheckSameOriginURI(
             targetURI, uri, false, false))) {
       break;
@@ -703,7 +704,7 @@ void nsSHistory::WalkClosestContiguousEntriesFrom(
                entry, SearchDirection::Right);
        current; current = shistory->FindClosestAdjacentContiguousEntryFor(
                     current, SearchDirection::Right)) {
-    nsCOMPtr<nsIURI> uri = current->GetURIOrInheritedForAboutBlank();
+    nsCOMPtr<nsIURI> uri = current->GetURIOrInheritedForAboutBlankOrSrcdoc();
     if (NS_FAILED(nsContentUtils::GetSecurityManager()->CheckSameOriginURI(
             targetURI, uri, false, false))) {
       break;
@@ -1339,6 +1340,15 @@ static const mozilla::dom::SessionHistoryInfo* TraversalViewTransitionTarget(
   return nullptr;
 }
 
+static bool CanRestoreFrameLoader(nsFrameLoader* aFrameLoader) {
+  if (!aFrameLoader->IsRemoteFrame()) {
+    return true;
+  }
+  BrowserParent* browserParent = aFrameLoader->GetBrowserParent();
+  return browserParent && browserParent->CanSend() &&
+         !browserParent->IsDestroyed();
+}
+
 MOZ_CAN_RUN_SCRIPT
 static void FinishRestore(CanonicalBrowsingContext* aBrowsingContext,
                           nsDocShellLoadState* aLoadState,
@@ -1359,7 +1369,7 @@ static void FinishRestore(CanonicalBrowsingContext* aBrowsingContext,
   nsCOMPtr<nsFrameLoaderOwner> frameLoaderOwner =
       do_QueryInterface(aBrowsingContext->GetEmbedderElement());
   if (frameLoaderOwner && aFrameLoader->GetMaybePendingBrowsingContext() &&
-      indexOfHistoryLoad >= 0) {
+      CanRestoreFrameLoader(aFrameLoader) && indexOfHistoryLoad >= 0) {
     RefPtr<BrowsingContextWebProgress> webProgress =
         aBrowsingContext->GetWebProgress();
     if (webProgress) {

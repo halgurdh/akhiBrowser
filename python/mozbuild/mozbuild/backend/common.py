@@ -272,6 +272,7 @@ class CommonBackend(BuildBackend):
         first = programs[0]
         objdir = mozpath.normsep(first.objdir)
         rustc_flags = ()
+        inputs = ()
         # Windows programs link a version resource generated in the object
         # directory.
         if (
@@ -279,11 +280,13 @@ class CommonBackend(BuildBackend):
             and self.environment.substs.get("MOZ_WIDGET_TOOLKIT") == "windows"
         ):
             rustc_flags = ("-C", f"link-arg={objdir}/module.res")
+            inputs = (mozpath.join(first.relobjdir, "module.res"),)
         return CargoCommand(
             kind=kind,
             manifest_path=mozpath.normsep(first.cargo_file),
             names=tuple(program.name for program in programs),
             outputs=tuple(mozpath.normsep(program.location) for program in programs),
+            inputs=inputs,
             features=first.features or (),
             cargo_profile_suffix=profile_suffix,
             working_directory=objdir,
@@ -295,9 +298,9 @@ class CommonBackend(BuildBackend):
         """Build a Cargo test command using the directory's Cargo profile."""
         rustflags = ()
         substs = self.environment.substs
-        # Test executables load shared libraries from dist/bin. Other platforms
-        # use an rpath, while Windows stages the libraries next to the test
-        # binaries.
+        # Test executables load shared libraries from dist/bin. Outside Windows
+        # they use an rpath, and on Linux and Windows `compose_env` also adds
+        # dist/bin to the library search path.
         if substs.get("OS_TARGET") != "WINNT":
             dist_bin = mozpath.join(self.environment.topobjdir, "dist", "bin")
             rustflags = ("-C", f"link-arg=-Wl,-rpath,{dist_bin}")

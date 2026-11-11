@@ -192,6 +192,7 @@ import org.mozilla.fenix.search.awesomebar.AwesomeBarComposable
 import org.mozilla.fenix.snackbar.FenixSnackbarDelegate
 import org.mozilla.fenix.snackbar.SnackbarBinding
 import org.mozilla.fenix.tabgroups.TabGroupsStrip
+import org.mozilla.fenix.tabgroups.navigateToExpandedTabGroup
 import org.mozilla.fenix.tabgroups.strip.TabGroupsStripScrollViewModel
 import org.mozilla.fenix.tabgroups.strip.observeSelectedTabForNavigation
 import org.mozilla.fenix.tabgroups.strip.redux.TabGroupsStripAction
@@ -266,6 +267,7 @@ class HomeFragment : Fragment(), UserInteractionHandler, OnLongPressedListener {
                     TabGroupsStripMiddleware(
                         tabDataCoordinator = requireComponents.tabDataCoordinator,
                         isHomepageAsNewTabEnabled = { context?.components?.settings?.enableHomepageAsNewTab ?: false },
+                        expandGroup = { navigateToExpandedTabGroup(it) },
                         scope = lifecycleScope,
                     ),
                     TabGroupsStripTelemetryMiddleware(
@@ -1647,8 +1649,12 @@ class HomeFragment : Fragment(), UserInteractionHandler, OnLongPressedListener {
                             ),
                     )
             },
-            navigateToIpProtection = {
-                IPProtectionBottomSheetFragment.showPrompt(fragment = this, surface = IPProtectionSurface.HOMEPAGE)
+            navigateToIpProtection = { promptDetails ->
+                IPProtectionBottomSheetFragment.showPrompt(
+                    fragment = this,
+                    surface = IPProtectionSurface.HOMEPAGE,
+                    promptDetails = promptDetails,
+                )
             },
         )
     }

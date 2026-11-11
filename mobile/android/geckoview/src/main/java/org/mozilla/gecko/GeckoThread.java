@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.concurrent.atomic.AtomicLong;
 import org.mozilla.gecko.annotation.WrapForJNI;
 import org.mozilla.gecko.mozglue.GeckoLoader;
 import org.mozilla.gecko.process.MemoryController;
@@ -116,14 +117,20 @@ public class GeckoThread extends Thread {
   public static final State MIN_STATE = State.INITIAL;
   public static final State MAX_STATE = State.EXITED;
 
+  private static final AtomicLong sUiThreadCallbackTime = new AtomicLong(Long.MAX_VALUE);
+
   private static final Runnable UI_THREAD_CALLBACK =
       new Runnable() {
         @Override
         public void run() {
           ThreadUtils.assertOnUiThread();
+
+          // Reset the callback time so that we can schedule another callback if needed.
+          sUiThreadCallbackTime.set(Long.MAX_VALUE);
+
           final long nextDelay = runUiThreadCallback();
           if (nextDelay >= 0) {
-            ThreadUtils.getUiHandler().postDelayed(this, nextDelay);
+            scheduleAndroidUiThreadCallback(nextDelay);
           }
         }
       };
@@ -385,6 +392,9 @@ public class GeckoThread extends Thread {
   /**
    * Extract environment variable from extras. The environment variables are stored in the extras as
    * "env0", "env1", etc.
+   *
+   * @param extras the bundle to read, may be null
+   * @return the environment variables, as "NAME=value" strings
    */
   public static ArrayList<String> getEnvFromExtras(final Bundle extras) {
     if (extras == null) {
@@ -674,6 +684,19 @@ public class GeckoThread extends Thread {
     return true;
   }
 
+  private static void scheduleAndroidUiThreadCallback(final long delay) {
+    final long runTimeMillis = SystemClock.uptimeMillis() + delay;
+
+    final long prevRunTimeMillis = sUiThreadCallbackTime.getAndAccumulate(runTimeMillis, Math::min);
+    if (runTimeMillis >= prevRunTimeMillis) {
+      // We already have a callback scheduled sooner than this one, so we don't need to schedule
+      // it again.
+      return;
+    }
+
+    ThreadUtils.getUiHandler().postDelayed(UI_THREAD_CALLBACK, delay);
+  }
+
   /**
    * Check that the current Gecko thread state matches the given state.
    *
@@ -825,28 +848,54 @@ public class GeckoThread extends Thread {
 
   @WrapForJNI
   private static void requestUiThreadCallback(final long delay) {
-    ThreadUtils.getUiHandler().postDelayed(UI_THREAD_CALLBACK, delay);
+    scheduleAndroidUiThreadCallback(delay);
   }
 
-  /** Queue a call to the given static method until Gecko is in the RUNNING state. */
+  /**
+   * Queue a call to the given static method until Gecko is in the RUNNING state.
+   *
+   * @param cls the class declaring the method
+   * @param methodName the method name
+   * @param args the method arguments
+   */
   public static void queueNativeCall(
       final Class<?> cls, final String methodName, final Object... args) {
     sNativeQueue.queueUntilReady(cls, methodName, args);
   }
 
-  /** Queue a call to the given instance method until Gecko is in the RUNNING state. */
+  /**
+   * Queue a call to the given instance method until Gecko is in the RUNNING state.
+   *
+   * @param obj the object to call the method on
+   * @param methodName the method name
+   * @param args the method arguments
+   */
   public static void queueNativeCall(
       final Object obj, final String methodName, final Object... args) {
     sNativeQueue.queueUntilReady(obj, methodName, args);
   }
 
-  /** Queue a call to the given instance method until Gecko is in the RUNNING state. */
+  /**
+   * Queue a call to the given instance method until Gecko reaches the given state.
+   *
+   * @param state the state to wait for
+   * @param obj the object to call the method on
+   * @param methodName the method name
+   * @param args the method arguments
+   */
   public static void queueNativeCallUntil(
       final State state, final Object obj, final String methodName, final Object... args) {
     sNativeQueue.queueUntil(state, obj, methodName, args);
   }
 
-  /** Queue a call to the given static method until Gecko is in the RUNNING state. */
+  /**
+   * Queue a call to the given static method until Gecko reaches the given state.
+   *
+   * @param state the state to wait for
+   * @param cls the class declaring the method
+   * @param methodName the method name
+   * @param args the method arguments
+   */
   public static void queueNativeCallUntil(
       final State state, final Class<?> cls, final String methodName, final Object... args) {
     sNativeQueue.queueUntil(state, cls, methodName, args);

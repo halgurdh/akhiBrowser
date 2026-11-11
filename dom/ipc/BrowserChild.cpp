@@ -105,7 +105,6 @@
 #include "nsIURI.h"
 #include "nsIURIMutator.h"
 #include "nsIWeakReferenceUtils.h"
-#include "nsIWebBrowser.h"
 #include "nsIWebProgress.h"
 #include "nsIXULRuntime.h"
 #include "nsLayoutUtils.h"
@@ -478,10 +477,7 @@ nsresult BrowserChild::Init(mozIDOMWindowProxy* aParent,
     // here. dom/base/crashtests/1419902.html
     return NS_ERROR_FAILURE;
   }
-  nsIWebBrowser* webBrowser = mWebBrowser;
-
-  mWebNav = do_QueryInterface(webBrowser);
-  NS_ASSERTION(mWebNav, "nsWebBrowser doesn't implement nsIWebNavigation?");
+  mWebNav = mWebBrowser;
 
   // IPC uses a WebBrowser object for which DNS prefetching is turned off
   // by default. But here we really want it, so enable it explicitly
@@ -655,15 +651,9 @@ BrowserChild::SetDimensions(DimensionRequest&& aRequest) {
 }
 
 NS_IMETHODIMP
-BrowserChild::GetDimensions(DimensionKind aDimensionKind, int32_t* aX,
-                            int32_t* aY, int32_t* aCx, int32_t* aCy) {
+BrowserChild::GetDimensions(int32_t* aX, int32_t* aY, int32_t* aCx,
+                            int32_t* aCy) {
   LayoutDeviceIntRect rect = GetOuterRect();
-  if (aDimensionKind == DimensionKind::Inner) {
-    if (aX || aY) {
-      return NS_ERROR_NOT_IMPLEMENTED;
-    }
-    rect.SizeTo(GetInnerSize());
-  }
   if (aX) {
     *aX = rect.x;
   }
@@ -710,14 +700,13 @@ BrowserChild::ProvideWindow(nsIOpenWindowInfo* aOpenWindowInfo,
   // If it turns out we're opening in the current browser, just hand over the
   // current browser's docshell.
   if (openLocation == nsIBrowserDOMWindow::OPEN_CURRENTWINDOW) {
-    nsCOMPtr<nsIWebBrowser> browser = do_GetInterface(WebNavigation());
     *aWindowIsNew = false;
 
-    nsCOMPtr<mozIDOMWindowProxy> win;
-    MOZ_TRY(browser->GetContentDOMWindow(getter_AddRefs(win)));
+    nsCOMPtr<nsPIDOMWindowOuter> win =
+        mWebBrowser ? mWebBrowser->GetWindow() : nullptr;
+    NS_ENSURE_STATE(win);
 
-    RefPtr<BrowsingContext> bc(
-        nsPIDOMWindowOuter::From(win)->GetBrowsingContext());
+    RefPtr<BrowsingContext> bc(win->GetBrowsingContext());
     bc.forget(aReturn);
     return NS_OK;
   }
@@ -758,8 +747,9 @@ void BrowserChild::DestroyWindow() {
     data.reset();
   }
 
-  nsCOMPtr<nsIBaseWindow> baseWindow = do_QueryInterface(WebNavigation());
-  if (baseWindow) baseWindow->Destroy();
+  if (mWebBrowser) {
+    mWebBrowser->Close();
+  }
 
   if (mPuppetWidget) {
     mPuppetWidget->Destroy();
@@ -812,9 +802,8 @@ BrowserChild::~BrowserChild() {
 
   DestroyWindow();
 
-  nsCOMPtr<nsIWebBrowser> webBrowser = do_QueryInterface(WebNavigation());
-  if (webBrowser) {
-    webBrowser->SetContainerWindow(nullptr);
+  if (mWebBrowser) {
+    mWebBrowser->SetWebBrowserChrome(nullptr);
   }
 
   mozilla::DropJSObjects(this);
@@ -1077,13 +1066,13 @@ mozilla::ipc::IPCResult BrowserChild::RecvShow(
 
   mPuppetWidget->SetSizeMode(aOwnerInfo.sizeMode());
   if (!mDidFakeShow) {
-    nsCOMPtr<nsIBaseWindow> baseWindow = do_QueryInterface(WebNavigation());
-    if (!baseWindow) {
-      NS_ERROR("WebNavigation() doesn't QI to nsIBaseWindow");
+    if (!mWebBrowser) {
       return IPC_FAIL_NO_REASON(this);
     }
 
-    baseWindow->SetVisibility(true);
+    if (RefPtr<nsDocShell> docShell = mWebBrowser->GetDocShell()) {
+      docShell->SetVisibility(true);
+    }
     res = InitBrowserChildMessageManager();
   }
 
@@ -1165,9 +1154,9 @@ mozilla::ipc::IPCResult BrowserChild::RecvUpdateDimensions(
   // MobileViewportManager needs the content viewer size to be updated before
   // the reflow, otherwise it gets a stale size when it computes a new CSS
   // viewport.
-  nsCOMPtr<nsIBaseWindow> baseWin = do_QueryInterface(WebNavigation());
-  baseWin->SetPositionAndSize(0, 0, innerSize.width, innerSize.height,
-                              nsIBaseWindow::eRepaint);
+  RefPtr<nsDocShell> docShell = mWebBrowser->GetDocShell();
+  docShell->SetPositionAndSize(0, 0, innerSize.width, innerSize.height,
+                               nsIBaseWindow::eRepaint);
 
   const LayoutDeviceIntRect widgetRect(
       GetOuterRect().TopLeft() + mClientOffset + mChromeOffset, innerSize);
@@ -3648,9 +3637,9 @@ mozilla::ipc::IPCResult BrowserChild::RecvUIResolutionChanged(
   const LayoutDeviceIntSize innerSize = GetInnerSize();
   if (mHasValidInnerSize && oldInnerSize != innerSize) {
     // See RecvUpdateDimensions for the order of these operations.
-    nsCOMPtr<nsIBaseWindow> baseWin = do_QueryInterface(WebNavigation());
-    baseWin->SetPositionAndSize(0, 0, innerSize.width, innerSize.height,
-                                nsIBaseWindow::eRepaint);
+    RefPtr<nsDocShell> docShell = mWebBrowser->GetDocShell();
+    docShell->SetPositionAndSize(0, 0, innerSize.width, innerSize.height,
+                                 nsIBaseWindow::eRepaint);
 
     const LayoutDeviceIntRect widgetRect(
         GetOuterRect().TopLeft() + mClientOffset + mChromeOffset, innerSize);

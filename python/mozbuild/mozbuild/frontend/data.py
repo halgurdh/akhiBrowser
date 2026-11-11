@@ -403,6 +403,18 @@ class Linkable(ContextDerived):
             return ObjDirPath(self._context, "!" + self.name)
 
     @property
+    def dump_syms(self):
+        """Whether the crash reporter symbols are dumped for this binary.
+
+        Only a binary whose final target is under `dist/bin` is worth
+        symbolicating, whether or not it is installed there, and a binary with
+        an output category is not part of a default build.
+        """
+        if self.KIND != "target" or getattr(self, "output_category", None):
+            return False
+        return bool(mozpath.basedir(self.install_target, ("dist/bin",)))
+
+    @property
     def lto_object_path_flags(self):
         # On macOS, dsymutil reads debug info from the object files, which LTO
         # does not keep. Keep them in a directory per binary, since the linker
@@ -961,10 +973,18 @@ class SharedLibrary(Library):
                 "1",
             ]
         if substs.get("OS_ARCH") == "WINNT":
+            pdb = f"{mozpath.splitext(self.lib_name)[0]}.pdb"
             if substs.get("CC_TYPE") == "clang-cl":
-                return [f"-IMPLIB:{self.import_name}"]
-            return ["-Wl,--out-implib", f"-Wl,{self.import_name}"]
-        return []
+                if substs.get("MOZ_COPY_PDBS"):
+                    pdb = mozpath.relpath(
+                        mozpath.join(mozpath.dirname(self.output_path.full_path), pdb),
+                        self.objdir,
+                    )
+                return [f"-PDB:{pdb}", f"-IMPLIB:{self.import_name}"]
+            return [f"-Wl,-pdb,{pdb}", "-Wl,--out-implib", f"-Wl,{self.import_name}"]
+        if substs.get("OS_TARGET") == "NetBSD":
+            return [f"-Wl,-soname,{self.soname}"]
+        return [f"-Wl,-h,{self.soname}"]
 
 
 class HostSharedLibrary(HostMixin, Library):
@@ -1602,6 +1622,10 @@ class GeneratedFile(ContextDerived):
             "android_apks",
             ".profdata",
             ".webidl",
+            # .air and .metallib are compiled Metal shader outputs used to
+            # generate a header consumed by native compilation.
+            ".air",
+            ".metallib",
         ]
 
         try:

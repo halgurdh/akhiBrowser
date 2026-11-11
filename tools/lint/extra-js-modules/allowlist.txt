@@ -63,9 +63,6 @@ browser/components/newtab/AboutNewTabRedirector.sys.mjs
 browser/components/newtab/AboutNewTabResourceMapping.sys.mjs
 browser/components/profiles/SelectableProfile.sys.mjs
 browser/components/profiles/SelectableProfileService.sys.mjs
-browser/components/topsites/TippyTopProvider.sys.mjs
-browser/components/topsites/TopSites.sys.mjs
-browser/components/topsites/constants.mjs
 browser/modules/AboutNewTab.sys.mjs
 browser/modules/BackgroundTask_install.sys.mjs
 browser/modules/BackgroundTask_uninstall.sys.mjs
@@ -154,7 +151,6 @@ netwerk/protocol/http/NetworkErrorLogging.sys.mjs
 netwerk/protocol/http/ObliviousHTTP.sys.mjs
 netwerk/protocol/http/WellKnownOpportunisticUtils.sys.mjs
 security/sandbox/common/SandboxUtils.sys.mjs
-services/automation/ServicesAutomation.sys.mjs
 services/common/async.sys.mjs
 services/common/hawkclient.sys.mjs
 services/common/hawkrequest.sys.mjs
@@ -228,13 +224,6 @@ services/sync/modules/sync_auth.sys.mjs
 services/sync/modules/telemetry.sys.mjs
 services/sync/modules/util.sys.mjs
 toolkit/components/DefaultCLH.sys.mjs
-toolkit/components/antitracking/ContentBlockingAllowList.sys.mjs
-toolkit/components/antitracking/PartitioningExceptionListService.sys.mjs
-toolkit/components/antitracking/PurgeTrackerService.sys.mjs
-toolkit/components/antitracking/TrackingDBService.sys.mjs
-toolkit/components/antitracking/URLDecorationAnnotationsService.sys.mjs
-toolkit/components/antitracking/URLQueryStrippingListService.sys.mjs
-toolkit/components/antitracking/bouncetrackingprotection/BTPRemoteExceptionList.sys.mjs
 toolkit/components/asyncshutdown/AsyncShutdown.sys.mjs
 toolkit/components/asyncshutdown/nsAsyncShutdown.sys.mjs
 toolkit/components/autocomplete/AutoCompleteSimpleSearch.sys.mjs
@@ -248,7 +237,6 @@ toolkit/components/backgroundtasks/BackgroundTask_success.sys.mjs
 toolkit/components/backgroundtasks/BackgroundTasksManager.sys.mjs
 toolkit/components/backgroundtasks/BackgroundTasksUtils.sys.mjs
 toolkit/components/backgroundtasks/dbg-actors.js
-toolkit/components/captivedetect/CaptiveDetect.sys.mjs
 toolkit/components/cleardata/ClearBySiteEntry.sys.mjs
 toolkit/components/cleardata/ClearDataService.sys.mjs
 toolkit/components/cleardata/PrincipalsCollector.sys.mjs

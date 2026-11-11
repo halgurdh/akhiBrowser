@@ -263,6 +263,15 @@ class BigInt final : public js::gc::CellWithLengthAndFlags {
                      MutableHandle<BigInt*> quotient,
                      MutableHandle<BigInt*> remainder);
 
+  // When computing modulo by `m`, there is a short-cut if `|m|` is of the form
+  // `2^k - c`, where `c` is a single digit.  If we should use the "Crandall
+  // reduction" short-cut, store `k` and `c` and return true.
+  static bool shouldModuloByCrandallReduction(const BigInt* m, uint32_t* k,
+                                              Digit* c);
+  // Return `x % (2^k - c)`.
+  static BigInt* modCrandall(JSContext* cx, Handle<BigInt*> x, uint32_t k,
+                             Digit c);
+
   static bool powIntPtr(intptr_t x, intptr_t y, intptr_t* result);
 
   static int64_t toInt64(const BigInt* x);
@@ -415,19 +424,22 @@ class BigInt final : public js::gc::CellWithLengthAndFlags {
       bool quotientNegative);
   static void internalMultiplyAdd(const BigInt* source, Digit factor,
                                   Digit summand, unsigned, BigInt* result);
-  static void multiplyAccumulate(const BigInt* multiplicand, Digit multiplier,
-                                 BigInt* accumulator,
-                                 unsigned accumulatorIndex);
   static bool absoluteDivWithBigIntDivisor(
       JSContext* cx, Handle<BigInt*> dividend, Handle<BigInt*> divisor,
       const mozilla::Maybe<MutableHandle<BigInt*>>& quotient,
       const mozilla::Maybe<MutableHandle<BigInt*>>& remainder,
       bool quotientNegative);
 
-  // Store `multiplicand * multiplier` into `product`, which must have one more
-  // digit than `multiplicand`.
-  static void multiplyDigits(ConstDigits multiplicand, Digit multiplier,
-                             Digits product);
+  // Store `src * multiplier` into the low `src.size()` digits of `dest`,
+  // returning the carry.
+  static Digit multiplyDigits(ConstDigits src, Digit multiplier, Digits dest);
+  // Add `src * multiplier` to the low `src.size()` digits of `acc`, returning
+  // the carry.  `acc` is an in-out parameter.
+  static Digit multiplyAccumulateDigits(ConstDigits src, Digit multiplier,
+                                        Digits acc);
+  // Store `a * b` into `result`, which must have `a.size() + b.size()` digits.
+  static void schoolbookMultiplyDigits(ConstDigits a, ConstDigits b,
+                                       Digits result);
   // Subtract `y` from the low `y.size()` digits of `x`, returning the borrow.
   static Digit inplaceSubDigits(Digits x, ConstDigits y);
   // Add `y` to the low `y.size()` digits of `x`, returning the carry.
@@ -437,6 +449,9 @@ class BigInt final : public js::gc::CellWithLengthAndFlags {
   // the remainder. See the definition for full preconditions.
   static void divideDigitsInPlace(Digits u, ConstDigits v, Digits q,
                                   Digits qhatv);
+  // Reduce `r` modulo `2^k - c` in place.
+  static void modDigitsInPlaceByCrandallReduction(Digits r, uint32_t k,
+                                                  Digit c);
 
   enum class LeftShiftMode { SameSizeResult, AlwaysAddOneDigit };
 

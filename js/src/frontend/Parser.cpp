@@ -118,6 +118,33 @@ static bool GetInlinableNumber(ParseNode* node, double* initialValue) {
   return true;
 }
 
+static bool GetInlinableValue(ParseNode* node, InlinedFieldValueKind* kind,
+                              double* initialValue) {
+  switch (node->getKind()) {
+    case ParseNodeKind::TrueExpr:
+      *kind = InlinedFieldValueKind::True;
+      return true;
+    case ParseNodeKind::FalseExpr:
+      *kind = InlinedFieldValueKind::False;
+      return true;
+    case ParseNodeKind::NullExpr:
+      *kind = InlinedFieldValueKind::Null;
+      return true;
+    case ParseNodeKind::RawUndefinedExpr:
+      *kind = InlinedFieldValueKind::Undefined;
+      return true;
+    case ParseNodeKind::ArrayExpr:
+      *kind = InlinedFieldValueKind::EmptyArray;
+      return node->as<ListNode>().empty();
+    case ParseNodeKind::ObjectExpr:
+      *kind = InlinedFieldValueKind::EmptyObject;
+      return node->as<ListNode>().empty();
+    default:
+      *kind = InlinedFieldValueKind::Number;
+      return GetInlinableNumber(node, initialValue);
+  }
+}
+
 template <class ParseHandler, typename Unit>
 inline typename GeneralParser<ParseHandler, Unit>::FinalParser*
 GeneralParser<ParseHandler, Unit>::asFinalParser() {
@@ -1966,33 +1993,6 @@ FullParseHandler::ModuleNodeResult Parser<FullParseHandler, Unit>::moduleBody(
 
     p->value()->setClosedOver();
   }
-
-  // Reserve an environment slot for a "*namespace*" psuedo-binding and mark as
-  // closed-over. We do not know until module linking if this will be used.
-  if (!noteDeclaredName(
-          TaggedParserAtomIndex::WellKnown::star_namespace_star_(),
-          DeclarationKind::Const, pos())) {
-    return errorResult();
-  }
-  modulepc.varScope()
-      .lookupDeclaredName(
-          TaggedParserAtomIndex::WellKnown::star_namespace_star_())
-      ->value()
-      ->setClosedOver();
-
-  // Reserve an environment slot for a "*deferred-namespace*" pseudo-binding
-  // and mark as closed-over. We do not know until module linking if this will
-  // be used.
-  if (!noteDeclaredName(
-          TaggedParserAtomIndex::WellKnown::star_deferred_namespace_star_(),
-          DeclarationKind::Const, pos())) {
-    return errorResult();
-  }
-  modulepc.varScope()
-      .lookupDeclaredName(
-          TaggedParserAtomIndex::WellKnown::star_deferred_namespace_star_())
-      ->value()
-      ->setClosedOver();
 
   if (!CheckParseTree(this->fc_, alloc_, stmtList)) {
     return errorResult();
@@ -8787,15 +8787,16 @@ GeneralParser<ParseHandler, Unit>::fieldInitializerOpt(
       bool isPlainName = propAtom && (isPrivate || !this->parserAtoms().isIndex(
                                                        propAtom, &index));
 
-      double literalValue;
-      bool isInlinableNumber =
-          GetInlinableNumber(initializerExpr, &literalValue);
+      InlinedFieldValueKind valueKind;
+      double literalValue = 0;
+      bool isInlinableValue =
+          GetInlinableValue(initializerExpr, &valueKind, &literalValue);
       bool hasMaxInlinedFields =
           classInitializedMembers.inlinableFields.length() >=
           MemberInitializers::MaxInlinedFields;
-      if (isPlainName && isInlinableNumber && !hasMaxInlinedFields) {
+      if (isPlainName && isInlinableValue && !hasMaxInlinedFields) {
         if (!classInitializedMembers.inlinableFields.append(
-                InlinedField{propAtom, isPrivate, literalValue})) {
+                InlinedField{propAtom, isPrivate, valueKind, literalValue})) {
           js::ReportOutOfMemory(fc_);
           return errorResult();
         }
