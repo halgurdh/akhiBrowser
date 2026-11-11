@@ -144,6 +144,13 @@ video { display: block; width: 100%; height: auto; border-radius: 14px; backgrou
 .cancel ol { margin: 14px 0 0; padding-inline-start: 1.4em; color: var(--soft); }
 .cancel li + li { margin-top: 6px; }
 .plans { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.plan-school { margin-top: 12px; }
+.affiliate { display: grid; gap: 12px; max-width: 32em; margin-top: 24px; }
+.affiliate label { display: grid; gap: 6px; font-size: 15px; }
+.affiliate input, .affiliate textarea { font: inherit; padding: 10px 12px; border-radius: 10px; border: 1.5px solid var(--line); background: rgba(0, 0, 0, .18); color: #fff; }
+.affiliate .btn { justify-self: start; border: 0; cursor: pointer; font: inherit; font-weight: 650; }
+.affiliate .trap { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.plan-school .btn { display: block; text-align: center; }
 
 footer { border-top: 1px solid var(--line); padding: 36px 0 48px; font-size: 14px; color: var(--soft); }
 footer p + p { margin-top: 8px; }
@@ -383,7 +390,6 @@ footer p + p { margin-top: 8px; }
       <ul class="list">
         <li><h3 data-t="t60">Choose who to blur</h3><p data-t="t61">Blur women, men or both. Recognize hijab can leave covered women visible.</p></li>
         <li><h3 data-t="t74">Strict mode</h3><p data-t="t75">Every image and video stays blurred until you tap it, on all sites or the ones you choose.</p></li>
-        <li><h3 data-t="t76">Prayer pause</h3><p data-t="t77">Social media, video and game sites, or all sites, pause for a few minutes after each prayer time.</p></li>
         <li><h3 data-t="t78">A calmer web</h3><p data-t="t79">YouTube without recommendations, Shorts or autoplay, comments hidden, and profanity masked in the text of pages.</p></li>
       </ul>
       <h3 class="plan-title" data-t="t83">Family Premium, for parents</h3>
@@ -392,14 +398,24 @@ footer p + p { margin-top: 8px; }
         <li><h3 data-t="t64">Activity summary</h3><p data-t="t65">See the last seven days of blocked pages by reason, without page addresses. The summary stays on your device.</p></li>
         <li><h3 data-t="t66">Limit social feeds</h3><p data-t="t67">Hide short-video feeds and set a daily limit on social websites in AkhiBrowser, not in social-media apps.</p></li>
         <li><h3 data-t="t80">Pause the internet, back up the settings</h3><p data-t="t81">Pause browsing now with the PIN, and move the parent controls to another device in a file locked with the PIN.</p></li>
+        <li><h3 data-t="t76">Prayer pause</h3><p data-t="t77">Social media, video and game sites, or all sites, pause for a few minutes after each prayer time.</p></li>
+        <li><h3 data-t="f1">Halal check and halal places</h3><p data-t="f2">A warning on product pages with pork, alcohol, gelatine or doubtful E-numbers, and the places marked halal on Google Maps and delivery sites.</p></li>
+        <li><h3 data-t="f3">Riba warning, loot boxes blocked</h3><p data-t="f4">A warning on pages for interest loans, credit cards and buy now pay later, and case-opening and skin-gambling sites blocked.</p></li>
+        <li><h3 data-t="f5">Quran recitation, trusted sources</h3><p data-t="f6">Follow a recitation on YouTube verse by verse with its meaning, and see scholarly sources first when you search about Islam.</p></li>
+        <li><h3 data-t="f7">Deen Time</h3><p data-t="f8">YouTube with only the channels you chose, for your children.</p></li>
       </ul>
+      <p class="note" data-t="f9">New in 1.3.0: halal check, halal places, riba warning, loot box block, follow the recitation, trusted sources and Deen Time. Prayer pause is now part of Family Premium.</p>
       <div class="plans">
         <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/monthly" data-t="t49">Premium monthly<small>€3.33 a month</small></a>
         <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/yearly" data-t="t50">Premium yearly<small>€35.00 a year</small></a>
         <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/lifetime" data-t="t51">Lifetime Premium<small>€99.99 once</small></a>
         <a class="btn" href="https://akhi-license.akhibrowser.workers.dev/buy/family" data-t="t85">Family Premium<small>€49.99 a year</small></a>
       </div>
-      <p class="note" data-t="t52">In a Google Play build, Premium is bought through Google Play. In other builds, Stripe shows the price before you pay; you get a license key without creating an account. A Premium key works on up to three devices at a time, a Family key on up to ten. Bought Premium or Lifetime before version 1.2.1? You keep the parent controls you had.</p>
+      <div class="plan-school">
+        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/school" data-t="sm1">School / Mosque<small>€30 a month</small></a>
+        <p class="note" data-t="sm2">Everything in Family Premium, with one key for 100 to 500 devices: for schools, mosques and Islamic centres.</p>
+      </div>
+      <p class="note" data-t="t52">In a Google Play build, Premium is bought through Google Play. In other builds, Stripe shows the price before you pay; you get a license key without creating an account. A Premium key works on up to three devices at a time, a Family key on up to ten, a School / Mosque key on up to 500. Bought Premium or Lifetime before version 1.2.1? You keep the parent controls you had.</p>
       <div class="cancel" id="cancel">
         <h3 data-t="c0">How to cancel a subscription</h3>
         <ol>
@@ -410,6 +426,22 @@ footer p + p { margin-top: 8px; }
         <p class="note" data-t="c4">Premium then ends, and all the free protections keep working. A lifetime purchase is not a subscription, so there is nothing to cancel.</p>
         <p class="note" data-t="c5">Can't get to the browser? Email <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a> with the email address you paid with.</p>
       </div>
+    </div>
+  </section>
+
+  <section id="affiliate">
+    <div class="wrap">
+      <h2 data-t="af1">Recommend AkhiBrowser to a school or mosque</h2>
+      <p class="intro" data-t="af2">Know a school, mosque or Islamic centre that could use AkhiBrowser? Become an affiliate: you get 20% of each of their School / Mosque payments, every month, for as long as they stay subscribed. A payment counts once it is 30 days old, and we pay out monthly.</p>
+      <form class="affiliate" action="https://akhi-license.akhibrowser.workers.dev/affiliate" method="post">
+        <label><span data-t="af3">Your name</span><input name="name" required maxlength="100" autocomplete="name"></label>
+        <label><span data-t="af4">Email address</span><input name="email" type="email" required maxlength="200" autocomplete="email"></label>
+        <label><span data-t="af5">School, mosque or organisation (optional)</span><input name="organisation" maxlength="200" autocomplete="organization"></label>
+        <label><span data-t="af6">How will you recommend AkhiBrowser?</span><textarea name="about" rows="3" maxlength="2000"></textarea></label>
+        <label class="trap" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+        <button class="btn" type="submit" data-t="af7">Apply</button>
+        <p class="note" data-t="af8">We email you your own link within a few days. Your details are only used for this.</p>
+      </form>
     </div>
   </section>
 
@@ -495,7 +527,7 @@ footer p + p { margin-top: 8px; }
 "t49": "Premium per maand<small>€3,33 per maand<\/small>",
 "t50": "Premium per jaar<small>€35,00 per jaar<\/small>",
 "t51": "Levenslang Premium<small>€99,99 eenmalig<\/small>",
-"t52": "In de Google Play-versie koop je Premium via Google Play. In andere versies zie je de prijs bij Stripe voordat je betaalt. Je krijgt een licentiesleutel zonder account. Een Premium-sleutel werkt op maximaal drie apparaten tegelijk, een Family-sleutel op maximaal tien. Premium of Levenslang gekocht vóór versie 1.2.1? Dan houd je het ouderlijk toezicht dat je had.",
+"t52": "In de Google Play-versie koop je Premium via Google Play. In andere versies zie je de prijs bij Stripe voordat je betaalt. Je krijgt een licentiesleutel zonder account. Een Premium-sleutel werkt op maximaal drie apparaten tegelijk, een Family-sleutel op maximaal tien, een School / Moskee-sleutel op maximaal 500. Premium of Levenslang gekocht vóór versie 1.2.1? Dan houd je het ouderlijk toezicht dat je had.",
 "t53": "AkhiBrowser is gebouwd op <a href=\"https://www.firefox.com/\">Firefox<\/a>, maar is niet gemaakt of goedgekeurd door Mozilla. Het weghalen van achtergrondmuziek bouwt voort op <a href=\"https://github.com/mohamedsadiqaguenaou/NoMusic\">NoMusic<\/a> van Mohamed Sadiq.",
 "t54": "Broncode op GitHub",
 "t56": "Afbeeldingen op je apparaat gecontroleerd",
@@ -531,6 +563,25 @@ footer p + p { margin-top: 8px; }
 "t87": "Roadmap: iPhone en Mac",
 "t88": "AkhiBrowser is er nu voor Windows en Android. Versies voor iOS en macOS volgen later, nog zonder datum. Ons doel is eraan te beginnen zodra 100 gezinnen Family Premium hebben.",
 "t85": "Family Premium<small>€49,99 per jaar<\/small>",
+"sm1": "School / Moskee<small>€30 per maand<\/small>",
+"sm2": "Alles uit Family Premium, met één sleutel voor 100 tot 500 apparaten: voor scholen, moskeeën en islamitische centra.",
+"f1": "Halal-check en halal plekken",
+"f2": "Een waarschuwing op productpagina's met varken, alcohol, gelatine of twijfelachtige E-nummers, en de plekken die als halal gemarkeerd zijn op Google Maps en bezorgsites.",
+"f3": "Riba-waarschuwing, lootboxen geblokkeerd",
+"f4": "Een waarschuwing op pagina's voor leningen met rente, creditcards en achteraf betalen, en case-opening- en skin-goksites geblokkeerd.",
+"f5": "Koranrecitatie, betrouwbare bronnen",
+"f6": "Volg een recitatie op YouTube vers voor vers met de betekenis, en zie eerst geleerde bronnen als je iets zoekt over de islam.",
+"f7": "Deen Time",
+"f8": "YouTube met alleen de kanalen die jij kiest, voor je kinderen.",
+"f9": "Nieuw in 1.3.0: halal-check, halal plekken, riba-waarschuwing, lootbox-blokkade, recitatie volgen, betrouwbare bronnen en Deen Time. Gebedspauze hoort nu bij Family Premium.",
+"af1": "Raad AkhiBrowser aan bij een school of moskee",
+"af2": "Ken je een school, moskee of islamitisch centrum dat AkhiBrowser kan gebruiken? Word affiliate: je krijgt 20% van elke School / Moskee-betaling van hen, elke maand, zolang ze geabonneerd blijven. Een betaling telt mee zodra hij 30 dagen oud is, en we betalen maandelijks uit.",
+"af3": "Je naam",
+"af4": "E-mailadres",
+"af5": "School, moskee of organisatie (optioneel)",
+"af6": "Hoe ga je AkhiBrowser aanraden?",
+"af7": "Aanmelden",
+"af8": "We mailen je binnen een paar dagen je eigen link. Je gegevens gebruiken we alleen hiervoor.",
 "a0": "De instellingen van AkhiBrowser: het vers van de dag, gebedstijden en de vijf beschermingen, allemaal aan: reclame en trackers geblokkeerd, achtergrondmuziek weg, 18+-inhoud geblokkeerd, haram sites geblokkeerd en naaktbeelden wazig.",
 "a1": "Promovideo van AkhiBrowser, 35 seconden",
 "a2": "Korte video van AkhiBrowser: zij stopten er muziek in, dus wij haalden het eruit, 19 seconden",
@@ -627,7 +678,7 @@ footer p + p { margin-top: 8px; }
 "t49": "Premium شهري<small>3.33 € شهريًا<\/small>",
 "t50": "Premium سنوي<small>35.00 € سنويًا<\/small>",
 "t51": "Premium مدى الحياة<small>99.99 € مرة واحدة<\/small>",
-"t52": "في نسخة Google Play، يُشترى Premium عبر Google Play. وفي النسخ الأخرى، يعرض Stripe السعر قبل أن تدفع، وتحصل على مفتاح ترخيص دون إنشاء حساب. يعمل مفتاح Premium على ما يصل إلى ثلاثة أجهزة في الوقت نفسه، ومفتاح Family على ما يصل إلى عشرة. اشتريت Premium أو Premium مدى الحياة قبل الإصدار 1.2.1؟ تحتفظ بأدوات الرقابة الأبوية التي كانت لديك.",
+"t52": "في نسخة Google Play، يُشترى Premium عبر Google Play. وفي النسخ الأخرى، يعرض Stripe السعر قبل أن تدفع، وتحصل على مفتاح ترخيص دون إنشاء حساب. يعمل مفتاح Premium على ما يصل إلى ثلاثة أجهزة في الوقت نفسه، ومفتاح Family على ما يصل إلى عشرة، ومفتاح مدرسة / مسجد على ما يصل إلى 500. اشتريت Premium أو Premium مدى الحياة قبل الإصدار 1.2.1؟ تحتفظ بأدوات الرقابة الأبوية التي كانت لديك.",
 "t53": "AkhiBrowser مبني على <a href=\"https://www.firefox.com/\">Firefox<\/a>، وليس من صنع Mozilla ولا تعتمده. تعتمد إزالة الموسيقى الخلفية على <a href=\"https://github.com/mohamedsadiqaguenaou/NoMusic\">NoMusic<\/a> من Mohamed Sadiq.",
 "t54": "الشيفرة المصدرية على GitHub",
 "t56": "فحص الصور على جهازك",
@@ -659,6 +710,25 @@ footer p + p { margin-top: 8px; }
 "t82": "Premium، لك أنت",
 "t83": "Family Premium، للوالدين",
 "t85": "Family Premium<small>49.99 € سنويًا<\/small>",
+"sm1": "مدرسة / مسجد<small>30 € شهريًا<\/small>",
+"sm2": "كل ما في Family Premium، بمفتاح واحد لـ 100 إلى 500 جهاز: للمدارس والمساجد والمراكز الإسلامية.",
+"f1": "فحص الحلال والأماكن الحلال",
+"f2": "تحذير على صفحات المنتجات التي فيها لحم خنزير أو كحول أو جيلاتين أو أرقام E مشكوك فيها، والأماكن الموسومة بالحلال على خرائط Google ومواقع التوصيل.",
+"f3": "تحذير من الربا، وحظر صناديق الغنائم",
+"f4": "تحذير على صفحات القروض بفائدة وبطاقات الائتمان والشراء الآن والدفع لاحقًا، وحظر مواقع فتح الصناديق والمقامرة بالأغراض.",
+"f5": "تلاوة القرآن، والمصادر الموثوقة",
+"f6": "تابع تلاوة على YouTube آية بآية مع معناها، واطّلع على مصادر العلماء أولًا عندما تبحث عن الإسلام.",
+"f7": "Deen Time",
+"f8": "YouTube بالقنوات التي اخترتها فقط، لأطفالك.",
+"f9": "جديد في 1.3.0: فحص الحلال، والأماكن الحلال، والتحذير من الربا، وحظر صناديق الغنائم، ومتابعة التلاوة، والمصادر الموثوقة، وDeen Time. وأصبح إيقاف الصلاة جزءًا من Family Premium.",
+"af1": "انصح مدرسة أو مسجدًا بـ AkhiBrowser",
+"af2": "تعرف مدرسة أو مسجدًا أو مركزًا إسلاميًا يمكنه الاستفادة من AkhiBrowser؟ كن شريكًا بالعمولة: تحصل على 20% من كل دفعة لهم في خطة مدرسة / مسجد، كل شهر، ما داموا مشتركين. تُحتسب الدفعة بعد مرور 30 يومًا عليها، وندفع العمولة شهريًا.",
+"af3": "اسمك",
+"af4": "البريد الإلكتروني",
+"af5": "المدرسة أو المسجد أو المؤسسة (اختياري)",
+"af6": "كيف ستنصح بـ AkhiBrowser؟",
+"af7": "تقديم الطلب",
+"af8": "نرسل إليك رابطك الخاص بالبريد خلال أيام قليلة. لا نستخدم بياناتك إلا لهذا الغرض.",
 "t86": "مقارنة مع Kahf Browser",
 "t89": "مقارنة المتصفحات",
 "t87": "خارطة الطريق: iPhone وMac",
@@ -749,6 +819,24 @@ footer p + p { margin-top: 8px; }
   });
   menu.hidden = false;
   for (const node of document.querySelectorAll("[data-year]")) node.textContent = new Date().getFullYear();
+})();
+</script>
+<script>
+(function () {
+  const CODE = /^[a-z0-9]{2,24}-[A-Za-z0-9_-]{8}$/;
+  let ref = new URLSearchParams(location.search).get("ref");
+  try {
+    if (ref && CODE.test(ref)) {
+      localStorage.setItem("akhiRef", ref);
+    } else {
+      ref = localStorage.getItem("akhiRef");
+    }
+  } catch (e) {}
+  if (ref && CODE.test(ref)) {
+    for (const link of document.querySelectorAll('a[href$="/buy/school"]')) {
+      link.href += "?ref=" + encodeURIComponent(ref);
+    }
+  }
 })();
 </script>
 </body>
