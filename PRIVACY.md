@@ -1,6 +1,6 @@
 # AkhiBrowser: privacy policy
 
-Last updated: 07-11-2026
+Last updated: 11-11-2026
 
 This policy covers the AkhiBrowser website, browser for Android and Windows, and extension for Firefox and Chrome.
 AkhiBrowser is made by Halgurd Hussein. The browser and extensions have no account of their own, no ads and no
@@ -17,6 +17,11 @@ depending on its configuration. Google's handling of this information is covered
 [Google's privacy policy](https://policies.google.com/privacy). The tag loads when the page loads; the website does not
 currently show a consent prompt.
 
+The forms to become an affiliate, sponsor or partner load Cloudflare Turnstile, a check against robots, once you start
+filling one in. Cloudflare receives your IP address and information about your browser for that check, under
+[Cloudflare's Turnstile privacy addendum](https://www.cloudflare.com/turnstile-privacy-policy/). What you type in the form
+is emailed to us and used only to answer you.
+
 ## The browser (Android and Windows)
 
 AkhiBrowser is a web browser built on Firefox.
@@ -31,6 +36,9 @@ AkhiBrowser is a web browser built on Firefox.
   [its policy for this service](https://developers.cloudflare.com/1.1.1.1/privacy/public-dns-resolver/). You can change
   or turn this off in Settings, under DNS over HTTPS.
 - **Your search terms, to the search engine you use**, as you type them when search suggestions are on.
+- **AkhiBrowser's partner code, to a search engine we have a partner contract with**, in the address of a search you
+  start in the browser. The engine pays us a small share of what it earns. The code says only that the search came from
+  AkhiBrowser: we receive nothing about you or your searches. Firefox's own codes for Mozilla are taken out.
 - **Requests to Mozilla's servers, without anything that identifies you beyond your IP address**, for add-ons
   (addons.mozilla.org, from which uBlock Origin is installed while ad blocking is on), and for security and block list
   updates (Remote Settings, Safe Browsing lists).
@@ -52,6 +60,11 @@ AkhiBrowser is a web browser built on Firefox.
   use Mozilla's account settings.
 - **Usage data and crash reports to Mozilla.** These are off by default, and only go to Mozilla if you turn them on in
   Settings.
+- **Support AkhiBrowser when you shop.** Off by default. If you turn it on and go to one of our partner shops yourself
+  (typed, from a bookmark or from the start page), AkhiBrowser adds its partner code to that visit, so the shop pays us a
+  small share of a purchase. The shop learns that you came through AkhiBrowser, nothing more; we receive nothing about
+  you or what you buy. A link from another site keeps its own code. Tips on the start page with an affiliate link are
+  labelled as such.
 - **Camera, microphone and location.** Your device asks you first when a site you are on wants them. They go only to
   that site, and only if you allow it.
 

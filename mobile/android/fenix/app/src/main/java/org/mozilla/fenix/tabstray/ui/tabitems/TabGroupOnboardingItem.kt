@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -28,9 +29,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import kotlin.time.Duration.Companion.seconds
 import mozilla.components.compose.base.PromoCard
-import mozilla.components.ui.animation.AnimatedIllustration
 import org.mozilla.fenix.R
 import org.mozilla.fenix.tabstray.TabsTrayTestTag
 import org.mozilla.fenix.theme.FirefoxTheme
@@ -58,16 +57,15 @@ fun TabGroupOnboardingGridItem(
                 .focusable(true)
                 .semantics(mergeDescendants = true) {},
         title = stringResource(R.string.tab_group_onboarding_item_title),
+        // AkhiBrowser: the shield instead of Firefox's fox
         illustration = {
-            AnimatedIllustration(
-                animationResource = R.raw.mozac_ic_kit_tab_groups_animation,
-                staticDrawableResource = R.drawable.mozac_ic_kit_tab_groups,
+            Image(
+                painter = painterResource(R.drawable.ic_firefox),
+                contentDescription = null,
                 modifier =
                     Modifier.height(OnboardingGridItemMinHeight)
-                        .padding(vertical = FirefoxTheme.layout.space.static150)
+                        .padding(vertical = FirefoxTheme.layout.space.static400)
                         .testTag(TabsTrayTestTag.TAB_GROUP_ONBOARDING_ILLUSTRATION),
-                contentDescription = null,
-                iterationDelay = 8.seconds,
             )
         },
         contentSpacing = 0.dp,
@@ -108,10 +106,11 @@ fun TabGroupOnboardingListItem(
             modifier = Modifier.weight(1f),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            // AkhiBrowser: the shield instead of Firefox's fox
             Image(
-                painter = painterResource(R.drawable.mozac_ic_kit_tab_groups_list_view),
+                painter = painterResource(R.drawable.ic_firefox),
                 contentDescription = null,
-                modifier = Modifier.testTag(TabsTrayTestTag.TAB_GROUP_ONBOARDING_ILLUSTRATION),
+                modifier = Modifier.size(48.dp).testTag(TabsTrayTestTag.TAB_GROUP_ONBOARDING_ILLUSTRATION),
             )
 
             Spacer(modifier = Modifier.width(FirefoxTheme.layout.space.static200))

@@ -2,6 +2,8 @@
   "nonPublishedName": "mozilla-central",
   "notes(nonPublishedName)": "This package is never published, but the nonPublishedName helps our ESLint package to find the top-level of mozilla-central",
   "description": "This package file is for node modules used in mozilla-central",
+  "version": "1.3.0",
+  "notes(version)": "The AkhiBrowser version, the same as browser/config/akhi_version.txt",
   "repository": {},
   "license": "MPL-2.0",
   "devDependencies": {
