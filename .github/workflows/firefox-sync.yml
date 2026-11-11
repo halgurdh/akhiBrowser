@@ -67,4 +67,5 @@ jobs:
         if: steps.merge.outputs.merged == 'true' && github.event.schedule == '30 */2 * * *'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh issue create --title "Exploited Firefox bug: firefox-daily has the latest code, build it" --body-file report.md
+        run: |
+          gh issue create --title "Exploited Firefox bug: firefox-daily has the latest code, build it" --body-file report.md
