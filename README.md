@@ -62,12 +62,11 @@ Premium is for you, Family Premium for parents. Each feature is off until you tu
 - **Choose who to blur:** women, men, or both. A woman is blurred when her hair or body shows (her face and hands may);
   a man from the navel to the knees. A person whose gender is unclear can be judged as a woman, an optional setting.
 - **Strict mode:** every image and video stays blurred until tapped, on all sites or chosen ones.
-- **Prayer pause:** social media, video and game sites (or all sites) pause for a few minutes after each prayer time.
 - **YouTube clean mode:** no recommendations, end screens, autoplay or Shorts.
 - **Hide comments** on YouTube, Reddit, TikTok and news sites.
 - **Profanity masking** in the text of pages.
 
-**Family Premium** (yearly, up to 10 devices): everything in Premium, plus the parent controls:
+**Family Premium** (yearly, up to 10 devices): everything in Premium, plus the parent controls and the Family features:
 
 - **Parental PIN:** locks the protections so they can't be turned off. Family Premium is needed to set a PIN, but a PIN
   that's already set keeps working without it.
@@ -80,9 +79,21 @@ Premium is for you, Family Premium for parents. Each feature is off until you tu
   stop screen. It works on websites in AkhiBrowser, not in social-media apps.
 - **Pause the internet** now, for a set time or until undone, with the PIN.
 - **Settings backup:** the parent controls in a file locked with the PIN, to set up another device.
+- **Prayer pause:** social media, video and game sites (or all sites) pause for a few minutes after each prayer time.
+- **Riba warning** on pages for interest loans, credit cards, buy now pay later and leveraged trading.
+- **Halal check:** a warning on product pages whose ingredients have pork, alcohol, gelatine or doubtful E-numbers, and
+  a badge on the products in a supermarket's search results whose name says pork.
+- **Loot box block:** case-opening and skin-gambling sites.
+- **Follow the Quran recitation:** beside a recitation on YouTube, the surah's verses and their meaning, the verse being
+  recited highlighted.
+- **Trusted sources first** in searches about Islam.
+- **Halal places:** on Google Maps (and Apple Maps on Apple's devices) the places marked halal in OpenStreetMap; on
+  delivery sites, a badge on the restaurants that say halal.
+- **Deen Time:** YouTube with only the channels the parent chose.
 
 Until version 1.2.1 the parent controls were in every Premium plan: a Premium or Lifetime license active when 1.2.1 is
-first installed keeps them.
+first installed keeps them. The same goes for prayer pause up to 1.2.2: a license active when the next version is first
+installed keeps it.
 
 The parent controls and the feed limit keep their data on the device.
 
