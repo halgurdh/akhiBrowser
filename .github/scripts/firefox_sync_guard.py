@@ -19,6 +19,19 @@ MUST_STAY = [
     (f"{JAVA}/home/ui/Homepage.kt", "AkhiHomeCard.Card", "the prayer times and verse on the home screen"),
     (f"{FENIX}/src/main/res/drawable/ic_firefox.xml", "M26.00,26.00", "the shield instead of the fox"),
 ]
+SETTINGS = f"{JAVA}/utils/Settings.kt"
+# Android's privacy defaults: a marker comment and the default right after it
+PRIVACY = [
+    ("telemetry goes to Mozilla's servers, also the default of the usage ping and experiments", "default = false,",
+     "telemetry, the usage ping and experiments off"),
+    ("crash reports go to Mozilla's servers", "default = CrashReportOption.Never.toString(),", "crash reports off"),
+    ("no stories on the homepage, as on desktop", "defaultValue = { false },", "Pocket stories off"),
+    ("no AI page summaries, the page would be sent to an AI service", "default = { false },", "AI page summaries off"),
+    ("secure by default", "default = true,", "HTTPS-only"),
+    ("private by default", "true,", "private by default"),
+    ("strict tracking protection by default", "false,", "strict tracking protection"),
+]
+SPONSORED_OFF = 3
 WATCHED_PREFS = ["browser/app/profile/firefox.js", "mobile/android/app/geckoview-prefs.js"]
 
 
@@ -29,6 +42,13 @@ def main():
         file = Path(path)
         if not file.exists() or text not in file.read_text(encoding="utf-8"):
             failures.append(f"- `{path}` lost `{text}`: {keeps}")
+    settings = Path(SETTINGS).read_text(encoding="utf-8") if Path(SETTINGS).exists() else ""
+    for marker, default, keeps in PRIVACY:
+        if not re.search(r"// AkhiBrowser: " + re.escape(marker) + r"\n\s*" + re.escape(default), settings):
+            failures.append(f"- `{SETTINGS}` lost `{marker}` / `{default}`: {keeps}")
+    sponsored = len(re.findall(r"// AkhiBrowser: no sponsored content\n\s*default(Value)? = (\{ )?false", settings))
+    if sponsored < SPONSORED_OFF:
+        failures.append(f"- `{SETTINGS}` has {sponsored} of {SPONSORED_OFF} sponsored content defaults off")
     diff = subprocess.run(
         ["git", "diff", before, "HEAD", "--", *WATCHED_PREFS],
         check=True,

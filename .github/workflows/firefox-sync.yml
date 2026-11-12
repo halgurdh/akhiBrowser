@@ -1,6 +1,8 @@
 # Merges Mozilla's main into the branch firefox-daily every day at 00:00 UTC, and at once when CISA's list of exploited
 # vulnerabilities gets a Firefox entry (checked every 2 hours). Nothing reaches main or a release from here: a build
 # takes firefox-daily when it's ready. A conflict, or something AkhiBrowser removed coming back, stops it with an issue.
+# firefox-daily keeps its merges, so a conflict solved there once stays solved; AkhiBrowser's main is merged into it
+# first.
 name: Firefox sync
 
 on:
@@ -8,6 +10,9 @@ on:
     - cron: "0 0 * * *"
     - cron: "30 */2 * * *"
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [.github/workflows/firefox-sync.yml, .github/scripts/firefox_sync_guard.py]
 
 permissions:
   contents: write
@@ -16,7 +21,7 @@ permissions:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v5
         with:
@@ -24,41 +29,67 @@ jobs:
           fetch-depth: 0
           filter: blob:none
 
+      # Mozilla is a promisor remote too: in this partial clone, the merge's missing Firefox files come from there
+      - name: Start from firefox-daily with AkhiBrowser's main
+        id: start
+        run: |
+          git config user.name "AkhiBrowser sync"
+          git config user.email "support@akhibrowser.com"
+          git remote add mozilla https://github.com/mozilla-firefox/firefox.git
+          git config remote.mozilla.promisor true
+          git config remote.mozilla.partialclonefilter blob:none
+          git fetch -q --filter=blob:none mozilla main
+          if git fetch -q origin firefox-daily 2>/dev/null; then
+            git checkout -q -B daily origin/firefox-daily
+            echo "daily=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+            if ! git merge --no-edit -m "Merge AkhiBrowser main into firefox-daily" origin/main > merge.log 2>&1; then
+              {
+                echo "### AkhiBrowser's main doesn't merge into firefox-daily"
+                git diff --name-only --diff-filter=U | sed 's/^/- /'
+                echo; echo '```'; tail -n 20 merge.log; echo '```'
+              } > report.md
+              echo "failed=true" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            git checkout -q -B daily origin/main
+          fi
+
       - name: A Firefox entry new on the list?
         id: urgent
-        if: github.event.schedule == '30 */2 * * *'
+        if: steps.start.outputs.failed != 'true' && github.event.schedule == '30 */2 * * *'
         run: |
-          base=$(git fetch -q https://github.com/mozilla-firefox/firefox.git main && git log -1 --format=%cs "$(git merge-base HEAD FETCH_HEAD)")
+          base=$(git log -1 --format=%cs "$(git merge-base HEAD mozilla/main)")
           count=$(curl -fsSL https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json |
             jq --arg base "$base" '[.vulnerabilities[] | select(.vendorProject == "Mozilla" and (.product | test("firefox"; "i")) and .dateAdded > $base)] | length')
           echo "count=$count" >> "$GITHUB_OUTPUT"
 
       - name: Merge
         id: merge
-        if: github.event.schedule != '30 */2 * * *' || steps.urgent.outputs.count != '0'
+        if: steps.start.outputs.failed != 'true' && (github.event.schedule != '30 */2 * * *' || steps.urgent.outputs.count != '0')
         run: |
-          git config user.name "AkhiBrowser sync"
-          git config user.email "support@akhibrowser.com"
           before=$(git rev-parse HEAD)
-          git fetch -q https://github.com/mozilla-firefox/firefox.git main
-          if git merge-base --is-ancestor FETCH_HEAD HEAD; then
-            echo "Nothing new."
+          if git merge-base --is-ancestor mozilla/main HEAD; then
+            echo "Nothing new from Mozilla."
+          elif ! git merge --no-edit -m "Merge Firefox main into AkhiBrowser" mozilla/main > merge.log 2>&1; then
+            {
+              echo "### The merge with Firefox's main has conflicts"
+              git diff --name-only --diff-filter=U | sed 's/^/- /'
+              echo; echo '```'; tail -n 20 merge.log; echo '```'
+              echo; echo "Solve them on firefox-daily: the next sync starts from there."
+            } > report.md
+            echo "failed=true" >> "$GITHUB_OUTPUT"
             exit 0
-          fi
-          if ! git merge --no-edit -m "Merge Firefox main into AkhiBrowser" FETCH_HEAD; then
-            { echo "### The merge has conflicts"; git diff --name-only --diff-filter=U | sed 's/^/- /'; } > report.md
+          elif ! python3 .github/scripts/firefox_sync_guard.py "$before" > report.md; then
             echo "failed=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          if ! python3 .github/scripts/firefox_sync_guard.py "$before" > report.md; then
-            echo "failed=true" >> "$GITHUB_OUTPUT"
-            exit 0
+          if [ "$(git rev-parse HEAD)" != "${{ steps.start.outputs.daily }}" ]; then
+            git push origin HEAD:refs/heads/firefox-daily
+            echo "merged=true" >> "$GITHUB_OUTPUT"
           fi
-          git push --force origin HEAD:refs/heads/firefox-daily
-          echo "merged=true" >> "$GITHUB_OUTPUT"
 
       - name: Say what stopped it
-        if: steps.merge.outputs.failed == 'true'
+        if: steps.start.outputs.failed == 'true' || steps.merge.outputs.failed == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh issue create --title "Firefox sync stopped on $(date -u +%F)" --body-file report.md
@@ -67,4 +98,5 @@ jobs:
         if: steps.merge.outputs.merged == 'true' && github.event.schedule == '30 */2 * * *'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh issue create --title "Exploited Firefox bug: firefox-daily has the latest code, build it" --body-file report.md
+        run: |
+          gh issue create --title "Exploited Firefox bug: firefox-daily has the latest code, build it" --body-file report.md
