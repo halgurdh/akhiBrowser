@@ -220,6 +220,7 @@ COMPARE = {
 }
 
 _CWS = "https://chromewebstore.google.com/detail/akhibrowser/ghkpflipnhahpjdnpoclaakbecnopamk"
+_AMO = "https://addons.mozilla.org/en-US/firefox/addon/akhibrowser/"
 _ALL5 = "Windows وmacOS وLinux وAndroid وiOS"
 
 COMPARE_BROWSERS = {
@@ -230,7 +231,7 @@ COMPARE_BROWSERS = {
     "head": ["", "AkhiBrowser", "Kahf Browser", "Brave", "Firefox", "Chrome"],
     "rows": [
         ["السعر", "الحماية مجانية؛ Premium وFamily Premium اختياريان", "مجاني", "مجاني", "مجاني", "مجاني"],
-        ["الأنظمة", f'Windows (Microsoft Store)، Android (قريبًا)؛ و<a href="{_CWS}">إضافة Chrome مجانية</a> أخف', "Windows وmacOS وAndroid وiOS", _ALL5, _ALL5, _ALL5],
+        ["الأنظمة", f'Windows (Microsoft Store)، Android (قريبًا)؛ وإضافات مجانية أخف لـ<a href="{_CWS}">Chrome</a> و<a href="{_AMO}">Firefox</a>', "Windows وmacOS وAndroid وiOS", _ALL5, _ALL5, _ALL5],
         ["مبني على", "Firefox", "Chromium", "Chromium", "محرّك Firefox الخاص", "Chromium"],
         ["الإعلانات وأدوات التتبع", "محجوبة، مع uBlock Origin مدمج", "محجوبة", "محجوبة (Shields)", "أدوات التتبع محجوبة؛ الإعلانات تحتاج إلى إضافة", "غير محجوبة؛ حاجبات الإعلانات محدودة"],
         ["المواقع الإباحية والمحرمة", "محجوبة، من الصفحة الأولى", "محجوبة", "لا", "لا", "لا"],

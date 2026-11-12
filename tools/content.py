@@ -466,6 +466,7 @@ COMPARE = {
 }
 
 _CWS = "https://chromewebstore.google.com/detail/akhibrowser/ghkpflipnhahpjdnpoclaakbecnopamk"
+_AMO = "https://addons.mozilla.org/en-US/firefox/addon/akhibrowser/"
 
 COMPARE_BROWSERS = {
     "sources": [
@@ -482,7 +483,7 @@ COMPARE_BROWSERS = {
         "head": ["", "AkhiBrowser", "Kahf Browser", "Brave", "Firefox", "Chrome"],
         "rows": [
             ["Price", "Protections free; optional Premium and Family Premium", "Free", "Free", "Free", "Free"],
-            ["Platforms", f'Windows (Microsoft Store), Android (coming soon); a lighter <a href="{_CWS}">free Chrome extension</a>', "Windows, macOS, Android, iOS", "Windows, macOS, Linux, Android, iOS", "Windows, macOS, Linux, Android, iOS", "Windows, macOS, Linux, Android, iOS"],
+            ["Platforms", f'Windows (Microsoft Store), Android (coming soon); lighter free extensions for <a href="{_CWS}">Chrome</a> and <a href="{_AMO}">Firefox</a>', "Windows, macOS, Android, iOS", "Windows, macOS, Linux, Android, iOS", "Windows, macOS, Linux, Android, iOS", "Windows, macOS, Linux, Android, iOS"],
             ["Built on", "Firefox", "Chromium", "Chromium", "Firefox's own engine", "Chromium"],
             ["Ads and trackers", "Blocked, uBlock Origin built in", "Blocked", "Blocked (Shields)", "Trackers blocked; ads need an extension", "Not blocked; ad blockers are limited"],
             ["Adult and haram sites", "Blocked, from the first page", "Blocked", "No", "No", "No"],
@@ -508,7 +509,7 @@ COMPARE_BROWSERS = {
         "head": ["", "AkhiBrowser", "Kahf Browser", "Brave", "Firefox", "Chrome"],
         "rows": [
             ["Prijs", "Bescherming gratis; optioneel Premium en Family Premium", "Gratis", "Gratis", "Gratis", "Gratis"],
-            ["Platforms", f'Windows (Microsoft Store), Android (binnenkort); een lichtere <a href="{_CWS}">gratis Chrome-extensie</a>', "Windows, macOS, Android, iOS", "Windows, macOS, Linux, Android, iOS", "Windows, macOS, Linux, Android, iOS", "Windows, macOS, Linux, Android, iOS"],
+            ["Platforms", f'Windows (Microsoft Store), Android (binnenkort); lichtere gratis extensies voor <a href="{_CWS}">Chrome</a> en <a href="{_AMO}">Firefox</a>', "Windows, macOS, Android, iOS", "Windows, macOS, Linux, Android, iOS", "Windows, macOS, Linux, Android, iOS", "Windows, macOS, Linux, Android, iOS"],
             ["Gebouwd op", "Firefox", "Chromium", "Chromium", "De eigen engine van Firefox", "Chromium"],
             ["Reclame en trackers", "Geblokkeerd, uBlock Origin ingebouwd", "Geblokkeerd", "Geblokkeerd (Shields)", "Trackers geblokkeerd; reclame vraagt een extensie", "Niet geblokkeerd; reclameblokkers zijn beperkt"],
             ["18+- en haram sites", "Geblokkeerd, vanaf de eerste pagina", "Geblokkeerd", "Nee", "Nee", "Nee"],
