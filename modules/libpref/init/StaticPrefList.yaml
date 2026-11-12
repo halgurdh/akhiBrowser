@@ -2884,6 +2884,13 @@
   value: false
   mirror: always
 
+# Enables document.parsed, document.contentLoaded and document.loaded.
+# See https://github.com/whatwg/html/pull/1936
+- name: dom.document.load_promises.enabled
+  type: bool
+  value: false
+  mirror: always
+
 # Preferences for document-language metadata extraction.
 #
 # How long a metadata request waits for the document load event before
@@ -5607,6 +5614,7 @@
 # Whether OPFS is enabled in Private Browsing Mode.
 # TODO: Before enabling, please handle crash safety in
 # EncryptedRandomAccessStream::SetEOF, see bug 2072949 for details.
+# Also, please fix bug 2087589.
 - name: dom.fs.privateBrowsing.enabled
   type: RelaxedAtomicBool
   value: false
@@ -5732,7 +5740,7 @@
 
 - name: dom.headingoffset.enabled
   type: RelaxedAtomicBool
-  value: false
+  value: true
   mirror: always
   rust: true
 
@@ -8545,7 +8553,7 @@
 # WebRender image's color multiplier instead of being rasterized in a blob.
 - name: gfx.webrender.svg-images.opacity
   type: RelaxedAtomicBool
-  value: false
+  value: true
   mirror: always
 
 - name: gfx.webrender.svg-shapes
@@ -8579,7 +8587,7 @@
 # is performed by the enclosing nsDisplayBlendMode stacking context.
 - name: gfx.webrender.svg-shapes.blend
   type: RelaxedAtomicBool
-  value: false
+  value: true
   mirror: always
 
 # SVG <text> with a plain opaque fill and no stroke is drawn with WebRender
@@ -11321,6 +11329,13 @@
 - name: layout.css.basic-shape-shape.enabled
   type: RelaxedAtomicBool
   value: true
+  mirror: always
+  rust: true
+
+# Is support for CSS Borders 4 border-shape enabled?
+- name: layout.css.border-shape.enabled
+  type: RelaxedAtomicBool
+  value: false
   mirror: always
   rust: true
 

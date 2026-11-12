@@ -73,6 +73,9 @@
       "chrome://browser/content/aiwindow/components/aitab-highlights.mjs": [
         "../../../browser/components/aiwindow/ui/components/aitab-page/aitab-highlights/aitab-highlights.mjs"
       ],
+      "chrome://browser/content/aiwindow/components/aitab-image.mjs": [
+        "../../../browser/components/aiwindow/ui/components/aitab-page/aitab-image/aitab-image.mjs"
+      ],
       "chrome://browser/content/aiwindow/components/aitab-list.mjs": [
         "../../../browser/components/aiwindow/ui/components/aitab-page/aitab-list/aitab-list.mjs"
       ],
@@ -358,9 +361,6 @@
       "chrome://browser/content/preferences/config/notification-permissions.mjs": [
         "../../../browser/components/preferences/config/notification-permissions.mjs"
       ],
-      "chrome://browser/content/preferences/widgets/dialog-button.mjs": [
-        "../../../browser/components/preferences/widgets/dialog-button/dialog-button.mjs"
-      ],
       "chrome://browser/content/preferences/widgets/nav-notice.mjs": [
         "../../../browser/components/preferences/widgets/nav-notice/nav-notice.mjs"
       ],
@@ -502,8 +502,8 @@
       "chrome://browser/content/urlbar/UrlbarChildController.mjs": [
         "../../../browser/components/urlbar/content/UrlbarChildController.mjs"
       ],
-      "chrome://browser/content/urlbar/UrlbarChildTelemetry.mjs": [
-        "../../../browser/components/urlbar/content/UrlbarChildTelemetry.mjs"
+      "chrome://browser/content/urlbar/UrlbarChildSession.mjs": [
+        "../../../browser/components/urlbar/content/UrlbarChildSession.mjs"
       ],
       "chrome://browser/content/urlbar/UrlbarContentPrefs.mjs": [
         "../../../browser/components/urlbar/content/UrlbarContentPrefs.mjs"
@@ -6340,9 +6340,6 @@
       "resource://gre/modules/Preferences.sys.mjs": [
         "../../../toolkit/modules/Preferences.sys.mjs"
       ],
-      "resource://gre/modules/PrincipalsCollector.sys.mjs": [
-        "../../../toolkit/components/cleardata/PrincipalsCollector.sys.mjs"
-      ],
       "resource://gre/modules/PrivateBrowsingUtils.sys.mjs": [
         "../../../toolkit/modules/PrivateBrowsingUtils.sys.mjs"
       ],
@@ -6423,9 +6420,6 @@
       ],
       "resource://gre/modules/ServiceRequest.sys.mjs": [
         "../../../toolkit/modules/ServiceRequest.sys.mjs"
-      ],
-      "resource://gre/modules/ServiceWorkerCleanUp.sys.mjs": [
-        "../../../toolkit/components/cleardata/ServiceWorkerCleanUp.sys.mjs"
       ],
       "resource://gre/modules/ShortcutUtils.sys.mjs": [
         "../../../toolkit/modules/ShortcutUtils.sys.mjs"
@@ -7002,9 +6996,6 @@
       ],
       "resource://newtab/lib/TopSitesFeed.sys.mjs": [
         "../../../browser/extensions/newtab/lib/TopSitesFeed.sys.mjs"
-      ],
-      "resource://newtab/lib/TopStoriesFeed.sys.mjs": [
-        "../../../browser/extensions/newtab/lib/TopStoriesFeed.sys.mjs"
       ],
       "resource://newtab/lib/Wallpapers/WallpaperFeed.sys.mjs": [
         "../../../browser/extensions/newtab/lib/Wallpapers/WallpaperFeed.sys.mjs"

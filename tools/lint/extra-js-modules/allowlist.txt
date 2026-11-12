@@ -227,7 +227,6 @@ toolkit/components/DefaultCLH.sys.mjs
 toolkit/components/asyncshutdown/AsyncShutdown.sys.mjs
 toolkit/components/asyncshutdown/nsAsyncShutdown.sys.mjs
 toolkit/components/autocomplete/AutoCompleteSimpleSearch.sys.mjs
-toolkit/components/backgroundhangmonitor/BHRTelemetryService.sys.mjs
 toolkit/components/backgroundtasks/BackgroundTask_exception.sys.mjs
 toolkit/components/backgroundtasks/BackgroundTask_failure.sys.mjs
 toolkit/components/backgroundtasks/BackgroundTask_message.sys.mjs
@@ -237,10 +236,6 @@ toolkit/components/backgroundtasks/BackgroundTask_success.sys.mjs
 toolkit/components/backgroundtasks/BackgroundTasksManager.sys.mjs
 toolkit/components/backgroundtasks/BackgroundTasksUtils.sys.mjs
 toolkit/components/backgroundtasks/dbg-actors.js
-toolkit/components/cleardata/ClearBySiteEntry.sys.mjs
-toolkit/components/cleardata/ClearDataService.sys.mjs
-toolkit/components/cleardata/PrincipalsCollector.sys.mjs
-toolkit/components/cleardata/ServiceWorkerCleanUp.sys.mjs
 toolkit/components/content-classifier/ContentClassifierRemoteSettingsClient.sys.mjs
 toolkit/components/contentanalysis/ContentAnalysisUtils.sys.mjs
 toolkit/components/contentanalysis/ContentAnalysisWasmChild.sys.mjs
