@@ -1,6 +1,6 @@
 # AkhiBrowser: privacy policy
 
-Last updated: 11-11-2026
+Last updated: 13-11-2026
 
 This policy covers the AkhiBrowser website, browser for Android and Windows, and extension for Firefox and Chrome.
 AkhiBrowser is made by Halgurd Hussein. The browser and extensions have no account of their own, no ads and no
@@ -20,7 +20,12 @@ currently show a consent prompt.
 The forms to become an affiliate, sponsor or partner load Cloudflare Turnstile, a check against robots, once you start
 filling one in. Cloudflare receives your IP address and information about your browser for that check, under
 [Cloudflare's Turnstile privacy addendum](https://www.cloudflare.com/turnstile-privacy-policy/). What you type in the form
-is emailed to us and used only to answer you.
+is emailed to us and used only to answer you. For affiliates, see [Affiliates](#affiliates).
+
+If you open the website through an affiliate's link (`?ref=<code>`), the website keeps that code in your browser's
+local storage and adds it to the checkout links, and asks our license server whether it is a VIP code, to show the VIP
+price. The code is then kept on the subscription in Stripe, so the affiliate can be paid. Nothing else about you is
+added.
 
 ## The browser (Android and Windows)
 
@@ -109,6 +114,23 @@ This applies to the extension, to Windows and to the Android app from GitHub, on
 
 Buying Premium happens on a Stripe page, under [Stripe's privacy policy](https://stripe.com/privacy). We do not see your
 payment details.
+
+## Affiliates
+
+This applies only to people who recommend AkhiBrowser for a commission (schools and mosques, and invited VIPs), not to
+users of the browser:
+
+- **Your application** (name, email address, organisation) is emailed to us. If we accept it, your name, email address
+  and organisation are kept in our license server's database (on Cloudflare), with your code, to send you your code,
+  what you earned each month, and when it is paid.
+- **Your IBAN and account holder's name**, if you fill them in with the button in your welcome mail, are kept only
+  encrypted (AES-256-GCM). We decrypt them only to make a transfer, on a page that shows them to us; they are never put
+  in an email. Your bank and ours record the transfer, as with any payment.
+- **Your commission** is counted from the Stripe payments that carry your code: their amounts and dates. You don't learn
+  who bought, and buyers don't learn who you are.
+
+When you stop, or if you ask us, we delete your name, email address and IBAN from the database. Records of the payments
+we made to you are kept as long as the law requires for bookkeeping. To see, correct or delete your details, email us.
 
 ## Children
 
