@@ -224,6 +224,37 @@ footer { border-top: 1px solid var(--line); padding: 36px 0 48px; font-size: 14p
 footer p + p { margin-top: 8px; }
 
 .nav-end { display: flex; align-items: center; gap: 22px; }
+nav { position: relative; }
+.links { align-items: center; }
+.drop { position: relative; }
+.drop summary { display: flex; align-items: center; gap: 7px; list-style: none; cursor: pointer; }
+.drop summary::-webkit-details-marker { display: none; }
+.drop summary::after { content: ""; width: 6px; height: 6px; border: solid currentColor; border-width: 0 1.5px 1.5px 0; transform: translateY(-2px) rotate(45deg); transition: transform .2s; }
+.drop[open] summary::after { transform: translateY(1px) rotate(-135deg); }
+.drop summary:hover, .drop[open] summary { color: var(--gold); }
+.drop summary:focus-visible { outline: 3px solid #fff; outline-offset: 3px; border-radius: 4px; }
+.drop > div { position: absolute; top: calc(100% + 14px); inset-inline-start: -14px; z-index: 30; display: grid; min-width: 240px; padding: 8px; border: 1px solid var(--line); border-radius: 12px; background: #062f33; box-shadow: 0 18px 40px rgba(0, 0, 0, .45); }
+.drop > div a { padding: 8px 10px; border-radius: 8px; color: #fff; text-decoration: none; white-space: nowrap; }
+.drop > div a:hover { background: rgba(244, 190, 52, .12); color: var(--gold); }
+.links .nav-cta { padding: 7px 14px; border-radius: 9px; background: var(--gold); color: var(--ink); font-weight: 650; text-decoration: none; }
+.links .nav-cta:hover { background: #ffd76a; color: var(--ink); }
+.menu-btn { display: none; }
+@media (max-width: 820px) {
+  .menu-btn { display: inline-flex; padding: 7px 14px; border: 0; border-radius: 9px; box-shadow: inset 0 0 0 1.5px var(--gold); background: transparent; color: #fff; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; }
+  .menu-btn[aria-expanded="true"] { background: rgba(244, 190, 52, .14); }
+  .links { position: absolute; top: 100%; inset-inline: 0; z-index: 30; display: none; flex-direction: column; align-items: stretch; gap: 0; max-height: calc(100vh - 90px); overflow: auto; padding: 10px; border: 1px solid var(--line); border-radius: 14px; background: #062f33; box-shadow: 0 18px 40px rgba(0, 0, 0, .45); font-size: 16px; }
+  .links.open { display: flex; }
+  .drop summary { justify-content: space-between; padding: 10px; }
+  .drop > div { position: static; min-width: 0; padding: 0 0 6px; padding-inline-start: 12px; border: 0; background: transparent; box-shadow: none; }
+  .drop > div a { white-space: normal; }
+  .links .nav-cta { margin-top: 8px; text-align: center; }
+}
+@media (max-width: 480px) {
+  .nav-end { gap: 8px; }
+  .brand { font-size: 17px; gap: 7px; }
+  .brand img { width: 30px; height: 30px; }
+  .menu-btn { padding: 6px 10px; }
+}
 .lang {
   flex: none;
   appearance: none;
@@ -450,13 +481,39 @@ footer .powered a:hover { text-decoration: underline; }
   <div class="wrap">
     <nav aria-label="Main">
       <a class="brand" href="#"><img src="assets/akhi.svg" alt="" width="36" height="36"><span><span>Akhi</span>Browser</span></a>
-      <div class="nav-end"><div class="links">
-        <a href="#watch" data-t="t0">Watch</a>
-        <a href="#features" data-t="t1">Features</a>
-        <a href="#privacy" data-t="n0">Privacy</a>
-        <a href="#premium">Premium</a>
-        <a href="/blog/" data-t="n1">Blog</a>
-      </div>
+      <div class="nav-end"><button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu" data-t="nv0">Menu</button>
+      <div class="links" id="menu">
+        <details class="drop"><summary data-t="t1">Features</summary><div>
+          <a href="#features" data-t="nv1">All features</a>
+          <a href="#watch" data-t="t0">Watch</a>
+          <a href="#accessibility" data-t="x11">Accessibility</a>
+          <a href="#roadmap" data-t="nv2">iPhone and Mac</a>
+        </div></details>
+        <details class="drop"><summary>Premium</summary><div>
+          <a href="#premium" data-t="nv3">Plans and prices</a>
+          <a href="#school" data-t="nv4">School / Mosque</a>
+          <a href="#cancel" data-t="nv5">Cancel or manage</a>
+        </div></details>
+        <details class="drop"><summary data-t="n0">Privacy</summary><div>
+          <a href="#privacy" data-t="nv6">What the browser sends</a>
+          <a href="#security" data-t="nv7">Security and updates</a>
+          <a href="/money/" data-t="mm1">How we make money</a>
+          <a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md" data-t="nv8">Privacy policy</a>
+        </div></details>
+        <details class="drop"><summary data-t="nv9">Partners</summary><div>
+          <a href="/affiliate/" data-t="nv10">Recommend to a school or mosque</a>
+          <a href="/affiliate/#vip" data-t="nv11">VIP for influencers</a>
+          <a href="/money/#partner" data-t="mm14">Become a sponsor or partner</a>
+        </div></details>
+        <details class="drop"><summary data-t="n1">Blog</summary><div>
+          <a href="/blog/" data-t="nv12">All guides</a>
+          <a href="/blog/what-is-a-halal-browser/" data-t="hb1">What is a halal browser?</a>
+          <a href="/blog/best-halal-browsers/" data-t="hb2">Best halal browsers</a>
+          <a href="/compare/browsers/" data-t="t89">Compare browsers</a>
+          <a href="/compare/kahf-browser/" data-t="t86">Compare with Kahf Browser</a>
+        </div></details>
+        <a class="nav-cta" href="#download" data-t="nv13">Download</a>
+      </div><!-- /links -->
       <select class="lang" id="lang" aria-label="Language · Taal · اللغة" hidden>
         <option value="en" lang="en">English</option>
         <option value="nl" lang="nl">Nederlands</option>
@@ -701,7 +758,7 @@ footer .powered a:hover { text-decoration: underline; }
         <a class="btn" href="https://akhi-license.akhibrowser.workers.dev/buy/family" data-t="t85">Family Premium<small>€49.99 a year</small></a>
       </div>
       <p class="note vip-note" hidden data-t="vip1">Your VIP link gives you 10% off Family Premium: €44.99 a year instead of €49.99, every year you stay. Stripe shows the price before you pay.</p>
-      <div class="plan-school">
+      <div class="plan-school" id="school">
         <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/school" data-t="sm1">School / Mosque<small>€30 a month</small></a>
         <p class="note" data-t="sm2">Everything in Family Premium, with one key for 100 to 500 devices: for schools, mosques and Islamic centres.</p>
       </div>
@@ -719,68 +776,6 @@ footer .powered a:hover { text-decoration: underline; }
     </div>
   </section>
 
-  <section id="affiliate">
-    <div class="wrap">
-      <h2 data-t="af1">Recommend AkhiBrowser to a school or mosque</h2>
-      <p class="intro" data-t="af2">Know a school, mosque or Islamic centre that could use AkhiBrowser? Become an affiliate: you get 20% of each of their School / Mosque payments, every month, for as long as they stay subscribed. A payment counts once it is 30 days old, and we pay out monthly.</p>
-      <p class="note" data-t="vip2">Influencer? Our VIP affiliate program for Family Premium is by invitation: your followers get 10% off and you get 10% of their payments. Mail <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a>.</p>
-      <div class="school-card">
-        <div>
-          <span class="label" data-t="sc1">The school or mosque pays</span>
-          <strong data-t="sc2">€30<small>a month</small></strong>
-          <p data-t="sc3">School / Mosque plan: everything in Family Premium, one key for 100 to 500 devices.</p>
-        </div>
-        <div class="earn">
-          <span class="label" data-t="sc4">You get</span>
-          <strong data-t="sc5">€6<small>a month, for each school</small></strong>
-          <p data-t="sc6">20% of each payment, for as long as they stay subscribed.</p>
-        </div>
-      </div>
-      <form class="affiliate" action="https://akhi-license.akhibrowser.workers.dev/affiliate" method="post">
-        <label><span data-t="af3">Your name</span><input name="name" required maxlength="100" autocomplete="name"></label>
-        <label><span data-t="af4">Email address</span><input name="email" type="email" required maxlength="200" autocomplete="email"></label>
-        <label><span data-t="af5">School, mosque or organisation (optional)</span><input name="organisation" maxlength="200" autocomplete="organization"></label>
-        <label><span data-t="af6">How will you recommend AkhiBrowser?</span><textarea name="about" rows="3" maxlength="2000"></textarea></label>
-        <label class="trap" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
-        <div class="cf-turnstile" data-sitekey="0x4AAAAAAF9TRz9CNNAJX1Cg" data-action="affiliate" data-theme="dark" data-language="auto"></div>
-        <button class="btn" type="submit" data-t="af7">Apply</button>
-        <p class="note" data-t="af8">We email you your own link within a few days. Your details are only used for this. To keep robots out, the form loads Cloudflare Turnstile once you start filling it in.</p>
-      </form>
-    </div>
-  </section>
-
-  <section id="money">
-    <div class="wrap">
-      <h2 data-t="mm1">How we make money</h2>
-      <p class="intro" data-t="mm2">AkhiBrowser is free, shows no ads, and never sells or shares what you do. This is how it pays for itself, every way of it:</p>
-      <ul class="list">
-        <li><h3 data-t="mm3">Premium</h3><p data-t="mm4">Optional paid features for you, for families, and for schools and mosques. Most of the money comes from here.</p></li>
-        <li><h3 data-t="mm5">Search partners</h3><p data-t="mm6">When a search engine has a partner contract with us, a search you start in AkhiBrowser carries our partner code, and the engine gives us a small share of what it earns. Only the code is added: nothing about you or your search comes to us.</p></li>
-        <li><h3 data-t="mm7">Partner shops, only if you choose</h3><p data-t="mm8">Off unless you turn it on: when you go to a partner shop yourself, we add our code and the shop gives us a small share. You pay the same, and a link from another site keeps its own code.</p></li>
-        <li><h3 data-t="mm9">Tips on our start page</h3><p data-t="mm10">Now and then a tip with an affiliate link, always labelled as one. We never change the links of other websites.</p></li>
-        <li><h3 data-t="mm11">Affiliates, sponsors and partners</h3><p data-t="mm12">People who bring in schools and mosques get 20% of their payments. Sponsors and organisations can support AkhiBrowser, but never get your data or a say in what is blocked.</p></li>
-      </ul>
-      <p class="note" data-t="mm13">What we never do: show ads, sell or share your browsing, track you across sites, or let money change what is blocked.</p>
-      <h3 class="plan-title" data-t="mm14">Become a sponsor or partner</h3>
-      <form class="affiliate" action="https://akhi-license.akhibrowser.workers.dev/partner" method="post">
-        <label><span data-t="mm15">Your name</span><input name="name" required maxlength="100" autocomplete="name"></label>
-        <label><span data-t="mm16">Email address</span><input name="email" type="email" required maxlength="200" autocomplete="email"></label>
-        <label><span data-t="mm17">Organisation</span><input name="organisation" maxlength="200" autocomplete="organization"></label>
-        <label><span data-t="mm18">What kind of partner?</span><select name="kind">
-          <option value="sponsor" data-t="mm19">Sponsor</option>
-          <option value="ecosystem" data-t="mm20">Ecosystem partner: an Islamic app, school platform or organisation</option>
-          <option value="search" data-t="mm21">Search engine</option>
-          <option value="shop" data-t="mm22">Shop</option>
-        </select></label>
-        <label><span data-t="mm23">What do you propose?</span><textarea name="about" rows="3" maxlength="2000"></textarea></label>
-        <label class="trap" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
-        <div class="cf-turnstile" data-sitekey="0x4AAAAAAF9TRz9CNNAJX1Cg" data-action="partner" data-theme="dark" data-language="auto"></div>
-        <button class="btn" type="submit" data-t="mm24">Send</button>
-        <p class="note" data-t="mm25">We answer within a few days. A partnership has to keep AkhiBrowser private: no data of our users is ever part of it.</p>
-      </form>
-    </div>
-  </section>
-
   <section id="roadmap">
     <div class="wrap">
       <h2 data-t="t87">Roadmap: iPhone and Mac</h2>
@@ -793,7 +788,7 @@ footer .powered a:hover { text-decoration: underline; }
 <footer>
   <div class="wrap">
     <p data-t="t53">AkhiBrowser is built on <a href="https://www.firefox.com/">Firefox</a>, and is not made or endorsed by Mozilla. Background music removal builds on <a href="https://github.com/mohamedsadiqaguenaou/NoMusic">NoMusic</a> by Mohamed Sadiq.</p>
-    <p><a href="/blog/best-halal-browsers/" data-t="hb2">Best halal browsers</a> &middot; <a href="/compare/browsers/" data-t="t89">Compare browsers</a> &middot; <a href="/compare/kahf-browser/" data-t="t86">Compare with Kahf Browser</a> &middot; <a href="/blog/what-is-a-halal-browser/" data-t="hb1">What is a halal browser?</a> &middot; <a href="/blog/" data-t="n1">Blog</a> &middot; <a href="https://www.youtube.com/@akhibrowser">YouTube</a> &middot; <a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md" data-t="n0">Privacy</a> &middot; <a href="#money" data-t="mm1">How we make money</a> &middot; <a href="https://github.com/halgurdh/akhiBrowser" data-t="t54">Source on GitHub</a> &middot; <a href="#accessibility" data-t="x11">Accessibility</a> &middot; <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a></p>
+    <p><a href="/blog/best-halal-browsers/" data-t="hb2">Best halal browsers</a> &middot; <a href="/compare/browsers/" data-t="t89">Compare browsers</a> &middot; <a href="/compare/kahf-browser/" data-t="t86">Compare with Kahf Browser</a> &middot; <a href="/blog/what-is-a-halal-browser/" data-t="hb1">What is a halal browser?</a> &middot; <a href="/blog/" data-t="n1">Blog</a> &middot; <a href="https://www.youtube.com/@akhibrowser">YouTube</a> &middot; <a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md" data-t="n0">Privacy</a> &middot; <a href="/money/" data-t="mm1">How we make money</a> &middot; <a href="/affiliate/" data-t="nv10">Recommend to a school or mosque</a> &middot; <a href="https://github.com/halgurdh/akhiBrowser" data-t="t54">Source on GitHub</a> &middot; <a href="#accessibility" data-t="x11">Accessibility</a> &middot; <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a></p>
     <p>&copy; <span data-year>2026</span> AkhiBrowser &middot; KvK 82581509 &middot; <span data-t="loc">Almere, Netherlands</span></p>
     <p class="powered"><span data-t="p0">Powered by</span> <a href="https://cdgbrands.com">CDGBrands</a></p>
   </div>
@@ -802,6 +797,20 @@ footer .powered a:hover { text-decoration: underline; }
 <script>
 (function () {
   const NL = {
+"nv0": "Menu",
+"nv1": "Alle functies",
+"nv2": "iPhone en Mac",
+"nv3": "Abonnementen en prijzen",
+"nv4": "School / Moskee",
+"nv5": "Opzeggen of beheren",
+"nv6": "Wat de browser verstuurt",
+"nv7": "Beveiliging en updates",
+"nv8": "Privacybeleid (Engels)",
+"nv9": "Samenwerken",
+"nv10": "Aanraden bij een school of moskee",
+"nv11": "VIP voor influencers",
+"nv12": "Alle gidsen",
+"nv13": "Downloaden",
 "t0": "Video's",
 "t1": "Functies",
 "t2": "<span>De halal browser<\/span> die het web filtert op je eigen apparaat.",
@@ -1013,6 +1022,20 @@ footer .powered a:hover { text-decoration: underline; }
 "loc": "Almere, Nederland"
 };
   const AR = {
+"nv0": "القائمة",
+"nv1": "كل الميزات",
+"nv2": "iPhone وMac",
+"nv3": "الخطط والأسعار",
+"nv4": "مدرسة / مسجد",
+"nv5": "الإلغاء أو الإدارة",
+"nv6": "ما يرسله المتصفح",
+"nv7": "الأمان والتحديثات",
+"nv8": "سياسة الخصوصية (بالإنجليزية)",
+"nv9": "الشركاء",
+"nv10": "انصح به مدرسة أو مسجدًا",
+"nv11": "VIP للمؤثرين",
+"nv12": "كل الأدلة",
+"nv13": "تحميل",
 "t0": "شاهد",
 "t1": "الميزات",
 "n0": "الخصوصية",
@@ -1245,7 +1268,7 @@ footer .powered a:hover { text-decoration: underline; }
     return [node, name, key, node.getAttribute(name)];
   });
   // links to the blog and comparison pages go to the pages in the chosen language
-  const pageLinks = [...document.querySelectorAll('a[href^="/blog/"], a[href^="/compare/"]')].map(node => [node, node.getAttribute("href")]);
+  const pageLinks = [...document.querySelectorAll('a[href^="/blog/"], a[href^="/compare/"], a[href^="/affiliate/"], a[href^="/money/"]')].map(node => [node, node.getAttribute("href")]);
   const menu = document.getElementById("lang");
 
   function show(lang) {
@@ -1367,6 +1390,52 @@ footer .powered a:hover { text-decoration: underline; }
   mark();
   setLabel();
   tick();
+})();
+</script>
+<script>
+// the menu: one group open at a time, closed by a click elsewhere, Escape or a chosen link; a button on phones
+(function () {
+  const links = document.getElementById("menu");
+  const button = document.querySelector(".menu-btn");
+  const drops = [...links.querySelectorAll(".drop")];
+  function closeAll(except) {
+    for (const drop of drops) {
+      if (drop !== except) {
+        drop.open = false;
+      }
+    }
+  }
+  function setOpen(open) {
+    links.classList.toggle("open", open);
+    button.setAttribute("aria-expanded", String(open));
+    if (!open) {
+      closeAll();
+    }
+  }
+  for (const drop of drops) {
+    drop.addEventListener("toggle", () => {
+      if (drop.open) {
+        closeAll(drop);
+      }
+    });
+  }
+  button.addEventListener("click", () => setOpen(!links.classList.contains("open")));
+  links.addEventListener("click", e => {
+    if (e.target.closest("a")) {
+      setOpen(false);
+    }
+  });
+  document.addEventListener("click", e => {
+    if (!e.target.closest("nav")) {
+      setOpen(false);
+    }
+  });
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && (links.classList.contains("open") || drops.some(drop => drop.open))) {
+      setOpen(false);
+      button.offsetParent ? button.focus() : drops[0].querySelector("summary").focus();
+    }
+  });
 })();
 </script>
 <script>
@@ -1677,5 +1746,69 @@ footer .powered a:hover { text-decoration: underline; }
   }
 })();
 </script>
+<template id="pages">
+  <section id="affiliate">
+    <div class="wrap">
+      <h2 data-t="af1">Recommend AkhiBrowser to a school or mosque</h2>
+      <p class="intro" data-t="af2">Know a school, mosque or Islamic centre that could use AkhiBrowser? Become an affiliate: you get 20% of each of their School / Mosque payments, every month, for as long as they stay subscribed. A payment counts once it is 30 days old, and we pay out monthly.</p>
+      <p class="note" id="vip" data-t="vip2">Influencer? Our VIP affiliate program for Family Premium is by invitation: your followers get 10% off and you get 10% of their payments. Mail <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a>.</p>
+      <div class="school-card">
+        <div>
+          <span class="label" data-t="sc1">The school or mosque pays</span>
+          <strong data-t="sc2">€30<small>a month</small></strong>
+          <p data-t="sc3">School / Mosque plan: everything in Family Premium, one key for 100 to 500 devices.</p>
+        </div>
+        <div class="earn">
+          <span class="label" data-t="sc4">You get</span>
+          <strong data-t="sc5">€6<small>a month, for each school</small></strong>
+          <p data-t="sc6">20% of each payment, for as long as they stay subscribed.</p>
+        </div>
+      </div>
+      <form class="affiliate" action="https://akhi-license.akhibrowser.workers.dev/affiliate" method="post">
+        <label><span data-t="af3">Your name</span><input name="name" required maxlength="100" autocomplete="name"></label>
+        <label><span data-t="af4">Email address</span><input name="email" type="email" required maxlength="200" autocomplete="email"></label>
+        <label><span data-t="af5">School, mosque or organisation (optional)</span><input name="organisation" maxlength="200" autocomplete="organization"></label>
+        <label><span data-t="af6">How will you recommend AkhiBrowser?</span><textarea name="about" rows="3" maxlength="2000"></textarea></label>
+        <label class="trap" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAF9TRz9CNNAJX1Cg" data-action="affiliate" data-theme="dark" data-language="auto"></div>
+        <button class="btn" type="submit" data-t="af7">Apply</button>
+        <p class="note" data-t="af8">We email you your own link within a few days. Your details are only used for this. To keep robots out, the form loads Cloudflare Turnstile once you start filling it in.</p>
+      </form>
+    </div>
+  </section>
+
+  <section id="money">
+    <div class="wrap">
+      <h2 data-t="mm1">How we make money</h2>
+      <p class="intro" data-t="mm2">AkhiBrowser is free, shows no ads, and never sells or shares what you do. This is how it pays for itself, every way of it:</p>
+      <ul class="list">
+        <li><h3 data-t="mm3">Premium</h3><p data-t="mm4">Optional paid features for you, for families, and for schools and mosques. Most of the money comes from here.</p></li>
+        <li><h3 data-t="mm5">Search partners</h3><p data-t="mm6">When a search engine has a partner contract with us, a search you start in AkhiBrowser carries our partner code, and the engine gives us a small share of what it earns. Only the code is added: nothing about you or your search comes to us.</p></li>
+        <li><h3 data-t="mm7">Partner shops, only if you choose</h3><p data-t="mm8">Off unless you turn it on: when you go to a partner shop yourself, we add our code and the shop gives us a small share. You pay the same, and a link from another site keeps its own code.</p></li>
+        <li><h3 data-t="mm9">Tips on our start page</h3><p data-t="mm10">Now and then a tip with an affiliate link, always labelled as one. We never change the links of other websites.</p></li>
+        <li><h3 data-t="mm11">Affiliates, sponsors and partners</h3><p data-t="mm12">People who bring in schools and mosques get 20% of their payments. Sponsors and organisations can support AkhiBrowser, but never get your data or a say in what is blocked.</p></li>
+      </ul>
+      <p class="note" data-t="mm13">What we never do: show ads, sell or share your browsing, track you across sites, or let money change what is blocked.</p>
+      <h3 class="plan-title" id="partner" data-t="mm14">Become a sponsor or partner</h3>
+      <form class="affiliate" action="https://akhi-license.akhibrowser.workers.dev/partner" method="post">
+        <label><span data-t="mm15">Your name</span><input name="name" required maxlength="100" autocomplete="name"></label>
+        <label><span data-t="mm16">Email address</span><input name="email" type="email" required maxlength="200" autocomplete="email"></label>
+        <label><span data-t="mm17">Organisation</span><input name="organisation" maxlength="200" autocomplete="organization"></label>
+        <label><span data-t="mm18">What kind of partner?</span><select name="kind">
+          <option value="sponsor" data-t="mm19">Sponsor</option>
+          <option value="ecosystem" data-t="mm20">Ecosystem partner: an Islamic app, school platform or organisation</option>
+          <option value="search" data-t="mm21">Search engine</option>
+          <option value="shop" data-t="mm22">Shop</option>
+        </select></label>
+        <label><span data-t="mm23">What do you propose?</span><textarea name="about" rows="3" maxlength="2000"></textarea></label>
+        <label class="trap" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAF9TRz9CNNAJX1Cg" data-action="partner" data-theme="dark" data-language="auto"></div>
+        <button class="btn" type="submit" data-t="mm24">Send</button>
+        <p class="note" data-t="mm25">We answer within a few days. A partnership has to keep AkhiBrowser private: no data of our users is ever part of it.</p>
+      </form>
+    </div>
+  </section>
+
+</template>
 </body>
 </html>

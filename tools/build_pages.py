@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Builds the blog and comparison pages, the sitemap and robots.txt from tools/content.py.
 
+The menu, and the pages /affiliate/ and /money/, come from index.html: its menu (div.links), the sections in its
+<template id="pages">, and its Dutch and Arabic texts (const NL and const AR). Change them there, then build.
+
 To add an article: add an entry to ARTICLES in content.py with its English and Dutch text, and its Arabic
 text to content_ar.py, then run
 
@@ -8,6 +11,7 @@ text to content_ar.py, then run
 """
 import html
 import json
+import re
 from pathlib import Path
 
 from content import ARTICLES, COMPARE, COMPARE_BROWSERS, UI
@@ -40,6 +44,62 @@ addEventListener("pageshow", () => { menu.value = menu.querySelector("[selected]
 </script>""" % YEAR
 
 
+MENU_SCRIPT = (Path(__file__).resolve().parent.parent / "index.html").read_text(encoding="utf-8")
+MENU_SCRIPT = re.search(r"<script>\n(// the menu: .*?)</script>", MENU_SCRIPT, re.S).group(1)
+TURNSTILE = """<script>
+// Cloudflare Turnstile, the check against robots on the forms: loaded once someone starts filling one in
+(function () {
+  let loaded = false;
+  function load() {
+    if (!loaded) {
+      loaded = true;
+      const script = document.createElement("script");
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+      script.async = true;
+      document.head.append(script);
+    }
+  }
+  for (const form of document.querySelectorAll("form.affiliate")) {
+    form.addEventListener("focusin", load);
+    form.addEventListener("pointerdown", load);
+  }
+})();
+</script>"""
+
+
+def home():
+    """The menu, the sections for their own pages, and the Dutch and Arabic texts, from index.html."""
+    text = (ROOT / "index.html").read_text(encoding="utf-8")
+    dicts = {"en": {}}
+    for lang, name in (("nl", "NL"), ("ar", "AR")):
+        block = re.search(r"const %s = \{\n(.*?)\n\};" % name, text, re.S).group(1)
+        dicts[lang] = {k: json.loads(v) for k, v in re.findall(r'^"([\w-]+)": (".*"),?$', block, re.M)}
+    menu = re.search(r'<div class="links" id="menu">.*?</div><!-- /links -->', text, re.S).group(0)
+    template = re.search(r'<template id="pages">(.*?)</template>', text, re.S).group(1)
+    sections = dict(re.findall(r'<section id="(\w+)">\s*<div class="wrap">(.*?)</div>\s*</section>', template, re.S))
+    return dicts, menu, sections
+
+
+HOME_TEXTS, HOME_MENU, HOME_SECTIONS = None, None, None
+
+
+def translated(markup, lang):
+    """The markup with each element's data-t text in this language, as index.html's script shows it."""
+    words = HOME_TEXTS[lang]
+
+    def swap(match):
+        return match.group(1) + words[match.group(3)] + match.group(4) if match.group(3) in words else match.group(0)
+
+    return re.sub(r'(<(\w+)\b[^>]*\bdata-t="([\w-]+)"[^>]*>).*?(</\2>)', swap, markup, flags=re.S)
+
+
+def menu_of(lang):
+    markup = translated(HOME_MENU, lang)
+    markup = re.sub(r'href="#', 'href="/#', markup)
+    markup = re.sub(r'href="/((?:blog|compare|affiliate|money)/[^"]*)"', lambda m: f'href="{url_of(lang, m.group(1))}"', markup)
+    return markup
+
+
 def url_of(lang, path):
     return f"/{path}" if lang == "en" else f"/{lang}/{path}"
 
@@ -62,7 +122,7 @@ def lang_menu(lang, path):
     return f'<select class="lang" id="lang" aria-label="{LANG_LABEL[lang]}">{options}</select>'
 
 
-def page(lang, path, title, description, body, json_ld=None):
+def page(lang, path, title, description, body, json_ld=None, scripts=""):
     ui = UI[lang]
     title, description = plain(title), plain(description)
     canonical = SITE + url_of(lang, path)
@@ -94,12 +154,10 @@ def page(lang, path, title, description, body, json_ld=None):
 <header>
   <nav class="wrap" aria-label="{ui['nav_label']}">
     <a class="brand" href="/"><img src="/assets/akhi.svg" alt="" width="32" height="32"><span><b>Akhi</b>Browser</span></a>
-    <span class="links">
-      <a href="{url_of(lang, 'blog/')}">{ui['blog']}</a>
-      <a href="{url_of(lang, 'compare/browsers/')}">{ui['compare']}</a>
-      <a href="/#download">{ui['download']}</a>
+    <div class="nav-end"><button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">{HOME_TEXTS[lang].get('nv0', 'Menu')}</button>
+      {menu_of(lang)}
       {lang_menu(lang, path)}
-    </span>
+    </div>
   </nav>
 </header>
 <main class="wrap">
@@ -110,6 +168,9 @@ def page(lang, path, title, description, body, json_ld=None):
   <p>&copy; <span data-year>{YEAR}</span> AkhiBrowser</p>
 </footer>
 {SCRIPT}
+<script>
+{MENU_SCRIPT}</script>
+{scripts}
 </body>
 </html>
 """
@@ -182,6 +243,16 @@ def compare_page(lang, data, path):
     return path, page(lang, path, text["seo_title"], text["description"], body)
 
 
+def home_page(lang, section, path, extra=""):
+    """A section of index.html as its own page: its h2 is the page's title."""
+    words = HOME_TEXTS[lang]
+    markup = translated(HOME_SECTIONS[section], lang).replace("<h2", "<h1", 1).replace("</h2>", "</h1>", 1)
+    title = html.unescape(re.sub(r"<[^>]+>", "", re.search(r"<h1[^>]*>(.*?)</h1>", markup, re.S).group(1)))
+    intro = html.unescape(re.sub(r"<[^>]+>", "", re.search(r'<p class="intro"[^>]*>(.*?)</p>', markup, re.S).group(1)))
+    body = f'<div class="home">\n{markup}\n{extra}</div>\n{cta(lang)}'
+    return path, page(lang, path, f"{title} | AkhiBrowser", intro, body, scripts=TURNSTILE)
+
+
 def write(lang, path, content):
     target = ROOT / url_of(lang, path).lstrip("/") / "index.html"
     target.parent.mkdir(parents=True, exist_ok=True)
@@ -189,10 +260,14 @@ def write(lang, path, content):
 
 
 def main():
+    global HOME_TEXTS, HOME_MENU, HOME_SECTIONS
+    HOME_TEXTS, HOME_MENU, HOME_SECTIONS = home()
     paths = []
     for lang in LANGS:
         builders = [
             index_page(lang),
+            home_page(lang, "affiliate", "affiliate/"),
+            home_page(lang, "money", "money/"),
             compare_page(lang, COMPARE_BROWSERS, "compare/browsers/"),
             compare_page(lang, COMPARE, "compare/kahf-browser/"),
         ] + [article_page(lang, a) for a in ARTICLES]

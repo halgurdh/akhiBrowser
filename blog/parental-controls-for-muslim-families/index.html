@@ -31,12 +31,41 @@
 <header>
   <nav class="wrap" aria-label="Main">
     <a class="brand" href="/"><img src="/assets/akhi.svg" alt="" width="32" height="32"><span><b>Akhi</b>Browser</span></a>
-    <span class="links">
-      <a href="/blog/">Blog</a>
-      <a href="/compare/browsers/">Compare</a>
-      <a href="/#download">Get AkhiBrowser</a>
+    <div class="nav-end"><button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+      <div class="links" id="menu">
+        <details class="drop"><summary data-t="t1">Features</summary><div>
+          <a href="/#features" data-t="nv1">All features</a>
+          <a href="/#watch" data-t="t0">Watch</a>
+          <a href="/#accessibility" data-t="x11">Accessibility</a>
+          <a href="/#roadmap" data-t="nv2">iPhone and Mac</a>
+        </div></details>
+        <details class="drop"><summary>Premium</summary><div>
+          <a href="/#premium" data-t="nv3">Plans and prices</a>
+          <a href="/#school" data-t="nv4">School / Mosque</a>
+          <a href="/#cancel" data-t="nv5">Cancel or manage</a>
+        </div></details>
+        <details class="drop"><summary data-t="n0">Privacy</summary><div>
+          <a href="/#privacy" data-t="nv6">What the browser sends</a>
+          <a href="/#security" data-t="nv7">Security and updates</a>
+          <a href="/money/" data-t="mm1">How we make money</a>
+          <a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md" data-t="nv8">Privacy policy</a>
+        </div></details>
+        <details class="drop"><summary data-t="nv9">Partners</summary><div>
+          <a href="/affiliate/" data-t="nv10">Recommend to a school or mosque</a>
+          <a href="/affiliate/#vip" data-t="nv11">VIP for influencers</a>
+          <a href="/money/#partner" data-t="mm14">Become a sponsor or partner</a>
+        </div></details>
+        <details class="drop"><summary data-t="n1">Blog</summary><div>
+          <a href="/blog/" data-t="nv12">All guides</a>
+          <a href="/blog/what-is-a-halal-browser/" data-t="hb1">What is a halal browser?</a>
+          <a href="/blog/best-halal-browsers/" data-t="hb2">Best halal browsers</a>
+          <a href="/compare/browsers/" data-t="t89">Compare browsers</a>
+          <a href="/compare/kahf-browser/" data-t="t86">Compare with Kahf Browser</a>
+        </div></details>
+        <a class="nav-cta" href="/#download" data-t="nv13">Download</a>
+      </div><!-- /links -->
       <select class="lang" id="lang" aria-label="Language"><option value="/blog/parental-controls-for-muslim-families/" lang="en" selected>English</option><option value="/nl/blog/parental-controls-for-muslim-families/" lang="nl">Nederlands</option><option value="/ar/blog/parental-controls-for-muslim-families/" lang="ar">العربية</option></select>
-    </span>
+    </div>
   </nav>
 </header>
 <main class="wrap">
@@ -65,7 +94,7 @@
 </main>
 <footer class="wrap">
   <p>AkhiBrowser is built on <a href="https://www.firefox.com/">Firefox</a>, and is not made or endorsed by Mozilla. Filters can miss things, and they don't replace a parent's care. <a href="/">Home</a> · <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a></p>
-  <p>&copy; <span data-year>2026</span> AkhiBrowser &middot; KvK 82581509 &middot; Almere, Netherlands</p>
+  <p>&copy; <span data-year>2026</span> AkhiBrowser</p>
 </footer>
 <script>
 document.querySelectorAll("[data-year]").forEach(n => n.textContent = new Date().getFullYear());
@@ -78,5 +107,52 @@ menu.addEventListener("change", () => {
 // coming back with the Back button shows this page's language again
 addEventListener("pageshow", () => { menu.value = menu.querySelector("[selected]").value; });
 </script>
+<script>
+// the menu: one group open at a time, closed by a click elsewhere, Escape or a chosen link; a button on phones
+(function () {
+  const links = document.getElementById("menu");
+  const button = document.querySelector(".menu-btn");
+  const drops = [...links.querySelectorAll(".drop")];
+  function closeAll(except) {
+    for (const drop of drops) {
+      if (drop !== except) {
+        drop.open = false;
+      }
+    }
+  }
+  function setOpen(open) {
+    links.classList.toggle("open", open);
+    button.setAttribute("aria-expanded", String(open));
+    if (!open) {
+      closeAll();
+    }
+  }
+  for (const drop of drops) {
+    drop.addEventListener("toggle", () => {
+      if (drop.open) {
+        closeAll(drop);
+      }
+    });
+  }
+  button.addEventListener("click", () => setOpen(!links.classList.contains("open")));
+  links.addEventListener("click", e => {
+    if (e.target.closest("a")) {
+      setOpen(false);
+    }
+  });
+  document.addEventListener("click", e => {
+    if (!e.target.closest("nav")) {
+      setOpen(false);
+    }
+  });
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && (links.classList.contains("open") || drops.some(drop => drop.open))) {
+      setOpen(false);
+      button.offsetParent ? button.focus() : drops[0].querySelector("summary").focus();
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
