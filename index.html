@@ -92,8 +92,9 @@ h1 { font-size: clamp(40px, 6.4vw, 66px); letter-spacing: -.02em; }
 .lead { margin-top: 20px; font-size: clamp(19px, 2.2vw, 22px); color: var(--soft); max-width: 30em; }
 .shot { border-radius: 16px; box-shadow: 0 24px 60px rgba(0, 0, 0, .45); }
 
-.get { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
-.get .store { flex: 0 0 100%; line-height: 0; }
+.get { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; max-width: 540px; margin-top: 32px; }
+.get .store { display: flex; align-items: center; line-height: 0; }
+.get .btn { display: flex; flex-direction: column; justify-content: center; }
 #download { scroll-margin-top: 18vh; }
 .btn {
   display: inline-block;
@@ -374,6 +375,7 @@ footer .powered a:hover { text-decoration: underline; }
   .list, .flows, .cancel, form { text-align: start; }
   main .intro { margin-inline: auto; }
   .get, .plans { justify-content: center; }
+  .get { margin-inline: auto; }
   .get .store img { margin-inline: auto; }
   .hero-art { justify-self: center; }
   .hero .shot { margin-inline: auto; }
@@ -381,7 +383,8 @@ footer .powered a:hover { text-decoration: underline; }
 }
 @media (max-width: 480px) {
   .wrap { padding: 0 16px; }
-  .get .btn { width: 100%; text-align: center; }
+  .get { grid-template-columns: minmax(0, 1fr); }
+  .get .store { justify-content: center; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
