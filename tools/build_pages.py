@@ -96,7 +96,7 @@ def translated(markup, lang):
 def menu_of(lang):
     markup = translated(HOME_MENU, lang)
     markup = re.sub(r'href="#', 'href="/#', markup)
-    markup = re.sub(r'href="/((?:blog|compare|affiliate|money)/[^"]*)"', lambda m: f'href="{url_of(lang, m.group(1))}"', markup)
+    markup = re.sub(r'href="/((?:blog|compare|affiliate|money|privacy)/[^"]*)"', lambda m: f'href="{url_of(lang, m.group(1))}"', markup)
     return markup
 
 
@@ -268,6 +268,7 @@ def main():
             index_page(lang),
             home_page(lang, "affiliate", "affiliate/"),
             home_page(lang, "money", "money/"),
+            home_page(lang, "privacy", "privacy/"),
             compare_page(lang, COMPARE_BROWSERS, "compare/browsers/"),
             compare_page(lang, COMPARE, "compare/kahf-browser/"),
         ] + [article_page(lang, a) for a in ARTICLES]

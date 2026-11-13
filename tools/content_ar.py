@@ -62,7 +62,7 @@ ARTICLES = {
 <p>هو يغطي المتصفح. أما التطبيقات والمتصفحات الأخرى فاجمعه مع أدوات الجهاز، مثل Google Family Link أو Microsoft Family Safety. انظر <a href="/ar/blog/parental-controls-for-muslim-families/">إعدادًا بسيطًا للرقابة الأبوية</a>.</p>
 <h3>هل يستطيع المتصفح الحلال إزالة الموسيقى من الفيديوهات؟</h3>
 <p>بعضها يستطيع. AkhiBrowser <a href="/ar/blog/remove-background-music-from-videos/">يزيل الموسيقى الخلفية على جهازك</a>، فتبقى الأصوات وتذهب الموسيقى.</p>
-<p>AkhiBrowser أحد الخيارات، مبني على Firefox لنظامي Windows وAndroid. حمايته مفعّلة من الصفحة الأولى، و<a href="/#privacy">موقعه يذكر ما الذي يغادر جهازك</a>. يمكنك أيضًا قراءة <a href="/ar/compare/kahf-browser/">مقارنته مع Kahf Browser</a>.</p>""",
+<p>AkhiBrowser أحد الخيارات، مبني على Firefox لنظامي Windows وAndroid. حمايته مفعّلة من الصفحة الأولى، و<a href="/ar/privacy/">موقعه يذكر ما الذي يغادر جهازك</a>. يمكنك أيضًا قراءة <a href="/ar/compare/kahf-browser/">مقارنته مع Kahf Browser</a>.</p>""",
     },
     "block-haram-content": {
         "title": "كيف تحجب المحتوى الحرام على هاتفك وحاسوبك",

@@ -80,7 +80,7 @@ ARTICLES = [
 <p>It covers the browser. For apps and other browsers, combine it with the controls of the device, such as Google Family Link or Microsoft Family Safety. See <a href="/blog/parental-controls-for-muslim-families/">a simple parental-controls setup</a>.</p>
 <h3>Can a halal browser remove music from videos?</h3>
 <p>Some can. AkhiBrowser <a href="/blog/remove-background-music-from-videos/">removes background music on your device</a>, so the voices stay and the music goes.</p>
-<p>AkhiBrowser is one option, built on Firefox for Windows and Android. Its protections are on from the first page, and <a href="/#privacy">its site lists what leaves your device</a>. You can also read <a href="/compare/kahf-browser/">how it compares with Kahf Browser</a>.</p>""",
+<p>AkhiBrowser is one option, built on Firefox for Windows and Android. Its protections are on from the first page, and <a href="/privacy/">its site lists what leaves your device</a>. You can also read <a href="/compare/kahf-browser/">how it compares with Kahf Browser</a>.</p>""",
         },
         "nl": {
             "title": "Wat is een halal browser, en heb je er een nodig?",
@@ -129,7 +129,7 @@ ARTICLES = [
 <p>Hij dekt de browser. Combineer hem voor apps en andere browsers met het toezicht van het apparaat, zoals Google Family Link of Microsoft Family Safety. Zie <a href="/nl/blog/parental-controls-for-muslim-families/">een eenvoudige opzet voor ouderlijk toezicht</a>.</p>
 <h3>Kan een halal browser muziek uit video's halen?</h3>
 <p>Sommige wel. AkhiBrowser <a href="/nl/blog/remove-background-music-from-videos/">haalt achtergrondmuziek weg op je apparaat</a>: de stemmen blijven, de muziek gaat.</p>
-<p>AkhiBrowser is een van de opties, gebouwd op Firefox voor Windows en Android. De bescherming staat meteen aan en <a href="/#privacy">de site vertelt wat er van je apparaat af gaat</a>. Lees ook <a href="/nl/compare/kahf-browser/">de vergelijking met Kahf Browser</a>.</p>""",
+<p>AkhiBrowser is een van de opties, gebouwd op Firefox voor Windows en Android. De bescherming staat meteen aan en <a href="/nl/privacy/">de site vertelt wat er van je apparaat af gaat</a>. Lees ook <a href="/nl/compare/kahf-browser/">de vergelijking met Kahf Browser</a>.</p>""",
         },
     },
     {

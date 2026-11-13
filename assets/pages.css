@@ -131,3 +131,6 @@ nav { position: relative; }
   .school-card { grid-template-columns: 1fr; }
   .school-card .earn { border-inline-start: 0; border-top: 1.5px solid var(--line); }
 }
+.flows { margin: 28px 0 0; padding: 0; list-style: none; }
+.flows li { margin: 0; padding: 14px 0; border-top: 1px solid var(--line); color: var(--soft); font-size: 16px; }
+.flows strong { color: #fff; font-weight: 600; }
