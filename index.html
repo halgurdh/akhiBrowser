@@ -692,6 +692,7 @@ footer .powered a:hover { text-decoration: underline; }
         <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/lifetime" data-t="t51">Lifetime Premium<small>€99.99 once</small></a>
         <a class="btn" href="https://akhi-license.akhibrowser.workers.dev/buy/family" data-t="t85">Family Premium<small>€49.99 a year</small></a>
       </div>
+      <p class="note vip-note" hidden data-t="vip1">Your VIP link gives you 10% off Family Premium: €44.99 a year instead of €49.99, every year you stay. Stripe shows the price before you pay.</p>
       <div class="plan-school">
         <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/school" data-t="sm1">School / Mosque<small>€30 a month</small></a>
         <p class="note" data-t="sm2">Everything in Family Premium, with one key for 100 to 500 devices: for schools, mosques and Islamic centres.</p>
@@ -714,6 +715,7 @@ footer .powered a:hover { text-decoration: underline; }
     <div class="wrap">
       <h2 data-t="af1">Recommend AkhiBrowser to a school or mosque</h2>
       <p class="intro" data-t="af2">Know a school, mosque or Islamic centre that could use AkhiBrowser? Become an affiliate: you get 20% of each of their School / Mosque payments, every month, for as long as they stay subscribed. A payment counts once it is 30 days old, and we pay out monthly.</p>
+      <p class="note" data-t="vip2">Influencer? Our VIP affiliate program for Family Premium is by invitation: your followers get 10% off and you get 10% of their payments. Mail <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a>.</p>
       <div class="school-card">
         <div>
           <span class="label" data-t="sc1">The school or mosque pays</span>
@@ -894,6 +896,8 @@ footer .powered a:hover { text-decoration: underline; }
 "t87": "Roadmap: iPhone en Mac",
 "t88": "AkhiBrowser is er nu voor Windows en Android. Versies voor iOS en macOS volgen later, nog zonder datum. Ons doel is eraan te beginnen zodra 100 gezinnen Family Premium hebben.",
 "t85": "Family Premium<small>€49,99 per jaar<\/small>",
+"vip1": "Je VIP-link geeft je 10% korting op Family Premium: €44,99 per jaar in plaats van €49,99, elk jaar dat je blijft. Stripe laat de prijs zien voordat je betaalt.",
+"vip2": "Influencer? Ons VIP-affiliateprogramma voor Family Premium gaat op uitnodiging: je volgers krijgen 10% korting en jij krijgt 10% van hun betalingen. Mail <a href=\"mailto:support@akhibrowser.com\">support@akhibrowser.com<\/a>.",
 "sm1": "School / Moskee<small>€30 per maand<\/small>",
 "sm2": "Alles uit Family Premium, met één sleutel voor 100 tot 500 apparaten: voor scholen, moskeeën en islamitische centra.",
 "f1": "Halal-check en halal plekken",
@@ -1101,6 +1105,8 @@ footer .powered a:hover { text-decoration: underline; }
 "t82": "Premium، لك أنت",
 "t83": "Family Premium، للوالدين",
 "t85": "Family Premium<small>49.99 € سنويًا<\/small>",
+"vip1": "رابط VIP الخاص بك يمنحك خصم 10% على Family Premium: 44.99 € سنويًا بدلًا من 49.99 €، كل سنة تبقى فيها مشتركًا. يعرض Stripe السعر قبل الدفع.",
+"vip2": "مؤثر على وسائل التواصل؟ برنامج شركاء VIP لخطة Family Premium بالدعوة فقط: يحصل متابعوك على خصم 10% وتحصل أنت على 10% من مدفوعاتهم. راسلنا على <a href=\"mailto:support@akhibrowser.com\">support@akhibrowser.com<\/a>.",
 "sm1": "مدرسة / مسجد<small>30 € شهريًا<\/small>",
 "sm2": "كل ما في Family Premium، بمفتاح واحد لـ 100 إلى 500 جهاز: للمدارس والمساجد والمراكز الإسلامية.",
 "f1": "فحص الحلال والأماكن الحلال",
@@ -1387,9 +1393,17 @@ footer .powered a:hover { text-decoration: underline; }
     }
   } catch (e) {}
   if (ref && CODE.test(ref)) {
-    for (const link of document.querySelectorAll('a[href$="/buy/school"]')) {
+    for (const link of document.querySelectorAll('a[href$="/buy/school"], a[href$="/buy/family"]')) {
       link.href += "?ref=" + encodeURIComponent(ref);
     }
+    fetch("https://akhi-license.akhibrowser.workers.dev/ref?code=" + encodeURIComponent(ref))
+      .then(response => response.json())
+      .then(({ kind }) => {
+        if (kind === "vip") {
+          document.querySelector(".vip-note").hidden = false;
+        }
+      })
+      .catch(() => {});
   }
 })();
 </script>
@@ -1419,15 +1433,22 @@ footer .powered a:hover { text-decoration: underline; }
   addEventListener("resize", sizeTop);
   document.getElementById("lang").addEventListener("change", sizeTop);
   const parallax = motion && matchMedia("(min-width: 821px)").matches;
+  // where the hero ends without its parallax shift, and how far it can shift before the header clips it
+  function heroBounds() {
+    const shift = parseFloat(hero.style.translate.split(" ")[1]) || 0;
+    const end = hero.getBoundingClientRect().bottom + scrollY - shift;
+    return { shift, end, room: Math.max(0, top.getBoundingClientRect().bottom + scrollY - end - 16) };
+  }
   document.addEventListener("click", e => {
     const link = e.target.closest('a[href="#download"]');
     if (!link) {
       return;
     }
     e.preventDefault();
-    const shift = parseFloat(hero.style.translate.split(" ")[1]) || 0;
+    const { shift, room } = heroBounds();
     const base = document.getElementById("download").getBoundingClientRect().top + scrollY - shift - bar.offsetHeight - innerHeight * .18;
-    scrollTo({ top: Math.max(0, parallax ? base / .7 : base), behavior: motion ? "smooth" : "auto" });
+    const y = parallax ? (base / .7 * .3 <= room ? base / .7 : base + room) : base;
+    scrollTo({ top: Math.max(0, y), behavior: motion ? "smooth" : "auto" });
     history.replaceState(null, "", "#download");
   });
   function update() {
@@ -1436,11 +1457,11 @@ footer .powered a:hover { text-decoration: underline; }
     bar.classList.toggle("scrolled", scrollY > 8);
     progress.style.transform = `scaleX(${max > 0 ? Math.min(scrollY / max, 1) : 0})`;
     if (parallax) {
-      const shift = parseFloat(hero.style.translate.split(" ")[1]) || 0;
-      const end = hero.getBoundingClientRect().bottom + scrollY - shift;
-      if (scrollY < end / .7 + innerHeight) {
-        hero.style.translate = `0 ${scrollY * .3}px`;
-        hero.style.opacity = Math.min(1, Math.max(0, (end - scrollY * .7 - bar.offsetHeight) / (innerHeight * .5)));
+      const { end, room } = heroBounds();
+      if (scrollY < end + innerHeight * 2) {
+        const shift = Math.min(scrollY * .3, room);
+        hero.style.translate = `0 ${shift}px`;
+        hero.style.opacity = Math.min(1, Math.max(0, (end + shift - scrollY - bar.offsetHeight) / (innerHeight * .5)));
       }
     }
     if (motion) {
