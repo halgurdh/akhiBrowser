@@ -67,6 +67,38 @@ TURNSTILE = """<script>
 </script>"""
 
 
+KIT_SCRIPT = """<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script>
+// the kit for schools and mosques: the message and the poster are made here, the key isn't sent anywhere
+(function () {
+  const $ = id => document.getElementById(id);
+  const download = "https://akhibrowser.com/#download";
+  function update() {
+    const key = $("kit-key").value.trim();
+    const name = $("kit-name").value.trim() || $("kit-org").textContent;
+    const text = $("kit-text").textContent.replace("{NAME}", name).replace("{KEY}", key || "AKHI-...");
+    $("kit-msg").value = text;
+    $("kit-wa").href = "https://wa.me/?text=" + encodeURIComponent(text);
+    $("kit-title").textContent = $("kit-title").dataset.template.replace("{NAME}", name);
+    $("kit-poster-key").textContent = key;
+    $("kit-scan").hidden = Boolean(key);
+  }
+  $("kit-title").dataset.template = $("kit-title").textContent;
+  if (window.qrcode) {
+    const qr = qrcode(0, "M");
+    qr.addData(download);
+    qr.make();
+    $("kit-qr").innerHTML = qr.createSvgTag({ cellSize: 6, margin: 2, scalable: true });
+  }
+  $("kit-key").addEventListener("input", update);
+  $("kit-name").addEventListener("input", update);
+  $("kit-copy").addEventListener("click", () => navigator.clipboard.writeText($("kit-msg").value));
+  $("kit-print").addEventListener("click", () => print());
+  update();
+})();
+</script>"""
+
+
 def home():
     """The menu, the sections for their own pages, and the Dutch and Arabic texts, from index.html."""
     text = (ROOT / "index.html").read_text(encoding="utf-8")
@@ -96,7 +128,7 @@ def translated(markup, lang):
 def menu_of(lang):
     markup = translated(HOME_MENU, lang)
     markup = re.sub(r'href="#', 'href="/#', markup)
-    markup = re.sub(r'href="/((?:blog|compare|affiliate|money|privacy|setup)/[^"]*)"', lambda m: f'href="{url_of(lang, m.group(1))}"', markup)
+    markup = re.sub(r'href="/((?:blog|compare|affiliate|money|privacy|setup|kit)/[^"]*)"', lambda m: f'href="{url_of(lang, m.group(1))}"', markup)
     return markup
 
 
@@ -243,14 +275,14 @@ def compare_page(lang, data, path):
     return path, page(lang, path, text["seo_title"], text["description"], body)
 
 
-def home_page(lang, section, path, extra=""):
+def home_page(lang, section, path, extra="", scripts=TURNSTILE):
     """A section of index.html as its own page: its h2 is the page's title."""
     words = HOME_TEXTS[lang]
     markup = translated(HOME_SECTIONS[section], lang).replace("<h2", "<h1", 1).replace("</h2>", "</h1>", 1)
     title = html.unescape(re.sub(r"<[^>]+>", "", re.search(r"<h1[^>]*>(.*?)</h1>", markup, re.S).group(1)))
     intro = html.unescape(re.sub(r"<[^>]+>", "", re.search(r'<p class="intro"[^>]*>(.*?)</p>', markup, re.S).group(1)))
     body = f'<div class="home">\n{markup}\n{extra}</div>\n{cta(lang)}'
-    return path, page(lang, path, f"{title} | AkhiBrowser", intro, body, scripts=TURNSTILE)
+    return path, page(lang, path, f"{title} | AkhiBrowser", intro, body, scripts=scripts)
 
 
 def write(lang, path, content):
@@ -270,6 +302,7 @@ def main():
             home_page(lang, "money", "money/"),
             home_page(lang, "privacy", "privacy/"),
             home_page(lang, "setup", "setup/"),
+            home_page(lang, "kit", "kit/", scripts=KIT_SCRIPT),
             compare_page(lang, COMPARE_BROWSERS, "compare/browsers/"),
             compare_page(lang, COMPARE, "compare/kahf-browser/"),
         ] + [article_page(lang, a) for a in ARTICLES]

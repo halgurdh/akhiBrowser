@@ -134,3 +134,22 @@ nav { position: relative; }
 .flows { margin: 28px 0 0; padding: 0; list-style: none; }
 .flows li { margin: 0; padding: 14px 0; border-top: 1px solid var(--line); color: var(--soft); font-size: 16px; }
 .flows strong { color: #fff; font-weight: 600; }
+.kit { display: grid; gap: 8px; margin-top: 32px; padding: 20px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
+.kit label { margin-top: 8px; font-weight: 650; }
+.kit input, .kit textarea { width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: rgba(0, 0, 0, .2); color: inherit; font: inherit; }
+.kit textarea { font-size: 15px; resize: vertical; }
+.kit-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.kit-actions .btn { border: 0; cursor: pointer; font: inherit; font-weight: 650; }
+.poster { margin-top: 32px; padding: 32px 24px; border: 1px solid var(--line); border-radius: 14px; text-align: center; }
+.poster h3 { margin: 12px 0 8px; font-size: 28px; color: var(--gold); }
+.poster p { color: var(--soft); }
+.poster .qr { display: block; width: min(220px, 70%); margin: 20px auto 8px; padding: 8px; border-radius: 8px; background: #fff; }
+.poster .qr svg { display: block; width: 100%; height: auto; }
+.poster-key { font-family: ui-monospace, monospace; font-size: 14px; word-break: break-all; }
+@media print {
+  body { background: #fff; color: #000; }
+  header, footer, .cta, .home > :not(.poster) { display: none !important; }
+  .poster { border: 0; }
+  .poster h3 { color: #000; }
+  .poster p { color: #000; }
+}
