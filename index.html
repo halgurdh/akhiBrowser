@@ -135,6 +135,20 @@ h2 { font-size: clamp(28px, 3.6vw, 38px); color: var(--gold); }
 .watch { display: grid; grid-template-columns: minmax(0, 3.16fr) minmax(0, 1fr) minmax(0, 1fr); gap: 28px; margin-top: 32px; align-items: start; }
 video { display: block; width: 100%; height: auto; border-radius: 14px; background: #000; box-shadow: 0 24px 60px rgba(0, 0, 0, .45); }
 
+.carousel { max-width: 1040px; margin: 40px auto 0; }
+.track { display: flex; margin: 0; padding: 0; list-style: none; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; border-radius: 14px; box-shadow: 0 24px 60px rgba(0, 0, 0, .45); }
+.track::-webkit-scrollbar { display: none; }
+.track:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+.slide { flex: 0 0 100%; scroll-snap-align: start; }
+.slide img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; }
+.car-bar { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 16px; }
+.car-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: transparent; color: #fff; font-size: 22px; line-height: 1; cursor: pointer; }
+.car-btn.car-play { font-size: 10px; letter-spacing: 1px; }
+.car-btn:hover { background: rgba(255, 255, 255, .08); }
+.dots { display: flex; gap: 8px; }
+.dots button { width: 10px; height: 10px; padding: 0; border-radius: 50%; border: 0; background: rgba(255, 255, 255, .3); cursor: pointer; }
+.dots button[aria-current="true"] { background: #fff; }
+
 .flows { margin: 28px 0 0; padding: 0; list-style: none; }
 .flows li { padding: 14px 0; border-top: 1px solid var(--line); color: var(--soft); font-size: 16px; }
 .flows strong { color: #fff; font-weight: 600; }
@@ -208,6 +222,7 @@ footer p + p { margin-top: 8px; }
   html { scroll-behavior: auto; }
   .stack .after { animation: none; opacity: 1; }
   .stack .kept { opacity: 0; }
+  .track { scroll-behavior: auto; }
 }
 </style>
 </head>
@@ -255,9 +270,9 @@ footer p + p { margin-top: 8px; }
     <div class="wrap">
       <h2 data-t="t12">See it work</h2>
       <div class="watch">
-        <video controls playsinline preload="none" poster="assets/promo-poster.png" width="1920" height="1080" aria-label="AkhiBrowser promo video, 35 seconds" data-a="aria-label:a1">
-          <source src="assets/promo.mp4" type="video/mp4">
-          <a href="assets/promo.mp4">Download the video</a>
+        <video controls playsinline preload="none" poster="assets/trailer-poster.jpg" width="1920" height="1080" aria-label="AkhiBrowser trailer: NoMusic removes background music and keeps the voice, the haram filter blocks nudity and adult content on your device, and uBlock Origin is built in, 25 seconds" data-a="aria-label:a1">
+          <source src="assets/trailer.mp4" type="video/mp4">
+          <a href="assets/trailer.mp4">Download the video</a>
         </video>
         <video controls playsinline preload="none" poster="assets/reel-viral-poster.jpg" width="1080" height="1920" aria-label="AkhiBrowser reel: you just want to watch a lecture online, NoMusic removes the background music and keeps the voice, 21 seconds" data-a="aria-label:a9">
           <source src="assets/reel-viral.mp4" type="video/mp4">
@@ -267,6 +282,24 @@ footer p + p { margin-top: 8px; }
           <source src="assets/reel.mp4" type="video/mp4">
           <a href="assets/reel.mp4">Download the video</a>
         </video>
+      </div>
+      <div class="carousel" role="region" aria-roledescription="carousel" aria-label="AkhiBrowser features" data-a="aria-label:car0">
+        <ul class="track" dir="ltr" tabindex="0">
+          <li class="slide"><img src="assets/shots/1-nudity-blur.webp" width="1600" height="900" loading="eager" decoding="async" alt="Free: Lower your gaze. Automatically. Every image and video stays blurred until on-device AI has checked it, so nothing flashes. A news page in AkhiBrowser with images blurred." data-a="alt:car1"></li>
+          <li class="slide"><img src="assets/shots/2-no-music.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Free: Keep the voice. Lose the music. AkhiBrowser removes background music from videos as they play. A lecture video with the voice kept and the music removed." data-a="alt:car2"></li>
+          <li class="slide"><img src="assets/shots/3-search-blocking.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Free: Search “beer”. Get the truth. Haram searches are blocked or turned into questions, in 11 languages, and SafeSearch is always on." data-a="alt:car3"></li>
+          <li class="slide"><img src="assets/shots/4-hijab-recognition.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Premium: Smart enough to see the hijab. Covered women are shown and uncovered ones are blurred. You choose who to blur: women, men or both." data-a="alt:car4"></li>
+          <li class="slide"><img src="assets/shots/5-youtube-clean-mode.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Premium: YouTube, minus the rabbit hole. No recommendations, end screens, autoplay or Shorts, and comments hidden." data-a="alt:car5"></li>
+          <li class="slide"><img src="assets/shots/6-parental-pin-time-limits.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Family Premium: You set the rules. A PIN keeps them. A parental PIN, a daily limit, bedtime and school hours." data-a="alt:car6"></li>
+          <li class="slide"><img src="assets/shots/7-prayer-pause.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Family Premium: Adhan calls? The feed stops. Social media, video and game sites pause for a few minutes after each prayer time." data-a="alt:car7"></li>
+          <li class="slide"><img src="assets/shots/8-halal-check-riba-warning.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Family Premium: Halal or not? Know first. A shop page warns about gelatine and an E-number, and a pay-later offer gets a riba warning." data-a="alt:car8"></li>
+        </ul>
+        <div class="car-bar" dir="ltr">
+          <button type="button" class="car-btn" data-dir="-1" aria-label="Previous picture" data-a="aria-label:carPrev">&#8249;</button>
+          <div class="dots"></div>
+          <button type="button" class="car-btn car-play" aria-label="Pause" data-a="aria-label:carPause">&#10074;&#10074;</button>
+          <button type="button" class="car-btn" data-dir="1" aria-label="Next picture" data-a="aria-label:carNext">&#8250;</button>
+        </div>
       </div>
     </div>
   </section>
@@ -672,7 +705,20 @@ footer p + p { margin-top: 8px; }
 "mm24": "Versturen",
 "mm25": "We antwoorden binnen een paar dagen. Een samenwerking moet AkhiBrowser privé houden: gegevens van onze gebruikers horen er nooit bij.",
 "a0": "De instellingen van AkhiBrowser: het vers van de dag, gebedstijden en de vijf beschermingen, allemaal aan: reclame en trackers geblokkeerd, achtergrondmuziek weg, 18+-inhoud geblokkeerd, haram sites geblokkeerd en naaktbeelden wazig.",
-"a1": "Promovideo van AkhiBrowser, 35 seconden",
+"a1": "Trailer van AkhiBrowser: NoMusic haalt de achtergrondmuziek weg en laat de stem staan, het haramfilter houdt naakt en volwassen inhoud tegen op je eigen apparaat, en uBlock Origin zit erin, 25 seconden",
+"car0": "Functies van AkhiBrowser",
+"carPrev": "Vorige afbeelding",
+"carNext": "Volgende afbeelding",
+"carPause": "Pauzeren",
+"carPlay": "Afspelen",
+"car1": "Gratis: Sla je ogen neer. Automatisch. Elke afbeelding en video blijft wazig tot AI op je apparaat hem heeft gecontroleerd, zodat er niets in beeld flitst. Een nieuwspagina in AkhiBrowser met wazige afbeeldingen.",
+"car2": "Gratis: Houd de stem. Weg met de muziek. AkhiBrowser haalt de achtergrondmuziek uit video's terwijl ze spelen. Een lesvideo waarin de stem blijft en de muziek weg is.",
+"car3": "Gratis: Zoek “bier”. Krijg de waarheid. Haram zoekopdrachten worden tegengehouden of omgezet in vragen, in 11 talen, en SafeSearch staat altijd aan.",
+"car4": "Premium: Slim genoeg om de hijab te zien. Bedekte vrouwen worden getoond en onbedekte worden wazig. Jij kiest wie wazig wordt: vrouwen, mannen of allebei.",
+"car5": "Premium: YouTube, zonder het konijnenhol. Geen aanbevelingen, eindschermen, autoplay of Shorts, en reacties verborgen.",
+"car6": "Family Premium: Jij stelt de regels. Een pincode bewaakt ze. Een pincode voor ouders, een daglimiet, bedtijd en schooltijden.",
+"car7": "Family Premium: De adhan klinkt? De feed stopt. Sociale media, video- en gamesites pauzeren een paar minuten na elke gebedstijd.",
+"car8": "Family Premium: Halal of niet? Weet het vooraf. Een winkelpagina waarschuwt voor gelatine en een E-nummer, en een achteraf-betalen-aanbod krijgt een riba-waarschuwing.",
 "a2": "Korte video van AkhiBrowser: zij stopten er muziek in, dus wij haalden het eruit, 19 seconden",
 "a3": "Een wazig landschap met het label: Checking on your device.",
 "a4": "Hetzelfde landschap, scherp, met het label: Checked: shown.",
@@ -855,7 +901,20 @@ footer p + p { margin-top: 8px; }
 "t87": "خارطة الطريق: iPhone وMac",
 "t88": "AkhiBrowser متوفر اليوم لنظامي Windows وAndroid. سيُعلن عن نسختي iOS وmacOS لاحقًا، دون موعد بعد. هدفنا أن نبدأ العمل عليهما عندما تشترك 100 أسرة في Family Premium.",
 "a0": "إعدادات AkhiBrowser: آية اليوم، ومواقيت الصلاة، والحمايات الخمس كلها مفعّلة: حجب الإعلانات وأدوات التتبع، وإزالة الموسيقى الخلفية، وحجب المحتوى الإباحي، وحجب المواقع المحرمة، وتمويه الصور العارية.",
-"a1": "فيديو ترويجي لـ AkhiBrowser، 35 ثانية",
+"a1": "إعلان AkhiBrowser: تزيل NoMusic الموسيقى الخلفية وتُبقي الصوت، ويحجب مرشّح المحرّمات العُري والمحتوى الإباحي على جهازك، وuBlock Origin مدمج، 25 ثانية",
+"car0": "ميزات AkhiBrowser",
+"carPrev": "الصورة السابقة",
+"carNext": "الصورة التالية",
+"carPause": "إيقاف مؤقت",
+"carPlay": "تشغيل",
+"car1": "مجاني: غضّ بصرك. تلقائيًا. كل صورة وفيديو يبقى مموّهًا حتى يفحصه الذكاء الاصطناعي على جهازك، فلا يظهر شيء فجأة. صفحة أخبار في AkhiBrowser بصور مموّهة.",
+"car2": "مجاني: أبقِ الصوت. واترك الموسيقى. يزيل AkhiBrowser الموسيقى الخلفية من الفيديوهات أثناء تشغيلها. فيديو محاضرة بقي فيه الصوت وأُزيلت الموسيقى.",
+"car3": "مجاني: ابحث عن «بيرة». واعرف الحقيقة. عمليات البحث المحرّمة تُحجب أو تتحول إلى أسئلة، بـ11 لغة، وSafeSearch مفعّل دائمًا.",
+"car4": "Premium: ذكي بما يكفي ليرى الحجاب. تظهر المحجبات وتُموَّه غير المحجبات. أنت تختار من يُموَّه: النساء أو الرجال أو كلاهما.",
+"car5": "Premium: YouTube بلا دوّامة. لا توصيات ولا شاشات نهاية ولا تشغيل تلقائي ولا Shorts، والتعليقات مخفية.",
+"car6": "Family Premium: أنت تضع القواعد. ورمز PIN يحفظها. رمز PIN للوالدين، وحد يومي، ووقت النوم وساعات المدرسة.",
+"car7": "Family Premium: الأذان يرتفع؟ تتوقف الصفحات. مواقع التواصل والفيديو والألعاب تتوقف بضع دقائق بعد كل وقت صلاة.",
+"car8": "Family Premium: حلال أم لا؟ اعرف أولًا. صفحة متجر تحذّر من الجيلاتين ورقم E، وعرض ادفع لاحقًا يحمل تحذيرًا من الربا.",
 "a2": "مقطع قصير لـ AkhiBrowser: وضعوا الموسيقى، فأزلناها، 19 ثانية",
 "a3": "منظر طبيعي مموّه مع العبارة: Checking on your device.",
 "a4": "المنظر نفسه، واضحًا، مع العبارة: Checked: shown.",
@@ -940,6 +999,92 @@ footer p + p { margin-top: 8px; }
   });
   menu.hidden = false;
   for (const node of document.querySelectorAll("[data-year]")) node.textContent = new Date().getFullYear();
+})();
+</script>
+<script>
+// The feature pictures: one at a time, moving on every 5 seconds until someone pauses, hovers or uses the controls
+(function () {
+  const root = document.querySelector(".carousel");
+  if (!root) {
+    return;
+  }
+  const track = root.querySelector(".track");
+  const slides = [...track.children];
+  const dots = root.querySelector(".dots");
+  const play = root.querySelector(".car-play");
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let paused = still;
+  let hovering = false;
+  let timer = null;
+
+  const buttons = slides.map((slide, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.setAttribute("aria-label", String(i + 1) + " / " + slides.length);
+    b.addEventListener("click", () => { stop(); go(i); });
+    dots.append(b);
+    return b;
+  });
+
+  function current() {
+    return Math.round(track.scrollLeft / track.clientWidth);
+  }
+  function go(i) {
+    const n = (i + slides.length) % slides.length;
+    track.scrollTo({ left: n * track.clientWidth });
+  }
+  function mark() {
+    const n = current();
+    buttons.forEach((b, i) => b.setAttribute("aria-current", i === n ? "true" : "false"));
+  }
+  function setLabel() {
+    const lang = document.documentElement.lang;
+    play.dataset.a = paused ? "aria-label:carPlay" : "aria-label:carPause";
+    const words = { en: ["Play", "Pause"], nl: ["Afspelen", "Pauzeren"], ar: ["\u062a\u0634\u063a\u064a\u0644", "\u0625\u064a\u0642\u0627\u0641 \u0645\u0624\u0642\u062a"] }[lang] || ["Play", "Pause"];
+    play.setAttribute("aria-label", paused ? words[0] : words[1]);
+    play.innerHTML = paused ? "&#9654;" : "&#10074;&#10074;";
+  }
+  function tick() {
+    clearInterval(timer);
+    timer = paused ? null : setInterval(() => {
+      if (!hovering && !document.hidden) {
+        go(current() + 1);
+      }
+    }, 5000);
+  }
+  function stop() {
+    paused = true;
+    setLabel();
+    tick();
+  }
+
+  root.querySelectorAll("[data-dir]").forEach(b => b.addEventListener("click", () => {
+    stop();
+    go(current() + Number(b.dataset.dir));
+  }));
+  play.addEventListener("click", () => {
+    paused = !paused;
+    setLabel();
+    tick();
+  });
+  track.addEventListener("keydown", e => {
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+      e.preventDefault();
+      stop();
+      go(current() + (e.key === "ArrowRight" ? 1 : -1));
+    }
+  });
+  root.addEventListener("pointerenter", () => { hovering = true; });
+  root.addEventListener("pointerleave", () => { hovering = false; });
+  root.addEventListener("focusin", () => { hovering = true; });
+  root.addEventListener("focusout", () => { hovering = false; });
+  track.addEventListener("touchstart", stop, { passive: true });
+  track.addEventListener("scroll", () => requestAnimationFrame(mark), { passive: true });
+  document.getElementById("lang").addEventListener("change", setLabel);
+
+  mark();
+  setLabel();
+  tick();
 })();
 </script>
 <script>
