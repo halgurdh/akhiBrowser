@@ -450,6 +450,7 @@ footer .powered a:hover { text-decoration: underline; }
         <p class="lead" data-t="t3">A private, halal browser for Muslims, built on Firefox. It blocks ads and haram sites, blurs images until they are checked, and takes the music out of videos.</p>
         <div class="get">
           <a class="store" href="https://apps.microsoft.com/detail/9n8kmf22z6k4?referrer=appbadge&amp;mode=direct" target="_self"><img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200" alt="Download from the Microsoft Store" data-a="alt:aStore"></a>
+          <a class="btn ghost" href="https://github.com/halgurdh/akhiBrowser/releases/latest/download/AkhiBrowser-windows-x64-setup.exe" download data-t="t4w">Windows installer (.exe)<small>Windows 10 or 11, 64-bit</small></a>
           <span class="btn soon" data-t="t4">Android: coming soon<small>Android 8.0 or newer</small></span>
           <a class="btn soon" href="#roadmap" data-t="t4b">iOS and macOS: coming soon<small>See the roadmap</small></a>
           <a class="btn ghost" href="https://chromewebstore.google.com/detail/akhibrowser/ghkpflipnhahpjdnpoclaakbecnopamk" data-t="t7">Get the Chrome extension<small>Free, available now</small></a>
@@ -789,6 +790,7 @@ footer .powered a:hover { text-decoration: underline; }
 "hb1": "Wat is een halal browser?",
 "hb2": "De beste halal browsers",
 "t3": "Een halal browser voor moslims die je privacy respecteert, gebouwd op Firefox. Hij houdt reclame en haram sites tegen, houdt afbeeldingen wazig tot ze zijn gecontroleerd en haalt de muziek uit video's.",
+"t4w": "Windows-installer (.exe)<small>Windows 10 of 11, 64-bit<\/small>",
 "t4": "Android: binnenkort<small>Android 8.0 of nieuwer<\/small>",
 "t4b": "iOS en macOS: binnenkort<small>Bekijk de roadmap<\/small>",
 "aStore": "Downloaden uit de Microsoft Store",
@@ -999,6 +1001,7 @@ footer .powered a:hover { text-decoration: underline; }
 "hb1": "ما هو المتصفح الحلال؟",
 "hb2": "أفضل المتصفحات الحلال",
 "t3": "متصفح حلال للمسلمين يحترم خصوصيتك، مبني على Firefox. يحجب الإعلانات والمواقع المحرمة، ويموّه الصور حتى تُفحص، ويزيل الموسيقى من الفيديوهات.",
+"t4w": "مثبّت Windows (.exe)<small>Windows 10 أو 11، 64-بت<\/small>",
 "t4": "Android: قريبًا<small>Android 8.0 أو أحدث<\/small>",
 "t4b": "iOS وmacOS: قريبًا<small>اطّلع على خارطة الطريق<\/small>",
 "aStore": "حمّله من Microsoft Store",
@@ -1413,9 +1416,9 @@ footer .powered a:hover { text-decoration: underline; }
     const max = document.documentElement.scrollHeight - innerHeight;
     bar.classList.toggle("scrolled", scrollY > 8);
     progress.style.transform = `scaleX(${max > 0 ? Math.min(scrollY / max, 1) : 0})`;
-    if (parallax && scrollY < innerHeight * 1.2) {
+    if (parallax && scrollY < innerHeight * 1.4) {
       hero.style.translate = `0 ${scrollY * .3}px`;
-      hero.style.opacity = Math.max(0, 1 - scrollY / (innerHeight * .9));
+      hero.style.opacity = Math.min(1, Math.max(0, 1 - (scrollY - innerHeight * .2) / (innerHeight * .9)));
     }
     if (motion) {
       top.style.setProperty("--lb", Math.max(0, 1 - scrollY / 300));
