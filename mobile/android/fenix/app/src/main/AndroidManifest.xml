@@ -803,6 +803,23 @@
             android:taskAffinity=""
             android:theme="@android:style/Theme.DeviceDefault.NoActionBar" />
 
+        <!-- AkhiPhoneFilter: Family, the APK only, taken out for Google Play in src/play/AndroidManifest.xml -->
+        <service
+            android:name=".components.AkhiPhoneFilterService"
+            android:permission="android.permission.BIND_VPN_SERVICE"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.net.VpnService" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".components.AkhiPhoneFilterActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:taskAffinity=""
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
         <receiver
             android:name=".components.AkhiAppBlockBoot"
             android:exported="false">

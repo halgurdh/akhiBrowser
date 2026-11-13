@@ -20,6 +20,8 @@
         <service android:name="org.mozilla.fenix.components.AkhiAppBlockService" tools:node="remove" />
         <activity android:name="org.mozilla.fenix.components.AkhiAppBlockActivity" tools:node="remove" />
         <receiver android:name="org.mozilla.fenix.components.AkhiAppBlockBoot" tools:node="remove" />
+        <service android:name="org.mozilla.fenix.components.AkhiPhoneFilterService" tools:node="remove" />
+        <activity android:name="org.mozilla.fenix.components.AkhiPhoneFilterActivity" tools:node="remove" />
         <receiver android:name="com.adjust.sdk.AdjustPreinstallReferrerReceiver" tools:node="remove" />
         <provider android:name="com.adjust.sdk.SystemLifecycleContentProvider" tools:node="remove" />
     </application>

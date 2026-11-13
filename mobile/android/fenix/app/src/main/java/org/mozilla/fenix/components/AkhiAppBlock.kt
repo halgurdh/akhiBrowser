@@ -237,11 +237,12 @@ class AkhiAppBlockActivity : Activity() {
     }
 }
 
-/** The watch again after a restart of the device. */
+/** The watch, and the phone filter (AkhiPhoneFilter.kt), again after a restart of the device. */
 class AkhiAppBlockBoot : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
             AkhiAppBlock.applyWatch(context)
+            AkhiPhoneFilter.startAfterBoot(context)
         }
     }
 }
