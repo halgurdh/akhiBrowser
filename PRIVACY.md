@@ -3,8 +3,9 @@
 Last updated: 13-11-2026
 
 This policy covers the AkhiBrowser website, browser for Android and Windows, and extension for Firefox and Chrome.
-AkhiBrowser is made by Halgurd Hussein. The browser and extensions have no account of their own, no ads and no
-analytics. We do not sell data.
+AkhiBrowser is made by Halgurd Hussein. The browser and extensions have no account of their own and no ads. Their only
+analytics is one anonymous count a day in the browser, without an id (see [What leaves your device](#what-leaves-your-device)).
+We do not sell data.
 
 The browser and extension do their work on your device, but they have to contact a few services. The website loads
 Google Tag Manager. This page lists those services.
@@ -49,6 +50,11 @@ AkhiBrowser is a web browser built on Firefox.
   updates (Remote Settings, Safe Browsing lists).
 - **Ad block lists**, downloaded from the list providers set in uBlock Origin.
 - **Video codecs (Windows)**, downloaded from Mozilla, Cisco and Google so that videos play.
+- **An anonymous count, once a day, to our license server** (akhi-license.akhibrowser.workers.dev, on Cloudflare): the
+  browser's version, its system, whether this is its first count of the week or month or after a new install, and
+  whether Premium is on (free, Premium or Family). There is no id, and nothing of what you visit. The server only keeps
+  the sums per day, so it can't tell two browsers apart; your IP address is only used against abuse and not kept. You
+  can turn it off in the AkhiBrowser settings, under "Count me anonymously".
 - **Update check (Windows, and the Android app from GitHub).** Once a day the browser asks GitHub whether a new release
   is out, and downloads it from GitHub. GitHub sees your IP address, under
   [GitHub's privacy statement](https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement).
