@@ -404,7 +404,7 @@ COMPARE = {
         "lead": "Both are browsers for Muslims. This table lists what each one states on its own website, as of 8 November 2026. We haven't tested Kahf Browser ourselves. &quot;Not stated&quot; means we didn't find it on the pages we read, not that the feature doesn't exist.",
         "head": ["", "AkhiBrowser", "Kahf Browser"],
         "rows": [
-            ["Price", "Protections free. Optional Premium €3.33 a month, €35 a year or €99.99 once; Family Premium €49.99 a year", "Free on all platforms, with no subscriptions or in-app purchases"],
+            ["Price", "Protections free. Optional Premium €3.99 a month, €39 a year or €119 once; Family Premium €59.99 a year", "Free on all platforms, with no subscriptions or in-app purchases"],
             ["Platforms", 'Windows, Android. iOS and macOS: <a href="/#roadmap">on the roadmap</a>, no date yet', "Windows, macOS, Android, iOS. Linux: its FAQ lists it, its download page says coming soon"],
             ["Built on", "Firefox", "Chromium; most Chrome extensions work"],
             ["Source code", "Firefox changes and MPL files are public; its own extension is private", "Not public yet, per its FAQ"],
@@ -437,7 +437,7 @@ COMPARE = {
         "lead": "Beide zijn browsers voor moslims. Deze tabel laat zien wat elk op de eigen website vermeldt, op 8 november 2026. We hebben Kahf Browser niet zelf getest. &quot;Niet vermeld&quot; betekent dat we het niet vonden op de pagina's die we lazen, niet dat de functie niet bestaat.",
         "head": ["", "AkhiBrowser", "Kahf Browser"],
         "rows": [
-            ["Prijs", "Bescherming gratis. Optioneel Premium €3,33 per maand, €35 per jaar of €99,99 eenmalig; Family Premium €49,99 per jaar", "Gratis op alle platforms, zonder abonnementen of in-app-aankopen"],
+            ["Prijs", "Bescherming gratis. Optioneel Premium €3,99 per maand, €39 per jaar of €119 eenmalig; Family Premium €59,99 per jaar", "Gratis op alle platforms, zonder abonnementen of in-app-aankopen"],
             ["Platforms", 'Windows, Android. iOS en macOS: <a href="/#roadmap">op de roadmap</a>, nog zonder datum', "Windows, macOS, Android, iOS. Linux: de FAQ noemt het, de downloadpagina zegt binnenkort"],
             ["Gebouwd op", "Firefox", "Chromium; de meeste Chrome-extensies werken"],
             ["Broncode", "Firefox-wijzigingen en MPL-bestanden zijn openbaar; de eigen extensie is privé", "Nog niet openbaar, volgens de FAQ"],
