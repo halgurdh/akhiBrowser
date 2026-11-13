@@ -94,6 +94,7 @@ h1 { font-size: clamp(40px, 6.4vw, 66px); letter-spacing: -.02em; }
 
 .get { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
 .get .store { flex: 0 0 100%; line-height: 0; }
+#download { scroll-margin-top: 18vh; }
 .btn {
   display: inline-block;
   padding: 13px 20px;
@@ -450,12 +451,12 @@ footer .powered a:hover { text-decoration: underline; }
   <span class="glow g2" aria-hidden="true"></span>
   <span class="flare" aria-hidden="true"></span>
   <div class="wrap">
-    <div class="hero" id="download">
+    <div class="hero">
       <div>
         <a class="badge" href="#download" data-t="k0"><i></i>Now on the Microsoft Store</a>
         <h1 data-t="t2"><span>The halal browser</span> that filters the web on your device.</h1>
         <p class="lead" data-t="t3">A private, halal browser for Muslims, built on Firefox. It blocks ads and haram sites, blurs images until they are checked, and takes the music out of videos.</p>
-        <div class="get">
+        <div class="get" id="download">
           <a class="store" href="https://apps.microsoft.com/detail/9n8kmf22z6k4?referrer=appbadge&amp;mode=direct" target="_self"><img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200" alt="Download from the Microsoft Store" data-a="alt:aStore"></a>
           <a class="btn ghost os-win" href="https://get.microsoft.com/installer/download/9N8KMF22Z6K4?cid=website_cta_psi" data-t="t4w">Windows installer (.exe)<small>Windows 10 or 11, 64-bit</small></a>
           <span class="btn soon os-android" data-t="t4">Android: coming soon<small>Android 8.0 or newer</small></span>
@@ -1418,14 +1419,29 @@ footer .powered a:hover { text-decoration: underline; }
   addEventListener("resize", sizeTop);
   document.getElementById("lang").addEventListener("change", sizeTop);
   const parallax = motion && matchMedia("(min-width: 821px)").matches;
+  document.addEventListener("click", e => {
+    const link = e.target.closest('a[href="#download"]');
+    if (!link) {
+      return;
+    }
+    e.preventDefault();
+    const shift = parseFloat(hero.style.translate.split(" ")[1]) || 0;
+    const base = document.getElementById("download").getBoundingClientRect().top + scrollY - shift - bar.offsetHeight - innerHeight * .18;
+    scrollTo({ top: Math.max(0, parallax ? base / .7 : base), behavior: motion ? "smooth" : "auto" });
+    history.replaceState(null, "", "#download");
+  });
   function update() {
     queued = false;
     const max = document.documentElement.scrollHeight - innerHeight;
     bar.classList.toggle("scrolled", scrollY > 8);
     progress.style.transform = `scaleX(${max > 0 ? Math.min(scrollY / max, 1) : 0})`;
-    if (parallax && scrollY < innerHeight * 1.4) {
-      hero.style.translate = `0 ${scrollY * .3}px`;
-      hero.style.opacity = Math.min(1, Math.max(0, 1 - (scrollY - innerHeight * .2) / (innerHeight * .9)));
+    if (parallax) {
+      const shift = parseFloat(hero.style.translate.split(" ")[1]) || 0;
+      const end = hero.getBoundingClientRect().bottom + scrollY - shift;
+      if (scrollY < end / .7 + innerHeight) {
+        hero.style.translate = `0 ${scrollY * .3}px`;
+        hero.style.opacity = Math.min(1, Math.max(0, (end - scrollY * .7 - bar.offsetHeight) / (innerHeight * .5)));
+      }
     }
     if (motion) {
       top.style.setProperty("--lb", Math.max(0, 1 - scrollY / 300));
