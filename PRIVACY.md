@@ -1,6 +1,6 @@
 # AkhiBrowser: privacy policy
 
-Last updated: 13-11-2026
+Last updated: 14-11-2026
 
 This policy covers the AkhiBrowser website, browser for Android and Windows, and extension for Firefox and Chrome.
 AkhiBrowser is made by Halgurd Hussein. The browser and extensions have no account of their own and no ads. Their only
@@ -76,6 +76,17 @@ AkhiBrowser is a web browser built on Firefox.
   small share of a purchase. The shop learns that you came through AkhiBrowser, nothing more; we receive nothing about
   you or what you buy. A link from another site keeps its own code. Tips on the start page with an affiliate link are
   labelled as such.
+- **Parent report by email (Family).** Off by default. If a parent turns it on and enters an email address, it is sent
+  with the license key to our license server, which mails a link to confirm it. Once confirmed, the server keeps a hash
+  of the key, a hash of the address and the address encrypted (AES-256-GCM). The browser then sends, with the key, the
+  address and a random install ID, what happened: a protection turned off, the parent PIN entered wrong too often or
+  removed, the key removed, the phone filter stopped, and once a week the number of blocks by reason. Never an address
+  or anything visited. The server keeps a hash of the install ID with when it last reported, so it can mail the parent
+  once when a device hasn't reported for 8 days; a device silent for 60 days is forgotten. Each mail has a link that
+  stops the reports and deletes the address.
+- **Filter the whole phone (Android, Family).** Off by default. When a parent turns it on, every app's site lookups go
+  through a local VPN on the phone to Cloudflare's family DNS, the same service as above. Nothing else goes through it,
+  and nothing of it comes to us.
 - **Camera, microphone and location.** Your device asks you first when a site you are on wants them. They go only to
   that site, and only if you allow it.
 
