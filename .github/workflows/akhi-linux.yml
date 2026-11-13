@@ -1,0 +1,73 @@
+# AkhiBrowser for Linux x64: a full build and its .tar.xz, with the extension and Premium merged and minified.
+# Runs on a push to linux-macos-ready or by hand, as it takes hours. It runs here because public repositories have free
+# runners; the build output goes to a file in the draft release of the private halgurdh/akhi-extension, not to the log
+# or an artifact of this repository, which anyone could read.
+# Needs the secret AKHI_SUBMODULES_TOKEN: read access to the submodules, read and write to the contents of
+# halgurdh/akhi-extension.
+name: AkhiBrowser Linux
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - linux-macos-ready
+
+permissions:
+  contents: read
+
+env:
+  MOZBUILD_STATE_PATH: ${{ github.workspace }}/.mozbuild
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 355
+    steps:
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
+          df -h /
+
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          token: ${{ secrets.AKHI_SUBMODULES_TOKEN }}
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install the build tools
+        run: |
+          mkdir -p artifacts
+          ./mach --no-interactive bootstrap --application-choice "Firefox for Desktop" > artifacts/bootstrap.log 2>&1 \
+            || { tail -n 30 artifacts/bootstrap.log; exit 1; }
+          (cd browser/extensions/akhi/webext && npm ci --no-audit --no-fund > /dev/null 2>&1 || npm install --no-audit --no-fund > /dev/null)
+
+      - name: Build and package
+        run: python3 browser/branding/akhi/tools/build_linux.py > artifacts/build.log 2>&1
+
+      - name: Smoke test
+        continue-on-error: true
+        run: |
+          tar -C "$RUNNER_TEMP" -xJf obj-akhi-linux-x64/dist/release/AkhiBrowser-linux-x64.tar.xz
+          python3 browser/branding/akhi/tools/smoke_test.py --binary "$RUNNER_TEMP/akhibrowser/akhibrowser" \
+            --out artifacts/smoke > artifacts/smoke.log 2>&1
+          result=$?
+          grep -E ": (ok|missing)$|doesn't start" artifacts/smoke.log
+          exit $result
+
+      - name: Upload to a private draft release
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.AKHI_SUBMODULES_TOKEN }}
+        run: |
+          df -h /
+          mkdir -p artifacts
+          tar -C artifacts -cJf build-logs.tar.xz .
+          files=(build-logs.tar.xz)
+          for f in obj-akhi-linux-x64/dist/release/*.tar.xz; do [ -f "$f" ] && files+=("$f"); done
+          gh release create "linux-build-${{ github.run_number }}" "${files[@]}" \
+            --repo halgurdh/akhi-extension --draft --title "Linux build ${{ github.run_number }}" \
+            --notes "From ${{ github.sha }}: ${{ job.status }}"

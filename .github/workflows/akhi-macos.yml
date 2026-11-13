@@ -1,6 +1,7 @@
 # AkhiBrowser for macOS: a full build and its .dmg, unsigned, so Gatekeeper blocks it on other Macs until it's signed.
-# Started by hand, as it takes hours. It runs here because public repositories have free runners, and the .dmg goes to
-# a draft release of the private halgurdh/akhi-extension, as anyone could download an artifact of this repository.
+# Started by hand, as it takes hours. It runs here because public repositories have free runners; the .dmg and the build
+# output go to a draft release of the private halgurdh/akhi-extension, as anyone could read the log or download an
+# artifact of this repository.
 # Needs the secret AKHI_SUBMODULES_TOKEN: read access to halgurdh/akhi-branding, read and write to
 # the contents of halgurdh/akhi-extension.
 name: AkhiBrowser macOS
@@ -12,7 +13,6 @@ permissions:
   contents: read
 
 env:
-  MOZCONFIG: browser/branding/akhi/mozconfigs/akhi-desktop
   MOZBUILD_STATE_PATH: ${{ github.workspace }}/.mozbuild
 
 jobs:
@@ -34,21 +34,44 @@ jobs:
           token: ${{ secrets.AKHI_SUBMODULES_TOKEN }}
           persist-credentials: false
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
       - name: Install the build tools
-        run: ./mach --no-interactive bootstrap --application-choice "Firefox for Desktop"
+        run: |
+          mkdir -p artifacts
+          ./mach --no-interactive bootstrap --application-choice "Firefox for Desktop" > artifacts/bootstrap.log 2>&1 \
+            || { tail -n 30 artifacts/bootstrap.log; exit 1; }
+          (cd browser/extensions/akhi/webext && npm ci --no-audit --no-fund > /dev/null 2>&1 || npm install --no-audit --no-fund > /dev/null)
 
-      - name: Build
-        run: ./mach build
+      - name: Build and package
+        run: python3 browser/branding/akhi/tools/build_macos.py > artifacts/build.log 2>&1
 
-      - name: Package
-        run: ./mach package
-
-      - name: Disk space left
-        if: always()
-        run: df -h /
+      - name: Smoke test
+        continue-on-error: true
+        run: |
+          mount=$(mktemp -d)
+          hdiutil attach -nobrowse -readonly -mountpoint "$mount" obj-akhi-macos-arm64/dist/release/AkhiBrowser-macos-arm64.dmg
+          ditto "$mount/AkhiBrowser.app" "$RUNNER_TEMP/AkhiBrowser.app"
+          hdiutil detach "$mount"
+          defaults read "$RUNNER_TEMP/AkhiBrowser.app/Contents/Info" CFBundleIdentifier | tee artifacts/bundle-id.txt
+          python3 browser/branding/akhi/tools/smoke_test.py --binary "$RUNNER_TEMP/AkhiBrowser.app/Contents/MacOS/akhibrowser" \
+            --out artifacts/smoke > artifacts/smoke.log 2>&1
+          result=$?
+          grep -E ": (ok|missing)$|doesn't start" artifacts/smoke.log
+          exit $result
 
       - name: Upload to a private draft release
+        if: always()
         env:
           GH_TOKEN: ${{ secrets.AKHI_SUBMODULES_TOKEN }}
         run: |
-          gh release create "macos-build-${{ github.run_number }}" obj-akhi-desktop/dist/*.dmg             --repo halgurdh/akhi-extension --draft --title "macOS build ${{ github.run_number }}"             --notes "Unsigned, from ${{ github.sha }}"
+          df -h /
+          mkdir -p artifacts
+          tar -C artifacts -cJf build-logs.tar.xz .
+          files=(build-logs.tar.xz)
+          for f in obj-akhi-macos-arm64/dist/release/*.dmg; do [ -f "$f" ] && files+=("$f"); done
+          gh release create "macos-build-${{ github.run_number }}" "${files[@]}" \
+            --repo halgurdh/akhi-extension --draft --title "macOS build ${{ github.run_number }}" \
+            --notes "Unsigned, from ${{ github.sha }}: ${{ job.status }}"
