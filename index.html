@@ -172,9 +172,9 @@ video { display: block; width: 100%; height: auto; border-radius: 14px; backgrou
 .cancel li + li { margin-top: 6px; }
 .plans { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
 .plan-school { margin-top: 12px; }
-.affiliate { display: grid; gap: 12px; max-width: 32em; margin-top: 24px; }
-.affiliate label { display: grid; gap: 6px; font-size: 15px; }
-.affiliate input, .affiliate textarea, .affiliate select { font: inherit; padding: 10px 12px; border-radius: 10px; border: 1.5px solid var(--line); background: rgba(0, 0, 0, .18); color: #fff; }
+.affiliate { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; max-width: 32em; margin-top: 24px; }
+.affiliate label { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; font-size: 15px; }
+.affiliate input, .affiliate textarea, .affiliate select { min-width: 0; font: inherit; padding: 10px 12px; border-radius: 10px; border: 1.5px solid var(--line); background: rgba(0, 0, 0, .18); color: #fff; }
 .affiliate .btn { justify-self: start; border: 0; cursor: pointer; font: inherit; font-weight: 650; }
 .affiliate .trap { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .plan-school .btn { display: block; text-align: center; }
@@ -304,11 +304,19 @@ footer .powered a:hover { text-decoration: underline; }
   .hero { padding-top: 16px; }
   .hero .shot { max-width: min(440px, 100%); }
   .list { grid-template-columns: minmax(0, 1fr); gap: 26px; }
-  .demo, .demo.first { justify-self: start; order: 0; }
+  .demo, .demo.first { justify-self: center; order: 0; }
   .watch { grid-template-columns: minmax(0, 1fr); }
-  .watch video + video { max-width: 300px; }
+  .watch video + video { max-width: 300px; margin-inline: auto; }
   section { padding: 56px 0; }
   .links { display: none; }
+  .hero > div:first-child, .split > div, section h2, main .intro, main .note, .plan-title, .cta { text-align: center; }
+  .list, .flows, .cancel, form { text-align: start; }
+  main .intro { margin-inline: auto; }
+  .get, .plans { justify-content: center; }
+  .get .store img { margin-inline: auto; }
+  .hero-art { justify-self: center; }
+  .hero .shot { margin-inline: auto; }
+  section h2::after, [dir="rtl"] section h2::after { width: 80px; margin-inline: auto; background: linear-gradient(90deg, transparent, var(--gold), transparent); transform-origin: 50% 50%; }
 }
 @media (max-width: 480px) {
   .wrap { padding: 0 16px; }
