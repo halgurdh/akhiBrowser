@@ -205,6 +205,11 @@ video { display: block; width: 100%; height: auto; border-radius: 14px; backgrou
 .cancel ol { margin: 14px 0 0; padding-inline-start: 1.4em; color: var(--soft); }
 .cancel li + li { margin-top: 6px; }
 .plans { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.android-buy { margin-top: 28px; }
+.android-buy .store { display: inline-block; margin: 20px 17px 12px; line-height: 0; }
+.android-buy .store img { width: 252px; height: auto; margin: -17px; }
+.linklike { padding: 0; border: 0; font: inherit; color: var(--gold); text-decoration: underline; background: none; cursor: pointer; }
+.android .plans:not(.shown), .android .android-note, .android .vip-note:not(.shown) { display: none; }
 .plan-school { margin-top: 12px; }
 .affiliate { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; max-width: 32em; margin-top: 24px; }
 .affiliate label { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; font-size: 15px; }
@@ -743,6 +748,12 @@ footer .powered a:hover { text-decoration: underline; }
         <li><h3 data-t="f7">Deen Time</h3><p data-t="f8">YouTube with only the channels you chose, for your children.</p></li>
       </ul>
       <p class="note" data-t="f9">New in 1.3.0: halal check, halal places, riba warning, loot box block, follow the recitation, trusted sources and Deen Time. Prayer pause is now part of Family Premium.</p>
+      <p class="note android-note" data-t="andp"><strong>AkhiBrowser from Google Play on Android?</strong> Buy Premium in the app: menu, Extensions, AkhiBrowser, Premium. Google Play takes the payment. A key bought on this site works in AkhiBrowser on Windows and in AkhiBrowser for Android from GitHub, not in the one from Google Play.</p>
+      <div class="android-buy" hidden>
+        <p data-t="andb">On your phone, buy Premium in AkhiBrowser from Google Play: menu, Extensions, AkhiBrowser, Premium. Google Play takes the payment.</p>
+        <a class="store store-play" href="https://play.google.com/store/apps/details?id=org.akhibrowser"><img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" width="646" height="250" loading="lazy" alt="Get it on Google Play" data-a="alt:aPlay"></a>
+        <p><button type="button" class="linklike" id="show-plans" data-t="andall">Buying for a computer? Show all ways to pay</button></p>
+      </div>
       <div class="plans">
         <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/monthly" data-t="t49">Premium monthly<small>€3.99 a month</small></a>
         <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/yearly" data-t="t50">Premium yearly<small>€39.00 a year</small></a>
@@ -1025,6 +1036,9 @@ footer .powered a:hover { text-decoration: underline; }
 "c3": "Kies voor opzeggen en bevestig dat.",
 "c4": "Daarna stopt Premium, en alle gratis bescherming blijft gewoon werken. Een levenslange aankoop is geen abonnement, dus die hoef je niet op te zeggen.",
 "c5": "Kun je niet bij de browser? Mail naar <a href=\"mailto:support@akhibrowser.com\">support@akhibrowser.com<\/a> met het e-mailadres waarmee je hebt betaald.",
+"andb": "Koop Premium op je telefoon in AkhiBrowser uit Google Play: menu, Extensies, AkhiBrowser, Premium. Google Play regelt de betaling.",
+"andall": "Koop je voor een computer? Toon alle manieren om te betalen",
+"andp": "<strong>AkhiBrowser uit Google Play op Android?<\/strong> Koop Premium in de app: menu, Extensies, AkhiBrowser, Premium. Google Play regelt de betaling. Een sleutel die je op deze site koopt, werkt in AkhiBrowser op Windows en in AkhiBrowser voor Android van GitHub, niet in die uit Google Play.",
 "x0": "Toegankelijkheid",
 "x1": "Voor mensen die kleurenblind of slechthorend zijn, en voor iedereen die op het web wat meer hulp kan gebruiken.",
 "x2": "Kleurenblind",
@@ -1289,6 +1303,9 @@ footer .powered a:hover { text-decoration: underline; }
 "c3": "اختر الإلغاء، ثم أكّد.",
 "c4": "ينتهي Premium بعد ذلك، وتبقى كل الحماية المجانية تعمل. الشراء مدى الحياة ليس اشتراكًا، فلا شيء لإلغائه.",
 "c5": "لا تستطيع الوصول إلى المتصفح؟ راسل <a href=\"mailto:support@akhibrowser.com\">support@akhibrowser.com<\/a> من عنوان البريد الذي دفعت به.",
+"andb": "على هاتفك، اشترِ Premium من AkhiBrowser المثبّت من Google Play: القائمة، ثم الإضافات، ثم AkhiBrowser، ثم Premium. يتولى Google Play عملية الدفع.",
+"andall": "تشتري لحاسوب؟ اعرض كل طرق الدفع",
+"andp": "<strong>تستخدم AkhiBrowser من Google Play على Android؟<\/strong> اشترِ Premium من داخل التطبيق: القائمة، ثم الإضافات، ثم AkhiBrowser، ثم Premium. يتولى Google Play عملية الدفع. المفتاح الذي تشتريه من هذا الموقع يعمل في AkhiBrowser على Windows وفي AkhiBrowser لنظام Android من GitHub، وليس في النسخة من Google Play.",
 "x0": "إمكانية الوصول",
 "x1": "لمن لديهم عمى ألوان أو ضعف في السمع، ولكل من يحتاج إلى مساعدة أكثر قليلًا على الإنترنت.",
 "x2": "عمى الألوان",
@@ -1536,9 +1553,23 @@ footer .powered a:hover { text-decoration: underline; }
       ref = localStorage.getItem("akhiRef");
     }
   } catch (e) {}
+  // Android phones buy in the app from Google Play: the website's buttons only on request
+  if (/Android/i.test(navigator.userAgent)) {
+    document.documentElement.classList.add("android");
+    document.querySelector(".android-buy").hidden = false;
+    document.getElementById("show-plans").addEventListener("click", () => {
+      document.querySelector(".plans").classList.add("shown");
+      document.querySelector(".vip-note").classList.add("shown");
+      document.querySelector(".android-buy").hidden = true;
+    });
+  }
   if (ref && CODE.test(ref)) {
     for (const link of document.querySelectorAll('a[href$="/buy/school"], a[href$="/buy/family"]')) {
       link.href += "?ref=" + encodeURIComponent(ref);
+    }
+    // installed from this link, the app reads the code: a VIP's 10% Family offer and their commission
+    for (const link of document.querySelectorAll('a[href^="https://play.google.com/store/apps/details?id=org.akhibrowser"]')) {
+      link.href += "&referrer=" + encodeURIComponent("ref=" + ref);
     }
     fetch("https://akhi-license.akhibrowser.workers.dev/ref?code=" + encodeURIComponent(ref))
       .then(response => response.json())
