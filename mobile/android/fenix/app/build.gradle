@@ -406,7 +406,7 @@ abstract class SyncAkhiExtension extends DefaultTask {
                     "content/profanity_mask.js", "content/strict_mode.js", "content/akhi_notice.js",
                     "content/riba_warning.js", "content/halal_check.js", "content/quran_follow.js",
                     "content/trusted_sources.js", "content/halal_places.js", "content/deen_time.js",
-                    "lib/family_controls.js",
+                    "lib/family_controls.js", "lib/parent_report.js",
                     "lib/family.js", "lib/premium.js", "lib/prayer_pause.js", "lib/premium_image_classifier.js",
                     "pages/family_backup.js", "pages/family_pause.*", "pages/family_tools.js",
                     "pages/settings_premium.js", "faces/**", "gender/**", "body/**"
