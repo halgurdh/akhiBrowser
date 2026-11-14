@@ -19,12 +19,15 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/assets/akhi.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/assets/pages.css">
-<script async src="https://www.googletagmanager.com/gtm.js?id=GTM-N2MF3XPS"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  gtag('consent', 'default', {analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', wait_for_update: 500});
+  try { if (localStorage.getItem('akhi-consent') === 'granted') gtag('consent', 'update', {analytics_storage: 'granted'}); } catch (e) {}
+  dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
 </script>
+<script async src="https://www.googletagmanager.com/gtm.js?id=GTM-N2MF3XPS"></script>
+<script src="/assets/analytics.js" defer></script>
 </head>
 <body>
 <header>
@@ -80,7 +83,7 @@
         <li data-t="t44"><strong>التحقق من التحديثات.</strong> مرة في اليوم، يسأل المتصفح GitHub إن كان هناك إصدار جديد.</li>
         <li data-t="t90"><strong>عدّ دون هوية، إلينا.</strong> مرة في اليوم يحسب المتصفح نفسه: الإصدار والنظام وهل Premium مفعّل، بلا معرّف ولا شيء مما تزوره. يمكنك إيقافه في الإعدادات، تحت «احسبني دون هوية».</li>
         <li data-t="t45"><strong>مفتاح Premium، إن أدخلته.</strong> يُتحقق منه عبر خادم التراخيص لدينا، مع معرّف تثبيت عشوائي، حتى يعمل المفتاح على 3 أجهزة في الوقت نفسه. لا يحتفظ الخادم بأسماء ولا عناوين بريد ولا بيانات تصفح.</li>
-        <li data-t="t55"><strong>تحليلات الموقع.</strong> يحمّل هذا الموقع Google Tag Manager. تتلقى Google عنوان IP للاتصال ومعلومات تقنية عن الطلب؛ وقد تجمع أيضًا وسوم التحليلات المفعّلة في حاوية GTM مشاهدات الصفحات والأحداث. انظر <a href="https://policies.google.com/privacy">سياسة خصوصية Google</a>.</li>
+        <li data-t="t55"><strong>تحليلات الموقع.</strong> يحمّل هذا الموقع Google Tag Manager، لذلك تتلقى Google عنوان IP للاتصال ومعلومات تقنية عن الطلب. لا يحسب Google Analytics الزيارات والنقرات (على زر تنزيل أو خطة) إلا بعد أن تضغط «سماح» في الشريط؛ وقبل ذلك لا يُحفظ أي ملف تعريف ارتباط للتحليلات. وإذا اشتريت خطة بعد السماح، يُرسل معرّف Google Analytics المجهول مع صفحة الدفع، فتُحسب عملية الشراء (الخطة والمبلغ، وليس بريدك أو مفتاحك أبدًا) للزيارة. <a href="#cookies">تغيير اختيارك</a>. راجع <a href="https://policies.google.com/privacy">سياسة خصوصية Google</a>.</li>
       </ul>
       <p class="note" data-t="t46"><a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md">سياسة الخصوصية (بالإنجليزية)</a></p>
     
