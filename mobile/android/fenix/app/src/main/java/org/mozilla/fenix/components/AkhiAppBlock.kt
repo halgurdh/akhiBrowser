@@ -33,13 +33,11 @@ import mozilla.components.concept.engine.EngineSession
 import mozilla.components.concept.engine.webextension.MessageHandler
 import org.json.JSONArray
 import org.json.JSONObject
-import org.mozilla.fenix.BuildConfig
 import org.mozilla.fenix.R
 
 /**
- * Family: the apps a parent chose can't be opened. The APK only: Google Play doesn't get the permissions or this
- * service (src/play/AndroidManifest.xml). The settings are in the extension (pages/family_tools.js), each message is
- * {type, ...}; it asks the parent's PIN before it sends a change.
+ * Family: the apps a parent chose can't be opened, in the APK and on Google Play. The settings are in the extension
+ * (pages/family_tools.js), each message is {type, ...}; it asks the parent's PIN before it sends a change.
  */
 internal object AkhiAppBlock {
     const val NATIVE_APP = "akhiAppBlock"
@@ -48,6 +46,7 @@ internal object AkhiAppBlock {
     private const val PREFERENCES = "akhi_app_block"
     private const val BLOCKED = "blocked"
     private const val TEXT = "text"
+    private const val OPEN_TEXT = "open"
     private const val CHANNEL = "akhi_app_block"
 
     fun blocked(context: Context): Set<String> =
@@ -55,6 +54,24 @@ internal object AkhiAppBlock {
 
     fun text(context: Context): String =
         context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE).getString(TEXT, null).orEmpty()
+
+    fun openText(context: Context): String =
+        context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE).getString(OPEN_TEXT, null).orEmpty()
+
+    /** The website of a blocked app, opened in AkhiBrowser where its images are checked */
+    fun siteOf(app: String?): String? = when (app) {
+        "com.instagram.android", "com.instagram.lite" -> "https://www.instagram.com/"
+        "com.instagram.barcelona" -> "https://www.threads.net/"
+        "com.zhiliaoapp.musically", "com.ss.android.ugc.trill", "com.zhiliaoapp.musically.go" ->
+            "https://www.tiktok.com/"
+        "com.facebook.katana", "com.facebook.lite" -> "https://m.facebook.com/"
+        "com.twitter.android" -> "https://x.com/"
+        "com.reddit.frontpage" -> "https://www.reddit.com/"
+        "com.pinterest" -> "https://www.pinterest.com/"
+        "com.tumblr" -> "https://www.tumblr.com/"
+        "com.google.android.youtube" -> "https://m.youtube.com/"
+        else -> null
+    }
 
     @Suppress("DEPRECATION") // its replacement is newer than our oldest Android
     private fun hasUsageAccess(context: Context): Boolean {
@@ -109,15 +126,13 @@ internal object AkhiAppBlock {
 
         override fun onMessage(message: Any, source: EngineSession?): Any {
             val request = message as? JSONObject ?: return JSONObject()
-            if (BuildConfig.AKHI_PLAY_STORE) {
-                return JSONObject().put("available", false)
-            }
             when (request.optString("type")) {
                 "set" -> {
                     val list = request.optJSONArray("blocked") ?: JSONArray()
                     appContext.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE).edit()
                         .putStringSet(BLOCKED, (0 until list.length()).map { list.getString(it) }.toSet())
                         .putString(TEXT, request.optString("text"))
+                        .putString(OPEN_TEXT, request.optString("open"))
                         .apply()
                     applyWatch(appContext)
                 }
@@ -149,6 +164,7 @@ class AkhiAppBlockService : Service() {
             if (app != null && app in AkhiAppBlock.blocked(this@AkhiAppBlockService)) {
                 startActivity(
                     Intent(this@AkhiAppBlockService, AkhiAppBlockActivity::class.java)
+                        .putExtra(AkhiAppBlockActivity.EXTRA_APP, app)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
                 )
             }
@@ -195,7 +211,7 @@ class AkhiAppBlockService : Service() {
     }
 }
 
-/** Shown over a blocked app: the only way on is the home screen. */
+/** Shown over a blocked app: the way on is the home screen, or the app's website in AkhiBrowser. */
 class AkhiAppBlockActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -209,15 +225,40 @@ class AkhiAppBlockActivity : Activity() {
             text = getString(android.R.string.ok)
             setOnClickListener { goHome() }
         }
+        val site = AkhiAppBlock.siteOf(intent.getStringExtra(EXTRA_APP))
+        val openText = AkhiAppBlock.openText(this)
         setContentView(
             LinearLayout(this).apply {
                 orientation = LinearLayout.VERTICAL
                 gravity = Gravity.CENTER
                 setPadding(padding, padding, padding, padding)
                 addView(message)
+                if (site != null && openText.isNotEmpty()) {
+                    addView(
+                        Button(this@AkhiAppBlockActivity).apply {
+                            text = openText
+                            setOnClickListener { openSite(site) }
+                        },
+                    )
+                }
                 addView(home)
             },
         )
+    }
+
+    private fun openSite(site: String) {
+        startActivity(
+            Intent(Intent.ACTION_VIEW, Uri.parse(site))
+                .setPackage(packageName)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+        )
+        finish()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        recreate()
     }
 
     private fun goHome() {
@@ -231,9 +272,10 @@ class AkhiAppBlockActivity : Activity() {
     @Suppress("OVERRIDE_DEPRECATION", "MissingSuperCall")
     override fun onBackPressed() = goHome()
 
-    private companion object {
-        const val PADDING_DP = 32
-        const val TEXT_SP = 20f
+    companion object {
+        const val EXTRA_APP = "app"
+        private const val PADDING_DP = 32
+        private const val TEXT_SP = 20f
     }
 }
 
