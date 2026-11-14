@@ -47,7 +47,7 @@
 
     <!-- Needed to post notifications on devices with Android 13 and later-->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <!-- AkhiAppBlock: Family, the APK only, taken out for Google Play in src/play/AndroidManifest.xml -->
+    <!-- AkhiAppBlock: Family, in the APK and on Google Play -->
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
