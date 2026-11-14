@@ -21,6 +21,8 @@ import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.QueryPurchasesParams
+import com.android.installreferrer.api.InstallReferrerClient
+import com.android.installreferrer.api.InstallReferrerStateListener
 import mozilla.components.concept.engine.EngineSession
 import mozilla.components.concept.engine.webextension.MessageHandler
 import mozilla.components.concept.engine.webextension.Port
@@ -85,7 +87,12 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
             when (request.optString("type")) {
                 "store" -> reply(id, JSONObject().put("store", if (BuildConfig.AKHI_PLAY_STORE) "play" else "direct"))
                 "status" -> if (BuildConfig.AKHI_PLAY_STORE) status(id) else replyError(id)
-                "buy" -> if (BuildConfig.AKHI_PLAY_STORE) buy(id, request.optString("plan")) else replyError(id)
+                "buy" -> if (BuildConfig.AKHI_PLAY_STORE) {
+                    buy(id, request.optString("plan"), request.optString("offer"))
+                } else {
+                    replyError(id)
+                }
+                "referrer" -> if (BuildConfig.AKHI_PLAY_STORE) referrer(id) else replyError(id)
                 "gifts" -> if (BuildConfig.AKHI_PLAY_STORE) gifts(id) else replyError(id)
                 "consume" -> if (BuildConfig.AKHI_PLAY_STORE) consumeGift(id, request.optString("purchaseToken")) else replyError(id)
                 else -> replyError(id)
@@ -202,7 +209,28 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
         }
     }
 
-    private fun buy(id: Int, plan: String) {
+    // the referrer of the Play Store link this was installed from, like "ref=<affiliate code>": the extension keeps its
+    // code, for a VIP's Family offer and their commission (lib/premium.js)
+    private fun referrer(id: Int) {
+        val client = InstallReferrerClient.newBuilder(appContext).build()
+        client.startConnection(
+            object : InstallReferrerStateListener {
+                override fun onInstallReferrerSetupFinished(responseCode: Int) {
+                    val referrer = if (responseCode == InstallReferrerClient.InstallReferrerResponse.OK) {
+                        runCatching { client.installReferrer.installReferrer }.getOrNull()
+                    } else {
+                        null
+                    }
+                    runCatching { client.endConnection() }
+                    mainHandler.post { reply(id, JSONObject().put("referrer", referrer ?: JSONObject.NULL)) }
+                }
+
+                override fun onInstallReferrerServiceDisconnected() = Unit
+            },
+        )
+    }
+
+    private fun buy(id: Int, plan: String, offer: String = "") {
         val isLifetime = plan == "lifetime"
         val isGift = plan == "gift"
         if (!isLifetime && !isGift && plan != "monthly" && plan != "yearly" && plan != "family") {
@@ -231,8 +259,10 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
                     val offerToken = if (isOneTime) {
                         productDetails?.oneTimePurchaseOfferDetailsList?.firstOrNull()?.offerToken
                     } else {
-                        productDetails?.subscriptionOfferDetails
-                            ?.firstOrNull { it.basePlanId == plan && it.offerId == null }
+                        // a VIP's Family offer when asked for and set up in the Play Console, else the base plan
+                        val offers = productDetails?.subscriptionOfferDetails.orEmpty()
+                        (offers.firstOrNull { offer.isNotEmpty() && it.basePlanId == plan && it.offerId == offer }
+                            ?: offers.firstOrNull { it.basePlanId == plan && it.offerId == null })
                             ?.offerToken
                     }
                     val activity = resumedActivity.get()
