@@ -211,7 +211,14 @@ video { display: block; width: 100%; height: auto; border-radius: 14px; backgrou
 .android-buy .store { display: inline-block; margin: 20px 17px 12px; line-height: 0; }
 .android-buy .store img { width: 252px; height: auto; margin: -17px; }
 .linklike { padding: 0; border: 0; font: inherit; color: var(--gold); text-decoration: underline; background: none; cursor: pointer; }
-.android .plans:not(.shown), .android .android-note, .android .vip-note:not(.shown) { display: none; }
+.android .plans:not(.shown), .android .buy-guide:not(.shown), .android .vip-note:not(.shown) { display: none; }
+.buy-guide { margin-top: 28px; padding: 18px 22px; border: 1px solid rgba(244, 190, 52, .45); border-inline-start: 5px solid var(--gold); border-radius: 12px; background: rgba(244, 190, 52, .08); max-width: 46em; }
+.buy-guide h3 { margin: 0; font-size: 20px; color: var(--gold); }
+.buy-guide ul { margin: 10px 0 0; padding-inline-start: 1.2em; color: var(--soft); }
+.buy-guide li + li { margin-top: 8px; }
+.buy-guide strong { color: #fff; }
+.buy-warning { margin: 14px 0 0; padding: 10px 14px; border-radius: 8px; font-weight: 600; color: var(--ink); background: var(--gold); }
+.buy-warning::before { content: "⚠ "; }
 .plan-school { margin-top: 12px; }
 .affiliate { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; max-width: 32em; margin-top: 24px; }
 .affiliate label { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; font-size: 15px; }
@@ -750,7 +757,16 @@ footer .powered a:hover { text-decoration: underline; }
         <li><h3 data-t="f7">Deen Time</h3><p data-t="f8">YouTube with only the channels you chose, for your children.</p></li>
       </ul>
       <p class="note" data-t="f9">New in 1.3.0: halal check, halal places, riba warning, loot box block, follow the recitation, trusted sources and Deen Time. Prayer pause is now part of Family Premium.</p>
-      <p class="note android-note" data-t="andp"><strong>AkhiBrowser from Google Play on Android?</strong> Buy Premium in the app: menu, Extensions, AkhiBrowser, Premium. Google Play takes the payment. A key bought on this site works in AkhiBrowser on Windows and in AkhiBrowser for Android from GitHub, not in the one from Google Play.</p>
+      <div class="buy-guide" role="note">
+        <h3 data-t="bg0">Which one should I buy?</h3>
+        <ul>
+          <li data-t="bg1"><strong>Do you have an Android phone?</strong> Buy in AkhiBrowser from Google Play: menu, Extensions, AkhiBrowser, Premium. You get Premium on your phone, and with Get a license key on your computer too.</li>
+          <li data-t="bg2"><strong>Only a computer, or an iPhone?</strong> Buy with the buttons below. You get a license key by email, for up to 3 devices or 10 with Family: AkhiBrowser on Windows, and AkhiBrowser for Android from GitHub.</li>
+          <li data-t="bg3"><strong>A school or mosque?</strong> Take School / Mosque below. Families on a computer use your key; families with AkhiBrowser from Google Play get a Google Play code from you.</li>
+          <li data-t="bg4"><strong>A gift?</strong> Give Family Premium below, or in AkhiBrowser from Google Play. If they use AkhiBrowser from Google Play, they swap the key for a Google Play code.</li>
+        </ul>
+        <p class="buy-warning" data-t="bg5">A key bought on this website doesn't work in AkhiBrowser from Google Play: on an Android phone, buy in the app.</p>
+      </div>
       <div class="android-buy" hidden>
         <p data-t="andb">On your phone, buy Premium in AkhiBrowser from Google Play: menu, Extensions, AkhiBrowser, Premium. Google Play takes the payment.</p>
         <a class="store store-play" href="https://play.google.com/store/apps/details?id=org.akhibrowser"><img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" width="646" height="250" loading="lazy" alt="Get it on Google Play" data-a="alt:aPlay"></a>
@@ -1049,6 +1065,12 @@ footer .powered a:hover { text-decoration: underline; }
 "c3": "Kies voor opzeggen en bevestig dat.",
 "c4": "Daarna stopt Premium, en alle gratis bescherming blijft gewoon werken. Een levenslange aankoop is geen abonnement, dus die hoef je niet op te zeggen.",
 "c5": "Kun je niet bij de browser? Mail naar <a href=\"mailto:support@akhibrowser.com\">support@akhibrowser.com<\/a> met het e-mailadres waarmee je hebt betaald.",
+"bg0": "Welke moet ik kopen?",
+"bg1": "<strong>Heb je een Android-telefoon?<\/strong> Koop in AkhiBrowser uit Google Play: menu, Extensies, AkhiBrowser, Premium. Je krijgt Premium op je telefoon, en met Licentiesleutel aanvragen ook op je computer.",
+"bg2": "<strong>Alleen een computer, of een iPhone?<\/strong> Koop met de knoppen hieronder. Je krijgt een licentiesleutel per e-mail, voor maximaal 3 apparaten of 10 met Family: AkhiBrowser op Windows, en AkhiBrowser voor Android van GitHub.",
+"bg3": "<strong>Een school of moskee?<\/strong> Kies hieronder School / Moskee. Gezinnen op een computer gebruiken je sleutel; gezinnen met AkhiBrowser uit Google Play krijgen van jou een Google Play-code.",
+"bg4": "<strong>Een cadeau?<\/strong> Geef Family Premium hieronder, of in AkhiBrowser uit Google Play. Gebruiken ze AkhiBrowser uit Google Play, dan wisselen ze de sleutel om voor een Google Play-code.",
+"bg5": "Een sleutel die je op deze website koopt, werkt niet in AkhiBrowser uit Google Play: koop op een Android-telefoon in de app.",
 "gp0": "Gekocht via Google Play",
 "gp1": "Wijzigen of opzeggen doe je in Google Play: tik in de Play Store op je profielfoto, dan Betalingen en abonnementen, Abonnementen, AkhiBrowser. Premium blijft werken tot het einde van de periode die je hebt betaald.",
 "gp2": "Premium ook op je computer",
@@ -1060,7 +1082,6 @@ footer .powered a:hover { text-decoration: underline; }
 "gp8": "Je sleutel werkt in AkhiBrowser op Windows en in AkhiBrowser voor Android van GitHub. AkhiBrowser uit Google Play neemt alleen aankopen in Google Play aan, dus daarvoor: met een cadeausleutel <a href=\"https://akhi-license.akhibrowser.workers.dev/redeem\">vraag je een Google Play-code aan<\/a>; een school of moskee <a href=\"https://akhi-license.akhibrowser.workers.dev/school\">krijgt een code per gezin<\/a>. Elke code is een jaar Family Premium, vanaf de dag dat hij wordt ingewisseld.",
 "andb": "Koop Premium op je telefoon in AkhiBrowser uit Google Play: menu, Extensies, AkhiBrowser, Premium. Google Play regelt de betaling.",
 "andall": "Koop je voor een computer? Toon alle manieren om te betalen",
-"andp": "<strong>AkhiBrowser uit Google Play op Android?<\/strong> Koop Premium in de app: menu, Extensies, AkhiBrowser, Premium. Google Play regelt de betaling. Een sleutel die je op deze site koopt, werkt in AkhiBrowser op Windows en in AkhiBrowser voor Android van GitHub, niet in die uit Google Play.",
 "x0": "Toegankelijkheid",
 "x1": "Voor mensen die kleurenblind of slechthorend zijn, en voor iedereen die op het web wat meer hulp kan gebruiken.",
 "x2": "Kleurenblind",
@@ -1325,6 +1346,12 @@ footer .powered a:hover { text-decoration: underline; }
 "c3": "اختر الإلغاء، ثم أكّد.",
 "c4": "ينتهي Premium بعد ذلك، وتبقى كل الحماية المجانية تعمل. الشراء مدى الحياة ليس اشتراكًا، فلا شيء لإلغائه.",
 "c5": "لا تستطيع الوصول إلى المتصفح؟ راسل <a href=\"mailto:support@akhibrowser.com\">support@akhibrowser.com<\/a> من عنوان البريد الذي دفعت به.",
+"bg0": "أيّها أشتري؟",
+"bg1": "<strong>هل لديك هاتف Android؟<\/strong> اشترِ من AkhiBrowser المثبّت من Google Play: القائمة، ثم الإضافات، ثم AkhiBrowser، ثم Premium. تحصل على Premium على هاتفك، وعبر «احصل على مفتاح ترخيص» على حاسوبك أيضًا.",
+"bg2": "<strong>حاسوب فقط، أو iPhone؟<\/strong> اشترِ بالأزرار أدناه. تحصل على مفتاح ترخيص بالبريد، لـ 3 أجهزة كحد أقصى أو 10 مع Family: AkhiBrowser على Windows، وAkhiBrowser لنظام Android من GitHub.",
+"bg3": "<strong>مدرسة أو مسجد؟<\/strong> اختر «مدرسة / مسجد» أدناه. العائلات على الحاسوب تستخدم مفتاحك، والعائلات التي تستخدم AkhiBrowser من Google Play تحصل منك على رمز Google Play.",
+"bg4": "<strong>هدية؟<\/strong> أهدِ Family Premium أدناه، أو من AkhiBrowser المثبّت من Google Play. إن كانوا يستخدمون AkhiBrowser من Google Play، يستبدلون المفتاح برمز Google Play.",
+"bg5": "المفتاح الذي تشتريه من هذا الموقع لا يعمل في AkhiBrowser المثبّت من Google Play: على هاتف Android، اشترِ من داخل التطبيق.",
 "gp0": "الشراء عبر Google Play",
 "gp1": "غيّره أو ألغِه من Google Play: في متجر Play، اضغط على صورة ملفك الشخصي، ثم الدفعات والاشتراكات، ثم الاشتراكات، ثم AkhiBrowser. يبقى Premium يعمل حتى نهاية الفترة التي دفعت ثمنها.",
 "gp2": "Premium على حاسوبك أيضًا",
@@ -1336,7 +1363,6 @@ footer .powered a:hover { text-decoration: underline; }
 "gp8": "يعمل مفتاحك في AkhiBrowser على Windows وفي AkhiBrowser لنظام Android من GitHub. أما AkhiBrowser من Google Play فيقبل فقط المشتريات التي تتم عبر Google Play، لذلك: مع مفتاح هدية <a href=\"https://akhi-license.akhibrowser.workers.dev/redeem\">احصل على رمز Google Play<\/a>؛ والمدرسة أو المسجد <a href=\"https://akhi-license.akhibrowser.workers.dev/school\">يحصل على رمز لكل أسرة<\/a>. كل رمز يمنح سنة من Family Premium، تبدأ من يوم استبداله.",
 "andb": "على هاتفك، اشترِ Premium من AkhiBrowser المثبّت من Google Play: القائمة، ثم الإضافات، ثم AkhiBrowser، ثم Premium. يتولى Google Play عملية الدفع.",
 "andall": "تشتري لحاسوب؟ اعرض كل طرق الدفع",
-"andp": "<strong>تستخدم AkhiBrowser من Google Play على Android؟<\/strong> اشترِ Premium من داخل التطبيق: القائمة، ثم الإضافات، ثم AkhiBrowser، ثم Premium. يتولى Google Play عملية الدفع. المفتاح الذي تشتريه من هذا الموقع يعمل في AkhiBrowser على Windows وفي AkhiBrowser لنظام Android من GitHub، وليس في النسخة من Google Play.",
 "x0": "إمكانية الوصول",
 "x1": "لمن لديهم عمى ألوان أو ضعف في السمع، ولكل من يحتاج إلى مساعدة أكثر قليلًا على الإنترنت.",
 "x2": "عمى الألوان",
@@ -1590,6 +1616,7 @@ footer .powered a:hover { text-decoration: underline; }
     document.querySelector(".android-buy").hidden = false;
     document.getElementById("show-plans").addEventListener("click", () => {
       document.querySelector(".plans").classList.add("shown");
+      document.querySelector(".buy-guide").classList.add("shown");
       document.querySelector(".vip-note").classList.add("shown");
       document.querySelector(".android-buy").hidden = true;
     });
