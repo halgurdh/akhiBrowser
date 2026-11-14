@@ -8,7 +8,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import mozilla.components.lib.state.Middleware
 import mozilla.components.lib.state.Store
-import org.mozilla.fenix.settings.SupportUtils
 
 /**
  * [Middleware] that emits [CustomReviewPromptNavigationEvent]s handled by the hosting fragment when an action results
@@ -33,7 +32,7 @@ class CustomReviewPromptNavigationMiddleware(private val scope: CoroutineScope) 
 
             CustomReviewPromptAction.LeaveFeedbackButtonClicked -> {
                 scope.launch {
-                    events.emit(CustomReviewPromptNavigationEvent.OpenInNewTab(SupportUtils.ANDROID_SUPPORT_SUMO_URL))
+                    events.emit(CustomReviewPromptNavigationEvent.SendFeedbackEmail)
                     events.emit(CustomReviewPromptNavigationEvent.Dismiss)
                 }
             }
@@ -57,4 +56,7 @@ sealed class CustomReviewPromptNavigationEvent {
 
     /** Open a [url] in a new tab. */
     data class OpenInNewTab(val url: String) : CustomReviewPromptNavigationEvent()
+
+    /** Open an email to AkhiBrowser's support, with feedback in its subject. */
+    data object SendFeedbackEmail : CustomReviewPromptNavigationEvent()
 }
