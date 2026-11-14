@@ -699,6 +699,10 @@ void DocumentLoadListener::AsyncOpenAfterPrefetchWait(
              self.get(), rec));
         if (rec) {
           self->ActivateFromPrefetch(rec);
+          if (RefPtr<nsHttpChannel> httpChannel =
+                  do_QueryObject(self->mChannel)) {
+            httpChannel->SetCacheReadStart(TimeStamp::Now());
+          }
         }
         nsresult rv = self->mChannel->AsyncOpen(listener);
         if (NS_FAILED(rv)) {
@@ -2394,13 +2398,15 @@ bool DocumentLoadListener::MaybeTriggerProcessSwitch(
 
                   MOZ_LOG(gProcessIsolationLog, LogLevel::Verbose,
                           ("Process Switch: Redirected load to new tab"));
+                  if (switchedContainer) {
+                    BounceTrackingState::OnLoadRetargeted(
+                        startedIn, aBrowsingContext->Canonical(),
+                        self->mLoadIdentifier);
+                    NotifyLoadRetargeted(startedIn);
+                  }
                   self->TriggerProcessSwitch(
                       MOZ_KnownLive(aBrowsingContext->Canonical()), options,
                       /* aIsNewTab */ true);
-
-                  if (switchedContainer) {
-                    NotifyLoadRetargeted(startedIn);
-                  }
                 },
             [self = RefPtr{this}](const CopyableErrorResult&) {
               MOZ_LOG(gProcessIsolationLog, LogLevel::Error,

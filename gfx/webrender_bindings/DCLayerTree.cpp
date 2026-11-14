@@ -2399,16 +2399,16 @@ bool DCSurfaceVideo::CalculateSwapChainSize(gfx::Matrix& aTransform) {
     PROFILER_MARKER_TEXT("DCSurfaceVideo", GRAPHICS, {}, str);
   }
 
+  auto swapChainFormat =
+      GetSwapChainFormat(useVpAutoHDR, useHDRRGB10A2, useHDRRGBA16F);
   if (!mVideoSwapChain || mSwapChainSize != swapChainSize || mIsDRM != isDRM ||
-      mUseVpAutoHDR != useVpAutoHDR) {
+      mUseVpAutoHDR != useVpAutoHDR || mSwapChainFormat != swapChainFormat) {
     needsToPresent = true;
     ReleaseDecodeSwapChainResources();
     // Update mSwapChainSize before creating SwapChain
     mSwapChainSize = swapChainSize;
     mIsDRM = isDRM;
 
-    auto swapChainFormat =
-        GetSwapChainFormat(useVpAutoHDR, useHDRRGB10A2, useHDRRGBA16F);
     bool useYUVSwapChain = IsYUVSwapChainFormat(swapChainFormat);
     if (useYUVSwapChain) {
       // Tries to create YUV SwapChain
@@ -2419,6 +2419,8 @@ bool DCSurfaceVideo::CalculateSwapChainSize(gfx::Matrix& aTransform) {
       if (!mVideoSwapChain) {
         mFailedYuvSwapChain = true;
         ReleaseDecodeSwapChainResources();
+        swapChainFormat =
+            GetSwapChainFormat(useVpAutoHDR, useHDRRGB10A2, useHDRRGBA16F);
 
         gfxCriticalNote << "Fallback to RGB SwapChain";
       }
@@ -2652,11 +2654,22 @@ bool DCSurfaceVideo::CreateVideoSwapChain(DXGI_FORMAT aSwapChainFormat) {
   if (FAILED(hr)) {
     gfxCriticalNote << "Failed to create video SwapChain: " << gfx::hexa(hr)
                     << " " << mSwapChainSize;
+    // A caller may retry immediately with a different format.
+    ::CloseHandle(mSwapChainSurfaceHandle);
+    mSwapChainSurfaceHandle = 0;
     return false;
   }
 
   mSwapChainFormat = aSwapChainFormat;
-  mContentVisual->SetContent(mVideoSwapChain);
+  hr = mContentVisual->SetContent(mVideoSwapChain);
+  if (FAILED(hr)) {
+    gfxCriticalNoteOnce << "SetContent(video swap chain) failed: "
+                        << gfx::hexa(hr);
+    ReleaseDecodeSwapChainResources();
+    return false;
+  }
+  // Geometry can remain unchanged when the video swap chain is replaced.
+  mDCLayerTree->SetPendingCommit();
   return true;
 }
 

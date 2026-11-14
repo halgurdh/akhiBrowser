@@ -116,6 +116,10 @@ class ExtensionsMenuItemProvider(
         when (target) {
             MenuTarget.Home -> extensions.mapToMenuItem(viewLifecycleScope) { it.toHomeMenuItem(context) }
             MenuTarget.CustomizeMenu -> MutableStateFlow<List<MenuItem>>(listOf(DEFAULT_MENU_ITEM))
+            MenuTarget.Preview ->
+                MutableStateFlow<List<MenuItem>>(
+                    listOf(DEFAULT_MENU_ITEM.copy(onClickEvent = MenuAction.Navigate.ManageExtensions))
+                )
             MenuTarget.BrowserTab -> extensions.mapToMenuItem(viewLifecycleScope) { it.toMenuItem(target, context) }
             is MenuTarget.CustomTab ->
                 extensions.mapToMenuItem(viewLifecycleScope) { it.toCustomTabMenuItem(target, context) }
@@ -124,7 +128,7 @@ class ExtensionsMenuItemProvider(
     init {
         if (target == MenuTarget.Home) {
             viewLifecycleScope.launch { observeBuiltInActions() }
-        } else if (target != MenuTarget.CustomizeMenu) {
+        } else if (target is MenuTarget.BrowserTab || target is MenuTarget.CustomTab) {
             observeExtensions(viewLifecycleScope, applicationScope)
         }
     }
@@ -185,16 +189,17 @@ class ExtensionsMenuItemProvider(
     private fun Addon.toMenuAddon() = MenuAddon(name = displayName(context), summary = summary(context), addon = this)
 
     override fun handles(event: MenuEvent) =
-        when (event) {
-            MenuAction.OnExtensionsMenuClicked,
-            is MenuAction.InstallAddon,
-            is MenuAction.Navigate.AddonDetails,
-            is MenuAction.Navigate.InstalledAddonDetails,
-            MenuAction.Navigate.ManageExtensions,
-            is MenuAction.WebExtensionActionClicked,
-            MenuAction.Navigate.DiscoverMoreExtensions -> true
-            else -> false
-        }
+        target != MenuTarget.Preview &&
+            when (event) {
+                MenuAction.OnExtensionsMenuClicked,
+                is MenuAction.InstallAddon,
+                is MenuAction.Navigate.AddonDetails,
+                is MenuAction.Navigate.InstalledAddonDetails,
+                MenuAction.Navigate.ManageExtensions,
+                is MenuAction.WebExtensionActionClicked,
+                MenuAction.Navigate.DiscoverMoreExtensions -> true
+                else -> false
+            }
 
     /** Expanding the item is left to the menu. */
     override fun onEvent(event: MenuEvent, menu: MenuHost) {

@@ -1395,6 +1395,25 @@ class SettingsTest {
     }
 
     @Test
+    fun `WHEN user has accepted the ToU and the app installed time is unavailable THEN termsOfUseAcceptedTimeInMillis returns 0L`() {
+        val settings =
+            Settings(
+                appContext = testContext,
+                packageName = "test",
+                packageManagerCompatHelper =
+                    FakePackageManagerCompatHelper(
+                        packageInfo = PackageInfo().apply { firstInstallTime = 12345L },
+                        getPackageInfoThrowable = PackageManager.NameNotFoundException(),
+                    ),
+            )
+        settings.hasAcceptedTermsOfService = true
+
+        val result = settings.termsOfUseAcceptedTimeInMillis
+
+        assertEquals(0L, result)
+    }
+
+    @Test
     fun `WHEN user has not accepted the ToU THEN termsOfUseAcceptedTimeInMillis returns 0L`() {
         val installTime = 12345L
         val settings =
@@ -1624,5 +1643,26 @@ class SettingsTest {
         settings.ipProtectionLastDataLimitNoticeCycleResetTime = "2026-11-01T00:00:00Z"
 
         assertEquals("2026-11-01T00:00:00Z", settings.ipProtectionLastDataLimitNoticeCycleResetTime)
+    }
+
+    @Test
+    fun `GIVEN a fresh install WHEN reading the last auth flow entrypoint THEN it is null`() {
+        assertNull(settings.lastAuthFlowEntrypoint)
+    }
+
+    @Test
+    fun `GIVEN no last auth flow entrypoint WHEN setting it THEN it is persisted`() {
+        settings.lastAuthFlowEntrypoint = "newuser-onboarding"
+
+        assertEquals("newuser-onboarding", settings.lastAuthFlowEntrypoint)
+    }
+
+    @Test
+    fun `GIVEN a last auth flow entrypoint is set WHEN clearing it THEN it is null`() {
+        settings.lastAuthFlowEntrypoint = "newuser-onboarding"
+
+        settings.lastAuthFlowEntrypoint = null
+
+        assertNull(settings.lastAuthFlowEntrypoint)
     }
 }

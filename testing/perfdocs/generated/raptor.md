@@ -33795,12 +33795,12 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-amazon**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
 * - **browsertime-tp6-essential-firefox-amazon**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -33815,7 +33815,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - ❌
   - ❌
 * - **browsertime-tp6-webextensions-firefox-amazon**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -33864,7 +33864,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-amazon**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -33884,7 +33884,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - ❌
   - ❌
 * - **browsertime-tp6-webextensions-firefox-amazon**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -33965,12 +33965,12 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-amazon**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
 * - **browsertime-tp6-essential-firefox-amazon**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -33985,7 +33985,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - ❌
   - ❌
 * - **browsertime-tp6-webextensions-firefox-amazon**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -34034,12 +34034,12 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-amazon**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
 * - **browsertime-tp6-essential-firefox-amazon**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -34049,7 +34049,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - ❌
   - ❌
 * - **browsertime-tp6-webextensions-firefox-amazon**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -34188,12 +34188,12 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-bing-search**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
 * - **browsertime-tp6-essential-firefox-bing-search**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -34242,7 +34242,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-bing-search**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -34323,12 +34323,12 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-bing-search**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
 * - **browsertime-tp6-essential-firefox-bing-search**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -34377,12 +34377,12 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-bing-search**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
 * - **browsertime-tp6-essential-firefox-bing-search**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -34502,7 +34502,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-buzzfeed**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -34536,7 +34536,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-buzzfeed**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -34587,7 +34587,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-buzzfeed**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -34621,7 +34621,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-buzzfeed**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -34746,12 +34746,12 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-cnn**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
 * - **browsertime-tp6-essential-firefox-cnn**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -34800,7 +34800,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-cnn**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -34881,12 +34881,12 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-cnn**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
 * - **browsertime-tp6-essential-firefox-cnn**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -34935,12 +34935,12 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-cnn**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
 * - **browsertime-tp6-essential-firefox-cnn**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -35287,7 +35287,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-ebay**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -35331,7 +35331,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-ebay**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -35397,7 +35397,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-ebay**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -35441,7 +35441,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-ebay**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -35556,7 +35556,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-espn**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -35590,7 +35590,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-espn**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -35641,7 +35641,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-espn**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -35675,7 +35675,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-espn**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -35780,7 +35780,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-expedia**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -35814,7 +35814,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-expedia**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -35865,7 +35865,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-expedia**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -35899,7 +35899,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-expedia**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -36023,12 +36023,12 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-fandom**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
 * - **browsertime-tp6-essential-firefox-fandom**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -36077,7 +36077,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-fandom**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -36158,12 +36158,12 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-fandom**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
 * - **browsertime-tp6-essential-firefox-fandom**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -36212,12 +36212,12 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-fandom**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
 * - **browsertime-tp6-essential-firefox-fandom**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -36348,7 +36348,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-google-docs**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -36392,7 +36392,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-google-docs**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -36458,7 +36458,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-google-docs**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -36502,7 +36502,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-google-docs**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -36626,7 +36626,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-google-search**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -36670,7 +36670,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-google-search**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -36736,7 +36736,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-google-search**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -36780,7 +36780,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-google-search**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -36915,12 +36915,12 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-google-slides**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
 * - **browsertime-tp6-essential-firefox-google-slides**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -36969,7 +36969,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-google-slides**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -37050,12 +37050,12 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-google-slides**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
 * - **browsertime-tp6-essential-firefox-google-slides**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -37104,12 +37104,12 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-google-slides**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
 * - **browsertime-tp6-essential-firefox-google-slides**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -37239,7 +37239,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-imdb**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -37283,7 +37283,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-imdb**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -37349,7 +37349,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-imdb**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -37393,7 +37393,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-imdb**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -37519,7 +37519,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-imgur**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -37563,7 +37563,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-imgur**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -37629,7 +37629,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-imgur**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -37673,7 +37673,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-imgur**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -37798,7 +37798,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-microsoft**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -37842,7 +37842,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-microsoft**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -37908,7 +37908,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-microsoft**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -37952,7 +37952,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-microsoft**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -38294,7 +38294,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-reddit**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -38338,7 +38338,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-reddit**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -38404,7 +38404,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-reddit**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -38448,7 +38448,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-reddit**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -39016,12 +39016,12 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-twitter**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
 * - **browsertime-tp6-essential-firefox-twitter**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -39070,7 +39070,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-twitter**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -39151,12 +39151,12 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-twitter**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
 * - **browsertime-tp6-essential-firefox-twitter**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -39205,12 +39205,12 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-twitter**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
 * - **browsertime-tp6-essential-firefox-twitter**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -39547,7 +39547,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-wikia**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -39581,7 +39581,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-wikia**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -39632,7 +39632,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-wikia**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -39666,7 +39666,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-wikia**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -39791,12 +39791,12 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-wikipedia**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
 * - **browsertime-tp6-essential-firefox-wikipedia**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -39845,7 +39845,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-wikipedia**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -39926,12 +39926,12 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-wikipedia**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
 * - **browsertime-tp6-essential-firefox-wikipedia**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -39980,12 +39980,12 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-bytecode-firefox-wikipedia**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
 * - **browsertime-tp6-essential-firefox-wikipedia**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -40115,7 +40115,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-youtube**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -40159,7 +40159,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-youtube**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -40225,7 +40225,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-youtube**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -40269,7 +40269,7 @@ Tests for page-load performance. The links direct to the actual websites that ar
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6-firefox-youtube**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -40397,7 +40397,7 @@ Browsertime tests that interact with the webpage. Includes responsiveness tests 
   - ❌
   - ❌
 * - **browsertime-responsiveness-firefox-cnn-nav**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -40431,7 +40431,7 @@ Browsertime tests that interact with the webpage. Includes responsiveness tests 
   - mozilla-release
   - mozilla-beta
 * - **browsertime-responsiveness-firefox-cnn-nav**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -40482,7 +40482,7 @@ Browsertime tests that interact with the webpage. Includes responsiveness tests 
   - mozilla-release
   - mozilla-beta
 * - **browsertime-responsiveness-firefox-cnn-nav**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -40521,7 +40521,7 @@ Browsertime tests that interact with the webpage. Includes responsiveness tests 
   - ❌
   - ❌
 * - **browsertime-responsiveness-firefox-cnn-nav**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -40634,7 +40634,7 @@ Browsertime tests that interact with the webpage. Includes responsiveness tests 
   - ❌
   - ❌
 * - **browsertime-responsiveness-firefox-reddit-billgates-ama**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -40668,7 +40668,7 @@ Browsertime tests that interact with the webpage. Includes responsiveness tests 
   - mozilla-release
   - mozilla-beta
 * - **browsertime-responsiveness-firefox-reddit-billgates-ama**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -40719,7 +40719,7 @@ Browsertime tests that interact with the webpage. Includes responsiveness tests 
   - mozilla-release
   - mozilla-beta
 * - **browsertime-responsiveness-firefox-reddit-billgates-ama**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -40758,7 +40758,7 @@ Browsertime tests that interact with the webpage. Includes responsiveness tests 
   - ❌
   - ❌
 * - **browsertime-responsiveness-firefox-reddit-billgates-ama**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -40871,7 +40871,7 @@ Browsertime tests that interact with the webpage. Includes responsiveness tests 
   - ❌
   - ❌
 * - **browsertime-responsiveness-firefox-reddit-billgates-post-1**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -40905,7 +40905,7 @@ Browsertime tests that interact with the webpage. Includes responsiveness tests 
   - mozilla-release
   - mozilla-beta
 * - **browsertime-responsiveness-firefox-reddit-billgates-post-1**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -40956,7 +40956,7 @@ Browsertime tests that interact with the webpage. Includes responsiveness tests 
   - mozilla-release
   - mozilla-beta
 * - **browsertime-responsiveness-firefox-reddit-billgates-post-1**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -40995,7 +40995,7 @@ Browsertime tests that interact with the webpage. Includes responsiveness tests 
   - ❌
   - ❌
 * - **browsertime-responsiveness-firefox-reddit-billgates-post-1**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -41108,7 +41108,7 @@ Browsertime tests that interact with the webpage. Includes responsiveness tests 
   - ❌
   - ❌
 * - **browsertime-responsiveness-firefox-reddit-billgates-post-2**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -41142,7 +41142,7 @@ Browsertime tests that interact with the webpage. Includes responsiveness tests 
   - mozilla-release
   - mozilla-beta
 * - **browsertime-responsiveness-firefox-reddit-billgates-post-2**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -41193,7 +41193,7 @@ Browsertime tests that interact with the webpage. Includes responsiveness tests 
   - mozilla-release
   - mozilla-beta
 * - **browsertime-responsiveness-firefox-reddit-billgates-post-2**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -41232,7 +41232,7 @@ Browsertime tests that interact with the webpage. Includes responsiveness tests 
   - ❌
   - ❌
 * - **browsertime-responsiveness-firefox-reddit-billgates-post-2**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -42201,6 +42201,23 @@ Page-load performance test suite on Android. The links direct to the actual webs
 * **use live sites**: false
 * **Test Task**:
 
+:::{list-table} **{ref}`test-android-em-14-arm64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-tp6m-essential-fenix-allrecipes**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-android-hw-a55-14-0-aarch64-shippable/opt <hardware-samsung-a55>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -42211,7 +42228,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6m-essential-fenix-allrecipes**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -42320,7 +42337,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6m-fenix-amazon**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -42419,6 +42436,23 @@ Page-load performance test suite on Android. The links direct to the actual webs
 * **use live sites**: false
 * **Test Task**:
 
+:::{list-table} **{ref}`test-android-em-14-arm64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-tp6m-essential-fenix-amazon-search**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-android-hw-a55-14-0-aarch64-shippable/opt <hardware-samsung-a55>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -42429,7 +42463,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6m-essential-fenix-amazon-search**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -42548,7 +42582,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6m-fenix-bild-de**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -42657,7 +42691,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6m-fenix-bing**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -42766,7 +42800,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6m-fenix-bing-search-restaurants**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -42875,7 +42909,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6m-fenix-booking**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -42984,7 +43018,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6m-fenix-cnn**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -43093,7 +43127,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6m-fenix-cnn-ampstories**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -43202,7 +43236,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6m-fenix-dailymail**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -43311,7 +43345,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6m-fenix-ebay-kleinanzeigen**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -43420,7 +43454,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6m-fenix-ebay-kleinanzeigen-search**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -43519,6 +43553,23 @@ Page-load performance test suite on Android. The links direct to the actual webs
 * **use live sites**: false
 * **Test Task**:
 
+:::{list-table} **{ref}`test-android-em-14-arm64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-tp6m-essential-fenix-espn**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-android-hw-a55-14-0-aarch64-shippable/opt <hardware-samsung-a55>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -43529,7 +43580,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6m-essential-fenix-espn**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -43629,6 +43680,23 @@ Page-load performance test suite on Android. The links direct to the actual webs
 * **use live sites**: false
 * **Test Task**:
 
+:::{list-table} **{ref}`test-android-em-14-arm64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-tp6m-essential-fenix-google**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-android-hw-a55-14-0-aarch64-shippable/opt <hardware-samsung-a55>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -43639,7 +43707,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6m-essential-fenix-google**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -43748,7 +43816,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6m-fenix-google-maps**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -43858,7 +43926,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6m-fenix-google-search-restaurants**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -43967,7 +44035,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6m-fenix-imdb**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -44066,6 +44134,23 @@ Page-load performance test suite on Android. The links direct to the actual webs
 * **use live sites**: false
 * **Test Task**:
 
+:::{list-table} **{ref}`test-android-em-14-arm64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-tp6m-essential-fenix-microsoft-support**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-android-hw-a55-14-0-aarch64-shippable/opt <hardware-samsung-a55>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -44076,7 +44161,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6m-essential-fenix-microsoft-support**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -44185,7 +44270,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6m-fenix-reddit**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -44294,7 +44379,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6m-fenix-stackoverflow**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -44403,7 +44488,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6m-fenix-wikipedia**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -44512,7 +44597,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6m-fenix-youtube**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌
@@ -44611,6 +44696,23 @@ Page-load performance test suite on Android. The links direct to the actual webs
 * **use live sites**: false
 * **Test Task**:
 
+:::{list-table} **{ref}`test-android-em-14-arm64-shippable/opt <hardware-mac-mini-m4>`**
+:widths: 30 15 15 15 15
+:header-rows: 1
+
+* - **Test Name**
+  - mozilla-central
+  - autoland
+  - mozilla-release
+  - mozilla-beta
+* - **browsertime-tp6m-essential-fenix-youtube-watch**
+  - ❌
+  - ❌
+  - ❌
+  - ❌
+:::
+
+
 :::{list-table} **{ref}`test-android-hw-a55-14-0-aarch64-shippable/opt <hardware-samsung-a55>`**
 :widths: 30 15 15 15 15
 :header-rows: 1
@@ -44621,7 +44723,7 @@ Page-load performance test suite on Android. The links direct to the actual webs
   - mozilla-release
   - mozilla-beta
 * - **browsertime-tp6m-essential-fenix-youtube-watch**
-  - ✅
+  - ❌
   - ✅
   - ❌
   - ❌

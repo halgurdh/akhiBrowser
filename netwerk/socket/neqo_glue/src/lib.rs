@@ -171,20 +171,24 @@ extern "C" {
 
 extern "C" {
     fn moz_mock_network_udp_send_would_block(family: u16, addr: *const u8, port: u16) -> bool;
+    fn moz_mock_network_udp_send_reset(family: u16, addr: *const u8, port: u16) -> bool;
 }
 
-fn mock_udp_send_would_block(dest: SocketAddr) -> bool {
+fn mock_udp_send_error(dest: SocketAddr) -> Option<io::ErrorKind> {
     if !static_prefs::pref!("network.socket.attach_mock_network_layer") {
-        return false;
+        return None;
     }
+    let (family, octets) = match dest.ip() {
+        IpAddr::V4(v4) => (AF_INET_U16, v4.octets().to_vec()),
+        IpAddr::V6(v6) => (AF_INET6_U16, v6.octets().to_vec()),
+    };
     unsafe {
-        match dest.ip() {
-            IpAddr::V4(v4) => {
-                moz_mock_network_udp_send_would_block(AF_INET_U16, v4.octets().as_ptr(), dest.port())
-            }
-            IpAddr::V6(v6) => {
-                moz_mock_network_udp_send_would_block(AF_INET6_U16, v6.octets().as_ptr(), dest.port())
-            }
+        if moz_mock_network_udp_send_reset(family, octets.as_ptr(), dest.port()) {
+            Some(io::ErrorKind::ConnectionReset)
+        } else if moz_mock_network_udp_send_would_block(family, octets.as_ptr(), dest.port()) {
+            Some(io::ErrorKind::WouldBlock)
+        } else {
+            None
         }
     }
 }
@@ -397,6 +401,7 @@ impl NeqoHttp3Conn {
         idle_timeout: u32,
         fast_pto: u32,
         pmtud_enabled: bool,
+        pacing_enabled: bool,
         socket: Option<i64>,
     ) -> Result<RefPtr<Self>, nsresult> {
         // Nss init.
@@ -519,6 +524,7 @@ impl NeqoHttp3Conn {
             // MLKEM support is configured further below. By default, disable it.
             .mlkem(false)
             .pmtud(pmtud_enabled)
+            .pacing(pacing_enabled)
             .spurious_recovery(spurious_recovery)
             .abe(static_prefs::pref!("network.http.http3.abe"))
             .hystart_css_baseline(css_baseline);
@@ -1138,6 +1144,7 @@ pub extern "C" fn neqo_http3conn_new(
         idle_timeout,
         fast_pto,
         pmtud_enabled,
+        true,
         Some(socket),
     ) {
         Ok(http3_conn) => {
@@ -1164,6 +1171,7 @@ pub extern "C" fn neqo_http3conn_new_use_nspr_for_io(
     qlog_dir: &nsACString,
     idle_timeout: u32,
     fast_pto: u32,
+    pacing_enabled: bool,
     result: &mut *const NeqoHttp3Conn,
 ) -> nsresult {
     *result = ptr::null_mut();
@@ -1183,6 +1191,7 @@ pub extern "C" fn neqo_http3conn_new_use_nspr_for_io(
         idle_timeout,
         fast_pto,
         false,
+        pacing_enabled,
         None,
     ) {
         Ok(http3_conn) => {
@@ -1432,10 +1441,9 @@ pub extern "C" fn neqo_http3conn_process_output_and_send(
                     break NS_ERROR_CONNECTION_REFUSED;
                 }
 
-                let send_result = if mock_udp_send_would_block(dg.destination()) {
-                    Err(io::Error::from(io::ErrorKind::WouldBlock))
-                } else {
-                    conn.socket.as_mut().expect("non NSPR IO").send(&dg)
+                let send_result = match mock_udp_send_error(dg.destination()) {
+                    Some(kind) => Err(io::Error::from(kind)),
+                    None => conn.socket.as_mut().expect("non NSPR IO").send(&dg),
                 };
                 match send_result {
                     Ok(()) => {}

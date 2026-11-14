@@ -35,6 +35,10 @@ ChromeUtils.defineESModuleGetters(lazy, {
 const { setTimeout, clearTimeout } = ChromeUtils.importESModule(
   "resource://gre/modules/Timer.sys.mjs"
 );
+// eslint-disable-next-line mozilla/use-static-import
+const { AppConstants } = ChromeUtils.importESModule(
+  "resource://gre/modules/AppConstants.sys.mjs"
+);
 import {
   actionTypes as at,
   actionCreators as ac,
@@ -85,7 +89,6 @@ const PREF_SPOC_COUNTS = "discoverystream.placements.spocs.counts";
 const PREF_SPOC_POSITIONS = "discoverystream.spoc-positions";
 const PREF_MERINO_FEED_EXPERIMENT =
   "browser.newtabpage.activity-stream.discoverystream.merino-feed-experiment";
-const PREF_ENABLED = "discoverystream.enabled";
 const PREF_HARDCODED_BASIC_LAYOUT = "discoverystream.hardcoded-basic-layout";
 const PREF_SPOCS_ENDPOINT = "discoverystream.spocs-endpoint";
 const PREF_SPOCS_ENDPOINT_QUERY = "discoverystream.spocs-endpoint-query";
@@ -144,6 +147,7 @@ const PREF_SECTIONS_ORDERING = "discoverystream.sections.ordering";
 // Comma-separated section ranks that may carry an ad; "" uses the hard-coded set.
 const PREF_SECTIONS_AD_ALLOWED_RANKS =
   "discoverystream.sections.adAllowedRanks";
+const DISCOVERY_STREAM_ENABLED = true;
 
 let getHardcodedLayout;
 
@@ -205,9 +209,7 @@ export class DiscoveryStreamFeed {
         e
       );
     }
-    this._prefCache.config.enabled =
-      this._prefCache.config.enabled &&
-      this.store.getState().Prefs.values[PREF_ENABLED];
+    this._prefCache.config.enabled = DISCOVERY_STREAM_ENABLED;
 
     return this._prefCache.config;
   }
@@ -662,40 +664,63 @@ export class DiscoveryStreamFeed {
       );
     }
 
-    const spocs = await this.adsClient.requestSpocAds(requests, options);
+    /**
+     * @backward-compat { version 161 }
+     * `requestSpocOrImageAds` can return images and spocs (with similar structures) unlike `requestSpocAds`
+     * which invalidly drops would-be images returned from MARS. This requires a vendor of A-S
+     * for the function to exist, and another for it to behave correctly (using the latter).
+     */
+    const adsClientUpdated =
+      Services.vc.compare(AppConstants.MOZ_APP_VERSION, "161.0a1") >= 0;
+    let spocs;
+    if (adsClientUpdated) {
+      spocs = await this.adsClient.requestSpocOrImageAds(requests, options);
+    } else {
+      spocs = await this.adsClient.requestSpocAds(requests, options);
+    }
 
     // The ads-client omits placements it has no ads for; MARS returns them as
     // empty arrays, and loadSpocs concats by placement, so a missing key folds
     // an undefined into the spocs list.
+    // `requestSpocOrImageAds` returns wrapped spocs (under field 'v0').
     return {
       ...Object.fromEntries(placements.map(p => [p.placement, []])),
       ...Object.fromEntries(
         spocs.entries().map(([placementId, placementSpocs]) => [
           placementId,
-          placementSpocs.map(spoc => ({
-            format: spoc.format,
-            url: spoc.url,
-            callbacks: spoc.callbacks,
-            image_url: spoc.imageUrl,
-            title: spoc.title,
-            domain: spoc.domain,
-            excerpt: spoc.excerpt,
-            sponsor: spoc.sponsor,
-            sponsored_by_override: spoc.sponsoredByOverride,
-            block_key: spoc.blockKey,
-            caps: spoc.caps
-              ? { cap_key: spoc.caps.capKey, day: spoc.caps.day }
-              : undefined,
-            ranking: spoc.ranking
-              ? {
-                  item_score: spoc.ranking.itemScore,
-                  personalization_models: Object.fromEntries(
-                    spoc.ranking.personalizationModels ?? []
-                  ),
-                  priority: spoc.ranking.priority,
-                }
-              : undefined,
-          })),
+          placementSpocs
+            .map(spocWrapped => {
+              if (adsClientUpdated) {
+                return spocWrapped.v0;
+              }
+              return spocWrapped;
+            })
+            .filter(Boolean)
+            .map(spoc => ({
+              alt_text: spoc.altText,
+              format: spoc.format,
+              url: spoc.url,
+              callbacks: spoc.callbacks,
+              image_url: spoc.imageUrl,
+              title: spoc.title,
+              domain: spoc.domain,
+              excerpt: spoc.excerpt,
+              sponsor: spoc.sponsor,
+              sponsored_by_override: spoc.sponsoredByOverride,
+              block_key: spoc.blockKey,
+              caps: spoc.caps
+                ? { cap_key: spoc.caps.capKey, day: spoc.caps.day }
+                : undefined,
+              ranking: spoc.ranking
+                ? {
+                    item_score: spoc.ranking.itemScore,
+                    personalization_models: Object.fromEntries(
+                      spoc.ranking.personalizationModels ?? []
+                    ),
+                    priority: spoc.ranking.priority,
+                  }
+                : undefined,
+            })),
         ])
       ),
     };
@@ -2627,7 +2652,6 @@ export class DiscoveryStreamFeed {
   async onPrefChangedAction(action) {
     switch (action.data.name) {
       case PREF_CONFIG:
-      case PREF_ENABLED:
       case PREF_HARDCODED_BASIC_LAYOUT:
       case PREF_SPOCS_ENDPOINT:
       case PREF_SPOCS_ENDPOINT_QUERY:

@@ -19,9 +19,11 @@ smart_window:
       - https://bugzilla.mozilla.org/show_bug.cgi?id=2015626
       - https://bugzilla.mozilla.org/show_bug.cgi?id=2009615
       - https://bugzilla.mozilla.org/show_bug.cgi?id=2084445
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=2090056
     data_reviews:
       - https://phabricator.services.mozilla.com/D282873
       - https://phabricator.services.mozilla.com/D338147
+      - https://phabricator.services.mozilla.com/D340378
     data_sensitivity:
       - interaction
     notification_emails: &emails
@@ -35,7 +37,9 @@ smart_window:
       detected_intent: &detected_intent
         type: string
         description: >
-          What was the detected intent for the request: navigate, search, chat, or action
+          What was the detected intent for the request: navigate, search, chat, or action.
+          When the smartWindow feature's smartbarIntent variable pins search or chat,
+          non-navigate requests report the pinned value rather than the classifier's.
       length: &length
         type: quantity
         unit: characters
@@ -63,8 +67,8 @@ smart_window:
         type: string
         description: >
           How the request was submitted: button, enter, follow-up, fxms,
-          menu, resume, retry, shortcuts, starter, or suggestion. Messaging
-          surfaces may supply their own value instead of fxms
+          menu, resume, retry, shortcuts, starter, suggestion, or toolbar.
+          Messaging surfaces may supply their own value instead of fxms
       tabs:
         type: quantity
         unit: count

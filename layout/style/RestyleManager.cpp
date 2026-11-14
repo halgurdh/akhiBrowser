@@ -480,20 +480,29 @@ void RestyleManager::RestyleForInsertOrChange(nsIContent* aChild) {
   }
 }
 
-void RestyleManager::ContentWillBeRemoved(nsIContent* aOldChild) {
+void RestyleManager::ContentWillBeRemoved(nsIContent* aOldChild,
+                                          const ContentRemoveInfo& aInfo) {
   auto* container = aOldChild->GetParentNode();
   MOZ_ASSERT(container);
 
   // Computed style data isn't useful for detached nodes, and we'll need to
-  // recompute it anyway if we ever insert the nodes back into a document.
+  // recompute it anyway if we ever insert the nodes back into a document. We do
+  // need to keep our data for moveBefore().
   if (auto* element = Element::FromNode(aOldChild)) {
-    RestyleManager::ClearServoDataFromSubtree(element);
+    const bool preserveRootData =
+        aInfo.mNewParent && aInfo.mNewParent->IsElement() &&
+        aInfo.mNewParent->AsElement()->HasServoData() &&
+        !Servo_Element_IsDisplayNone(aInfo.mNewParent->AsElement());
+    ClearServoDataFromSubtree(element, IncludeRoot(!preserveRootData));
     // If this element is undisplayed or may have undisplayed descendants, we
     // need to invalidate the cache, since there's the unlikely event of those
     // elements getting destroyed and their addresses reused in a way that we
     // look up the cache with their address for a different element before it's
     // invalidated.
     IncrementUndisplayedRestyleGeneration();
+    if (preserveRootData) {
+      PostRestyleEvent(element, RestyleHint::RestyleSubtree(), nsChangeHint(0));
+    }
   }
 
   // This is called with anonymous nodes explicitly by editor and view
@@ -1028,11 +1037,11 @@ static bool RecomputePosition(nsIFrame* aFrame) {
   availSize.BSize(frameWM) = NS_UNCONSTRAINEDSIZE;
 
   ViewportFrame* viewport = do_QueryFrame(parentFrame);
-  nsSize cbSize =
-      viewport
-          ? viewport->GetContainingBlockAdjustedForScrollbars(parentReflowInput)
-                .Size()
-          : aFrame->GetContainingBlock()->GetSize();
+  nsSize cbSize = viewport ? viewport
+                                 ->GetContainingBlockAdjustedForScrollbars(
+                                     parentReflowInput, aFrame)
+                                 .Size()
+                           : aFrame->GetContainingBlock()->GetSize();
   const nsMargin& parentBorder =
       parentReflowInput.mStyleBorder->GetComputedBorder();
   cbSize -= nsSize(parentBorder.LeftRight(), parentBorder.TopBottom());

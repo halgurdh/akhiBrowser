@@ -93,6 +93,8 @@ ChromeUtils.defineESModuleGetters(lazy, {
     "moz-src:///browser/components/aiwindow/ui/modules/MonitorAttention.sys.mjs",
   MonitorUIUtils:
     "moz-src:///browser/components/aiwindow/ui/modules/MonitorUIUtils.sys.mjs",
+  SmartActionsToolbar:
+    "moz-src:///browser/components/aiwindow/ui/modules/SmartActionsToolbar.sys.mjs",
   SmartWindowLocation:
     "moz-src:///browser/components/aiwindow/models/SmartWindowLocation.sys.mjs",
   SmartWindowTelemetry:
@@ -179,6 +181,7 @@ export const AIWindow = {
       this._updateHamburgerMenuPosition(win);
       this._initializeAskButtonOnToolbox(win);
       this._updateMonitorButtonForWindow(win);
+      lazy.SmartActionsToolbar.init(win);
       const windowArgs = win?.arguments?.[1];
       if (
         windowArgs instanceof Ci.nsIPropertyBag2 &&
@@ -224,6 +227,7 @@ export const AIWindow = {
     );
     Services.obs.addObserver(this, "tabstrip-orientation-change");
     Services.obs.addObserver(this, "browser-region-updated");
+    Services.obs.addObserver(this, "intl:app-locales-changed");
     Services.prefs.addObserver(PREF_AGENT_SUPPORTED_REGIONS, this);
     Services.prefs.addObserver(PREF_AUTO_TAB_GROUPING_LOCALES, this);
     lazy.SmartWindowTelemetry.init();
@@ -272,6 +276,7 @@ export const AIWindow = {
     );
     Services.obs.removeObserver(this, "tabstrip-orientation-change");
     Services.obs.removeObserver(this, "browser-region-updated");
+    Services.obs.removeObserver(this, "intl:app-locales-changed");
     Services.prefs.removeObserver(PREF_AGENT_SUPPORTED_REGIONS, this);
     Services.prefs.removeObserver(PREF_AUTO_TAB_GROUPING_LOCALES, this);
 
@@ -308,9 +313,11 @@ export const AIWindow = {
       this._updateGroupTabsButtons();
     } else if (
       topic === "browser-region-updated" ||
+      topic === "intl:app-locales-changed" ||
       topic === "nsPref:changed"
     ) {
-      // Both inputs to the region gate on the monitor button.
+      // The supported markets, the home region and the app locale are all
+      // inputs to the region gate on the monitor button.
       this._updateMonitorWidgetRegistration();
     } else if (topic === lazy.MONITOR_CONDITION_MET_TOPIC) {
       this.showMonitorAttention(data);
@@ -404,6 +411,7 @@ export const AIWindow = {
     this._updateGroupTabsWidgetRegistration();
     this._updateSwitcherWidgetRegistration();
     this._updateMonitorWidgetRegistration();
+    lazy.SmartActionsToolbar.updateAll();
     const widget = lazy.CustomizableUI.getWidget("ai-window-toggle");
     for (const { node } of widget?.instances ?? []) {
       this._updateButtonVisibility(node);
@@ -1211,6 +1219,7 @@ export const AIWindow = {
       this._updateHamburgerMenuPosition(win, { isToggling: true });
       this._initializeAskButtonOnToolbox(win);
       this._updateMonitorButtonForWindow(win);
+      lazy.SmartActionsToolbar.update(win);
       this._updateGroupTabsButtonVisibility(
         win.document.getElementById(GROUP_TABS_BUTTON_ID)
       );
@@ -1296,6 +1305,7 @@ export const AIWindow = {
       this._recordSmartWindowUsage();
     }
     this._uninitTabStateManager(win);
+    lazy.SmartActionsToolbar.uninit(win);
     this._windowStates.delete(win);
   },
 

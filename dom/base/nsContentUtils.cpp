@@ -7091,7 +7091,9 @@ void nsContentUtils::SetHTMLUnsafe(
 // Please note that about:blank and about:srcdoc inherit the security
 // context from the embedding context and hence are not loaded using
 // an about: scheme principal.
-bool ShouldSanitize(nsIPrincipal* aPrincipal, int32_t aFlags) {
+// static
+bool nsContentUtils::ShouldSanitizeFragment(nsIPrincipal* aPrincipal,
+                                            int32_t aFlags) {
   // We don't need to sanitize for setHTML(), which uses
   // kParseFragmentNoSanitization.
   if (aFlags == nsContentUtils::kParseFragmentNoSanitization) {
@@ -7186,7 +7188,7 @@ nsresult nsContentUtils::ParseFragmentHTML(
   RefPtr<Document> doc = aTargetNode->OwnerDoc();
   RefPtr<DocumentFragment> fragment;
 
-  if (ShouldSanitize(nodePrincipal, aFlags)) {
+  if (ShouldSanitizeFragment(nodePrincipal, aFlags)) {
     if (!doc->IsLoadedAsData()) {
       doc = nsContentUtils::CreateInertHTMLDocument(doc);
       if (!doc) {
@@ -7283,7 +7285,7 @@ nsresult nsContentUtils::ParseFragmentXML(const nsAString& aSourceBuffer,
   }
 #endif
 
-  bool shouldSanitize = ShouldSanitize(nodePrincipal, aFlags);
+  bool shouldSanitize = ShouldSanitizeFragment(nodePrincipal, aFlags);
   if (shouldSanitize && !aDocument->IsLoadedAsData()) {
     doc = nsContentUtils::CreateInertXMLDocument(aDocument);
   } else {
@@ -7785,6 +7787,9 @@ void nsContentUtils::RemoveScriptBlocker() {
   uint32_t blockersCount = lastBlocker - firstBlocker;
   sRunnersCountAtFirstBlocker = 0;
   NS_ASSERTION(firstBlocker <= lastBlocker, "bad sRunnersCountAtFirstBlocker");
+  if (!blockersCount) {
+    return;
+  }
 
   while (firstBlocker < lastBlocker) {
     nsCOMPtr<nsIRunnable> runnable;
@@ -7806,7 +7811,9 @@ void nsContentUtils::RemoveScriptBlocker() {
   AutoRestore<bool> removingScriptBlockers(sRemovingScriptBlockers);
   sRemovingScriptBlockers = true;
 #endif
-  sBlockedScriptRunners->RemoveElementsAt(originalFirstBlocker, blockersCount);
+  MOZ_DIAGNOSTIC_ASSERT(!sScriptBlockerCount &&
+                        sBlockedScriptRunners->Length() == lastBlocker);
+  sBlockedScriptRunners->TruncateLength(originalFirstBlocker);
 }
 
 nsAutoMicroTaskForDocument::nsAutoMicroTaskForDocument(
@@ -11687,8 +11694,7 @@ static bool StartSerializingShadowDOM(
 
   // 6. If shadow's slot assignment is "manual", then append "
   // shadowrootslotassignment="manual"".
-  if (StaticPrefs::dom_shadowdom_shadowRootSlotAssignment_enabled() &&
-      shadow->SlotAssignment() == SlotAssignmentMode::Manual) {
+  if (shadow->SlotAssignment() == SlotAssignmentMode::Manual) {
     aBuilder.Append(u" shadowrootslotassignment=\"manual\"");
   }
 
@@ -11832,7 +11838,7 @@ static void SerializeNodeToMarkupInternal(
         aBuilder.Append(u" ");
         aBuilder.Append(
             static_cast<nsIContent*>(current)->GetCharacterDataBuffer());
-        aBuilder.Append(u">");
+        aBuilder.Append(u"?>");
         break;
       }
     }

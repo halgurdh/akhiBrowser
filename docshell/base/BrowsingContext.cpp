@@ -159,6 +159,31 @@ DEFINE_IPC_SERIALIZER_WITH_FIELDS(mozilla::dom::EmbedderColorSchemes, mUsed,
 
 }  // namespace IPC
 
+namespace geckoprofiler::markers {
+
+class NavigationRateLimitedMarker
+    : public mozilla::BaseMarkerType<NavigationRateLimitedMarker> {
+ public:
+  static constexpr const char* Name = "NavigationRateLimited";
+  static constexpr const char* Description =
+      "A location or history API call was ignored because the navigation rate "
+      "limit was reached.";
+
+  using MS = mozilla::MarkerSchema;
+  static constexpr MS::PayloadField PayloadFields[] = {
+      {"limit", MS::InputType::Uint32, "Limit", MS::Format::Integer},
+      {"timespan", MS::InputType::TimeDuration, "Timespan",
+       MS::Format::Duration}};
+
+  static constexpr MS::Location Locations[] = {MS::Location::MarkerChart,
+                                               MS::Location::MarkerTable};
+  static constexpr const char* TableLabel =
+      "Limit of {marker.data.limit} calls per {marker.data.timespan} reached";
+  static constexpr const char* ChartLabel = "{marker.name}";
+};
+
+}  // namespace geckoprofiler::markers
+
 namespace mozilla {
 namespace dom {
 
@@ -2552,6 +2577,9 @@ nsresult BrowsingContext::InternalLoad(nsDocShellLoadState* aLoadState) {
   // Same reason as for the sandbox flags.
   MOZ_TRY(CheckFramebusting(aLoadState));
 
+  // Ensure we don't keep a strong reference to the source element for too long.
+  aLoadState->SetSourceElement(nullptr);
+
   if (XRE_IsParentProcess()) {
     ContentParent* cp = Canonical()->GetContentParent();
     if (!cp || !cp->CanSend()) {
@@ -3179,6 +3207,11 @@ BrowsingContext::IPCInitializer BrowsingContext::GetIPCInitializer() {
   IPCInitializer init;
   init.mId = Id();
   init.mParentId = mParentWindow ? mParentWindow->Id() : 0;
+  if (RefPtr<BrowsingContext> opener = GetOpener()) {
+    if (WindowContext* openerWindow = opener->GetCurrentWindowContext()) {
+      init.mOpenerInnerWindowId = openerWindow->Id();
+    }
+  }
   init.mWindowless = mWindowless;
   init.mUseRemoteTabs = mUseRemoteTabs;
   init.mUseRemoteSubframes = mUseRemoteSubframes;
@@ -4597,6 +4630,12 @@ bool BrowsingContext::CheckNavigationRateLimit(CallerType aCallerType) {
                                       "NavigationChangeFloodingPrevented");
     }
 
+    PROFILER_MARKER(
+        "Navigation rate limited", DOM,
+        MarkerOptions(MarkerStack::Capture(),
+                      MarkerInnerWindowId(GetCurrentInnerWindowId())),
+        NavigationRateLimitedMarker, limitCount, throttleSpan);
+
     return false;
   }
 
@@ -4696,7 +4735,8 @@ bool ParamTraits<MaybeDiscarded<BrowsingContext>>::Read(
 }
 
 IMPLEMENT_IPC_SERIALIZER_WITH_FIELDS(BrowsingContext::IPCInitializer, mId,
-                                     mParentId, mWindowless, mUseRemoteTabs,
+                                     mParentId, mOpenerInnerWindowId,
+                                     mWindowless, mUseRemoteTabs,
                                      mUseRemoteSubframes, mCreatedDynamically,
                                      mChildOffset, mOriginAttributes,
                                      mRequestContextId, mSessionHistoryIndex,

@@ -161,7 +161,7 @@ static uint32_t gNonSynthesizedMouseOrKeyboardEventCounter = 0;
 static nsITimer* gUserInteractionTimer = nullptr;
 static nsITimerCallback* gUserInteractionTimerCallback = nullptr;
 
-static const double kCursorLoadingTimeout = 1000;  // ms
+static const int32_t kCursorLoadingTimeout = 1000;  // ms
 constinit static AutoWeakFrame gLastCursorSourceFrame;
 static TimeStamp gLastCursorUpdateTime;
 static TimeStamp gTypingStartTime;
@@ -4467,7 +4467,11 @@ nsresult EventStateManager::PostHandleEvent(nsPresContext* aPresContext,
             break;
           }
 
+          AutoWeakFrame weakScrollTarget(scrollTarget);
           ScrollbarsForWheel::SetActiveScrollTarget(scrollTarget);
+          if (scrollTarget && !weakScrollTarget.IsAlive()) {
+            break;
+          }
 
           ScrollContainerFrame* rootScrollContainerFrame =
               !mCurrentTarget

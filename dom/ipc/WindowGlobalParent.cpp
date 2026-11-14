@@ -667,13 +667,14 @@ IPCResult WindowGlobalParent::RecvUpdateDocumentCspSettings(
 }
 
 mozilla::ipc::IPCResult WindowGlobalParent::RecvSetClientInfo(
-    const IPCClientInfo& aIPCClientInfo) {
-  if (!ClientIsValidPrincipalInfo(
-          aIPCClientInfo.principalInfo(),
-          GetContentParent() ? GetContentParent()->LoadedOrigins() : nullptr)) {
+    Tainted<IPCClientInfo>&& aIPCClientInfo) {
+  Maybe<IPCClientInfo&> clientInfo = ValidateClientInfo(
+      aIPCClientInfo,
+      GetContentParent() ? GetContentParent()->LoadedOrigins() : nullptr);
+  if (!clientInfo) {
     return IPC_FAIL(this, "SetClientInfo principal not valid for remote type");
   }
-  mClientInfo = Some(ClientInfo(aIPCClientInfo));
+  mClientInfo = Some(ClientInfo(*clientInfo));
   return IPC_OK();
 }
 
@@ -2133,8 +2134,12 @@ void WindowGlobalParent::SetShouldReportHasBlockedOpaqueResponse(
 }
 
 IPCResult WindowGlobalParent::RecvSetCookies(
-    const nsCString& aBaseDomain, const OriginAttributes& aOriginAttributes,
-    nsIURI* aHost, bool aIsThirdParty, const nsTArray<CookieStruct>& aCookies) {
+    const OriginAttributes& aOriginAttributes, nsIURI* aHost,
+    bool aIsThirdParty, const nsTArray<CookieStruct>& aCookies) {
+  if (!aHost) {
+    return IPC_FAIL(this, "aHost must not be null");
+  }
+
   // Only content principals should be setting cookies via this path.
   // Reject non-content principals (system, null, expanded) to prevent a
   // compromised content process from bypassing the baseDomain check below.
@@ -2147,12 +2152,20 @@ IPCResult WindowGlobalParent::RecvSetCookies(
   // file:// principals have no meaningful baseDomain for cookie validation,
   // skip the domain check.
   if (!documentPrincipal->SchemeIs("file")) {
+    nsCOMPtr<nsIEffectiveTLDService> tldService =
+        components::EffectiveTLD::Service();
+    NS_ENSURE_TRUE(tldService, IPC_OK());
+
     nsAutoCString principalBaseDomain;
+    nsAutoCString hostBaseDomain;
+    bool requireHostMatch = false;
     if (NS_FAILED(net::CookieCommons::GetBaseDomain(documentPrincipal,
                                                     principalBaseDomain)) ||
-        !principalBaseDomain.Equals(aBaseDomain)) {
-      return IPC_FAIL(
-          this, "SetCookies baseDomain does not match document principal");
+        NS_FAILED(net::CookieCommons::GetBaseDomain(
+            tldService, aHost, hostBaseDomain, requireHostMatch)) ||
+        !principalBaseDomain.Equals(hostBaseDomain)) {
+      return IPC_FAIL(this,
+                      "SetCookies host does not match document principal");
     }
   }
 
@@ -2169,23 +2182,8 @@ IPCResult WindowGlobalParent::RecvSetCookies(
   NS_ENSURE_TRUE(csParent, IPC_OK());
   auto* cs = static_cast<net::CookieServiceParent*>(csParent);
 
-  if (!aHost) {
-    return IPC_FAIL(this, "aHost must not be null");
-  }
-
-  // Authorize the write if the process has already loaded this cookie key, or
-  // could legitimately load this principal. The latter covers documents with no
-  // channel registration (e.g. file://), which never populate the key set.
-  nsCOMPtr<nsIPrincipal> principal =
-      BasePrincipal::CreateContentPrincipal(aHost, aOriginAttributes);
-  if (!cs->ContentProcessHasCookie(aBaseDomain, aOriginAttributes) &&
-      !contentParent->ValidatePrincipal(principal)) {
-    return IPC_FAIL(this,
-                    "Content process not authorized for this cookie domain");
-  }
-
-  return cs->SetCookies(aBaseDomain, aOriginAttributes, aHost, aIsThirdParty,
-                        aCookies, GetBrowsingContext());
+  return cs->SetCookies(aOriginAttributes, aHost, aIsThirdParty, aCookies,
+                        GetBrowsingContext());
 }
 
 IPCResult WindowGlobalParent::RecvRecordUserActivationForBTP() {
@@ -2630,6 +2628,60 @@ void WindowGlobalParent::DedupePrefetchRecords(
            "older rec=%p",
            this, rec));
       rec->MarkCanceled();
+    }
+  }
+}
+
+/* static */
+void WindowGlobalParent::ClearPrefetchCache(
+    nsIPrincipal* aPartitionedPrincipal) {
+  // Implements "clear prefetch cache" for Clear-Site-Data "prefetchCache".
+  // Spec:
+  // https://wicg.github.io/nav-speculation/prefetch.html#clear-prefetch-cache
+  // Unlike the spec, which matches on origin alone, documents are matched on
+  // their partitioned principal so that a third-party response can't clear a
+  // first-party document's prefetches.
+  if (LOG_SPECRULES_ENABLED()) {
+    nsAutoCString origin;
+    aPartitionedPrincipal->GetOrigin(origin);
+    LOG_SPECRULES_FMT("WindowGlobalParent::ClearPrefetchCache: origin={}",
+                      origin);
+  }
+  // 1. For each top-level traversable traversable of the user agent's
+  // top-level traversable set:
+  nsTArray<RefPtr<BrowsingContextGroup>> groups;
+  BrowsingContextGroup::GetAllGroups(groups);
+  for (const auto& group : groups) {
+    for (const auto& top : group->Toplevels()) {
+      // 1.1. Let navigables be the inclusive descendant navigables of
+      // traversable's active document.
+      // 1.2. For each navigable in navigables:
+      top->PreOrderWalk([&](dom::BrowsingContext* aBC) {
+        // 1.2.1. Let activeDocument be the navigable's active document.
+        RefPtr<WindowGlobalParent> wgp =
+            aBC->Canonical()->GetCurrentWindowGlobal();
+        // 1.2.2. If activeDocument's origin is not same origin with origin,
+        // then continue.
+        if (!wgp || !wgp->DocumentPartitionedPrincipal()->Equals(
+                        aPartitionedPrincipal)) {
+          return;
+        }
+        // 1.2.3. For each prefetchRecord in activeDocument's prefetch records:
+        nsTArray<PPrefetchRecordParent*> managed;
+        wgp->ManagedPPrefetchRecordParent(managed);
+        if (!managed.IsEmpty()) {
+          LOG_SPECRULES_FMT(
+              "WindowGlobalParent::ClearPrefetchCache: wgp={} clearing {} "
+              "records",
+              fmt::ptr(wgp.get()), managed.Length());
+        }
+        for (auto* p : managed) {
+          // 1.2.3.1. is skipped: prerendering is not implemented, so a
+          // record's prerendering traversable is always null.
+          // 1.2.3.2. Cancel and discard prefetchRecord given activeDocument.
+          static_cast<PrefetchRecordParent*>(p)->MarkCanceled();
+        }
+      });
     }
   }
 }

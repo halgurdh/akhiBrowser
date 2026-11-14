@@ -59,6 +59,7 @@
     <string name="pref_key_about" translatable="false">pref_key_about</string>
     <string name="pref_key_account" translatable="false">pref_key_account</string>
     <string name="pref_key_sign_in" translatable="false">pref_key_sign_in</string>
+    <string name="pref_key_sign_in_promo" translatable="false">pref_key_sign_in_promo</string>
     <string name="pref_key_account_auth_error" translatable="false">pref_key_account_auth_error</string>
     <string name="pref_key_sync_debug" translatable="false">pref_key_sync_debug</string>
     <string name="pref_key_override_fxa_server" translatable="false">pref_key_override_fxa_server</string>
@@ -385,6 +386,7 @@
     <string name="pref_key_is_user_skyflag_attributed" translatable="false">pref_key_is_user_skyflag_attributed</string>
     <string name="pref_key_is_user_quora_attributed" translatable="false">pref_key_is_user_quora_attributed</string>
     <string name="pref_key_is_user_pairing_campaign_attributed" translatable="false">pref_key_is_user_pairing_campaign_attributed</string>
+    <string name="pref_key_last_auth_flow_entrypoint" translatable="false">pref_key_last_auth_flow_entrypoint</string>
     <string name="pref_key_referral_ping_submitted" translatable="false">pref_key_referral_ping_submitted</string>
     <string name="pref_key_referral_code" translatable="false">pref_key_referral_code</string>
 

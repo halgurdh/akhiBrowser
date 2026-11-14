@@ -53,8 +53,6 @@ category-list =
 
 pane-general-title = General
 
-pane-home-title = Home
-
 pane-home-startup-title2 = Home and startup
   .title = Home and startup
 
@@ -66,8 +64,6 @@ pane-privacy-title3 = Privacy and security
 
 pane-privacy-section =
     .heading = Privacy and security
-
-pane-sync-title3 = Sync
 
 pane-ai-controls-title2 = AI controls
   .title = AI controls
@@ -597,9 +593,7 @@ spellcheck-promo =
     .heading = How to use spell checking
     .message = Right-click a text field to turn spell check on or off or to change the language. Not all fields support spell check.
 
-## General Section - Files and Applications
-
-files-and-applications-title = Files and Applications
+## Downloads
 
 download-save-files-header =
     .label = Save files to
@@ -614,9 +608,7 @@ download-private-browsing-delete2 =
     .label = Delete private window downloads on close
     .accesskey = D
 
-applications-header = Applications
-
-applications-description = Choose how { -brand-short-name } handles the files you download from the web or the applications you use while browsing.
+## Downloads - Files and applications
 
 applications-setting2 =
     .label = Files and applications
@@ -625,15 +617,7 @@ applications-setting2 =
 applications-filter =
     .placeholder = Search file types or applications
 
-applications-type-column =
-    .label = Content Type
-    .accesskey = T
-
 applications-type-heading = Content Type
-
-applications-action-column =
-    .label = Action
-    .accesskey = A
 
 applications-action-heading = Action
 
@@ -683,48 +667,13 @@ applications-file-ending-with-type = { applications-file-ending } ({ $type })
 applications-open-inapp =
     .label = Open in { -brand-short-name }
 
-## The strings in this group are used to populate
-## selected label element based on the string from
-## the selected menu item.
-
-applications-action-save-label =
-    .value = { applications-action-save.label }
-
-applications-use-app-label =
-    .value = { applications-use-app.label }
-
-applications-open-inapp-label =
-    .value = { applications-open-inapp.label }
-
-applications-always-ask-label =
-    .value = { applications-always-ask.label }
-
-applications-use-app-default-label =
-    .value = { applications-use-app-default.label }
-
-applications-use-other-label =
-    .value = { applications-use-other.label }
-
-applications-use-os-default-label =
-    .value = { applications-use-os-default.label }
-
-##
-
-applications-handle-new-file-types-description = What should { -brand-short-name } do with other files?
-
 applications-setting-new-file-types =
      .label = What should { -brand-short-name } do with other files?
 
-applications-save-for-new-types =
-    .label = Save files
-    .accesskey = S
 applications-save-for-new-types2 =
     .label = Automatically save files
     .accesskey = S
 
-applications-ask-before-handling =
-    .label = Ask whether to open or save files
-    .accesskey = A
 applications-ask-before-handling2 =
     .label = Ask to open or save files
     .accesskey = A
@@ -819,6 +768,15 @@ support-get-help =
 
 support-share-ideas =
     .label = Share ideas and feedback
+
+## Firefox newsletter
+
+newsletter-settings-heading =
+    .label = { -brand-product-name } newsletter
+    .description = Get how-tos, advice, and news to make your { -brand-product-name } experience work best for you.
+
+newsletter-sign-up-link =
+    .label = Sign up
 
 ## General Section - Performance
 
@@ -1240,13 +1198,6 @@ account-placeholder2 =
 ## Firefox account - Signed out. Note that "Sync" and "Firefox account" are now
 ## more discrete ("signed in" no longer means "and sync is connected").
 
-sync-signedout-caption = Take Your Web With You
-sync-signedout-description2 = Synchronize your bookmarks, history, tabs, passwords, add-ons, and settings across all your devices.
-
-sync-signedout-account-signin3 =
-    .label = Sign in to sync…
-    .accesskey = i
-
 sync-signedout-account-signin-4 =
     .label = Sign in to your account to start syncing
     .accesskey = i
@@ -1255,38 +1206,11 @@ sync-signedout-account-short =
     .label = Sign in
     .accesskey = i
 
-# This message contains two links and two icon images.
-#   `<img data-l10n-name="android-icon"/>` - Android logo icon
-#   `<a data-l10n-name="android-link">` - Link to Android Download
-#   `<img data-l10n-name="ios-icon">` - iOS logo icon
-#   `<a data-l10n-name="ios-link">` - Link to iOS Download
-#
-# They can be moved within the sentence as needed to adapt
-# to your language, but should not be changed or translated.
-sync-mobile-promo = Download Firefox for <img data-l10n-name="android-icon"/> <a data-l10n-name="android-link">Android</a> or <img data-l10n-name="ios-icon"/> <a data-l10n-name="ios-link">iOS</a> to sync with your mobile device.
-
 ## Firefox account - Signed in
-
-sync-profile-picture-with-alt =
-    .tooltiptext = Change profile picture
-    .alt = Change profile picture
-
-sync-profile-picture-account-problem =
-    .alt = Account profile picture
-
-fxa-login-rejected-warning =
-    .alt = Warning
-
-sync-sign-out =
-    .label = Sign Out…
-    .accesskey = g
 
 sync-sign-out2 =
     .label = Sign out
     .accesskey = g
-
-sync-manage-account = Manage account
-    .accesskey = o
 
 sync-manage-account2 =
     .label = Manage account
@@ -1303,13 +1227,9 @@ sync-account-signed-in-display-name =
     .label = { $name }
     .description = { $email }
 
-sync-signedin-unverified = { $email } is not verified.
-
 sync-signedin-unverified2 =
     .label = { $email } isn’t confirmed yet
     .description = Check your inbox to confirm your account and make it official.
-
-sync-signedin-login-failure = Please sign in to reconnect { $email }
 
 sync-signedin-login-failure2 =
     .label = You’re signed out of { $email }
@@ -1340,8 +1260,6 @@ prefs-syncing-on = Syncing: ON
 prefs-syncing-on-2 =
     .label = Syncing is ON
 
-prefs-syncing-off = Syncing: OFF
-
 prefs-syncing-off-2 =
     .label = Syncing is OFF
     .description = Turn on sync to get your bookmarks, passwords, history, and more on any device.
@@ -1351,34 +1269,19 @@ prefs-syncing-off-3 =
     .label = Syncing is OFF
     .description = Turn on sync to get your bookmarks, passwords, history, and more on this device.
 
-prefs-sync-turn-on-syncing =
-    .label = Turn on syncing…
-    .accesskey = s
-
 prefs-sync-turn-on-syncing-2 =
     .label = Turn on syncing
     .accesskey = s
 
-prefs-sync-offer-setup-label2 = Synchronize your bookmarks, history, tabs, passwords, add-ons, and settings across all your devices.
-
-prefs-sync-now-button =
-    .label = Sync Now
-    .accesskey = N
-
 prefs-sync-now-button-2 =
     .label = Sync now
     .accesskey = N
-
-prefs-syncing-button =
-    .label = Syncing…
 
 prefs-syncing-button-2 =
     .label = Syncing…
     .title = Sync now
 
 ## The list of things currently syncing.
-
-sync-syncing-across-devices-heading = You are syncing these items across all your connected devices:
 
 sync-syncing-across-devices-heading-2 = Data synced across devices
 
@@ -1400,10 +1303,6 @@ sync-currently-syncing-addresses = Addresses
 sync-currently-syncing-payment-methods = Payment methods
 sync-currently-syncing-addons = Add-ons
 sync-currently-syncing-settings = Settings
-
-sync-manage-options =
-    .label = Manage sync…
-    .accesskey = M
 
 sync-manage-options-2 =
     .label = Manage synced data
@@ -1471,8 +1370,6 @@ sync-engine-settings2 =
 
 ## The device name controls.
 
-sync-device-name-header = Device Name
-
 sync-device-name-header-2 =
     .label = Device name
 
@@ -1486,10 +1383,6 @@ sync-device-name-change-2 =
     .label = Change Device Name
     .accesskey = h
 
-sync-device-name-change =
-    .label = Change Device Name…
-    .accesskey = h
-
 sync-device-name-cancel =
     .label = Cancel
     .accesskey = n
@@ -1497,8 +1390,6 @@ sync-device-name-cancel =
 sync-device-name-save =
     .label = Save
     .accesskey = v
-
-sync-connect-another-device = Connect another device
 
 sync-connect-another-device-2 =
     .label = Connect another device

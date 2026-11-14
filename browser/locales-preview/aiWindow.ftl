@@ -132,7 +132,8 @@ ai-tasks-alert-delete-button =
 ai-tasks-alert-edit-button = Edit
 ai-tasks-alert-pause-button = Pause
 ai-tasks-alert-resume-button = Resume
-ai-tasks-alert-check-now-button = Check now
+ai-tasks-alert-check-now-button =
+  .label = Check now
 
 ## Dialog Headers - Titles for alert dialogs
 
@@ -148,7 +149,7 @@ ai-tasks-page-title = Tasks
 ai-tasks-add-alert-button = Create task
 ai-task-page-description = { -smart-window-brand-name } can watch prices and content on pages you choose. You’ll get a desktop notification when it finds a match.
 ai-tasks-no-monitors-title = { -smart-window-brand-name } tasks aren’t available in your region
-ai-tasks-no-monitors-message = Learn more <a data-l10n-name="smart-window-link">about Smart Window</a>.
+ai-tasks-no-monitors-message = Learn more <a data-l10n-name="smart-window-link">about { -smart-window-brand-name }</a>.
 ai-tasks-blocked-title = { -smart-window-brand-name } tasks are blocked in AI controls
 ai-task-page-no-alerts = Create a task to track prices or content on pages you choose. You’ll get notified when { -smart-window-brand-name } finds a match.
 ai-task-page-no-alerts-title = Watch what matters
@@ -321,7 +322,7 @@ ai-tasks-alert-history-error-network = { -smart-window-brand-name } couldn’t c
 
 ai-tasks-alert-history-error-timeout = The page took too long to respond. This task will try again at its next scheduled time.
 
-ai-tasks-alert-history-error-budget = { -smart-window-brand-name } has reached its daily check limit. This task will try again at its next scheduled time.
+ai-tasks-alert-history-error-budget = { -smart-window-brand-name } has reached its weekly check limit. This task will try again at its next scheduled time.
 
 ai-tasks-alert-history-error-rate-limit = { -smart-window-brand-name } has reached its request limit for now. This task will try again at its next scheduled time.
 
@@ -548,6 +549,7 @@ smartwindow-aitab-open-current =
 smartwindow-aitab-open-new =
     .label = Open in new tab
 
+smartwindow-aitab-response-card-title = Your { -smart-page-brand-name } is ready
 smartwindow-aitab-created-an-aitab = Created { -smart-page-brand-name }
 smartwindow-aitab-updated-an-aitab = Updated { -smart-page-brand-name }
 smartwindow-aitab-empty-chat-message = Want to make changes to your { -smart-page-brand-name }? Ask in the chat to add or remove content.
@@ -630,3 +632,10 @@ ai-clarifying-question-send =
     .label = Send
 ai-clarifying-question-close =
     .title = Close questions
+
+## Smart actions toolbar
+## Suggestions for the current page, shown under the navigation toolbar.
+
+smart-actions-toolbar =
+    .aria-label = Smart actions
+smart-actions-loading = Looking at this page…

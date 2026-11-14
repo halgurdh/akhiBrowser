@@ -361,7 +361,6 @@
 #include "nsIAuthPrompt.h"
 #include "nsIAuthPrompt2.h"
 #include "nsIBFCacheEntry.h"
-#include "nsIBaseWindow.h"
 #include "nsIBrowserChild.h"
 #include "nsIBrowserUsage.h"
 #include "nsICSSLoaderObserver.h"
@@ -1052,6 +1051,9 @@ Document* ExternalResourceMap::RequestResource(
     // chances are it failed for good reasons (security check, etc).
     // This must be done outside the WithEntryHandle functor, as it accesses
     // mPendingLoads.
+    // PendingLoad::StartLoad does the same if it had to defer AsyncOpen and
+    // that failed. It is called inside a script runnner (outside of
+    // WithEntryHandle functor) so it's safe.
     AddExternalResource(clone, nullptr, nullptr, aDisplayDocument);
   }
 
@@ -1349,7 +1351,27 @@ nsresult ExternalResourceMap::PendingLoad::StartLoad(
 
   mURI = aURI;
 
-  return channel->AsyncOpen(this);
+  if (nsContentUtils::IsSafeToRunScript()) {
+    return channel->AsyncOpen(this);
+  }
+
+  nsContentUtils::AddScriptRunner(NS_NewRunnableFunction(
+      "ExternalResourceMap::PendingLoad::StartLoad",
+      [self = RefPtr{this}, channel]() MOZ_CAN_RUN_SCRIPT_BOUNDARY_LAMBDA {
+        ExternalResourceMap& map =
+            self->mDisplayDocument->ExternalResourceMap();
+        if (map.HaveShutDown() || NS_SUCCEEDED(channel->AsyncOpen(self))) {
+          return;
+        }
+        // Same handling as for a synchronous AsyncOpen failure in
+        // ExternalResourceMap::RequestResource: make sure we don't thrash
+        // things by trying this load again, since chances are it failed for
+        // good reasons (security check, etc).
+        const nsCOMPtr<nsIURI> uri = self->mURI;
+        const RefPtr<Document> displayDocument = self->mDisplayDocument;
+        map.AddExternalResource(uri, nullptr, nullptr, displayDocument);
+      }));
+  return NS_OK;
 }
 
 NS_IMPL_ISUPPORTS(ExternalResourceMap::LoadgroupCallbacks,
@@ -2764,6 +2786,9 @@ NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN_INTERNAL(Document)
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mFontFaceSet)
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mPreviouslyFocusedContent)
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mReadyForIdle)
+  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mParsedPromise)
+  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mContentLoadedPromise)
+  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mLoadedPromise)
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mDocumentL10n)
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mFragmentDirective)
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mHighlightRegistry)
@@ -2932,6 +2957,9 @@ NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN(Document)
   NS_IMPL_CYCLE_COLLECTION_UNLINK(mFontFaceSet)
   NS_IMPL_CYCLE_COLLECTION_UNLINK(mPreviouslyFocusedContent)
   NS_IMPL_CYCLE_COLLECTION_UNLINK(mReadyForIdle)
+  NS_IMPL_CYCLE_COLLECTION_UNLINK(mParsedPromise)
+  NS_IMPL_CYCLE_COLLECTION_UNLINK(mContentLoadedPromise)
+  NS_IMPL_CYCLE_COLLECTION_UNLINK(mLoadedPromise)
   NS_IMPL_CYCLE_COLLECTION_UNLINK(mDocumentL10n)
   NS_IMPL_CYCLE_COLLECTION_UNLINK(mFragmentDirective)
   NS_IMPL_CYCLE_COLLECTION_UNLINK(mHighlightRegistry)
@@ -6590,7 +6618,9 @@ HTMLEditor* Document::GetHTMLEditor() const {
 }
 
 nsresult Document::EditingStateChanged() {
-  if (mRemovedFromDocShell) {
+  // Don't allow editing on non-HTML/XHTML documents.  Return NS_OK so that the
+  // setter of designMode on non-HTML documents does not fail.
+  if (mRemovedFromDocShell || !IsHTMLOrXHTML()) {
     return NS_OK;
   }
 
@@ -6688,13 +6718,6 @@ nsresult Document::EditingStateChanged() {
   bool makeWindowEditable = mEditingState == EditingState::eOff;
   bool spellRecheckAll = false;
   bool putOffToRemoveScriptBlockerUntilModifyingEditingState = false;
-
-  if (makeWindowEditable && NS_WARN_IF(!IsHTMLOrXHTML())) {
-    // Don't allow editing on non-HTML/XHTML documents.
-    // Return NS_OK so that the setter of designMode on non-HTML documents
-    // does not fail.
-    return NS_OK;
-  }
 
   RefPtr<HTMLEditor> htmlEditor;
   {
@@ -8958,11 +8981,24 @@ void Document::DispatchContentLoadedEvents(bool aFinishSync) {
                         nullptr);
   }
 
+  // Resolved after the event so that its reactions run after every
+  // DOMContentLoaded listener, whatever event target they are on. The promise
+  // is fetched first because a listener can call document.open(), which
+  // replaces it with one for the next load.
+  RefPtr<Promise> contentLoaded;
+  if (StaticPrefs::dom_document_load_promises_enabled()) {
+    contentLoaded = GetContentLoaded(IgnoreErrors());
+  }
+
   // Fire a DOM event notifying listeners that this document has been
   // loaded (excluding images and other loads initiated by this
   // document).
   nsContentUtils::DispatchTrustedEvent(this, this, u"DOMContentLoaded"_ns,
                                        CanBubble::eYes, Cancelable::eNo);
+
+  if (contentLoaded) {
+    contentLoaded->MaybeResolveWithUndefined();
+  }
 
   if (auto* const window = GetInnerWindow()) {
     const RefPtr<ServiceWorkerContainer> serviceWorker =
@@ -9707,11 +9743,7 @@ void Document::ScheduleForPresAttrEvaluation(Element* aElement) {
   DebugOnly<bool> inserted = mLazyPresElements.EnsureInserted(aElement);
   MOZ_ASSERT(inserted);
   if (aElement->HasServoData()) {
-    // TODO(emilio): RESTYLE_SELF is too strong, there should be no need to
-    // re-selector-match, but right now this is needed to pick up the new mapped
-    // attributes. We need something like RESTYLE_STYLE_ATTRIBUTE but for mapped
-    // attributes.
-    nsLayoutUtils::PostRestyleEvent(aElement, RestyleHint::RESTYLE_SELF,
+    nsLayoutUtils::PostRestyleEvent(aElement, RestyleHint::RESTYLE_PRES_HINTS,
                                     nsChangeHint(0));
   } else if (auto* presContext = GetPresContext()) {
     presContext->RestyleManager()->IncrementUndisplayedRestyleGeneration();
@@ -10389,14 +10421,11 @@ void Document::DoNotifyPossibleTitleChange() {
   nsAutoString title;
   GetTitle(title);
 
-  if (RefPtr<PresShell> presShell = GetPresShell()) {
-    nsCOMPtr<nsISupports> container =
-        presShell->GetPresContext()->GetContainerWeak();
-    if (container) {
-      if (nsCOMPtr<nsIBaseWindow> docShellWin = do_QueryInterface(container)) {
-        docShellWin->SetTitle(title);
-      }
-    }
+  if (RefPtr<nsDocShell> docShell = nsDocShell::Cast(GetDocShell())) {
+    docShell->SetTitle(title);
+  }
+  if (nsCOMPtr<nsIAppWindow> appWin = GetAppWindowIfToplevelChrome()) {
+    appWin->SetTitle(title);
   }
 
   if (WindowGlobalChild* child = GetWindowGlobalChild()) {
@@ -10426,6 +10455,10 @@ already_AddRefed<MediaQueryList> Document::MatchMedia(
 void Document::SetMayStartLayout(bool aMayStartLayout) {
   mMayStartLayout = aMayStartLayout;
   if (MayStartLayout()) {
+    if (NodePrincipal()->IsSystemPrincipal() && !mChromeObserver) {
+      mChromeObserver = new ChromeObserver(this);
+      mChromeObserver->Init();
+    }
     // Before starting layout, check whether we're a toplevel chrome
     // window.  If we are, setup some state so that we don't have to restyle
     // the whole tree after StartLayout.
@@ -10820,6 +10853,11 @@ Document* Document::Open(const Optional<nsAString>& /* unused */,
   // navigation.
   if (shell && IsCurrentActiveDocument()) {
     if (shell->GetIsAttemptingToNavigate()) {
+      // Stopping can abort our own load and set readyState to "complete",
+      // which must not settle the promises of the load being replaced.
+      mParsedPromise = nullptr;
+      mContentLoadedPromise = nullptr;
+      mLoadedPromise = nullptr;
       shell->Stop(nsIWebNavigation::STOP_NETWORK);
 
       // The Stop call may have cancelled the onload blocker request or
@@ -13503,6 +13541,31 @@ void Document::SetReadyStateInternal(ReadyState aReadyState,
   if (wasLoading && StaticPrefs::dom_element_blocking_enabled()) {
     MaybeScheduleRendering();
   }
+  switch (aReadyState) {
+    case READYSTATE_LOADING:
+      mParsedPromise = nullptr;
+      mContentLoadedPromise = nullptr;
+      mLoadedPromise = nullptr;
+      break;
+    case READYSTATE_INTERACTIVE:
+      if (mParsedPromise) {
+        mParsedPromise->MaybeResolveWithUndefined();
+      }
+      break;
+    case READYSTATE_COMPLETE:
+      if (mParsedPromise) {
+        mParsedPromise->MaybeResolveWithUndefined();
+      }
+      if (mContentLoadedPromise) {
+        mContentLoadedPromise->MaybeResolveWithUndefined();
+      }
+      if (mLoadedPromise) {
+        mLoadedPromise->MaybeResolveWithUndefined();
+      }
+      break;
+    default:
+      break;
+  }
   if (aUpdateTimingInformation && mTiming) {
     switch (aReadyState) {
       case READYSTATE_LOADING:
@@ -13526,10 +13589,6 @@ void Document::SetReadyStateInternal(ReadyState aReadyState,
     if (!mXULPersist && XRE_IsParentProcess()) {
       mXULPersist = new XULPersist(this);
       mXULPersist->Init();
-    }
-    if (!mChromeObserver) {
-      mChromeObserver = new ChromeObserver(this);
-      mChromeObserver->Init();
     }
   }
 
@@ -13763,6 +13822,19 @@ void Document::MaybePreLoadImage(nsIURI* aUri,
 void Document::MaybePreconnect(nsIURI* aOrigURI, mozilla::CORSMode aCORSMode) {
   if (!StaticPrefs::network_preconnect()) {
     return;
+  }
+
+  // https://w3c.github.io/connection-allowlists/#html-preconnect
+  if (RefPtr<ConnectionAllowlists> allowlists =
+          PolicyContainer::GetConnectionAllowlists(mPolicyContainer)) {
+    nsAutoCString origin;
+    nsCOMPtr<nsIURI> originURI;
+    if (NS_FAILED(nsContentUtils::GetWebExposedOriginSerialization(aOrigURI,
+                                                                   origin)) ||
+        NS_FAILED(NS_NewURI(getter_AddRefs(originURI), origin)) ||
+        allowlists->ShouldBlockConnection(originURI, InnerWindowID())) {
+      return;
+    }
   }
 
   NS_MutateURI mutator(aOrigURI);
@@ -15704,6 +15776,31 @@ void Document::MaybeResolveReadyForIdle() {
   if (readyPromise) {
     readyPromise->MaybeResolveWithUndefined();
   }
+}
+
+Promise* Document::GetReadinessPromise(RefPtr<Promise>& aPromise,
+                                       bool aResolved, ErrorResult& aRv) {
+  if (!aPromise) {
+    nsIGlobalObject* global = GetScopeObject();
+    aPromise = aResolved ? Promise::CreateResolvedWithUndefined(global, aRv)
+                         : Promise::Create(global, aRv);
+  }
+  return aPromise;
+}
+
+Promise* Document::GetParsed(ErrorResult& aRv) {
+  return GetReadinessPromise(mParsedPromise,
+                             mReadyState >= READYSTATE_INTERACTIVE, aRv);
+}
+
+Promise* Document::GetContentLoaded(ErrorResult& aRv) {
+  return GetReadinessPromise(mContentLoadedPromise,
+                             mReadyState == READYSTATE_COMPLETE, aRv);
+}
+
+Promise* Document::GetLoaded(ErrorResult& aRv) {
+  return GetReadinessPromise(mLoadedPromise, mReadyState == READYSTATE_COMPLETE,
+                             aRv);
 }
 
 mozilla::dom::PermissionsPolicy* Document::PermissionsPolicy() const {

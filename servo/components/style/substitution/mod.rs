@@ -31,7 +31,7 @@ use servo_arc::Arc;
 use smallvec::SmallVec;
 use std::borrow::Cow;
 use std::num;
-use strum::VariantNames;
+use strum_macros::VariantNames;
 use style_traits::{ParseError, ParsingMode, StyleParseErrorKind};
 
 pub use self::attr::AttrFunction;
@@ -704,6 +704,16 @@ impl<'a> Substitution<'a> {
     pub fn from_value(v: VariableValue, attr_tainted: bool) -> Self {
         Substitution {
             css: v.css.into(),
+            first_token_type: v.first_token_type,
+            last_token_type: v.last_token_type,
+            attr_tainted,
+        }
+    }
+
+    /// Creates a substitution borrowing the CSS of a variable value.
+    pub fn from_borrowed_value(v: &'a VariableValue, attr_tainted: bool) -> Self {
+        Substitution {
+            css: Cow::Borrowed(&v.css),
             first_token_type: v.first_token_type,
             last_token_type: v.last_token_type,
             attr_tainted,

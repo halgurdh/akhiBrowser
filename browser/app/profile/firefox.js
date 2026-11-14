@@ -1867,6 +1867,11 @@ pref("services.sync.prefs.sync.browser.urlbar.suggest.openpage", true);
 pref("services.sync.prefs.sync.browser.urlbar.suggest.searches", true);
 pref("services.sync.prefs.sync.browser.urlbar.suggest.topsites", true);
 pref("services.sync.prefs.sync.browser.urlbar.suggest.engines", true);
+pref("services.sync.prefs.sync.browser.urlbar.suggest.quickactions", true);
+pref("services.sync.prefs.sync.browser.urlbar.suggest.recentsearches", true);
+pref("services.sync.prefs.sync.browser.urlbar.suggest.quicksuggest.all", true);
+pref("services.sync.prefs.sync.browser.urlbar.suggest.quicksuggest.sponsored", true);
+pref("services.sync.prefs.sync.browser.urlbar.quicksuggest.online.enabled", true);
 pref("services.sync.prefs.sync.dom.disable_open_during_load", true);
 pref("services.sync.prefs.sync.dom.disable_window_flip", true);
 pref("services.sync.prefs.sync.dom.disable_window_move_resize", true);
@@ -2025,9 +2030,6 @@ pref("browser.newtabpage.activity-stream.weather.locationSearchEnabled", true);
 // List of regions that get weather by default.
 pref("browser.newtabpage.activity-stream.discoverystream.region-weather-config", "AT,BE,BG,CA,CH,CY,CZ,DE,DK,EE,ES,FI,FR,GB,GL,GR,HK,HR,HU,IE,IQ,IS,IT,LI,LT,LV,MT,NL,NO,PL,PT,RO,RU,SE,SI,SK,US");
 
-// List of locales that weather widget supports.
-pref("browser.newtabpage.activity-stream.discoverystream.locale-weather-config", "ar,bg,cs,da,de,el,en-CA,en-GB,en-US,es-ES,et,fi,fr,hr,hu,is,it,lv,nb-NO,nl,pl,pt-PT,ro,ru,sk,sl,sv-SE,tr,zh-CN,zh-TW");
-
 // Regions with no widgets at all. Everywhere else the container is available
 // and on, and each widget's own prefs decide what appears. Blank means no
 // restriction, so there is no allow list here. Nightly ignores every list
@@ -2118,8 +2120,7 @@ pref("messaging-system.askForFeedback", true);
 // It's enabled by default, but could be disabled to force ASRouter to use the local files.
 pref("browser.newtabpage.activity-stream.asrouter.useRemoteL10n", true);
 
-// These prefs control if Discovery Stream is enabled.
-pref("browser.newtabpage.activity-stream.discoverystream.enabled", true);
+// These prefs control Discovery Stream.
 pref("browser.newtabpage.activity-stream.discoverystream.hardcoded-basic-layout", false);
 pref("browser.newtabpage.activity-stream.discoverystream.hybridLayout.enabled", false);
 pref("browser.newtabpage.activity-stream.discoverystream.hideCardBackground.enabled", false);
@@ -2286,7 +2287,7 @@ pref("browser.aboutwelcome.experimentsGate.minDisplayMs", 3000);
 pref("browser.aboutwelcome.experimentsGate.maxDisplayMs", 8000);
 
 // Global Nova redesign enabled pref
-pref("browser.nova.enabled", true);
+pref("browser.nova.enabled", true, locked);
 
 // Disable singleProfile messaging mitigation (Bug 1963213) for multiProfile feature users
 pref("messaging-system.profile.singleProfileMessaging.disable", true);
@@ -2433,6 +2434,9 @@ pref("browser.ml.pageAssist.enabled", false);
 
 // Smart Window Feature
 pref("browser.smartwindow.enabled", false);
+pref("browser.smartwindow.actionsToolbar.actionCount", 3);
+pref("browser.smartwindow.actionsToolbar.enabled", false);
+pref("browser.smartwindow.actionsToolbar.refreshDelayMs", 400);
 // Default endpoint for preset models
 pref("browser.smartwindow.endpoint", "https://mlpa-prod-prod-mozilla.freetls.fastly.net/v1");
 pref("browser.smartwindow.auth.impl", "fxa");
@@ -2492,7 +2496,7 @@ pref("browser.smartwindow.manageTabs.includeChatTab", false);
 
 // Smart Window Agent
 pref("browser.smartwindow.agent.enabled", true);
-pref("browser.smartwindow.agent.supportedRegions", "US,CA");
+pref("browser.smartwindow.agent.supportedRegions", '[["US",["*"]],["CA",["en-*"]],["GB",["en-*"]]]');
 // Toolbar button that opens the monitor creation panel (bug 2062113).
 pref("browser.smartwindow.agent.toolbar.enabled", true);
 // Announces the monitor agent as a new feature with a dot on the toolbar
@@ -2543,7 +2547,7 @@ pref("browser.widgets.generated.loglevel", "Warn");
 pref("browser.widgets.generated.endpoint", "");
 pref("browser.widgets.generated.apiKey", "");
 pref("browser.widgets.generated.model", "");
-pref("browser.widgets.generated.maxTurns", 20);
+pref("browser.widgets.generated.maxTurns", 30);
 pref("browser.widgets.generated.localPrompt", false);
 
 // Block insecure active content on https pages
@@ -3628,7 +3632,11 @@ pref("devtools.debugger.features.async-captured-stacks", true);
 pref("devtools.debugger.features.async-live-stacks", false);
 
 // This supports showing stylesheet sources in the debugger
-pref("devtools.debugger.features.stylesheets-in-debugger", false);
+#if defined(NIGHTLY_BUILD)
+  pref("devtools.debugger.features.stylesheets-in-debugger", true);
+#else
+  pref("devtools.debugger.features.stylesheets-in-debugger", false); 
+#endif
 
 // When debugging a website, this pref controls if extension content scripts applied
 // to the currently debugged page should be shown in the Debugger Source Tree
@@ -3801,7 +3809,7 @@ pref("browser.backup.template.fallback-download.release", "https://www.firefox.c
 pref("browser.backup.template.fallback-download.beta", "https://www.firefox.com/channel/desktop/?utm_medium=firefox-desktop&utm_source=html-backup");
 pref("browser.backup.template.fallback-download.aurora", "https://www.firefox.com/channel/desktop/?utm_medium=firefox-desktop&utm_source=html-backup");
 pref("browser.backup.template.fallback-download.nightly", "https://www.firefox.com/channel/desktop/?utm_medium=firefox-desktop&utm_source=html-backup");
-pref("browser.backup.template.fallback-download.esr", " https://www.firefox.com/download/all/desktop-esr/?utm_medium=firefox-desktop&utm_source=html-backup");
+pref("browser.backup.template.fallback-download.esr", "https://www.firefox.com/download/all/desktop-esr/?utm_medium=firefox-desktop&utm_source=html-backup");
 pref("browser.backup.errorCode", 0);
 pref("browser.backup.backup-retry-limit", 10);
 pref("browser.backup.disabled-on-idle-backup-retry", false);

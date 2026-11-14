@@ -3631,6 +3631,7 @@ pref("browser.ai.control.linkPreviewKeyPoints", "default");
 pref("browser.ai.control.sidebarChatbot", "default");
 pref("browser.ai.control.smartWindow", "default");
 pref("browser.ai.control.speechRecognition", "default");
+pref("browser.ai.control.generatedWidgets", "default");
 
 // Enable the experimental machine learning inference engine.
 pref("browser.ml.enable", true);
@@ -3662,6 +3663,14 @@ pref("browser.pageextractor.youtube.enabled", true);
 // How long, in milliseconds, to wait for the YouTube transcript panel to render
 // after it is opened before giving up and returning metadata alone.
 pref("browser.pageextractor.youtube.timeoutMs", 3000);
+
+// Read Google Docs documents through their plain HTML view during page
+// extraction.
+pref("browser.pageextractor.googledocs.enabled", true);
+
+// How long, in milliseconds, to wait for a Google Docs plain HTML view before
+// keeping the generic page extraction.
+pref("browser.pageextractor.googledocs.timeoutMs", 5000);
 
 // When a user cancels this number of authentication dialogs coming from
 // a single web page in a row, all following authentication dialogs will

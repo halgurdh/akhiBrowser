@@ -202,16 +202,6 @@ Gecko_GetMappedAttributeDeclarations(const mozilla::dom::Element* element);
 const mozilla::StyleLockedDeclarationBlock*
 Gecko_GetExtraContentStyleDeclarations(const mozilla::dom::Element* element);
 
-const mozilla::StyleLockedDeclarationBlock*
-Gecko_GetUnvisitedLinkAttrDeclarationBlock(
-    const mozilla::dom::Element* element);
-
-const mozilla::StyleLockedDeclarationBlock*
-Gecko_GetVisitedLinkAttrDeclarationBlock(const mozilla::dom::Element* element);
-
-const mozilla::StyleLockedDeclarationBlock*
-Gecko_GetActiveLinkAttrDeclarationBlock(const mozilla::dom::Element* element);
-
 // Visited handling.
 
 // Returns whether visited styles are enabled for a given document.
@@ -239,6 +229,11 @@ void Gecko_UpdateAnimations(const mozilla::dom::Element* aElementOrPseudo,
                             const mozilla::ComputedStyle* aOldComputedValues,
                             const mozilla::ComputedStyle* aComputedValues,
                             mozilla::UpdateAnimationsTasks aTasks);
+
+// Runs the named timeline lookups that Gecko_UpdateAnimations() deferred.
+// Called by the traversal of aRoot's subtree once its sequential tasks have
+// run, so every element of the traversal has registered its timelines.
+void Gecko_FlushPendingNamedTimelineUpdates(const mozilla::dom::Element* aRoot);
 
 size_t Gecko_GetAnimationEffectCount(
     const mozilla::dom::Element* aElementOrPseudo);
@@ -311,7 +306,6 @@ void Gecko_SetFontPaletteOverride(
 // Dirtiness tracking.
 void Gecko_NoteDirtyElement(const mozilla::dom::Element*);
 void Gecko_NoteDirtySubtreeForInvalidation(const mozilla::dom::Element*);
-void Gecko_NoteAnimationOnlyDirtyElement(const mozilla::dom::Element*);
 void Gecko_InvalidatePositionTry(const mozilla::dom::Element*);
 
 // Called when a highlight pseudo-element style (::selection, ::highlight,

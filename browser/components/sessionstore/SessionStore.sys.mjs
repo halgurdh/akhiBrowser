@@ -8872,10 +8872,34 @@ class _SessionStore {
 
     // We have a user typed value, load that with fixup:
     let loadPromise = this.#waitForStateStop(browser, tabData.userTypedValue);
-    browser.browsingContext.fixupAndLoadURIString(tabData.userTypedValue, {
-      loadFlags: Ci.nsIWebNavigation.LOAD_FLAGS_ALLOW_THIRD_PARTY_FIXUP,
-      triggeringPrincipal,
-    });
+    try {
+      browser.browsingContext.fixupAndLoadURIString(tabData.userTypedValue, {
+        loadFlags: Ci.nsIWebNavigation.LOAD_FLAGS_ALLOW_THIRD_PARTY_FIXUP,
+        triggeringPrincipal,
+      });
+    } catch (ex) {
+      // Bug 1986173: userTypedValue is the raw text that the user typed, not
+      // the search URL that the address bar built from it. If the text is a
+      // search term, fixup can fail if the search service, which is
+      // lazy-loaded, is not ready. In this case, restore the history entry and
+      // show the typed value in the address bar.
+      this.#log.warn(`Could not load the typed value: ${ex}`);
+      this.#restoreListeners.get(browser.permanentKey)?.unregister(false);
+      let { userTypedValue } = tabData;
+      return this.#restoreTabEntry(browser, {
+        ...tabData,
+        userTypedValue: null,
+      }).then(() => {
+        if (browser.userTypedValue) {
+          return;
+        }
+        browser.userTypedValue = userTypedValue;
+        let win = browser.documentGlobal;
+        if (win.gBrowser.selectedBrowser == browser) {
+          win.gURLBar.setURI();
+        }
+      });
+    }
 
     return loadPromise;
   }
@@ -9444,6 +9468,14 @@ class _SessionStore {
   }
 
   /**
+   * The parsed contents of session.schema.json, loaded by the first
+   * validateState call.
+   *
+   * @type {Promise<object>|null}
+   */
+  #stateSchemaPromise = null;
+
+  /**
    * Validates that a state object matches the schema
    * defined in browser/components/sessionstore/session.schema.json
    *
@@ -9459,19 +9491,14 @@ class _SessionStore {
       // Don't include any deferred initial state.
       delete state.deferredInitialState;
     }
-    const schema = await fetch(
+    this.#stateSchemaPromise ??= fetch(
       "moz-src:///browser/components/sessionstore/session.schema.json"
     ).then(rsp => rsp.json());
+    const schema = await this.#stateSchemaPromise;
 
     let result;
     try {
       result = lazy.JsonSchema.validate(state, schema);
-      if (!result.valid) {
-        console.warn(
-          "Session state didn't validate against the schema",
-          result.errors
-        );
-      }
     } catch (ex) {
       console.error(`Error validating session state: ${ex.message}`, ex);
     }
