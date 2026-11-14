@@ -86,6 +86,8 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
                 "store" -> reply(id, JSONObject().put("store", if (BuildConfig.AKHI_PLAY_STORE) "play" else "direct"))
                 "status" -> if (BuildConfig.AKHI_PLAY_STORE) status(id) else replyError(id)
                 "buy" -> if (BuildConfig.AKHI_PLAY_STORE) buy(id, request.optString("plan")) else replyError(id)
+                "gifts" -> if (BuildConfig.AKHI_PLAY_STORE) gifts(id) else replyError(id)
+                "consume" -> if (BuildConfig.AKHI_PLAY_STORE) consumeGift(id, request.optString("purchaseToken")) else replyError(id)
                 else -> replyError(id)
             }
         }
@@ -177,17 +179,43 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
         }
     }
 
-    private fun buy(id: Int, plan: String) {
-        val isLifetime = plan == "lifetime"
-        if (!isLifetime && plan != "monthly" && plan != "yearly" && plan != "family") {
+    // the gifts bought that the extension hasn't turned into a Play code yet: it asks the license server, then consumes them
+    private fun gifts(id: Int) {
+        val onError = { replyError(id) }
+        withBilling(onError) {
+            purchasesOf(BillingClient.ProductType.INAPP, onError) { oneTime ->
+                val tokens = oneTime.filter { GIFT_PRODUCT in it.products }.map { it.purchaseToken }
+                reply(id, JSONObject().put("purchaseTokens", org.json.JSONArray(tokens)))
+            }
+        }
+    }
+
+    private fun consumeGift(id: Int, purchaseToken: String) {
+        if (purchaseToken.isEmpty()) {
             replyError(id)
             return
         }
-        val productType = if (isLifetime) BillingClient.ProductType.INAPP else BillingClient.ProductType.SUBS
+        withBilling({ replyError(id) }) {
+            billingClient.consumeAsync(ConsumeParams.newBuilder().setPurchaseToken(purchaseToken).build()) { result, _ ->
+                mainHandler.post { reply(id, JSONObject().put("consumed", result.isOk())) }
+            }
+        }
+    }
+
+    private fun buy(id: Int, plan: String) {
+        val isLifetime = plan == "lifetime"
+        val isGift = plan == "gift"
+        if (!isLifetime && !isGift && plan != "monthly" && plan != "yearly" && plan != "family") {
+            replyError(id)
+            return
+        }
+        val isOneTime = isLifetime || isGift
+        val productType = if (isOneTime) BillingClient.ProductType.INAPP else BillingClient.ProductType.SUBS
         val product = QueryProductDetailsParams.Product.newBuilder()
             .setProductId(
                 when (plan) {
                     "lifetime" -> LIFETIME_PRODUCT
+                    "gift" -> GIFT_PRODUCT
                     "family" -> FAMILY_PRODUCT
                     else -> SUBSCRIPTION_PRODUCT
                 },
@@ -200,7 +228,7 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
             ) { result, details ->
                 mainHandler.post {
                     val productDetails = details.productDetailsList.firstOrNull()
-                    val offerToken = if (isLifetime) {
+                    val offerToken = if (isOneTime) {
                         productDetails?.oneTimePurchaseOfferDetailsList?.firstOrNull()?.offerToken
                     } else {
                         productDetails?.subscriptionOfferDetails
@@ -275,5 +303,8 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
         // Given only with promo codes, for gifts (the license server's /redeem): a year of Family from redeeming it
         private const val FAMILY_YEAR_PRODUCT = "akhi_family_year"
         private const val YEAR_MS = 365L * 24 * 3600 * 1000
+
+        // A consumable: a year of Family for someone else, as a Play code of FAMILY_YEAR_PRODUCT (/play/gift)
+        private const val GIFT_PRODUCT = "akhi_family_gift"
     }
 }
