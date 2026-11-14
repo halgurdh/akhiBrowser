@@ -18,7 +18,7 @@ from content import ARTICLES, COMPARE, COMPARE_BROWSERS, UI
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://akhibrowser.com"
-GTM = """<script async src="https://www.googletagmanager.com/gtm.js?id=GTM-N2MF3XPS"></script>
+GTM = """<script async src="https://www.googletagmanager.com/gtm.js?id=GTM-PW3SL6DM"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
