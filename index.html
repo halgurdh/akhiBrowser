@@ -202,6 +202,8 @@ video { display: block; width: 100%; height: auto; border-radius: 14px; backgrou
 
 .cancel { margin-top: 36px; padding-top: 28px; border-top: 1px solid var(--line); max-width: 42em; }
 .cancel h3 { font-size: 21px; }
+.cancel h3:not(:first-child) { margin-top: 28px; }
+.cancel h3 + p { margin-top: 8px; color: var(--soft); }
 .cancel ol { margin: 14px 0 0; padding-inline-start: 1.4em; color: var(--soft); }
 .cancel li + li { margin-top: 6px; }
 .plans { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
@@ -765,6 +767,17 @@ footer .powered a:hover { text-decoration: underline; }
         </ol>
         <p class="note" data-t="c4">Premium then ends, and all the free protections keep working. A lifetime purchase is not a subscription, so there is nothing to cancel.</p>
         <p class="note" data-t="c5">Can't get to the browser? Email <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a> with the email address you paid with.</p>
+        <h3 data-t="gp0">Bought on Google Play</h3>
+        <p data-t="gp1">Change or cancel it in Google Play: in the Play Store, tap your profile picture, then Payments and subscriptions, Subscriptions, AkhiBrowser. Premium keeps working until the end of the period you paid.</p>
+        <h3 data-t="gp2">Premium on your computer too</h3>
+        <ol>
+          <li data-t="gp3">In AkhiBrowser on your phone: menu, then Extensions, then AkhiBrowser. Under Premium, press Get a license key.</li>
+          <li data-t="gp4">Copy the key, or press Email me the key and open the email on your computer.</li>
+          <li data-t="gp5">In AkhiBrowser on Windows, open the AkhiBrowser shield in the toolbar and paste the key under Premium.</li>
+        </ol>
+        <p class="note" data-t="gp6">The key works on up to 3 devices, or 10 with Family. Cancel on Google Play, and it ends on your computer too.</p>
+        <h3 data-t="gp7">Bought on this website, or got a gift or a School / Mosque key?</h3>
+        <p data-t="gp8">Your key works in AkhiBrowser on Windows and in AkhiBrowser for Android from GitHub. AkhiBrowser from Google Play only takes purchases made in Google Play, so for it: with a gift key, <a href="https://akhi-license.akhibrowser.workers.dev/redeem">get a Google Play code</a>; a school or mosque <a href="https://akhi-license.akhibrowser.workers.dev/school">gets a code for each family</a>. Each code is a year of Family Premium, from the day it's redeemed.</p>
       </div>
     </div>
   </section>
@@ -1025,6 +1038,15 @@ footer .powered a:hover { text-decoration: underline; }
 "c3": "Kies voor opzeggen en bevestig dat.",
 "c4": "Daarna stopt Premium, en alle gratis bescherming blijft gewoon werken. Een levenslange aankoop is geen abonnement, dus die hoef je niet op te zeggen.",
 "c5": "Kun je niet bij de browser? Mail naar <a href=\"mailto:support@akhibrowser.com\">support@akhibrowser.com<\/a> met het e-mailadres waarmee je hebt betaald.",
+"gp0": "Gekocht via Google Play",
+"gp1": "Wijzigen of opzeggen doe je in Google Play: tik in de Play Store op je profielfoto, dan Betalingen en abonnementen, Abonnementen, AkhiBrowser. Premium blijft werken tot het einde van de periode die je hebt betaald.",
+"gp2": "Premium ook op je computer",
+"gp3": "In AkhiBrowser op je telefoon: menu, dan Extensies, dan AkhiBrowser. Druk onder Premium op Licentiesleutel aanvragen.",
+"gp4": "Kopieer de sleutel, of druk op Mail mij de sleutel en open de e-mail op je computer.",
+"gp5": "Open in AkhiBrowser op Windows het AkhiBrowser-schild in de werkbalk en plak de sleutel onder Premium.",
+"gp6": "De sleutel werkt op maximaal 3 apparaten, of 10 met Family. Zeg je op in Google Play, dan stopt hij ook op je computer.",
+"gp7": "Gekocht op deze website, of een cadeau- of School / Moskee-sleutel gekregen?",
+"gp8": "Je sleutel werkt in AkhiBrowser op Windows en in AkhiBrowser voor Android van GitHub. AkhiBrowser uit Google Play neemt alleen aankopen in Google Play aan, dus daarvoor: met een cadeausleutel <a href=\"https://akhi-license.akhibrowser.workers.dev/redeem\">vraag je een Google Play-code aan<\/a>; een school of moskee <a href=\"https://akhi-license.akhibrowser.workers.dev/school\">krijgt een code per gezin<\/a>. Elke code is een jaar Family Premium, vanaf de dag dat hij wordt ingewisseld.",
 "x0": "Toegankelijkheid",
 "x1": "Voor mensen die kleurenblind of slechthorend zijn, en voor iedereen die op het web wat meer hulp kan gebruiken.",
 "x2": "Kleurenblind",
@@ -1289,6 +1311,15 @@ footer .powered a:hover { text-decoration: underline; }
 "c3": "اختر الإلغاء، ثم أكّد.",
 "c4": "ينتهي Premium بعد ذلك، وتبقى كل الحماية المجانية تعمل. الشراء مدى الحياة ليس اشتراكًا، فلا شيء لإلغائه.",
 "c5": "لا تستطيع الوصول إلى المتصفح؟ راسل <a href=\"mailto:support@akhibrowser.com\">support@akhibrowser.com<\/a> من عنوان البريد الذي دفعت به.",
+"gp0": "الشراء عبر Google Play",
+"gp1": "غيّره أو ألغِه من Google Play: في متجر Play، اضغط على صورة ملفك الشخصي، ثم الدفعات والاشتراكات، ثم الاشتراكات، ثم AkhiBrowser. يبقى Premium يعمل حتى نهاية الفترة التي دفعت ثمنها.",
+"gp2": "Premium على حاسوبك أيضًا",
+"gp3": "في AkhiBrowser على هاتفك: القائمة، ثم الإضافات، ثم AkhiBrowser. ضمن Premium، اضغط احصل على مفتاح ترخيص.",
+"gp4": "انسخ المفتاح، أو اضغط أرسل لي المفتاح بالبريد وافتح الرسالة على حاسوبك.",
+"gp5": "في AkhiBrowser على Windows، افتح درع AkhiBrowser في شريط الأدوات والصق المفتاح ضمن Premium.",
+"gp6": "يعمل المفتاح على 3 أجهزة كحد أقصى، أو 10 مع Family. إذا ألغيت على Google Play، ينتهي على حاسوبك أيضًا.",
+"gp7": "اشتريت من هذا الموقع، أو حصلت على مفتاح هدية أو مفتاح مدرسة / مسجد؟",
+"gp8": "يعمل مفتاحك في AkhiBrowser على Windows وفي AkhiBrowser لنظام Android من GitHub. أما AkhiBrowser من Google Play فيقبل فقط المشتريات التي تتم عبر Google Play، لذلك: مع مفتاح هدية <a href=\"https://akhi-license.akhibrowser.workers.dev/redeem\">احصل على رمز Google Play<\/a>؛ والمدرسة أو المسجد <a href=\"https://akhi-license.akhibrowser.workers.dev/school\">يحصل على رمز لكل أسرة<\/a>. كل رمز يمنح سنة من Family Premium، تبدأ من يوم استبداله.",
 "x0": "إمكانية الوصول",
 "x1": "لمن لديهم عمى ألوان أو ضعف في السمع، ولكل من يحتاج إلى مساعدة أكثر قليلًا على الإنترنت.",
 "x2": "عمى الألوان",
