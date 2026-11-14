@@ -153,3 +153,37 @@ nav { position: relative; }
   .poster h3 { color: #000; }
   .poster p { color: #000; }
 }
+
+/* Motion from what browsers already have, no JavaScript: pages cross-fade into each other with the header in
+   place, content arrives as it scrolls in, and articles get a reading-progress bar. Off for visitors who ask for
+   less motion; a browser without support shows the page as before. index.html opts in to the page transitions. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .22s; }
+  body > header { view-transition-name: akhi-header; }
+
+  @supports (animation-timeline: view()) {
+    main > :is(article, aside, .home) > :not(.list, .posts),
+    main > :not(article, aside, .home, .posts),
+    main :is(.list, .posts) > li {
+      animation: arrive linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 160px;
+    }
+    body:has(main > article)::after {
+      content: "";
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 100;
+      height: 3px;
+      background: var(--gold);
+      transform-origin: 0 50%;
+      pointer-events: none;
+      animation: read linear both;
+      animation-timeline: scroll(root);
+    }
+    [dir="rtl"] body:has(main > article)::after { transform-origin: 100% 50%; }
+  }
+}
+@keyframes arrive { from { opacity: 0; transform: translateY(22px); } }
+@keyframes read { from { transform: scaleX(0); } to { transform: scaleX(1); } }

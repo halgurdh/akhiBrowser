@@ -409,6 +409,12 @@ footer .powered a:hover { text-decoration: underline; }
   .stack .kept { opacity: 0; }
   .track { scroll-behavior: auto; }
 }
+/* the other pages cross-fade into this one and back, the bar in place of their header (assets/pages.css) */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .22s; }
+  .bar { view-transition-name: akhi-header; }
+}
 @media (prefers-reduced-motion: no-preference) {
   .glow { animation: drift 18s ease-in-out infinite alternate; }
   .glow.g2 { animation-duration: 23s; animation-direction: alternate-reverse; }
