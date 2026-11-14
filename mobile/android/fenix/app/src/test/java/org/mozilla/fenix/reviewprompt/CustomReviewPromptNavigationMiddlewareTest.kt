@@ -45,7 +45,7 @@ class CustomReviewPromptNavigationMiddlewareTest {
     }
 
     @Test
-    fun `WHEN feedback button is clicked THEN sumo forum is opened in a new tab AND prompt is dismissed`() = runTest {
+    fun `WHEN feedback button is clicked THEN a feedback email is opened AND prompt is dismissed`() = runTest {
         val middleware = CustomReviewPromptNavigationMiddleware(this)
 
         val navigationEvents = mutableListOf<CustomReviewPromptNavigationEvent>()
@@ -63,7 +63,7 @@ class CustomReviewPromptNavigationMiddlewareTest {
 
         assertEquals(
             listOf(
-                CustomReviewPromptNavigationEvent.OpenInNewTab("mzl.la/AndroidSupport"),
+                CustomReviewPromptNavigationEvent.SendFeedbackEmail,
                 CustomReviewPromptNavigationEvent.Dismiss,
             ),
             navigationEvents,

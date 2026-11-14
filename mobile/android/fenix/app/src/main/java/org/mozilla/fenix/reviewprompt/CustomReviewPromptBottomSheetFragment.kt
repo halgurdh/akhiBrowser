@@ -5,7 +5,10 @@
 package org.mozilla.fenix.reviewprompt
 
 import android.app.Dialog
+import android.content.ActivityNotFoundException
 import android.content.DialogInterface
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -99,8 +102,18 @@ class CustomReviewPromptBottomSheetFragment : BottomSheetDialogFragment() {
                     }
 
                     is CustomReviewPromptNavigationEvent.OpenInNewTab -> openInNewTab(event.url)
+
+                    CustomReviewPromptNavigationEvent.SendFeedbackEmail -> sendFeedbackEmail()
                 }
             }
+        }
+    }
+
+    private fun sendFeedbackEmail() {
+        try {
+            startActivity(Intent(Intent.ACTION_SENDTO, Uri.parse(FEEDBACK_EMAIL)))
+        } catch (e: ActivityNotFoundException) {
+            openInNewTab(FEEDBACK_PAGE)
         }
     }
 
@@ -111,6 +124,8 @@ class CustomReviewPromptBottomSheetFragment : BottomSheetDialogFragment() {
 
     companion object {
         private const val TAG = "CustomReviewPromptBottomSheetFragment"
+        private const val FEEDBACK_EMAIL = "mailto:support@akhibrowser.com?subject=AkhiBrowser%20feedback"
+        private const val FEEDBACK_PAGE = "https://akhibrowser.com/"
 
         /**
          * Shows the custom review prompt, unless it is already shown.
