@@ -8,6 +8,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.VpnService
+import android.os.Build
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
 import android.provider.Settings
@@ -22,7 +23,10 @@ import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
 import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
+import java.util.concurrent.LinkedBlockingQueue
+import java.util.concurrent.RejectedExecutionException
+import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 
 /**
  * Family: the whole phone looks up sites through Cloudflare's family DNS, like the browser does, so adult and malware
@@ -181,6 +185,8 @@ internal object AkhiDns {
 class AkhiPhoneFilterService : VpnService() {
     @Volatile
     private var tunnel: ParcelFileDescriptor? = null
+
+    @Volatile
     private var workers: ExecutorService? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -197,35 +203,50 @@ class AkhiPhoneFilterService : VpnService() {
     }
 
     private fun open(): Boolean {
-        val established = Builder()
+        val builder = Builder()
             .setSession("AkhiBrowser")
             .addAddress(TUNNEL_ADDRESS, ADDRESS_BITS)
             .addDnsServer(DNS_ADDRESS)
             .addRoute(DNS_ADDRESS, ADDRESS_BITS)
             .setBlocking(true)
-            .establish() ?: return false
+        // a VPN is metered by default since Android 10: Wi-Fi would stop counting as Wi-Fi for updates and backups
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            builder.setMetered(false)
+        }
+        val established = builder.establish() ?: return false
+        // its own threads for each tunnel, with a bounded queue: a query that waits too long is dropped
+        val pool = ThreadPoolExecutor(
+            WORKERS,
+            WORKERS,
+            KEEP_ALIVE_S,
+            TimeUnit.SECONDS,
+            LinkedBlockingQueue(MAX_QUEUED),
+            ThreadPoolExecutor.DiscardOldestPolicy(),
+        )
         tunnel = established
-        workers = Executors.newFixedThreadPool(WORKERS)
+        workers = pool
         AkhiPhoneFilter.isRunning = true
-        Thread({ read(established) }, "AkhiPhoneFilter").start()
+        Thread({ read(established, pool) }, "AkhiPhoneFilter").start()
         return true
     }
 
-    private fun read(established: ParcelFileDescriptor) {
+    private fun read(established: ParcelFileDescriptor, pool: ExecutorService) {
         val input = FileInputStream(established.fileDescriptor)
         val output = FileOutputStream(established.fileDescriptor)
         val buffer = ByteArray(MAX_PACKET)
         try {
-            while (true) {
+            while (tunnel === established) {
                 val length = input.read(buffer)
                 if (length < 0) {
                     break
                 }
                 val query = AkhiDns.queryOf(buffer, length) ?: continue
-                workers?.execute { answer(query, output) }
+                pool.execute { answer(query, output) }
             }
         } catch (e: IOException) {
             // the tunnel was closed
+        } catch (e: RejectedExecutionException) {
+            // the tunnel was closed while a query came in
         }
     }
 
@@ -246,7 +267,7 @@ class AkhiPhoneFilterService : VpnService() {
             protect(socket)
             socket.soTimeout = TIMEOUT_MS
             socket.send(DatagramPacket(message, message.size, InetAddress.getByName(server), AkhiDns.PORT))
-            val buffer = ByteArray(MAX_PACKET)
+            val buffer = ByteArray(MAX_ANSWER)
             val response = DatagramPacket(buffer, buffer.size)
             socket.receive(response)
             buffer.copyOf(response.length)
@@ -284,8 +305,11 @@ class AkhiPhoneFilterService : VpnService() {
         const val ADDRESS_BITS = 32
         val UPSTREAMS = listOf("1.1.1.3", "1.0.0.3")
         const val MAX_PACKET = 32767
-        const val TIMEOUT_MS = 5000
-        const val WORKERS = 4
+        const val MAX_ANSWER = 4096
+        const val TIMEOUT_MS = 2000
+        const val WORKERS = 8
+        const val MAX_QUEUED = 64
+        const val KEEP_ALIVE_S = 30L
     }
 }
 
