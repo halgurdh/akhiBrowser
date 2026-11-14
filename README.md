@@ -7,7 +7,9 @@ Thanks to [Mohamed Sadiq](https://github.com/mohamedsadiqaguenaou): the backgrou
 [NoMusic](https://github.com/mohamedsadiqaguenaou/NoMusic), and his [Safaa](https://github.com/mohamedsadiqaguenaou/safaa)
 and [NoHaram](https://github.com/mohamedsadiqaguenaou/NoHaram) inspired the image filter. Give them a star.
 
-📲 [Website](https://akhibrowser.com)
+## 📲 [Download AkhiBrowser at akhibrowser.com](https://akhibrowser.com/#download)
+
+Get it from the Microsoft Store for Windows or Google Play for Android, both linked on [akhibrowser.com](https://akhibrowser.com/#download).
 
 (Insha'Allah, it will also be available soon as a standalone extension for Firefox and Chrome.)
 
