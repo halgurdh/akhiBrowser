@@ -10,10 +10,13 @@ import android.content.Intent
 import android.net.VpnService
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.ParcelFileDescriptor
 import android.provider.Settings
 import mozilla.components.concept.engine.EngineSession
 import mozilla.components.concept.engine.webextension.MessageHandler
+import mozilla.components.concept.engine.webextension.Port
 import org.json.JSONObject
 import org.mozilla.fenix.BuildConfig
 import java.io.FileInputStream
@@ -72,8 +75,24 @@ internal object AkhiPhoneFilter {
     class Messages(context: Context) : MessageHandler {
         private val appContext = context.applicationContext
 
+        // The settings ask through a port (connectNative), as AkhiStore does: an answer returned from onMessage doesn't
+        // reach the extension in the release builds, a message on a port does
+        private val mainHandler = Handler(Looper.getMainLooper())
+
+        override fun onPortConnected(port: Port) = Unit
+
+        override fun onPortMessage(message: Any, port: Port) {
+            val request = message as? JSONObject ?: return
+            val id = request.optInt("id")
+            mainHandler.post { port.postMessage(answer(request).put("id", id)) }
+        }
+
         override fun onMessage(message: Any, source: EngineSession?): Any {
             val request = message as? JSONObject ?: return JSONObject()
+            return answer(request)
+        }
+
+        private fun answer(request: JSONObject): JSONObject {
             if (BuildConfig.AKHI_PLAY_STORE) {
                 return JSONObject().put("available", false)
             }
