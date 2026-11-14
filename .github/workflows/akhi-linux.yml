@@ -1,5 +1,6 @@
 # AkhiBrowser for Linux x64: a full build and its .tar.xz, with the extension and Premium merged and minified.
-# Runs on a push to linux-macos-ready or by hand, as it takes hours. It runs here because public repositories have free
+# Runs on a push to linux-macos-ready or by hand, as it takes hours, and from firefox-sync.yml for each Firefox merge,
+# whose main moves only when the build and the smoke test (output smoke) pass. It runs here because public repositories have free
 # runners; the build output goes to a file in the draft release of the private halgurdh/akhi-extension, not to the log
 # or an artifact of this repository, which anyone could read.
 # Needs the secret AKHI_SUBMODULES_TOKEN: read access to the submodules, read and write to the contents of
@@ -8,6 +9,17 @@ name: AkhiBrowser Linux
 
 on:
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      ref:
+        description: The commit to build
+        type: string
+        required: false
+        default: ""
+    outputs:
+      smoke:
+        description: The smoke test's outcome, success when every check passed
+        value: ${{ jobs.build.outputs.smoke }}
   push:
     branches:
       - linux-macos-ready
@@ -22,6 +34,8 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     timeout-minutes: 355
+    outputs:
+      smoke: ${{ steps.smoke.outcome }}
     steps:
       - name: Free disk space
         run: |
@@ -30,6 +44,7 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
+          ref: ${{ inputs.ref }}
           submodules: recursive
           token: ${{ secrets.AKHI_SUBMODULES_TOKEN }}
           persist-credentials: false
@@ -49,6 +64,7 @@ jobs:
         run: python3 browser/branding/akhi/tools/build_linux.py > artifacts/build.log 2>&1
 
       - name: Smoke test
+        id: smoke
         continue-on-error: true
         run: |
           tar -C "$RUNNER_TEMP" -xJf obj-akhi-linux-x64/dist/release/AkhiBrowser-linux-x64.tar.xz
@@ -68,6 +84,6 @@ jobs:
           tar -C artifacts -cJf build-logs.tar.xz .
           files=(build-logs.tar.xz)
           for f in obj-akhi-linux-x64/dist/release/*.tar.xz; do [ -f "$f" ] && files+=("$f"); done
-          gh release create "linux-build-${{ github.run_number }}" "${files[@]}" \
-            --repo halgurdh/akhi-extension --draft --title "Linux build ${{ github.run_number }}" \
-            --notes "From ${{ github.sha }}: ${{ job.status }}"
+          gh release create "linux-build-${{ github.run_id }}-${{ github.run_attempt }}" "${files[@]}" \
+            --repo halgurdh/akhi-extension --draft --title "Linux build ${{ github.run_id }}" \
+            --notes "From ${{ inputs.ref || github.sha }}: ${{ job.status }}"

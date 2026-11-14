@@ -1,0 +1,86 @@
+# Every 30 minutes: the license server answers, the browser's update check (browser/extensions/akhi/lib/updates.js,
+# LATEST_RELEASE) answers, and akhibrowser.com is up. A failure opens an issue labelled uptime and mails the user
+# (notify.sh); while it stays down, a reminder at most every 12 hours; when all is back the issue closes with a mail.
+name: Uptime
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: uptime
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      AKHI_OPS_TOKEN: ${{ secrets.AKHI_OPS_TOKEN }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          sparse-checkout: .github/scripts
+
+      - name: Check
+        id: check
+        run: |
+          # three tries, 20 s apart, so a single hiccup doesn't count
+          try() {
+            for attempt in 1 2 3; do
+              if "$@"; then return 0; fi
+              [ "$attempt" -lt 3 ] && sleep 20
+            done
+            return 1
+          }
+          license() {
+            body=$(curl -sS -m 20 -o - -w '\n%{http_code}' -X POST -H "Content-Type: application/json" \
+              -d '{"key":"AKHI-uptime-check","device":"device-uptimecheck0"}' \
+              https://akhi-license.akhibrowser.workers.dev/license) || return 1
+            [ "$(tail -n1 <<< "$body")" = 403 ] && head -n -1 <<< "$body" | jq -e '.error == "invalid"' > /dev/null
+          }
+          updates() {
+            curl -fsS -m 20 -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GH_TOKEN" \
+              https://api.github.com/repos/halgurdh/akhiBrowser/releases/latest | jq -e '.tag_name | length > 0' > /dev/null
+          }
+          site() {
+            curl -fsSL -m 20 -o /dev/null https://akhibrowser.com/
+          }
+          : > "$RUNNER_TEMP/down.md"
+          try license || echo "- The license server (https://akhi-license.akhibrowser.workers.dev/license) doesn't answer a key check" >> "$RUNNER_TEMP/down.md"
+          try updates || echo "- The update check (GitHub's latest release of halgurdh/akhiBrowser) doesn't answer" >> "$RUNNER_TEMP/down.md"
+          try site || echo "- https://akhibrowser.com/ doesn't load" >> "$RUNNER_TEMP/down.md"
+          cat "$RUNNER_TEMP/down.md"
+          [ -s "$RUNNER_TEMP/down.md" ] && echo "down=true" >> "$GITHUB_OUTPUT" || true
+
+      - name: Open, remind or close the issue
+        env:
+          DOWN: ${{ steps.check.outputs.down }}
+        run: |
+          gh label create uptime --color B60205 --description "Opened by the uptime check" 2>/dev/null || true
+          open=$(gh issue list --label uptime --state open --json number,updatedAt --jq '.[0] // empty')
+          number=$(jq -r '.number // empty' <<< "${open:-null}")
+          now=$(date -u +%s)
+          if [ "$DOWN" = "true" ]; then
+            { echo "Down at $(date -u '+%F %H:%M') UTC:"; cat "$RUNNER_TEMP/down.md"; } > "$RUNNER_TEMP/body.md"
+            if [ -z "$number" ]; then
+              gh issue create --label uptime --title "Uptime: something is down" --body-file "$RUNNER_TEMP/body.md"
+              bash .github/scripts/notify.sh "AkhiBrowser: something is down" "$RUNNER_TEMP/body.md"
+            else
+              updated=$(date -u -d "$(jq -r .updatedAt <<< "$open")" +%s)
+              if [ $((now - updated)) -ge 43200 ]; then
+                gh issue comment "$number" --body-file "$RUNNER_TEMP/body.md"
+                bash .github/scripts/notify.sh "AkhiBrowser: still down" "$RUNNER_TEMP/body.md"
+              fi
+            fi
+          elif [ -n "$number" ]; then
+            echo "Everything answers again at $(date -u '+%F %H:%M') UTC." > "$RUNNER_TEMP/body.md"
+            gh issue close "$number" --comment "$(cat "$RUNNER_TEMP/body.md")"
+            bash .github/scripts/notify.sh "AkhiBrowser: everything is back up" "$RUNNER_TEMP/body.md"
+          fi

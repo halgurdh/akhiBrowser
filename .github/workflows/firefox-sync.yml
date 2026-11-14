@@ -1,8 +1,12 @@
 # Merges Mozilla's main into the branch firefox-daily every day at 00:00 UTC, and at once when CISA's list of exploited
-# vulnerabilities gets a Firefox entry (checked every 2 hours). Nothing reaches main or a release from here: a build
-# takes firefox-daily when it's ready. A conflict, or something AkhiBrowser removed coming back, stops it with an issue.
-# firefox-daily keeps its merges, so a conflict solved there once stays solved; AkhiBrowser's main is merged into it
-# first.
+# vulnerabilities gets a Firefox entry (checked every 2 hours). firefox-daily keeps its merges, so a conflict solved there
+# once stays solved; AkhiBrowser's main is merged into it first.
+# When firefox-daily has something main lacks, it's built and smoke tested (akhi-linux.yml), and main fast-forwards to
+# it when both pass. A conflict is handed to Claude, whose fix comes as a pull request into firefox-daily to approve;
+# something AkhiBrowser removed coming back stops it. Each stop opens an issue and mails the user (notify.sh).
+# Secrets: AKHI_SUBMODULES_TOKEN (the build), AKHI_OPS_TOKEN (the mails), ANTHROPIC_API_KEY (conflicts; without it
+# only the issue and the mail), AKHI_PUSH_TOKEN (optional: a token with contents and workflows write on this repository,
+# for merges that change files under .github/workflows, which the workflow's own token can't push).
 name: Firefox sync
 
 on:
@@ -17,22 +21,38 @@ on:
 permissions:
   contents: write
   issues: write
+  pull-requests: write
+
+concurrency:
+  group: firefox-sync
+  cancel-in-progress: false
+
+env:
+  AKHI_OPS_TOKEN: ${{ secrets.AKHI_OPS_TOKEN }}
 
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 120
+    outputs:
+      sha: ${{ steps.merge.outputs.sha }}
+      pending: ${{ steps.merge.outputs.pending }}
+    env:
+      HAS_CLAUDE: ${{ secrets.ANTHROPIC_API_KEY != '' }}
     steps:
       - uses: actions/checkout@v5
         with:
           ref: main
           fetch-depth: 0
           filter: blob:none
+          token: ${{ secrets.AKHI_PUSH_TOKEN || github.token }}
 
       # Mozilla is a promisor remote too: in this partial clone, the merge's missing Firefox files come from there
       - name: Start from firefox-daily with AkhiBrowser's main
         id: start
         run: |
+          echo "REPORT=$RUNNER_TEMP/report.md" >> "$GITHUB_ENV"
+          REPORT="$RUNNER_TEMP/report.md"
           git config user.name "AkhiBrowser sync"
           git config user.email "support@akhibrowser.com"
           git remote add mozilla https://github.com/mozilla-firefox/firefox.git
@@ -42,16 +62,18 @@ jobs:
           if git fetch -q origin firefox-daily 2>/dev/null; then
             git checkout -q -B daily origin/firefox-daily
             echo "daily=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-            if ! git merge --no-edit -m "Merge AkhiBrowser main into firefox-daily" origin/main > merge.log 2>&1; then
+            if ! git merge --no-edit -m "Merge AkhiBrowser main into firefox-daily" origin/main > "$RUNNER_TEMP/merge.log" 2>&1; then
               {
                 echo "### AkhiBrowser's main doesn't merge into firefox-daily"
                 git diff --name-only --diff-filter=U | sed 's/^/- /'
-                echo; echo '```'; tail -n 20 merge.log; echo '```'
-              } > report.md
+                echo; echo '```'; tail -n 20 "$RUNNER_TEMP/merge.log"; echo '```'
+              } > "$REPORT"
               echo "failed=true" >> "$GITHUB_OUTPUT"
+              echo "conflict=true" >> "$GITHUB_OUTPUT"
             fi
           else
             git checkout -q -B daily origin/main
+            echo "daily=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           fi
 
       - name: A Firefox entry new on the list?
@@ -68,35 +90,186 @@ jobs:
         if: steps.start.outputs.failed != 'true' && (github.event.schedule != '30 */2 * * *' || steps.urgent.outputs.count != '0')
         run: |
           before=$(git rev-parse HEAD)
+          echo "before=$before" >> "$GITHUB_OUTPUT"
           if git merge-base --is-ancestor mozilla/main HEAD; then
             echo "Nothing new from Mozilla."
-          elif ! git merge --no-edit -m "Merge Firefox main into AkhiBrowser" mozilla/main > merge.log 2>&1; then
+          elif ! git merge --no-edit -m "Merge Firefox main into AkhiBrowser" mozilla/main > "$RUNNER_TEMP/merge.log" 2>&1; then
             {
               echo "### The merge with Firefox's main has conflicts"
               git diff --name-only --diff-filter=U | sed 's/^/- /'
-              echo; echo '```'; tail -n 20 merge.log; echo '```'
-              echo; echo "Solve them on firefox-daily: the next sync starts from there."
-            } > report.md
+              echo; echo '```'; tail -n 20 "$RUNNER_TEMP/merge.log"; echo '```'
+            } > "$REPORT"
             echo "failed=true" >> "$GITHUB_OUTPUT"
+            echo "conflict=true" >> "$GITHUB_OUTPUT"
             exit 0
-          elif ! python3 .github/scripts/firefox_sync_guard.py "$before" > report.md; then
+          elif ! python3 .github/scripts/firefox_sync_guard.py "$before" > "$REPORT"; then
             echo "failed=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           if [ "$(git rev-parse HEAD)" != "${{ steps.start.outputs.daily }}" ]; then
-            git push origin HEAD:refs/heads/firefox-daily
+            if ! git push origin HEAD:refs/heads/firefox-daily 2> "$RUNNER_TEMP/push.log"; then
+              { echo "### firefox-daily couldn't be pushed"; echo '```'; cat "$RUNNER_TEMP/push.log"; echo '```'
+                echo "If it's about workflow files, add the secret AKHI_PUSH_TOKEN (contents and workflows write)."; } > "$REPORT"
+              echo "failed=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
             echo "merged=true" >> "$GITHUB_OUTPUT"
+          fi
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          git fetch -q origin main
+          if ! git merge-base --is-ancestor HEAD origin/main; then
+            echo "pending=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # one fix at a time: while one waits for approval, the conflicts come back each day without a new try
+      - name: A fix waiting already?
+        id: waiting
+        if: steps.start.outputs.conflict == 'true' || steps.merge.outputs.conflict == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          url=$(gh pr list --base firefox-daily --state open --json headRefName,url             --jq '[.[] | select(.headRefName | startswith("firefox-sync-fix-"))][0].url // empty')
+          if [ -n "$url" ]; then
+            echo "url=$url" >> "$GITHUB_OUTPUT"
+            echo "The Firefox sync waits for Claude's fix of the conflicts to be merged into firefox-daily: $url" > "$RUNNER_TEMP/wait.md"
+            bash .github/scripts/notify.sh "AkhiBrowser: Firefox sync waits for your approval" "$RUNNER_TEMP/wait.md"
+          fi
+
+      - name: Conflicts without Claude
+        if: (steps.start.outputs.conflict == 'true' || steps.merge.outputs.conflict == 'true') && env.HAS_CLAUDE != 'true' && !steps.waiting.outputs.url
+        run: |
+          echo; echo "Solve them on firefox-daily: the next sync starts from there. (No ANTHROPIC_API_KEY secret, so Claude didn't try.)" >> "$REPORT"
+
+      - name: Claude solves the conflicts
+        id: claude
+        if: (steps.start.outputs.conflict == 'true' || steps.merge.outputs.conflict == 'true') && env.HAS_CLAUDE == 'true' && !steps.waiting.outputs.url
+        continue-on-error: true
+        timeout-minutes: 60
+        uses: anthropics/claude-code-action@8d70a0dd265122bd65b8e09d3d959e65373ae2a1 # v1.0.260
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ github.token }}
+          claude_args: >-
+            --max-turns 300
+            --allowedTools "Read,Edit,Write,Glob,Grep,Bash(git diff:*),Bash(git status:*),Bash(git log:*),Bash(git show:*),Bash(git ls-files:*)"
+          prompt: |
+            This is AkhiBrowser, a fork of Firefox. A git merge in this checkout stopped with conflicts; `git status`
+            and `git diff --name-only --diff-filter=U` list them. Solve every conflicted file by editing it: keep
+            Mozilla's upstream changes and keep AkhiBrowser's own changes (code near "AkhiBrowser" comments, the Akhi*
+            files, branding). AkhiBrowser removed Firefox's telemetry, usage ping, crash reports, studies/Nimbus
+            experiments, Pocket and sponsored content and AI page summaries, and keeps HTTPS-only, strict tracking
+            protection and private defaults on: these must stay that way.
+            .github/scripts/firefox_sync_guard.py lists what must stay. Leave no conflict markers. Don't touch files
+            without conflicts unless a conflicted file can't build without it. Don't run git add, commit, merge,
+            checkout or push: only edit files. End with a short summary of each file and what you chose.
+
+      - name: Open a pull request with Claude's fix
+        id: fix
+        if: steps.claude.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BEFORE: ${{ steps.merge.outputs.before || steps.start.outputs.daily }}
+        run: |
+          files=$(git diff --name-only --diff-filter=U)
+          if [ -n "$files" ] && echo "$files" | xargs grep -lE '^(<<<<<<<|>>>>>>>)( |$)' > "$RUNNER_TEMP/left.txt" 2>/dev/null; then
+            { echo; echo "Claude left conflict markers in:"; sed 's/^/- /' "$RUNNER_TEMP/left.txt"; } >> "$REPORT"
+            exit 0
+          fi
+          git add -u
+          git commit -q --no-edit
+          branch="firefox-sync-fix-$(date -u +%F)"
+          {
+            echo "The daily Firefox sync stopped with conflicts; Claude solved them in this pull request. Merge it into"
+            echo "firefox-daily: the next sync builds it and moves main forward when the build and smoke test pass."
+            echo; cat "$REPORT"; echo
+          } > "$RUNNER_TEMP/pr.md"
+          draft=""
+          if ! python3 .github/scripts/firefox_sync_guard.py "$BEFORE" > "$RUNNER_TEMP/guard.md"; then
+            draft="--draft"
+            echo "**The guard stopped it: don't merge before fixing this.**" >> "$RUNNER_TEMP/pr.md"
+          fi
+          cat "$RUNNER_TEMP/guard.md" >> "$RUNNER_TEMP/pr.md"
+          git push -f origin "HEAD:refs/heads/$branch"
+          url=$(gh pr create --base firefox-daily --head "$branch" $draft \
+            --title "Firefox sync: Claude's fix of the conflicts of $(date -u +%F)" --body-file "$RUNNER_TEMP/pr.md")
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          { echo; echo "Claude solved them: $url"; echo "Look at it and merge it into firefox-daily."; } >> "$REPORT"
+          if [ -n "$draft" ]; then
+            echo "The guard stopped the fix, see the pull request." >> "$REPORT"
           fi
 
       - name: Say what stopped it
-        if: steps.start.outputs.failed == 'true' || steps.merge.outputs.failed == 'true'
+        if: (steps.start.outputs.failed == 'true' || steps.merge.outputs.failed == 'true') && !steps.waiting.outputs.url
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh issue create --title "Firefox sync stopped on $(date -u +%F)" --body-file report.md
+          PR: ${{ steps.fix.outputs.url }}
+        run: |
+          if [ -n "$PR" ]; then
+            title="Firefox sync: Claude's fix to approve ($(date -u +%F))"
+          else
+            title="Firefox sync stopped on $(date -u +%F)"
+          fi
+          gh issue create --title "$title" --body-file "$REPORT"
+          bash .github/scripts/notify.sh "AkhiBrowser: $title" "$REPORT"
 
       - name: Say what's urgent
         if: steps.merge.outputs.merged == 'true' && github.event.schedule == '30 */2 * * *'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh issue create --title "Exploited Firefox bug: firefox-daily has the latest code, build it" --body-file report.md
+          echo "An exploited Firefox bug is fixed in firefox-daily; it's being built and goes to main when it passes. Then build a release." > "$RUNNER_TEMP/urgent.md"
+          gh issue create --title "Exploited Firefox bug: firefox-daily has the latest code, build it" --body-file "$RUNNER_TEMP/urgent.md"
+          bash .github/scripts/notify.sh "AkhiBrowser: an exploited Firefox bug, release soon" "$RUNNER_TEMP/urgent.md"
+
+  # the 2-hourly checks build only an urgent merge; the daily run and a manual one build whatever main lacks
+  build:
+    needs: sync
+    if: needs.sync.outputs.pending == 'true'
+    uses: ./.github/workflows/akhi-linux.yml
+    with:
+      ref: ${{ needs.sync.outputs.sha }}
+    secrets: inherit
+
+  promote:
+    needs: [sync, build]
+    if: always() && needs.build.result != 'skipped'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+          filter: blob:none
+          sparse-checkout: .github
+          token: ${{ secrets.AKHI_PUSH_TOKEN || github.token }}
+
+      - name: Fast-forward main
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ needs.sync.outputs.sha }}
+          BUILD: ${{ needs.build.result }}
+          SMOKE: ${{ needs.build.outputs.smoke }}
+        run: |
+          short=${SHA:0:12}
+          if [ "$BUILD" != "success" ] || [ "$SMOKE" != "success" ]; then
+            echo "firefox-daily $short didn't pass: build $BUILD, smoke test ${SMOKE:-not run}. main stays where it is; the logs are in the private draft release of halgurdh/akhi-extension." > "$RUNNER_TEMP/r.md"
+            gh issue create --title "Firefox sync: firefox-daily didn't build or pass the smoke test ($(date -u +%F))" --body-file "$RUNNER_TEMP/r.md"
+            bash .github/scripts/notify.sh "AkhiBrowser: the Firefox update didn't build" "$RUNNER_TEMP/r.md"
+            exit 0
+          fi
+          git fetch -q origin main "$SHA"
+          if ! git merge-base --is-ancestor origin/main "$SHA"; then
+            echo "main moved while firefox-daily $short was built, so it can't fast-forward. The next daily sync merges main in and tries again." > "$RUNNER_TEMP/r.md"
+            bash .github/scripts/notify.sh "AkhiBrowser: Firefox update waits for the next sync" "$RUNNER_TEMP/r.md"
+            exit 0
+          fi
+          if ! git push origin "$SHA:refs/heads/main" 2> "$RUNNER_TEMP/push.log"; then
+            { echo "main couldn't move to firefox-daily $short:"; echo '```'; cat "$RUNNER_TEMP/push.log"; echo '```';
+              echo "If it's about workflow files, add the secret AKHI_PUSH_TOKEN (contents and workflows write)."; } > "$RUNNER_TEMP/r.md"
+            gh issue create --title "Firefox sync: main couldn't fast-forward ($(date -u +%F))" --body-file "$RUNNER_TEMP/r.md"
+            bash .github/scripts/notify.sh "AkhiBrowser: main couldn't take the Firefox update" "$RUNNER_TEMP/r.md"
+            exit 1
+          fi
+          echo "main is now at $short: the latest Firefox merged, built and smoke tested on Linux. The next release takes it." > "$RUNNER_TEMP/r.md"
+          bash .github/scripts/notify.sh "AkhiBrowser: Firefox update is in main" "$RUNNER_TEMP/r.md"
