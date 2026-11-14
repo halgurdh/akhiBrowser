@@ -15,6 +15,7 @@ import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.ConsumeParams
 import com.android.billingclient.api.PendingPurchasesParams
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.PurchasesUpdatedListener
@@ -148,9 +149,16 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
                     val ownedOneTime = oneTime.filter { LIFETIME_PRODUCT in it.products }
                     val ownedFamily = subscriptions.filter { FAMILY_PRODUCT in it.products }
                     val ownedSubscriptions = subscriptions.filter { SUBSCRIPTION_PRODUCT in it.products }
-                    (ownedOneTime + ownedFamily + ownedSubscriptions).forEach(::acknowledge)
+                    // a year of Family from a gift's promo code: once the year is over it's consumed, so that the
+                    // next gift's code can be redeemed on the same account
+                    val (ownedYear, endedYear) = oneTime
+                        .filter { FAMILY_YEAR_PRODUCT in it.products }
+                        .partition { System.currentTimeMillis() < it.purchaseTime + YEAR_MS }
+                    endedYear.forEach(::consume)
+                    (ownedOneTime + ownedFamily + ownedSubscriptions + ownedYear).forEach(::acknowledge)
                     val (plan, purchase, product) = when {
                         ownedFamily.isNotEmpty() -> Triple("family", ownedFamily.first(), FAMILY_PRODUCT)
+                        ownedYear.isNotEmpty() -> Triple("family", ownedYear.first(), FAMILY_YEAR_PRODUCT)
                         ownedOneTime.isNotEmpty() -> Triple("lifetime", ownedOneTime.first(), LIFETIME_PRODUCT)
                         ownedSubscriptions.isNotEmpty() ->
                             Triple("subscription", ownedSubscriptions.first(), SUBSCRIPTION_PRODUCT)
@@ -250,6 +258,10 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
         }
     }
 
+    private fun consume(purchase: Purchase) {
+        billingClient.consumeAsync(ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()) { _, _ -> }
+    }
+
     private fun BillingResult.isOk() = responseCode == BillingClient.BillingResponseCode.OK
 
     companion object {
@@ -259,5 +271,9 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
         private const val SUBSCRIPTION_PRODUCT = "akhi_premium"
         private const val FAMILY_PRODUCT = "akhi_family"
         private const val LIFETIME_PRODUCT = "akhi_premium_lifetime"
+
+        // Given only with promo codes, for gifts (the license server's /redeem): a year of Family from redeeming it
+        private const val FAMILY_YEAR_PRODUCT = "akhi_family_year"
+        private const val YEAR_MS = 365L * 24 * 3600 * 1000
     }
 }
