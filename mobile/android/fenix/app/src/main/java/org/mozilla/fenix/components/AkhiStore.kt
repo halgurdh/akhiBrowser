@@ -259,9 +259,11 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
                     val offerToken = if (isOneTime) {
                         productDetails?.oneTimePurchaseOfferDetailsList?.firstOrNull()?.offerToken
                     } else {
-                        // a VIP's Family offer when asked for and set up in the Play Console, else the base plan
+                        // a VIP's Family offer when asked for, else the free trial (Play lists it only to those who can
+                        // still have it), else the base plan; offer ids as set up in the Play Console
                         val offers = productDetails?.subscriptionOfferDetails.orEmpty()
                         (offers.firstOrNull { offer.isNotEmpty() && it.basePlanId == plan && it.offerId == offer }
+                            ?: offers.firstOrNull { it.basePlanId == plan && it.offerId == TRIAL_OFFER }
                             ?: offers.firstOrNull { it.basePlanId == plan && it.offerId == null })
                             ?.offerToken
                     }
@@ -336,5 +338,8 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
 
         // A consumable: a year of Family for someone else, as a Play code of FAMILY_YEAR_PRODUCT (/play/gift)
         private const val GIFT_PRODUCT = "akhi_family_gift"
+
+        // the free trial offer of a base plan, like Family's 3 days
+        private const val TRIAL_OFFER = "trial"
     }
 }
