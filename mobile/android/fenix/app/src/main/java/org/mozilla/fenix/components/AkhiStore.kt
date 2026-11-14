@@ -30,7 +30,8 @@ import java.lang.ref.WeakReference
 /**
  * The native side of lib/premium.js in the built-in extension. It tells the extension which store this build is for,
  * and on a Google Play build sells and checks Premium with Play Billing. Each message is {id, type, ...}, answered with
- * {id, ...} on the port. Play keeps the purchases, so nothing about them leaves the device from here.
+ * {id, ...} on the port. Play keeps the purchases. The status says the product and purchase token too: the extension
+ * sends them to the license server only when the buyer asks for a key for their other devices (lib/premium.js).
  */
 internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedListener {
     private val appContext = context.applicationContext
@@ -148,13 +149,21 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
                     val ownedFamily = subscriptions.filter { FAMILY_PRODUCT in it.products }
                     val ownedSubscriptions = subscriptions.filter { SUBSCRIPTION_PRODUCT in it.products }
                     (ownedOneTime + ownedFamily + ownedSubscriptions).forEach(::acknowledge)
-                    val plan = when {
-                        ownedFamily.isNotEmpty() -> "family"
-                        ownedOneTime.isNotEmpty() -> "lifetime"
-                        ownedSubscriptions.isNotEmpty() -> "subscription"
-                        else -> JSONObject.NULL
+                    val (plan, purchase, product) = when {
+                        ownedFamily.isNotEmpty() -> Triple("family", ownedFamily.first(), FAMILY_PRODUCT)
+                        ownedOneTime.isNotEmpty() -> Triple("lifetime", ownedOneTime.first(), LIFETIME_PRODUCT)
+                        ownedSubscriptions.isNotEmpty() ->
+                            Triple("subscription", ownedSubscriptions.first(), SUBSCRIPTION_PRODUCT)
+                        else -> Triple(null, null, null)
                     }
-                    reply(id, JSONObject().put("isActive", plan != JSONObject.NULL).put("plan", plan))
+                    reply(
+                        id,
+                        JSONObject()
+                            .put("isActive", plan != null)
+                            .put("plan", plan ?: JSONObject.NULL)
+                            .put("product", product ?: JSONObject.NULL)
+                            .put("purchaseToken", purchase?.purchaseToken ?: JSONObject.NULL),
+                    )
                 }
             }
         }

@@ -64,7 +64,9 @@ AkhiBrowser is a web browser built on Firefox.
 
 - **Premium, from Google Play.** Purchases go through Google Play, under
   [Google's privacy policy](https://policies.google.com/privacy). The app only asks Google Play whether Premium is active,
-  and we receive no payment details.
+  and we receive no payment details. If you ask for a license key for your other devices, the app sends the Google Play
+  purchase token and product to our license server, which asks Google Play whether that purchase is current, then and at
+  each check of the key. The token says nothing about you; the server keeps it only inside the key it gives you.
 - **Premium, with a license key** (Windows, and the Android app from GitHub): see [Premium license key](#premium-license-key).
 - **Sync.** If you sign in with a Mozilla account, your email address and the data you choose to sync go to Mozilla,
   encrypted, under [Mozilla's privacy notice](https://www.mozilla.org/privacy/mozilla-accounts/). To delete that account,
