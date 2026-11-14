@@ -95,6 +95,7 @@ h1 { font-size: clamp(40px, 6.4vw, 66px); letter-spacing: -.02em; }
 .get { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; max-width: 540px; margin-top: 32px; }
 .get .store { display: flex; align-items: center; line-height: 0; }
 .get .store img { width: min(100%, 250px); height: auto; }
+.get .store-play img { width: min(116%, 290px); margin: -7% -8%; max-width: none; }
 .get .btn { display: flex; flex-direction: column; justify-content: center; }
 #download { scroll-margin-top: 18vh; }
 .btn {
@@ -128,6 +129,8 @@ a.btn.soon:hover { background: #ffd76a; }
 section { padding: 72px 0; border-top: 1px solid var(--line); }
 h2 { font-size: clamp(28px, 3.6vw, 38px); color: var(--gold); }
 .intro { margin-top: 12px; color: var(--soft); max-width: 42em; }
+.plans-compare { margin: 32px 0 8px; }
+.plans-compare .shot { display: block; width: 100%; max-width: 1100px; height: auto; border-radius: 20px; }
 
 .list { margin: 36px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 32px 48px; }
 .list h3 { font-size: 19px; margin-bottom: 6px; }
@@ -543,10 +546,10 @@ footer .powered a:hover { text-decoration: underline; }
         <p class="lead" data-t="t3">A private, halal browser for Muslims, built on Firefox. One browser does it all, on your device: it blocks ads and haram sites, blurs images until they are checked and takes the music out of videos, without tracking what you browse.</p>
         <div class="get" id="download">
           <a class="store" href="https://apps.microsoft.com/detail/9n8kmf22z6k4?referrer=appbadge&amp;mode=direct" target="_self"><img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200" alt="Download from the Microsoft Store" data-a="alt:aStore"></a>
+          <a class="store store-play" href="https://play.google.com/store/apps/details?id=org.akhibrowser"><img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" width="646" height="250" alt="Get it on Google Play" data-a="alt:aPlay"></a>
           <a class="btn ghost os-win" href="https://get.microsoft.com/installer/download/9N8KMF22Z6K4?cid=website_cta_psi" data-t="t4w">Windows installer (.exe)<small>Windows 10 or 11, 64-bit</small></a>
           <a class="btn ghost os-chrome" href="https://chromewebstore.google.com/detail/akhibrowser/ghkpflipnhahpjdnpoclaakbecnopamk" data-t="t7">Get the Chrome extension<small>Free, available now</small></a>
           <a class="btn ghost os-firefox" href="https://addons.mozilla.org/en-US/firefox/addon/akhibrowser/" data-t="t7f">Get the Firefox add-on<small>Free, available now</small></a>
-          <span class="btn soon os-android" data-t="t4">Android: coming soon<small>Android 8.0 or newer</small></span>
           <a class="btn soon os-apple" href="#roadmap" data-t="t4b">iOS and macOS: coming soon<small>See the roadmap</small></a>
         </div>
         <p class="note" data-t="t7b">The Chrome and Firefox extensions are a lighter, free version: it blocks adult and haram sites, blurs images and removes background music, but it has no Premium or parent controls and no ad blocker of its own, and it can be removed. Arabic in the extensions is coming soon.</p>
@@ -719,6 +722,9 @@ footer .powered a:hover { text-decoration: underline; }
       <h2 data-t="t47">Premium, if you want it</h2>
       <p class="intro" data-t="t48">Every protection above stays free. Premium is for you: more control over images and a calmer web. Family Premium is for parents: everything in Premium, plus the parent controls, on up to ten devices. Each feature is off until you turn it on, and its data stays on the device.</p>
       <p class="intro" data-t="t48b">Premium is only in the AkhiBrowser browser, with a license key. The free AkhiBrowser extension for Chrome and Firefox has the free protections above, without Premium. The browser also brings what an extension can't: no telemetry, studies or crash reports to Mozilla, uBlock Origin built in, and strict tracking protection.</p>
+      <figure class="plans-compare">
+        <img class="shot" src="assets/plans.webp" srcset="assets/plans.webp 1x, assets/plans@2x.webp 2x" width="1600" height="900" loading="lazy" decoding="async" alt="The AkhiBrowser plans compared. Free: ads and trackers blocked, haram sites blocked, no music in videos, prayer times and verse, €0. Premium: everything in Free, choose who to blur, strict mode, a calmer web; €3.99 a month, €39 a year or €119 lifetime. Family Premium: everything in Premium, parent controls and PIN, activity summary, prayer pause, halal and riba check; €59.99 a year, 3 days free, 10 devices. School / Mosque: everything in Family, one licence key, up to 500 devices, €30 a month." data-a="alt:aPlans">
+      </figure>
       <figure class="demo premium-preview">
         <img class="shot" src="assets/premium.png" width="520" height="550" alt="The Premium plans in AkhiBrowser's settings: Free, Family Premium (recommended), Premium and Lifetime Premium, with their prices and features." data-a="alt:a8">
       </figure>
@@ -811,7 +817,7 @@ footer .powered a:hover { text-decoration: underline; }
 "hb2": "De beste halal browsers",
 "t3": "Een halal browser voor moslims die je privacy respecteert, gebouwd op Firefox. Eén browser die alles doet, op je eigen apparaat: hij houdt reclame en haram sites tegen, houdt afbeeldingen wazig tot ze zijn gecontroleerd en haalt de muziek uit video's, zonder te volgen wat je bezoekt.",
 "t4w": "Windows-installer (.exe)<small>Windows 10 of 11, 64-bit<\/small>",
-"t4": "Android: binnenkort<small>Android 8.0 of nieuwer<\/small>",
+"aPlay": "Ontdek het op Google Play",
 "t4b": "iOS en macOS: binnenkort<small>Bekijk de roadmap<\/small>",
 "aStore": "Downloaden uit de Microsoft Store",
 "t7": "Chrome-extensie<small>Gratis, nu beschikbaar<\/small>",
@@ -1015,6 +1021,7 @@ footer .powered a:hover { text-decoration: underline; }
 "a5": "Een pagina met de tekst: This page is blocked. AkhiBrowser blokkeert sites over alcohol, drugs en gokken. Daaronder een vers uit de Koran, 2:219, in het Arabisch en Engels, met een link naar quran.com.",
 "a6": "Een geluidsgolf van stemmen, met het label: Background music: removed.",
 "a7": "De startpagina van AkhiBrowser op Android: een zoekbalk, het AkhiBrowser-logo en het label: You're protected.",
+"aPlans": "De abonnementen van AkhiBrowser vergeleken: Gratis (€0), Premium (€3,99 per maand, €39 per jaar of €119 levenslang), Family Premium (€59,99 per jaar, 3 dagen gratis, 10 apparaten) en School / Moskee (€30 per maand, tot 500 apparaten), met hun functies.",
 "a8": "De Premium-abonnementen in de instellingen van AkhiBrowser: Gratis, Family Premium (aanbevolen), Premium en Levenslang Premium, met hun prijzen en functies.",
 "a9": "Korte video van AkhiBrowser: je wilt gewoon een les online kijken, NoMusic haalt de achtergrondmuziek weg en laat de stem staan, 21 seconden",
 "c0": "Zo zeg je je abonnement op",
@@ -1075,7 +1082,7 @@ footer .powered a:hover { text-decoration: underline; }
 "hb2": "أفضل المتصفحات الحلال",
 "t3": "متصفح حلال للمسلمين يحترم خصوصيتك، مبني على Firefox. متصفح واحد يقوم بكل شيء على جهازك: يحجب الإعلانات والمواقع المحرمة، ويموّه الصور حتى تُفحص، ويزيل الموسيقى من الفيديوهات، دون تتبّع ما تتصفحه.",
 "t4w": "مثبّت Windows (.exe)<small>Windows 10 أو 11، 64-بت<\/small>",
-"t4": "Android: قريبًا<small>Android 8.0 أو أحدث<\/small>",
+"aPlay": "احصل عليه من Google Play",
 "t4b": "iOS وmacOS: قريبًا<small>اطّلع على خارطة الطريق<\/small>",
 "aStore": "حمّله من Microsoft Store",
 "t7": "احصل على إضافة Chrome<small>مجانية، متوفرة الآن<\/small>",
@@ -1279,6 +1286,7 @@ footer .powered a:hover { text-decoration: underline; }
 "a5": "صفحة تقول: This page is blocked. يحجب AkhiBrowser مواقع الخمر والمخدرات والقمار. وتحتها آية من القرآن، 2:219، بالعربية والإنجليزية، مع رابط إلى quran.com.",
 "a6": "موجة صوتية لأصوات، مع العبارة: Background music: removed.",
 "a7": "الصفحة الرئيسية لـ AkhiBrowser على Android: شريط بحث، وشعار AkhiBrowser، والعبارة: You're protected.",
+"aPlans": "مقارنة خطط AkhiBrowser: المجانية (€0)، وPremium (€3.99 شهريًا أو €39 سنويًا أو €119 مدى الحياة)، وFamily Premium (€59.99 سنويًا، 3 أيام مجانًا، 10 أجهزة)، والمدرسة / المسجد (€30 شهريًا، حتى 500 جهاز)، مع ميزاتها.",
 "a8": "خطط Premium في إعدادات AkhiBrowser: مجاني، وFamily Premium (موصى به)، وPremium، وPremium مدى الحياة، مع أسعارها وميزاتها.",
 "a9": "مقطع قصير لـ AkhiBrowser: تريد فقط مشاهدة محاضرة على الإنترنت، فتزيل NoMusic الموسيقى الخلفية وتُبقي الصوت، 21 ثانية",
 "c0": "كيف تلغي الاشتراك",
