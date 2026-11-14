@@ -12,6 +12,7 @@ import mozilla.components.service.nimbus.evalJexlSafe
 import mozilla.components.service.nimbus.messaging.use
 import org.mozilla.experiments.nimbus.NimbusEventStore
 import org.mozilla.experiments.nimbus.NimbusMessagingHelperInterface
+import org.mozilla.fenix.BuildConfig
 import org.mozilla.fenix.GleanMetrics.CustomReviewPrompt
 import org.mozilla.fenix.components.appstate.AppAction
 import org.mozilla.fenix.components.appstate.AppAction.ReviewPromptAction.CheckIfEligibleForReviewPrompt
@@ -51,14 +52,18 @@ class ReviewPromptMiddleware(
     private object TriggerBuilder {
         fun mainCriteria(jexlHelper: NimbusMessagingHelperInterface): Sequence<Boolean> {
             return sequence {
+                // only a Google Play install can be rated there; the APK has no store
+                yield(BuildConfig.AKHI_PLAY_STORE)
                 yield(hasNotBeenPromptedLastFourMonths(jexlHelper))
                 yield(hasBeenOpenedSeveralTimes(jexlHelper))
             }
         }
 
+        // AkhiBrowser asks whether or not it's the default browser: most people keep another one as default
+        @Suppress("UNUSED_PARAMETER")
         fun subCriteria(jexlHelper: NimbusMessagingHelperInterface): Sequence<Boolean> {
             return sequence {
-                yield(isDefaultBrowser(jexlHelper))
+                yield(true)
             }
         }
     }
