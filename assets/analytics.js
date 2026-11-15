@@ -1,22 +1,22 @@
-/* akhibrowser.com: Google Analytics only after consent (Consent Mode v2, set to denied in each page's head), the
+/* akhibrowser.com: Google Analytics, and a Reddit ad's purchase reported to Reddit, only after consent (Consent Mode v2, set to denied in each page's head), the
  * clicks that matter as events (downloads, plans), the visitor's GA id passed to the checkout so the purchase the
  * license server reports is theirs, and the website as the source of Google Play installs. */
 (function () {
   "use strict";
   var KEY = "akhi-consent";
   var TEXT = {
-    en: ["We'd like to count visits and downloads with Google Analytics, to see what helps. No ads, nothing sold.", "Allow", "No thanks", "Privacy"],
-    nl: ["We tellen graag bezoeken en downloads met Google Analytics, om te zien wat helpt. Geen advertenties, niets verkocht.", "Toestaan", "Nee, bedankt", "Privacy"],
-    ar: ["نود أن نحسب الزيارات والتنزيلات باستخدام Google Analytics لنعرف ما يفيد. لا إعلانات ولا بيع لبياناتك.", "سماح", "لا، شكرًا", "الخصوصية"],
-    de: ["Wir würden Besuche und Downloads gern mit Google Analytics zählen, um zu sehen, was hilft. Keine Werbung, nichts wird verkauft.", "Erlauben", "Nein, danke", "Datenschutz"],
-    fr: ["Nous aimerions compter les visites et les téléchargements avec Google Analytics, pour voir ce qui aide. Pas de pub, rien n'est vendu.", "Autoriser", "Non merci", "Confidentialité"],
-    es: ["Nos gustaría contar visitas y descargas con Google Analytics, para ver qué ayuda. Sin anuncios, no vendemos nada.", "Permitir", "No, gracias", "Privacidad"],
-    tr: ["Neyin işe yaradığını görmek için ziyaretleri ve indirmeleri Google Analytics ile saymak istiyoruz. Reklam yok, hiçbir şey satılmaz.", "İzin ver", "Hayır, teşekkürler", "Gizlilik"],
-    id: ["Kami ingin menghitung kunjungan dan unduhan dengan Google Analytics, untuk melihat apa yang membantu. Tanpa iklan, tidak ada yang dijual.", "Izinkan", "Tidak, terima kasih", "Privasi"],
-    ms: ["Kami ingin mengira lawatan dan muat turun dengan Google Analytics, untuk melihat apa yang membantu. Tiada iklan, tiada yang dijual.", "Benarkan", "Tidak, terima kasih", "Privasi"],
-    ur: ["ہم Google Analytics سے وزٹ اور ڈاؤن لوڈ گننا چاہتے ہیں تاکہ معلوم ہو کیا مفید ہے۔ کوئی اشتہار نہیں، کچھ فروخت نہیں ہوتا۔", "اجازت دیں", "نہیں، شکریہ", "رازداری"],
-    fa: ["می‌خواهیم بازدیدها و دانلودها را با Google Analytics بشماریم تا ببینیم چه چیزی مفید است. بدون تبلیغ، چیزی فروخته نمی‌شود.", "اجازه", "نه، ممنون", "حریم خصوصی"],
-    ckb: ["دەمانەوێت سەردان و داگرتنەکان بە Google Analytics بژمێرین بۆ ئەوەی بزانین چی سوودی هەیە. هیچ ڕیکلامێک نییە، هیچ شتێک نافرۆشرێت.", "ڕێگەدان", "نەخێر، سوپاس", "تایبەتمەندی"],
+    en: ["We'd like to count visits and downloads with Google Analytics, and tell Reddit when one of its ads led to a purchase. No ads here, nothing sold.", "Allow", "No thanks", "Privacy"],
+    nl: ["We tellen graag bezoeken en downloads met Google Analytics, en laten Reddit weten wanneer een advertentie tot een aankoop leidde. Geen advertenties hier, niets verkocht.", "Toestaan", "Nee, bedankt", "Privacy"],
+    ar: ["نود أن نحسب الزيارات والتنزيلات باستخدام Google Analytics، وأن نخبر Reddit عندما يؤدي أحد إعلاناته إلى عملية شراء. لا إعلانات هنا ولا بيع لبياناتك.", "سماح", "لا، شكرًا", "الخصوصية"],
+    de: ["Wir würden Besuche und Downloads gern mit Google Analytics zählen und Reddit mitteilen, wenn eine seiner Anzeigen zu einem Kauf geführt hat. Keine Werbung hier, nichts wird verkauft.", "Erlauben", "Nein, danke", "Datenschutz"],
+    fr: ["Nous aimerions compter les visites et les téléchargements avec Google Analytics, et indiquer à Reddit quand l'une de ses annonces a mené à un achat. Pas de pub ici, rien n'est vendu.", "Autoriser", "Non merci", "Confidentialité"],
+    es: ["Nos gustaría contar visitas y descargas con Google Analytics, y avisar a Reddit cuando uno de sus anuncios lleve a una compra. Sin anuncios aquí, no vendemos nada.", "Permitir", "No, gracias", "Privacidad"],
+    tr: ["Ziyaretleri ve indirmeleri Google Analytics ile saymak ve bir Reddit reklamı satın almaya yol açtığında Reddit'e bildirmek istiyoruz. Burada reklam yok, hiçbir şey satılmaz.", "İzin ver", "Hayır, teşekkürler", "Gizlilik"],
+    id: ["Kami ingin menghitung kunjungan dan unduhan dengan Google Analytics, dan memberi tahu Reddit saat salah satu iklannya menghasilkan pembelian. Tanpa iklan di sini, tidak ada yang dijual.", "Izinkan", "Tidak, terima kasih", "Privasi"],
+    ms: ["Kami ingin mengira lawatan dan muat turun dengan Google Analytics, dan memberitahu Reddit apabila salah satu iklannya membawa kepada pembelian. Tiada iklan di sini, tiada yang dijual.", "Benarkan", "Tidak, terima kasih", "Privasi"],
+    ur: ["ہم Google Analytics سے وزٹ اور ڈاؤن لوڈ گننا چاہتے ہیں، اور Reddit کو بتانا چاہتے ہیں جب اس کا کوئی اشتہار خریداری تک لے جائے۔ یہاں کوئی اشتہار نہیں، کچھ فروخت نہیں ہوتا۔", "اجازت دیں", "نہیں، شکریہ", "رازداری"],
+    fa: ["می‌خواهیم بازدیدها و دانلودها را با Google Analytics بشماریم و وقتی یکی از تبلیغات Reddit به خرید منجر شد به Reddit اطلاع دهیم. اینجا تبلیغی نیست، چیزی فروخته نمی‌شود.", "اجازه", "نه، ممنون", "حریم خصوصی"],
+    ckb: ["دەمانەوێت سەردان و داگرتنەکان بە Google Analytics بژمێرین، و ئاگاداری Reddit بکەینەوە کاتێک یەکێک لە ڕیکلامەکانی بووە هۆی کڕین. لێرە هیچ ڕیکلامێک نییە، هیچ شتێک نافرۆشرێت.", "ڕێگەدان", "نەخێر، سوپاس", "تایبەتمەندی"],
   };
 
   function gtag() {
@@ -82,6 +82,20 @@
     document.body.appendChild(bar);
   }
 
+  // the Reddit ad click a visit came from (?rdt_cid=), kept for the visit; it goes to the checkout only after consent
+  function redditClick() {
+    var value = new URLSearchParams(location.search).get("rdt_cid");
+    try {
+      if (value && /^[A-Za-z0-9._~-]{8,200}$/.test(value)) {
+        sessionStorage.setItem("akhi-rdt", value);
+        return value;
+      }
+      return sessionStorage.getItem("akhi-rdt");
+    } catch (e) {
+      return value;
+    }
+  }
+
   // the visitor's GA client id ("GA1.1.123.456" → "123.456"), only there after consent
   function gaClientId() {
     var match = /(?:^|;\s*)_ga=GA\d\.\d\.(\d+\.\d+)/.exec(document.cookie);
@@ -108,9 +122,17 @@
     var buy = /akhi-license\.akhibrowser\.workers\.dev\/buy\/([a-z-]+)/.exec(href);
     if (buy) {
       window.dataLayer.push({ event: "begin_checkout", plan: buy[1], page_language: lang });
+      var extra = [];
       var id = gaClientId();
       if (id && !/[?&]ga=/.test(href)) {
-        link.href = href + (href.indexOf("?") < 0 ? "?" : "&") + "ga=" + encodeURIComponent(id);
+        extra.push("ga=" + encodeURIComponent(id));
+      }
+      var click = stored() === "granted" ? redditClick() : null;
+      if (click && !/[?&]rdt=/.test(href)) {
+        extra.push("rdt=" + encodeURIComponent(click));
+      }
+      if (extra.length) {
+        link.href = href + (href.indexOf("?") < 0 ? "?" : "&") + extra.join("&");
       }
       return;
     }
@@ -176,6 +198,7 @@
   );
 
   function start() {
+    redditClick();
     tagPlayLinks();
     if (!stored()) {
       showBanner();
