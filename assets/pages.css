@@ -18,7 +18,9 @@ a { color: var(--gold); text-underline-offset: 3px; }
 a:hover { color: #ffd76a; }
 a:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
 .wrap { width: min(760px, 100%); margin: 0 auto; padding: 0 16px; }
-header { border-bottom: 1px solid var(--line); }
+/* above the content: its scroll-in animations and the header's view transition each make a layer, which would
+   otherwise paint over the open menu */
+header { position: relative; z-index: 40; border-bottom: 1px solid var(--line); }
 nav.wrap { width: min(1040px, 100%); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding-block: 14px; }
 .brand { display: inline-flex; align-items: center; gap: 8px; color: #fff; font-size: 20px; font-weight: 650; text-decoration: none; }
 .brand b { color: var(--gold); font-weight: 650; }

@@ -1,0 +1,4 @@
+Contact: mailto:support@akhibrowser.com
+Expires: 2027-11-15T00:00:00.000Z
+Preferred-Languages: en, nl, ar
+Canonical: https://akhibrowser.com/.well-known/security.txt
