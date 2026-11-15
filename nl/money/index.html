@@ -85,11 +85,16 @@
         <li><h3 data-t="mm11">Affiliates, sponsors en partners</h3><p data-t="mm12">Mensen die scholen en moskeeën aanbrengen krijgen 20% van hun betalingen. Sponsors en organisaties kunnen AkhiBrowser steunen, maar krijgen nooit je gegevens of zeggenschap over wat er geblokkeerd wordt.</p></li>
       </ul>
       <p class="note" data-t="mm13">Wat we nooit doen: reclame tonen, je surfgedrag verkopen of delen, je volgen over sites heen, of geld laten bepalen wat er geblokkeerd wordt.</p>
+      <div id="sponsors" hidden>
+        <h3 class="plan-title" data-t="mm28">Onze sponsors en partners</h3>
+        <ul class="sponsors"></ul>
+      </div>
       <h3 class="plan-title" id="partner" data-t="mm14">Word sponsor of partner</h3>
       <form class="affiliate" action="https://akhi-license.akhibrowser.workers.dev/partner" method="post">
         <label><span data-t="mm15">Je naam</span><input name="name" required maxlength="100" autocomplete="name"></label>
         <label><span data-t="mm16">E-mailadres</span><input name="email" type="email" required maxlength="200" autocomplete="email"></label>
         <label><span data-t="mm17">Organisatie</span><input name="organisation" maxlength="200" autocomplete="organization"></label>
+        <label><span data-t="mm26">Je website</span><input name="site" type="url" inputmode="url" maxlength="200" autocomplete="url" placeholder="https://"></label>
         <label><span data-t="mm18">Wat voor partner?</span><select name="kind">
           <option value="sponsor" data-t="mm19">Sponsor</option>
           <option value="ecosystem" data-t="mm20">Ecosysteempartner: een islamitische app, schoolplatform of organisatie</option>
@@ -97,6 +102,7 @@
           <option value="shop" data-t="mm22">Winkel</option>
         </select></label>
         <label><span data-t="mm23">Wat stel je voor?</span><textarea name="about" rows="3" maxlength="2000"></textarea></label>
+        <label class="check"><input type="checkbox" name="listed" value="yes"> <span data-t="mm27">Toon onze organisatie, met een link naar onze website, op de sponsorpagina</span></label>
         <label class="trap" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
         <div class="cf-turnstile" data-sitekey="0x4AAAAAAF9TRz9CNNAJX1Cg" data-action="partner" data-theme="dark" data-language="auto"></div>
         <button class="btn" type="submit" data-t="mm24">Versturen</button>
@@ -110,6 +116,31 @@
   <p>AkhiBrowser is gebouwd op <a href="https://www.firefox.com/">Firefox</a>, maar is niet gemaakt of goedgekeurd door Mozilla. Filters kunnen iets missen en vervangen niet de aandacht van een ouder. <a href="/">Home</a> · <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a></p>
   <p>&copy; <span data-year>2026</span> AkhiBrowser</p>
 </footer>
+<script>
+// the approved sponsors and partners who agreed to be listed, from the license server; their kind as the form names it
+(async function () {
+  const box = document.getElementById("sponsors");
+  if (!box) {
+    return;
+  }
+  try {
+    const response = await fetch("https://akhi-license.akhibrowser.workers.dev/sponsors");
+    const { sponsors = [] } = response.ok ? await response.json() : {};
+    const kinds = Object.fromEntries([...document.querySelectorAll('select[name="kind"] option')].map(o => [o.value, o.textContent.split(":")[0]]));
+    for (const { name, kind, url } of sponsors) {
+      const item = document.createElement("li");
+      const label = url && /^https?:\/\//.test(url) ? Object.assign(document.createElement("a"), { href: url, rel: "noopener sponsored" }) : document.createElement("strong");
+      label.textContent = name;
+      item.append(label);
+      if (kinds[kind]) {
+        item.append(` · ${kinds[kind]}`);
+      }
+      box.querySelector("ul").append(item);
+    }
+    box.hidden = !sponsors.length;
+  } catch (e) {}
+})();
+</script>
 <script>
 document.querySelectorAll("[data-year]").forEach(n => n.textContent = new Date().getFullYear());
 document.title = document.title.replace("2026", new Date().getFullYear());

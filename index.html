@@ -838,6 +838,9 @@ footer .powered a:hover { text-decoration: underline; }
 <script>
 (function () {
   const NL = {
+"mm26": "Je website",
+"mm27": "Toon onze organisatie, met een link naar onze website, op de sponsorpagina",
+"mm28": "Onze sponsors en partners",
 "nv0": "Menu",
 "nv1": "Alle functies",
 "nv2": "iPhone en Mac",
@@ -1116,6 +1119,9 @@ footer .powered a:hover { text-decoration: underline; }
 "loc": "Almere, Nederland"
 };
   const AR = {
+"mm26": "موقعك الإلكتروني",
+"mm27": "اعرضوا مؤسستنا، مع رابط إلى موقعنا، في صفحة الرعاة",
+"mm28": "رعاتنا وشركاؤنا",
 "nv0": "القائمة",
 "nv1": "كل الميزات",
 "nv2": "iPhone وMac",
@@ -2020,11 +2026,16 @@ Please keep the key within our community.</span>
         <li><h3 data-t="mm11">Affiliates, sponsors and partners</h3><p data-t="mm12">People who bring in schools and mosques get 20% of their payments. Sponsors and organisations can support AkhiBrowser, but never get your data or a say in what is blocked.</p></li>
       </ul>
       <p class="note" data-t="mm13">What we never do: show ads, sell or share your browsing, track you across sites, or let money change what is blocked.</p>
+      <div id="sponsors" hidden>
+        <h3 class="plan-title" data-t="mm28">Our sponsors and partners</h3>
+        <ul class="sponsors"></ul>
+      </div>
       <h3 class="plan-title" id="partner" data-t="mm14">Become a sponsor or partner</h3>
       <form class="affiliate" action="https://akhi-license.akhibrowser.workers.dev/partner" method="post">
         <label><span data-t="mm15">Your name</span><input name="name" required maxlength="100" autocomplete="name"></label>
         <label><span data-t="mm16">Email address</span><input name="email" type="email" required maxlength="200" autocomplete="email"></label>
         <label><span data-t="mm17">Organisation</span><input name="organisation" maxlength="200" autocomplete="organization"></label>
+        <label><span data-t="mm26">Your website</span><input name="site" type="url" inputmode="url" maxlength="200" autocomplete="url" placeholder="https://"></label>
         <label><span data-t="mm18">What kind of partner?</span><select name="kind">
           <option value="sponsor" data-t="mm19">Sponsor</option>
           <option value="ecosystem" data-t="mm20">Ecosystem partner: an Islamic app, school platform or organisation</option>
@@ -2032,6 +2043,7 @@ Please keep the key within our community.</span>
           <option value="shop" data-t="mm22">Shop</option>
         </select></label>
         <label><span data-t="mm23">What do you propose?</span><textarea name="about" rows="3" maxlength="2000"></textarea></label>
+        <label class="check"><input type="checkbox" name="listed" value="yes"> <span data-t="mm27">Show our organisation, with a link to our website, on the sponsors page</span></label>
         <label class="trap" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
         <div class="cf-turnstile" data-sitekey="0x4AAAAAAF9TRz9CNNAJX1Cg" data-action="partner" data-theme="dark" data-language="auto"></div>
         <button class="btn" type="submit" data-t="mm24">Send</button>
