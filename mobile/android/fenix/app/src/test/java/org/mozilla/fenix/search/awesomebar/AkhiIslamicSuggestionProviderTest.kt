@@ -11,18 +11,29 @@ import org.junit.Test
 class AkhiIslamicSuggestionProviderTest {
     @Test
     fun `the searches starting with what was typed come first`() {
-        assertEquals("Mosque near me", AkhiIslamicSuggestionProvider.matching("mos").first())
-        assertTrue(AkhiIslamicSuggestionProvider.matching("moskee").contains("Moskee in de buurt"))
+        assertEquals("Mosque near me", AkhiIslamicSuggestionProvider.matching("mos", "en").first())
+        assertTrue(AkhiIslamicSuggestionProvider.matching("moskee", "nl").contains("Moskee in de buurt"))
     }
 
     @Test
     fun `every typed word can match`() {
-        assertTrue(AkhiIslamicSuggestionProvider.matching("near me").contains("Mosque near me"))
+        assertTrue(AkhiIslamicSuggestionProvider.matching("near me", "en").contains("Mosque near me"))
     }
 
     @Test
     fun `nothing typed, nothing shown, and at most four`() {
-        assertTrue(AkhiIslamicSuggestionProvider.matching("").isEmpty())
-        assertTrue(AkhiIslamicSuggestionProvider.matching("s").size <= 4)
+        assertTrue(AkhiIslamicSuggestionProvider.matching("", "en").isEmpty())
+        assertTrue(AkhiIslamicSuggestionProvider.matching("s", "en").size <= 4)
+    }
+
+    @Test
+    fun `the searches follow AkhiBrowser's language`() {
+        assertEquals(listOf("Moskee in de buurt"), AkhiIslamicSuggestionProvider.matching("mos", "nl"))
+        assertTrue(AkhiIslamicSuggestionProvider.matching("مسجد", "ar").contains("أقرب مسجد"))
+        assertEquals(
+            listOf("Moschee in der Nähe", "Mosque near me"),
+            AkhiIslamicSuggestionProvider.matching("mos", "de-DE"),
+        )
+        assertEquals("Mosque near me", AkhiIslamicSuggestionProvider.matching("mos", "xx").first())
     }
 }
