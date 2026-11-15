@@ -6,6 +6,10 @@
 <title>AkhiBrowser: Halal Browser for Muslims, Blocks Haram and Blurs Images</title>
 <meta name="description" content="AkhiBrowser is a free halal browser for Muslims, built on Firefox. It blocks ads, adult and haram sites, blurs images until they are checked, and removes background music from videos, all on your device.">
 <link rel="canonical" href="https://akhibrowser.com/">
+<link rel="alternate" hreflang="en" href="https://akhibrowser.com/">
+<link rel="alternate" hreflang="nl" href="https://akhibrowser.com/nl/">
+<link rel="alternate" hreflang="ar" href="https://akhibrowser.com/ar/">
+<link rel="alternate" hreflang="x-default" href="https://akhibrowser.com/">
 <meta name="theme-color" content="#03282e">
 <meta property="og:site_name" content="AkhiBrowser">
 <meta property="og:title" content="AkhiBrowser: Halal Browser for Muslims">
@@ -1475,12 +1479,19 @@ footer .powered a:hover { text-decoration: underline; }
   } catch (e) {}
   // otherwise the first of the device's languages that the page has, and English if there is none
   const device = (navigator.languages || [navigator.language]).map(l => String(l).slice(0, 2).toLowerCase()).find(l => LANGS.includes(l));
-  show(LANGS.includes(saved) ? saved : device || "en");
+  // /nl/ and /ar/ are this page already in that language (tools/build_home.py): they keep it
+  const fixed = document.documentElement.dataset.home;
+  if (fixed) {
+    menu.value = fixed;
+  } else {
+    show(LANGS.includes(saved) ? saved : device || "en");
+  }
+  // a choice in the menu opens the home page in that language, and is remembered
   menu.addEventListener("change", () => {
-    show(menu.value);
     try {
       localStorage.setItem("lang", menu.value);
     } catch (e) {}
+    location.href = menu.value === "en" ? "/" : `/${menu.value}/`;
   });
   menu.hidden = false;
   for (const node of document.querySelectorAll("[data-year]")) node.textContent = new Date().getFullYear();

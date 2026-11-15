@@ -1,0 +1,2109 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-home="ar">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AkhiBrowser: متصفح حلال للمسلمين، يحجب الحرام ويموّه الصور</title>
+<meta name="description" content="AkhiBrowser متصفح حلال مجاني للمسلمين، مبني على Firefox. يحجب الإعلانات والمواقع الإباحية والمحرمة، ويموّه الصور حتى تُفحص، ويزيل الموسيقى الخلفية من الفيديوهات، وكل ذلك على جهازك.">
+<link rel="canonical" href="https://akhibrowser.com/ar/">
+<link rel="alternate" hreflang="en" href="https://akhibrowser.com/">
+<link rel="alternate" hreflang="nl" href="https://akhibrowser.com/nl/">
+<link rel="alternate" hreflang="ar" href="https://akhibrowser.com/ar/">
+<link rel="alternate" hreflang="x-default" href="https://akhibrowser.com/">
+<meta name="theme-color" content="#03282e">
+<meta property="og:site_name" content="AkhiBrowser">
+<meta property="og:title" content="AkhiBrowser: متصفح حلال للمسلمين، يحجب الحرام ويموّه الصور">
+<meta property="og:description" content="AkhiBrowser متصفح حلال مجاني للمسلمين، مبني على Firefox. يحجب الإعلانات والمواقع الإباحية والمحرمة، ويموّه الصور حتى تُفحص، ويزيل الموسيقى الخلفية من الفيديوهات، وكل ذلك على جهازك.">
+<meta property="og:image" content="https://akhibrowser.com/assets/og.png">
+<meta property="og:url" content="https://akhibrowser.com/ar/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "AkhiBrowser",
+  "alternateName": "Akhi Browser",
+  "description": "A free halal browser for Muslims, built on Firefox: it blocks ads, adult and haram sites, blurs images until they are checked and removes background music from videos, on the device.",
+  "applicationCategory": "BrowserApplication",
+  "operatingSystem": "Windows 10, Windows 11, Android 8.0",
+  "softwareVersion": "1.2.1",
+  "url": "https://akhibrowser.com/",
+  "image": "https://akhibrowser.com/assets/og.png",
+  "inLanguage": ["en", "ar", "fa", "ckb", "ur", "tr", "fr", "de", "nl", "es", "id", "ms"],
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+}
+</script>
+<link rel="icon" href="/assets/akhi.svg" type="image/svg+xml">
+<script>
+if ("IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  document.documentElement.classList.add("motion");
+  try {
+    if (!sessionStorage.getItem("intro")) {
+      sessionStorage.setItem("intro", "1");
+      document.documentElement.classList.add("play-intro");
+    }
+  } catch (e) {}
+}
+</script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', wait_for_update: 500});
+  try { if (localStorage.getItem('akhi-consent') === 'granted') gtag('consent', 'update', {analytics_storage: 'granted'}); } catch (e) {}
+  dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+</script>
+<script async src="https://www.googletagmanager.com/gtm.js?id=GTM-PW3SL6DM"></script>
+<script src="/assets/analytics.js" defer></script>
+<style>
+:root {
+  color-scheme: dark;
+  --ink: #03282e;
+  --teal: #074d49;
+  --panel: #06403f;
+  --line: #1c5a58;
+  --gold: #f4be34;
+  --text: #ffffff;
+  --soft: #c9dedb;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--text);
+  font: 17px/1.6 "Segoe UI", system-ui, -apple-system, Roboto, "Noto Sans", sans-serif;
+}
+a { color: var(--gold); text-underline-offset: 3px; }
+a:hover { color: #ffd76a; }
+a:focus-visible, .btn:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+h1, h2, h3 { line-height: 1.15; margin: 0; font-weight: 650; }
+p { margin: 0; }
+img { display: block; max-width: 100%; height: auto; }
+.wrap { width: min(1080px, 100%); margin: 0 auto; padding: 0 24px; }
+
+.top {
+  background: linear-gradient(180deg, var(--teal), var(--ink));
+  padding-bottom: 72px;
+}
+nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 0; }
+.brand { display: flex; align-items: center; gap: 10px; color: #fff; font-size: 20px; font-weight: 650; text-decoration: none; }
+.brand img { width: 36px; height: 36px; }
+.brand span span, h1 span { color: var(--gold); }
+.links { display: flex; gap: 22px; font-size: 15px; }
+.links a { color: #fff; text-decoration: none; }
+.links a:hover { color: var(--gold); }
+
+.hero { display: grid; grid-template-columns: 1.1fr .9fr; gap: 56px; align-items: center; padding-top: 40px; }
+h1 { font-size: clamp(40px, 6.4vw, 66px); letter-spacing: -.02em; }
+.lead { margin-top: 20px; font-size: clamp(19px, 2.2vw, 22px); color: var(--soft); max-width: 30em; }
+.shot { border-radius: 16px; box-shadow: 0 24px 60px rgba(0, 0, 0, .45); }
+
+.get { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; max-width: 540px; margin-top: 32px; }
+.get .store { display: flex; align-items: center; line-height: 0; }
+.get .store img { width: min(100%, 250px); height: auto; }
+.get .store-play img { width: min(100%, 252px); margin: -17px; max-width: none; }
+.get .btn { display: flex; flex-direction: column; justify-content: center; }
+#download { scroll-margin-top: 18vh; }
+.btn {
+  display: inline-block;
+  padding: 13px 20px;
+  border-radius: 10px;
+  background: var(--gold);
+  color: var(--ink);
+  font-weight: 650;
+  text-decoration: none;
+  line-height: 1.3;
+}
+.btn:hover { background: #ffd76a; color: var(--ink); }
+.cta { margin: 28px 0 0; }
+.carousel + .cta { text-align: center; }
+.btn small { display: block; font-size: 13px; font-weight: 400; }
+.btn.ghost { background: transparent; color: #fff; box-shadow: inset 0 0 0 1.5px var(--gold); }
+.btn.ghost:hover { background: rgba(244, 190, 52, .14); color: #fff; }
+.btn.soon, .btn.soon:hover { background: var(--gold); color: var(--ink); cursor: default; }
+a.btn.soon { cursor: pointer; }
+a.btn.soon:hover { background: #ffd76a; }
+.get .btn[class*="os-"] { position: relative; padding-inline-start: 56px; text-align: start; }
+.get .btn[class*="os-"]::before { content: ""; position: absolute; inset-inline-start: 18px; top: 50%; width: 24px; height: 24px; margin-top: -12px; background: currentColor; -webkit-mask: var(--logo) center / contain no-repeat; mask: var(--logo) center / contain no-repeat; }
+.os-win { --logo: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h11.4v11.4H0zm12.6 0H24v11.4H12.6zM0 12.6h11.4V24H0zm12.6 0H24V24H12.6z'/%3E%3C/svg%3E"); }
+.os-android { --logo: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18.4395 5.5586c-.675 1.1664-1.352 2.3318-2.0274 3.498-.0366-.0155-.0742-.0286-.1113-.043-1.8249-.6957-3.484-.8-4.42-.787-1.8551.0185-3.3544.4643-4.2597.8203-.084-.1494-1.7526-3.021-2.0215-3.4864a1.1451 1.1451 0 0 0-.1406-.1914c-.3312-.364-.9054-.4859-1.379-.203-.475.282-.7136.9361-.3886 1.5019 1.9466 3.3696-.0966-.2158 1.9473 3.3593.0172.031-.4946.2642-1.3926 1.0177C2.8987 12.176.452 14.772 0 18.9902h24c-.119-1.1108-.3686-2.099-.7461-3.0683-.7438-1.9118-1.8435-3.2928-2.7402-4.1836a12.1048 12.1048 0 0 0-2.1309-1.6875c.6594-1.122 1.312-2.2559 1.9649-3.3848.2077-.3615.1886-.7956-.0079-1.1191a1.1001 1.1001 0 0 0-.8515-.5332c-.5225-.0536-.9392.3128-1.0488.5449zm-.0391 8.461c.3944.5926.324 1.3306-.1563 1.6503-.4799.3197-1.188.0985-1.582-.4941-.3944-.5927-.324-1.3307.1563-1.6504.4727-.315 1.1812-.1086 1.582.4941zM7.207 13.5273c.4803.3197.5506 1.0577.1563 1.6504-.394.5926-1.1038.8138-1.584.4941-.48-.3197-.5503-1.0577-.1563-1.6504.4008-.6021 1.1087-.8106 1.584-.4941z'/%3E%3C/svg%3E"); }
+.os-apple { --logo: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701'/%3E%3C/svg%3E"); }
+.os-chrome { --logo: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 0C8.21 0 4.831 1.757 2.632 4.501l3.953 6.848A5.454 5.454 0 0 1 12 6.545h10.691A12 12 0 0 0 12 0zM1.931 5.47A11.943 11.943 0 0 0 0 12c0 6.012 4.42 10.991 10.189 11.864l3.953-6.847a5.45 5.45 0 0 1-6.865-2.29zm13.342 2.166a5.446 5.446 0 0 1 1.45 7.09l.002.001h-.002l-5.344 9.257c.206.01.413.016.621.016 6.627 0 12-5.373 12-12 0-1.54-.29-3.011-.818-4.364zM12 16.364a4.364 4.364 0 1 1 0-8.728 4.364 4.364 0 0 1 0 8.728Z'/%3E%3C/svg%3E"); }
+.os-firefox { --logo: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.824 7.287c.008 0 .004 0 0 0zm-2.8-1.4c.006 0 .003 0 0 0zm16.754 2.161c-.505-1.215-1.53-2.528-2.333-2.943.654 1.283 1.033 2.57 1.177 3.53l.002.02c-1.314-3.278-3.544-4.6-5.366-7.477-.091-.147-.184-.292-.273-.446a3.545 3.545 0 01-.13-.24 2.118 2.118 0 01-.172-.46.03.03 0 00-.027-.03.038.038 0 00-.021 0l-.006.001a.037.037 0 00-.01.005L15.624 0c-2.585 1.515-3.657 4.168-3.932 5.856a6.197 6.197 0 00-2.305.587.297.297 0 00-.147.37c.057.162.24.24.396.17a5.622 5.622 0 012.008-.523l.067-.005a5.847 5.847 0 011.957.222l.095.03a5.816 5.816 0 01.616.228c.08.036.16.073.238.112l.107.055a5.835 5.835 0 01.368.211 5.953 5.953 0 012.034 2.104c-.62-.437-1.733-.868-2.803-.681 4.183 2.09 3.06 9.292-2.737 9.02a5.164 5.164 0 01-1.513-.292 4.42 4.42 0 01-.538-.232c-1.42-.735-2.593-2.121-2.74-3.806 0 0 .537-2 3.845-2 .357 0 1.38-.998 1.398-1.287-.005-.095-2.029-.9-2.817-1.677-.422-.416-.622-.616-.8-.767a3.47 3.47 0 00-.301-.227 5.388 5.388 0 01-.032-2.842c-1.195.544-2.124 1.403-2.8 2.163h-.006c-.46-.584-.428-2.51-.402-2.913-.006-.025-.343.176-.389.206-.406.29-.787.616-1.136.974-.397.403-.76.839-1.085 1.303a9.816 9.816 0 00-1.562 3.52c-.003.013-.11.487-.19 1.073-.013.09-.026.181-.037.272a7.8 7.8 0 00-.069.667l-.002.034-.023.387-.001.06C.386 18.795 5.593 24 12.016 24c5.752 0 10.527-4.176 11.463-9.661.02-.149.035-.298.052-.448.232-1.994-.025-4.09-.753-5.844z'/%3E%3C/svg%3E"); }
+.note { margin-top: 10px; font-size: 14px; color: var(--soft); }
+
+section { padding: 72px 0; border-top: 1px solid var(--line); }
+h2 { font-size: clamp(28px, 3.6vw, 38px); color: var(--gold); }
+.intro { margin-top: 12px; color: var(--soft); max-width: 42em; }
+.plans-compare { margin: 32px 0 8px; }
+.plans-compare .shot { display: block; width: 100%; max-width: 1100px; height: auto; border-radius: 20px; }
+
+.list { margin: 36px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 32px 48px; }
+.list h3 { font-size: 19px; margin-bottom: 6px; }
+.list p { color: var(--soft); font-size: 16px; }
+
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+.demo { margin: 0; max-width: 460px; justify-self: end; }
+.plan-title { margin-top: 32px; color: var(--gold); }
+.demo.first { justify-self: start; order: -1; }
+.demo figcaption { margin-top: 10px; font-size: 14px; color: var(--soft); text-align: center; }
+.stack { position: relative; }
+.stack .after { position: absolute; inset: 0; animation: reveal 10.5s ease-in-out infinite; }
+.stack .kept { animation-name: keep; }
+@keyframes reveal {
+  0%, 26% { opacity: 0; }
+  33%, 60% { opacity: 1; }
+  66%, 100% { opacity: 0; }
+}
+@keyframes keep {
+  0%, 60% { opacity: 0; }
+  66%, 93% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.phone { max-width: 270px; justify-self: center; }
+.phone img { border-radius: 26px; box-shadow: 0 0 0 8px #0b1b1e, 0 24px 60px rgba(0, 0, 0, .45); }
+.list.wide { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.list.wide p { font-size: 15px; }
+.showcase { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin-top: 20px; }
+.tile { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 22px; align-items: center; padding: 22px; border: 1px solid var(--line); border-radius: 16px; background: linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(255, 255, 255, .01)); }
+.tile .demo { max-width: 190px; justify-self: center; }
+.tile .demo.phone { max-width: 110px; }
+.tile .demo figcaption { font-size: 12px; margin-top: 6px; }
+.tile .shot { border-radius: 12px; }
+.tile .phone img { border-radius: 16px; box-shadow: 0 0 0 5px #0b1b1e, 0 16px 40px rgba(0, 0, 0, .45); }
+.tile h3 { font-size: 19px; margin-bottom: 6px; }
+.tile p { color: var(--soft); font-size: 15px; }
+.tile p + p { margin-top: 8px; }
+@media (max-width: 1000px) {
+  .list.wide { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .showcase { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  .list.wide { grid-template-columns: minmax(0, 1fr); }
+  .tile { grid-template-columns: 110px minmax(0, 1fr); gap: 16px; padding: 16px; }
+  .tile .demo { max-width: 110px; }
+  .tile .demo.phone { max-width: 72px; }
+}
+
+.watch { display: grid; grid-template-columns: minmax(0, 3.16fr) minmax(0, 1fr) minmax(0, 1fr); gap: 28px; margin-top: 32px; align-items: start; }
+video { display: block; width: 100%; height: auto; border-radius: 14px; background: #000; box-shadow: 0 24px 60px rgba(0, 0, 0, .45); }
+
+.carousel { max-width: 1040px; margin: 40px auto 0; }
+.track { display: flex; margin: 0; padding: 0; list-style: none; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; border-radius: 14px; box-shadow: 0 24px 60px rgba(0, 0, 0, .45); }
+.track::-webkit-scrollbar { display: none; }
+.track:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+.slide { flex: 0 0 100%; scroll-snap-align: start; }
+.slide img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; }
+.car-bar { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 16px; }
+.car-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: transparent; color: #fff; font-size: 22px; line-height: 1; cursor: pointer; }
+.car-btn.car-play { font-size: 10px; letter-spacing: 1px; }
+.car-btn:hover { background: rgba(255, 255, 255, .08); }
+.dots { display: flex; gap: 8px; }
+.dots button { width: 10px; height: 10px; padding: 0; border-radius: 50%; border: 0; background: rgba(255, 255, 255, .3); cursor: pointer; }
+.dots button[aria-current="true"] { background: #fff; }
+
+.flows { margin: 28px 0 0; padding: 0; list-style: none; }
+.flows li { padding: 14px 0; border-top: 1px solid var(--line); color: var(--soft); font-size: 16px; }
+.flows strong { color: #fff; font-weight: 600; }
+
+.cancel { margin-top: 36px; padding-top: 28px; border-top: 1px solid var(--line); max-width: 42em; }
+.cancel h3 { font-size: 21px; }
+.cancel h3:not(:first-child) { margin-top: 28px; }
+.cancel h3 + p { margin-top: 8px; color: var(--soft); }
+.cancel ol { margin: 14px 0 0; padding-inline-start: 1.4em; color: var(--soft); }
+.cancel li + li { margin-top: 6px; }
+.plans { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.android-buy { margin-top: 28px; }
+.android-buy .store { display: inline-block; margin: 20px 17px 12px; line-height: 0; }
+.android-buy .store img { width: 252px; height: auto; margin: -17px; }
+.linklike { padding: 0; border: 0; font: inherit; color: var(--gold); text-decoration: underline; background: none; cursor: pointer; }
+.android .plans:not(.shown), .android .buy-guide:not(.shown), .android .vip-note:not(.shown) { display: none; }
+.buy-guide { margin-top: 28px; padding: 18px 22px; border: 1px solid rgba(244, 190, 52, .45); border-inline-start: 5px solid var(--gold); border-radius: 12px; background: rgba(244, 190, 52, .08); max-width: 46em; }
+.buy-guide h3 { margin: 0; font-size: 20px; color: var(--gold); }
+.buy-guide ul { margin: 10px 0 0; padding-inline-start: 1.2em; color: var(--soft); }
+.buy-guide li + li { margin-top: 8px; }
+.buy-guide strong { color: #fff; }
+.buy-warning { margin: 14px 0 0; padding: 10px 14px; border-radius: 8px; font-weight: 600; color: var(--ink); background: var(--gold); }
+.buy-warning::before { content: "⚠ "; }
+.plan-school { margin-top: 12px; }
+.affiliate { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; max-width: 32em; margin-top: 24px; }
+.affiliate label { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; font-size: 15px; }
+.affiliate input, .affiliate textarea, .affiliate select { min-width: 0; font: inherit; padding: 10px 12px; border-radius: 10px; border: 1.5px solid var(--line); background: rgba(0, 0, 0, .18); color: #fff; }
+.affiliate .btn { justify-self: start; border: 0; cursor: pointer; font: inherit; font-weight: 650; }
+.affiliate .trap { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.plan-school .btn { display: block; text-align: center; }
+.school-card { display: grid; grid-template-columns: 1fr 1fr; max-width: 32em; margin-top: 24px; border: 1.5px solid var(--line); border-radius: 14px; background: var(--panel); overflow: hidden; }
+.school-card > div { padding: 18px 20px; }
+.school-card .earn { background: rgba(244, 190, 52, .1); border-inline-start: 1.5px solid var(--line); }
+.school-card .label { display: block; font-size: 13px; color: var(--soft); }
+.school-card strong { display: block; margin-top: 4px; font-size: 30px; line-height: 1.1; color: var(--gold); }
+.school-card strong small { display: block; margin-top: 4px; font-size: 14px; font-weight: 400; color: #fff; }
+.school-card p { margin-top: 10px; font-size: 14px; color: var(--soft); }
+@media (max-width: 480px) {
+  .school-card { grid-template-columns: 1fr; }
+  .school-card .earn { border-inline-start: 0; border-top: 1.5px solid var(--line); }
+}
+
+footer { border-top: 1px solid var(--line); padding: 36px 0 48px; font-size: 14px; color: var(--soft); }
+footer p + p { margin-top: 8px; }
+
+.nav-end { display: flex; align-items: center; gap: 22px; }
+nav { position: relative; }
+.links { align-items: center; }
+.drop { position: relative; }
+.drop summary { display: flex; align-items: center; gap: 7px; list-style: none; cursor: pointer; }
+.drop summary::-webkit-details-marker { display: none; }
+.drop summary::after { content: ""; width: 6px; height: 6px; border: solid currentColor; border-width: 0 1.5px 1.5px 0; transform: translateY(-2px) rotate(45deg); transition: transform .2s; }
+.drop[open] summary::after { transform: translateY(1px) rotate(-135deg); }
+.drop summary:hover, .drop[open] summary { color: var(--gold); }
+.drop summary:focus-visible { outline: 3px solid #fff; outline-offset: 3px; border-radius: 4px; }
+.drop > div { position: absolute; top: calc(100% + 14px); inset-inline-start: -14px; z-index: 30; display: grid; min-width: 240px; padding: 8px; border: 1px solid var(--line); border-radius: 12px; background: #062f33; box-shadow: 0 18px 40px rgba(0, 0, 0, .45); }
+.drop > div a { padding: 8px 10px; border-radius: 8px; color: #fff; text-decoration: none; white-space: nowrap; }
+.drop > div a:hover { background: rgba(244, 190, 52, .12); color: var(--gold); }
+.links .nav-cta { padding: 7px 14px; border-radius: 9px; background: var(--gold); color: var(--ink); font-weight: 650; text-decoration: none; }
+.links .nav-cta:hover { background: #ffd76a; color: var(--ink); }
+.menu-btn { display: none; }
+@media (max-width: 820px) {
+  .menu-btn { display: inline-flex; padding: 7px 14px; border: 0; border-radius: 9px; box-shadow: inset 0 0 0 1.5px var(--gold); background: transparent; color: #fff; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; }
+  .menu-btn[aria-expanded="true"] { background: rgba(244, 190, 52, .14); }
+  .links { position: absolute; top: 100%; inset-inline: 0; z-index: 30; display: none; flex-direction: column; align-items: stretch; gap: 0; max-height: calc(100vh - 90px); overflow: auto; padding: 10px; border: 1px solid var(--line); border-radius: 14px; background: #062f33; box-shadow: 0 18px 40px rgba(0, 0, 0, .45); font-size: 16px; }
+  .links.open { display: flex; }
+  .drop summary { justify-content: space-between; padding: 10px; }
+  .drop > div { position: static; min-width: 0; padding: 0 0 6px; padding-inline-start: 12px; border: 0; background: transparent; box-shadow: none; }
+  .drop > div a { white-space: normal; }
+  .links .nav-cta { margin-top: 8px; text-align: center; }
+}
+@media (max-width: 480px) {
+  .nav-end { gap: 8px; }
+  .brand { font-size: 17px; gap: 7px; }
+  .brand img { width: 30px; height: 30px; }
+  .menu-btn { padding: 6px 10px; }
+}
+.lang {
+  flex: none;
+  appearance: none;
+  padding-block: 6px;
+  padding-inline: 11px 30px;
+  border: 0;
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 1.5px var(--gold);
+  background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23f4be34' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 11px center;
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.lang[hidden] { display: none; }
+.lang:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.lang option { background: var(--ink); color: #fff; }
+[dir="rtl"] .lang { background-position: left 11px center; }
+[dir="rtl"] body { font-family: "Segoe UI", Tahoma, "Noto Sans Arabic", system-ui, sans-serif; }
+[dir="rtl"] h1 { letter-spacing: 0; }
+
+html { scroll-padding-top: 72px; }
+.bar { position: sticky; top: 0; z-index: 10; background: transparent; transition: background-color .3s, box-shadow .3s; }
+.bar nav { transition: padding .3s; }
+.bar.scrolled { background: rgba(3, 40, 46, .8); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4); box-shadow: 0 1px 0 var(--line), 0 10px 30px rgba(0, 0, 0, .25); }
+.bar.scrolled nav { padding: 10px 0; }
+.progress { position: absolute; left: 0; bottom: 0; width: 100%; height: 2px; transform: scaleX(0); transform-origin: 0 50%; background: linear-gradient(90deg, var(--gold), #fff0b8); }
+.brand img { transition: transform .5s cubic-bezier(.3, 1.6, .5, 1); }
+.brand:hover img { transform: rotate(-12deg) scale(1.1); }
+
+.top { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; margin-top: calc(-1 * var(--bar-h, 76px)); padding-top: var(--bar-h, 76px); }
+.top > .wrap { position: relative; }
+.glow { position: absolute; border-radius: 50%; pointer-events: none; filter: blur(40px); }
+.glow.g1 { width: 560px; height: 560px; top: -200px; right: -140px; background: radial-gradient(circle, rgba(244, 190, 52, .32), transparent 65%); }
+.glow.g2 { width: 640px; height: 640px; bottom: -300px; left: -220px; background: radial-gradient(circle, rgba(20, 170, 150, .4), transparent 65%); }
+h1 span {
+  background: linear-gradient(100deg, var(--gold) 0%, var(--gold) 40%, #fff3c4 50%, var(--gold) 60%, var(--gold) 100%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.badge { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 22px; padding: 6px 14px 6px 11px; border-radius: 999px; font-size: 14px; font-weight: 600; color: #fff; text-decoration: none; background: rgba(244, 190, 52, .1); box-shadow: inset 0 0 0 1px rgba(244, 190, 52, .45); transition: background-color .2s; }
+.badge:hover { color: #fff; background: rgba(244, 190, 52, .2); }
+.badge i { flex: none; width: 8px; height: 8px; border-radius: 50%; background: #4be0a0; }
+.hero-art { perspective: 1100px; }
+.hero-art .shot { transition: transform .25s ease-out; }
+
+.btn { transition: translate .2s, scale .2s, box-shadow .25s, background-color .2s; }
+a.btn:hover { translate: 0 -2px; box-shadow: 0 10px 28px rgba(244, 190, 52, .3); }
+a.btn:active { scale: .97; }
+.store img { transition: transform .2s; }
+.store:hover img { transform: translateY(-2px); }
+.plans .btn:not(.ghost) { position: relative; overflow: hidden; }
+
+section h2::after { content: ""; display: block; width: 56px; height: 3px; margin-top: 14px; border-radius: 3px; background: linear-gradient(90deg, var(--gold), transparent); transform-origin: 0 50%; }
+.list { gap: 20px; }
+.list li { position: relative; padding: 22px 22px 20px; border: 1px solid var(--line); border-radius: 16px; background: linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(255, 255, 255, .01)); transition: translate .35s, border-color .35s, box-shadow .35s; }
+.list li::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .35s; background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), rgba(244, 190, 52, .12), transparent 45%); }
+.list li:hover { translate: 0 -4px; border-color: rgba(244, 190, 52, .5); box-shadow: 0 18px 40px rgba(0, 0, 0, .35); }
+.list li:hover::before { opacity: 1; }
+.watch video { transition: translate .3s, box-shadow .3s; }
+.watch video:hover { translate: 0 -4px; box-shadow: 0 30px 70px rgba(0, 0, 0, .55); }
+
+.stats { padding: 44px 0; border-top: 1px solid var(--line); }
+.stat-list { list-style: none; margin: 0 auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; text-align: center; }
+.stat-list b { display: block; font-size: clamp(40px, 5vw, 56px); font-weight: 700; line-height: 1; color: var(--gold); font-variant-numeric: tabular-nums; }
+.stat-list span { display: block; margin-top: 10px; font-size: 15px; color: var(--soft); }
+
+.grain { position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; z-index: 50; pointer-events: none; opacity: .06; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.vignette, .vignette::after { position: fixed; inset: 0; z-index: 49; pointer-events: none; background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, .38) 100%); }
+.vignette::after { content: ""; background: radial-gradient(ellipse at 50% 40%, rgba(0, 0, 0, .1) 25%, rgba(0, 0, 0, .78) 100%); opacity: 0; transition: opacity .8s; }
+.theater .vignette::after { opacity: 1; }
+.opening { display: none; }
+.flare { position: absolute; top: 34%; left: -20%; width: 140%; height: 2px; pointer-events: none; opacity: .5; background: linear-gradient(90deg, transparent 10%, rgba(255, 226, 150, .55) 45%, #fff6dc 50%, rgba(255, 226, 150, .55) 55%, transparent 90%); box-shadow: 0 0 18px 2px rgba(244, 190, 52, .35); }
+.top::before, .top::after { content: ""; position: absolute; left: 0; right: 0; z-index: 1; height: calc(var(--lb, 1) * 6vh); background: #000; pointer-events: none; }
+.top::before { top: 0; height: calc(var(--lb, 1) * var(--bar-h, 76px)); }
+.top::after { bottom: 0; }
+.top > .wrap { z-index: 2; }
+
+.trailer { --serif: "Trajan Pro", "Cinzel", "Cormorant Garamond", Georgia, "Times New Roman", serif; padding: 96px 0; background: #000; text-align: center; }
+.stage { display: grid; gap: 28px; padding: 0 16px; }
+.card { margin: 0; font-family: var(--serif); font-size: clamp(26px, 4.6vw, 56px); font-weight: 400; line-height: 1.2; letter-spacing: .14em; text-transform: uppercase; color: #f3ead2; text-shadow: 0 0 40px rgba(244, 190, 52, .25); }
+.card.finale { display: grid; gap: 14px; margin-top: 24px; letter-spacing: normal; text-transform: none; }
+.finale .title { font-family: "Segoe UI", system-ui, sans-serif; font-size: clamp(48px, 9vw, 110px); font-weight: 700; letter-spacing: -.02em; color: #fff; }
+.finale .title b { color: var(--gold); font-weight: inherit; }
+
+footer { text-align: center; }
+footer p:first-child { font-family: "Trajan Pro", "Cinzel", Georgia, serif; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; max-width: 52em; margin-inline: auto; }
+
+footer .powered { margin-top: 20px; font-size: 12px; letter-spacing: .3em; text-transform: uppercase; }
+footer .powered a { font-weight: 600; text-decoration: none; }
+[dir="rtl"] .card, [dir="rtl"] .presents, [dir="rtl"] footer p, [dir="rtl"] .stat-list span { letter-spacing: 0 !important; font-family: inherit; }
+[dir="rtl"] .progress, [dir="rtl"] section h2::after { transform-origin: 100% 50%; }
+[dir="rtl"] section h2::after { background: linear-gradient(270deg, var(--gold), transparent); }
+footer .powered a:hover { text-decoration: underline; }
+
+#watch { position: relative; background: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(244, 190, 52, .1), transparent 70%), #021e22; }
+#watch h2 { font-size: clamp(34px, 5vw, 52px); letter-spacing: -.01em; }
+.watch video { transition: translate .3s, box-shadow .3s, opacity .6s, filter .6s; }
+.watch.playing video:not(.on) { opacity: .28; filter: grayscale(.7) blur(1px); }
+.watch video.on { box-shadow: 0 0 0 1px rgba(244, 190, 52, .35), 0 30px 90px rgba(0, 0, 0, .7), 0 0 80px rgba(244, 190, 52, .12); }
+
+@media (max-width: 820px) {
+  .stat-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 16px; }
+  .hero, .split { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .hero { padding-top: 16px; }
+  .hero .shot { max-width: min(440px, 100%); }
+  .list { grid-template-columns: minmax(0, 1fr); gap: 26px; }
+  .demo, .demo.first { justify-self: center; order: 0; }
+  .watch { grid-template-columns: minmax(0, 1fr); }
+  .watch video + video { max-width: 300px; margin-inline: auto; }
+  section { padding: 56px 0; }
+  .links { display: none; }
+  .hero > div:first-child, .split > div, section h2, main .intro, main .note, .plan-title, .cta { text-align: center; }
+  .list, .flows, .cancel, form { text-align: start; }
+  main .intro { margin-inline: auto; }
+  .get, .plans { justify-content: center; }
+  .get { margin-inline: auto; }
+  .get .store img { margin-inline: auto; }
+  .hero-art { justify-self: center; }
+  .hero .shot { margin-inline: auto; }
+  section h2::after, [dir="rtl"] section h2::after { width: 80px; margin-inline: auto; background: linear-gradient(90deg, transparent, var(--gold), transparent); transform-origin: 50% 50%; }
+}
+@media (max-width: 480px) {
+  .wrap { padding: 0 16px; }
+  .get { grid-template-columns: minmax(0, 1fr); }
+  .get .store { justify-content: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .stack .after { animation: none; opacity: 1; }
+  .stack .kept { opacity: 0; }
+  .track { scroll-behavior: auto; }
+}
+/* the other pages cross-fade into this one and back, the bar in place of their header (assets/pages.css) */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .22s; }
+  .bar { view-transition-name: akhi-header; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .glow { animation: drift 18s ease-in-out infinite alternate; }
+  .glow.g2 { animation-duration: 23s; animation-direction: alternate-reverse; }
+  @keyframes drift { to { transform: translate3d(-70px, 60px, 0) scale(1.18); } }
+  h1 span { animation: shimmer 6s ease-in-out infinite; }
+  @keyframes shimmer { 0% { background-position: 100% 0; } 45%, 100% { background-position: 0 0; } }
+  .badge i { animation: ping 2s ease-out infinite; }
+  @keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(75, 224, 160, .7); } 70%, 100% { box-shadow: 0 0 0 10px rgba(75, 224, 160, 0); } }
+  .play-intro { --intro: 3.3s; }
+  .motion .trailer { height: 100vh; height: 100svh; padding: 0; border-top: 0; scroll-margin-top: -72px; }
+  .motion .stage { position: relative; height: 100%; display: block; overflow: hidden; }
+  .motion .card { position: absolute; inset: 0; display: grid; place-content: center; padding: 0 24px; opacity: var(--o, 0); letter-spacing: calc(.14em + var(--x, 0) * .06em); }
+  .motion .card.finale { margin: 0; letter-spacing: normal; }
+  .hero > div:first-child > * { animation: rise 1s cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(var(--intro, 0s) + .5s); }
+  .hero > div:first-child > :first-child { animation-delay: var(--intro, 0s); }
+  .hero > div:first-child > h1 { animation: focus 1.8s cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(var(--intro, 0s) + .1s); }
+  [dir="rtl"] .hero > div:first-child > h1 { animation-name: rise; }
+  .demo { perspective: 1100px; }
+  .demo .shot { animation: art-in 1.6s .2s cubic-bezier(.2, .7, .2, 1) both, float 7s 1.8s ease-in-out infinite; transition: transform .25s ease-out; }
+  .demo .stack .after { animation: art-in 1.6s .2s cubic-bezier(.2, .7, .2, 1) both, float 7s 1.8s ease-in-out infinite, reveal 10.5s ease-in-out infinite; }
+  .demo .stack .kept { animation-name: art-in, float, keep; }
+  .motion .demo:not(.in) .shot { animation-play-state: paused; }
+  .hero > div:first-child > :nth-child(4) { animation-delay: calc(var(--intro, 0s) + .65s); }
+  .hero > div:first-child > :nth-child(n+5) { animation-delay: calc(var(--intro, 0s) + .8s); }
+  .hero-art { animation: art-in 1.6s calc(var(--intro, 0s) + .3s) cubic-bezier(.2, .7, .2, 1) both, float 7s calc(var(--intro, 0s) + 2s) ease-in-out infinite; }
+  @keyframes rise { from { opacity: 0; transform: translateY(26px); filter: blur(6px); } }
+  @keyframes focus { from { opacity: 0; filter: blur(16px); letter-spacing: .14em; } }
+  @keyframes art-in { from { opacity: 0; transform: scale(1.08) translateY(20px); filter: blur(10px) brightness(1.6); } }
+  .grain { animation: grain .9s steps(6) infinite; }
+  @keyframes grain {
+    0%, 100% { transform: translate(0, 0); }
+    20% { transform: translate(-4%, -7%); }
+    40% { transform: translate(6%, 3%); }
+    60% { transform: translate(-7%, 5%); }
+    80% { transform: translate(3%, -4%); }
+  }
+  .flare { animation: flare 9s calc(var(--intro, 0s) + 1s) ease-in-out infinite both; }
+  @keyframes flare {
+    0% { opacity: 0; transform: translateX(-25%) scaleX(.6); }
+    20%, 45% { opacity: .65; }
+    70%, 100% { opacity: 0; transform: translateX(25%) scaleX(1); }
+  }
+
+  .play-intro .opening { display: grid; place-items: center; position: fixed; inset: 0; z-index: 100; pointer-events: none; animation: intro-done 0s 4.1s forwards; }
+  .opening::before, .opening::after { content: ""; position: absolute; left: 0; right: 0; height: 50.5%; background: #000; animation: bar-up 1.1s 2.9s cubic-bezier(.7, 0, .2, 1) forwards; }
+  .presents { position: absolute; z-index: 1; margin: 0; font-family: "Trajan Pro", "Cinzel", Georgia, serif; font-size: clamp(13px, 1.8vw, 18px); letter-spacing: .5em; text-transform: uppercase; color: #d9cfb4; animation: presents 1.5s .2s ease-in-out both; }
+  @keyframes presents { 0% { opacity: 0; letter-spacing: .3em; } 35%, 70% { opacity: 1; } 100% { opacity: 0; letter-spacing: .6em; } }
+  .opening::before { top: 0; }
+  .opening::after { bottom: 0; animation-name: bar-down; }
+  @keyframes bar-up { to { transform: translateY(-100%); } }
+  @keyframes bar-down { to { transform: translateY(100%); } }
+  @keyframes intro-done { to { visibility: hidden; } }
+  .intro-logo { position: relative; z-index: 1; display: flex; align-items: center; gap: 14px; color: #fff; font-size: clamp(28px, 6vw, 46px); font-weight: 650; animation: logo-in 1.7s 1.5s cubic-bezier(.2, .7, .2, 1) both; }
+  .intro-logo img { width: 1.3em; height: 1.3em; }
+  .intro-logo b { color: var(--gold); font-weight: inherit; }
+  @keyframes logo-in {
+    0% { opacity: 0; filter: blur(14px); letter-spacing: .35em; }
+    45%, 72% { opacity: 1; filter: blur(0); letter-spacing: .02em; }
+    100% { opacity: 0; transform: scale(1.08); filter: blur(4px); }
+  }
+  @keyframes float { 50% { translate: 0 -12px; } }
+  .plans .btn:not(.ghost)::after { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, .6) 50%, transparent 70%); transform: translateX(-120%); animation: shine 4.5s ease-in-out infinite; }
+  @keyframes shine { 0%, 65% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
+
+  .motion main h2, .motion main .intro, .motion main .note, .motion .plan-title, .motion .list > li,
+  .motion .demo, .motion .flows li, .motion .plans .btn, .motion .watch video, .motion .cancel, .motion .stat-list li {
+    opacity: 0;
+    transform: translateY(40px) scale(.98);
+    filter: blur(8px);
+    transition: opacity 1s cubic-bezier(.2, .7, .2, 1) var(--d, 0s), transform 1.1s cubic-bezier(.2, .7, .2, 1) var(--d, 0s), filter 1s cubic-bezier(.2, .7, .2, 1) var(--d, 0s), clip-path 1.3s cubic-bezier(.7, 0, .2, 1) var(--d, 0s), translate .35s, scale .2s, border-color .35s, box-shadow .35s, background-color .2s;
+  }
+  .motion .demo, .motion .watch video { clip-path: inset(18% 0 18% 0 round 16px); transform: scale(1.06); }
+  .motion main .in, .motion .plans .btn.in { opacity: 1; transform: none; filter: none; }
+  .motion .demo.in, .motion .watch video.in { clip-path: inset(-100px); }
+  .motion section h2::after { transform: scaleX(0); transition: transform .8s .3s cubic-bezier(.2, .7, .2, 1); }
+  .motion section h2.in::after { transform: scaleX(1); }
+}
+@media print {
+  .motion main * { opacity: 1 !important; transform: none !important; }
+  .bar { position: static; }
+}
+</style>
+</head>
+<body>
+<div class="opening" aria-hidden="true"><p class="presents" data-t="h0">AkhiBrowser يقدّم</p><div class="intro-logo"><img src="/assets/akhi.svg" alt=""><span><b>Akhi</b>Browser</span></div></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<div class="bar" id="bar">
+  <div class="wrap">
+    <nav aria-label="Main">
+      <a class="brand" href="#"><img src="/assets/akhi.svg" alt="" width="36" height="36"><span><span>Akhi</span>Browser</span></a>
+      <div class="nav-end"><button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu" data-t="nv0">القائمة</button>
+      <div class="links" id="menu">
+        <details class="drop"><summary data-t="t1">الميزات</summary><div>
+          <a href="#features" data-t="nv1">كل الميزات</a>
+          <a href="#watch" data-t="t0">شاهد</a>
+          <a href="#accessibility" data-t="x11">إمكانية الوصول</a>
+          <a href="#roadmap" data-t="nv2">iPhone وMac</a>
+          <a href="/ar/setup/" data-t="nv14">نصائح للآباء</a>
+        </div></details>
+        <details class="drop"><summary>Premium</summary><div>
+          <a href="#premium" data-t="nv3">الخطط والأسعار</a>
+          <a href="#school" data-t="nv4">مدرسة / مسجد</a>
+          <a href="#cancel" data-t="nv5">الإلغاء أو الإدارة</a>
+          <a href="/ar/faq/" data-t="nvfaq">الأسئلة الشائعة</a>
+        </div></details>
+        <details class="drop"><summary data-t="n0">الخصوصية</summary><div>
+          <a href="/ar/privacy/" data-t="nv6">ما يرسله المتصفح</a>
+          <a href="#security" data-t="nv7">الأمان والتحديثات</a>
+          <a href="/ar/money/" data-t="mm1">كيف نكسب المال</a>
+          <a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md" data-t="nv8">سياسة الخصوصية (بالإنجليزية)</a>
+        </div></details>
+        <details class="drop"><summary data-t="nv9">الشركاء</summary><div>
+          <a href="/ar/kit/" data-t="nv15">حقيبة للمدارس والمساجد</a>
+          <a href="/ar/affiliate/" data-t="nv10">انصح به مدرستك أو مسجدك</a>
+          <a href="/ar/affiliate/#vip" data-t="nv11">VIP للمؤثرين</a>
+          <a href="/ar/money/#partner" data-t="mm14">كن راعيًا أو شريكًا</a>
+        </div></details>
+        <details class="drop"><summary data-t="n1">المدونة</summary><div>
+          <a href="/ar/blog/" data-t="nv12">كل الأدلة</a>
+          <a href="/ar/blog/what-is-a-halal-browser/" data-t="hb1">ما هو المتصفح الحلال؟</a>
+          <a href="/ar/blog/best-halal-browsers/" data-t="hb2">أفضل المتصفحات الحلال</a>
+          <a href="/ar/compare/browsers/" data-t="t89">مقارنة المتصفحات</a>
+          <a href="/ar/compare/kahf-browser/" data-t="t86">مقارنة مع Kahf Browser</a>
+        </div></details>
+        <a class="nav-cta" href="#download" data-t="nv13">تحميل</a>
+      </div><!-- /links -->
+      <select class="lang" id="lang" aria-label="Language · Taal · اللغة" hidden>
+        <option value="en" lang="en">English</option>
+        <option value="nl" lang="nl">Nederlands</option>
+        <option value="ar" lang="ar">العربية</option>
+      </select>
+      </div>
+    </nav>
+  </div>
+  <div class="progress" aria-hidden="true"></div>
+</div>
+
+<header class="top">
+  <span class="glow g1" aria-hidden="true"></span>
+  <span class="glow g2" aria-hidden="true"></span>
+  <span class="flare" aria-hidden="true"></span>
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <a class="badge" href="#download" data-t="k0"><i></i>متوفر الآن في متجر Microsoft</a>
+        <h1 data-t="t2"><span>المتصفح الحلال</span> الذي يرشّح الإنترنت على جهازك.</h1>
+        <p class="lead" data-t="t3">متصفح حلال للمسلمين يحترم خصوصيتك، مبني على Firefox. متصفح واحد يقوم بكل شيء على جهازك: يحجب الإعلانات والمواقع المحرمة، ويموّه الصور حتى تُفحص، ويزيل الموسيقى من الفيديوهات، دون تتبّع ما تتصفحه.</p>
+        <div class="get" id="download">
+          <a class="store" href="https://apps.microsoft.com/detail/9n8kmf22z6k4?referrer=appbadge&amp;mode=direct" target="_self"><img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200" alt="حمّله من Microsoft Store" data-a="alt:aStore"></a>
+          <a class="btn ghost os-win" href="https://get.microsoft.com/installer/download/9N8KMF22Z6K4?cid=website_cta_psi" data-t="t4w">مثبّت Windows (.exe)<small>Windows 10 أو 11، 64-بت</small></a>
+          <a class="btn ghost os-chrome" href="https://chromewebstore.google.com/detail/akhibrowser/ghkpflipnhahpjdnpoclaakbecnopamk" data-t="t7">احصل على إضافة Chrome<small>مجانية، متوفرة الآن</small></a>
+          <a class="btn ghost os-firefox" href="https://addons.mozilla.org/en-US/firefox/addon/akhibrowser/" data-t="t7f">احصل على إضافة Firefox<small>مجانية، متوفرة الآن</small></a>
+          <a class="store store-play" href="https://play.google.com/store/apps/details?id=org.akhibrowser"><img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" width="646" height="250" alt="احصل عليه من Google Play" data-a="alt:aPlay"></a>
+          <a class="btn soon os-apple" href="#roadmap" data-t="t4b">iOS وmacOS: قريبًا<small>اطّلع على خارطة الطريق</small></a>
+        </div>
+        <p class="note" data-t="t7b">إضافتا Chrome وFirefox نسخة أخف ومجانية: تحجب المواقع الإباحية والمحرمة، وتموّه الصور، وتزيل الموسيقى الخلفية، لكن ليس فيها Premium ولا رقابة أبوية ولا حاجب إعلانات خاص بها، ويمكن إزالتها. اللغة العربية في الإضافتين قادمة قريبًا.</p>
+        <p class="note" data-t="t11">الحماية مجانية.</p>
+      </div>
+      <div class="hero-art"><img class="shot" src="/assets/settings.png" width="520" height="700" alt="إعدادات AkhiBrowser: آية اليوم، ومواقيت الصلاة، والحمايات الخمس كلها مفعّلة: حجب الإعلانات وأدوات التتبع، وإزالة الموسيقى الخلفية، وحجب المحتوى الإباحي، وحجب المواقع المحرمة، وتمويه الصور العارية." data-a="alt:a0"></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="stats">
+    <ul class="wrap stat-list">
+      <li><b data-count="5">5</b><span data-t="k1">حمايات مجانية، تعمل من الصفحة الأولى</span></li>
+      <li><b data-count="12">12</b><span data-t="k2">لغة</span></li>
+      <li><b data-count="0">0</b><span data-t="k3">صفحات أو صور أو سجل تصفح يُرسل إلينا</span></li>
+      <li><b data-count="10">10</b><span data-t="k4">أجهزة بمفتاح Family واحد</span></li>
+    </ul>
+  </div>
+
+  <section class="trailer" aria-label="Trailer">
+    <div class="stage">
+      <p class="card" data-t="h1">في عالمٍ مليءٍ بالضجيج،</p>
+      <p class="card" data-t="h2">متصفحٌ واحد يُبقيه نظيفًا.</p>
+      <p class="card" data-t="h3">المواقع المحرّمة، محجوبة.</p>
+      <p class="card" data-t="h4">الموسيقى، محذوفة.</p>
+      <p class="card" data-t="h5">سجلّك يبقى على جهازك.</p>
+      <p class="card finale"><span class="title"><b>Akhi</b>Browser</span></p>
+    </div>
+  </section>
+
+  <section id="watch">
+    <div class="wrap">
+      <h2 data-t="t12">شاهده وهو يعمل</h2>
+      <div class="watch">
+        <video controls playsinline preload="none" poster="/assets/trailer-poster.jpg" width="1920" height="1080" aria-label="إعلان AkhiBrowser: تزيل NoMusic الموسيقى الخلفية وتُبقي الصوت، ويحجب مرشّح المحرّمات العُري والمحتوى الإباحي على جهازك، وuBlock Origin مدمج، 25 ثانية" data-a="aria-label:a1">
+          <source src="/assets/trailer.mp4" type="video/mp4">
+          <a href="/assets/trailer.mp4">Download the video</a>
+        </video>
+        <video controls playsinline preload="none" poster="/assets/reel-viral-poster.jpg" width="1080" height="1920" aria-label="مقطع قصير لـ AkhiBrowser: تريد فقط مشاهدة محاضرة على الإنترنت، فتزيل NoMusic الموسيقى الخلفية وتُبقي الصوت، 21 ثانية" data-a="aria-label:a9">
+          <source src="/assets/reel-viral.mp4" type="video/mp4">
+          <a href="/assets/reel-viral.mp4">Download the video</a>
+        </video>
+        <video controls playsinline preload="none" poster="/assets/reel-poster.jpg" width="1080" height="1920" aria-label="مقطع قصير لـ AkhiBrowser: وضعوا الموسيقى، فأزلناها، 19 ثانية" data-a="aria-label:a2">
+          <source src="/assets/reel.mp4" type="video/mp4">
+          <a href="/assets/reel.mp4">Download the video</a>
+        </video>
+      </div>
+      <div class="carousel" role="region" aria-roledescription="carousel" aria-label="ميزات AkhiBrowser" data-a="aria-label:car0">
+        <ul class="track" dir="ltr" tabindex="0">
+          <li class="slide"><img src="/assets/shots/1-nudity-blur.webp" width="1600" height="900" loading="eager" decoding="async" alt="مجاني: غضّ بصرك. تلقائيًا. كل صورة وفيديو يبقى مموّهًا حتى يفحصه الذكاء الاصطناعي على جهازك، فلا يظهر شيء فجأة. صفحة أخبار في AkhiBrowser بصور مموّهة." data-a="alt:car1"></li>
+          <li class="slide"><img src="/assets/shots/2-no-music.webp" width="1600" height="900" loading="lazy" decoding="async" alt="مجاني: أبقِ الصوت. واترك الموسيقى. يزيل AkhiBrowser الموسيقى الخلفية من الفيديوهات أثناء تشغيلها. فيديو محاضرة بقي فيه الصوت وأُزيلت الموسيقى." data-a="alt:car2"></li>
+          <li class="slide"><img src="/assets/shots/3-search-blocking.webp" width="1600" height="900" loading="lazy" decoding="async" alt="مجاني: ابحث عن «بيرة». واعرف الحقيقة. عمليات البحث المحرّمة تُحجب أو تتحول إلى أسئلة، بـ11 لغة، وSafeSearch مفعّل دائمًا." data-a="alt:car3"></li>
+          <li class="slide"><img src="/assets/shots/4-hijab-recognition.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Premium: ذكي بما يكفي ليرى الحجاب. تظهر المحجبات وتُموَّه غير المحجبات. أنت تختار من يُموَّه: النساء أو الرجال أو كلاهما." data-a="alt:car4"></li>
+          <li class="slide"><img src="/assets/shots/5-youtube-clean-mode.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Premium: YouTube بلا دوّامة. لا توصيات ولا شاشات نهاية ولا تشغيل تلقائي ولا Shorts، والتعليقات مخفية." data-a="alt:car5"></li>
+          <li class="slide"><img src="/assets/shots/6-parental-pin-time-limits.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Family Premium: أنت تضع القواعد. ورمز PIN يحفظها. رمز PIN للوالدين، وحد يومي، ووقت النوم وساعات المدرسة." data-a="alt:car6"></li>
+          <li class="slide"><img src="/assets/shots/7-prayer-pause.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Family Premium: الأذان يرتفع؟ تتوقف الصفحات. مواقع التواصل والفيديو والألعاب تتوقف بضع دقائق بعد كل وقت صلاة." data-a="alt:car7"></li>
+          <li class="slide"><img src="/assets/shots/8-halal-check-riba-warning.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Family Premium: حلال أم لا؟ اعرف أولًا. صفحة متجر تحذّر من الجيلاتين ورقم E، وعرض ادفع لاحقًا يحمل تحذيرًا من الربا." data-a="alt:car8"></li>
+        </ul>
+        <div class="car-bar" dir="ltr">
+          <button type="button" class="car-btn" data-dir="-1" aria-label="الصورة السابقة" data-a="aria-label:carPrev">&#8249;</button>
+          <div class="dots"></div>
+          <button type="button" class="car-btn car-play" aria-label="إيقاف مؤقت" data-a="aria-label:carPause">&#10074;&#10074;</button>
+          <button type="button" class="car-btn" data-dir="1" aria-label="الصورة التالية" data-a="aria-label:carNext">&#8250;</button>
+        </div>
+      </div>
+      <p class="cta"><a class="btn" href="#download" data-t="cta">حمّله مجانًا</a></p>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="wrap">
+      <h2 data-t="t13">مفعّلة من الصفحة الأولى</h2>
+      <p class="intro" data-t="t14">هذه الحماية مجانية ومدمجة. يمكن إيقاف كل واحدة منها من درع AkhiBrowser. ميزات Premium اختيارية ومتوقفة حتى تفعّلها.</p>
+      <ul class="list wide">
+        <li><h3 data-t="t15">حجب الإعلانات وأدوات التتبع</h3><p data-t="t16">يُثبَّت uBlock Origin لك ويبقى مفعّلًا، وتحته حاجب مدمج لنطاقات الإعلانات والتتبع والبرمجيات الخبيثة.</p></li>
+        <li><h3 data-t="t17">حجب المواقع الإباحية والمحرمة</h3><p data-t="t18">مواقع الإباحية والخمر والمخدرات والتدخين الإلكتروني والقمار. ويُفرض SafeSearch على Google وBing وDuckDuckGo وYahoo، وكذلك الوضع المقيّد في YouTube.</p></li>
+        <li><h3 data-t="t19">ترشيح عمليات البحث</h3><p data-t="t20">عمليات البحث عن المحتوى الإباحي أو المحرم محجوبة بـ 11 لغة. أما الأسئلة عنها فتبقى مسموحة، مثل «لماذا الخمر حرام».</p></li>
+        <li><h3 data-t="t21">بلا موسيقى</h3><p data-t="t22">يزيل الموسيقى الخلفية من الفيديوهات ويُبقي الأصوات، باستخدام نموذج كلام يعمل على جهازك.</p></li>
+        <li><h3 data-t="t68">حجب مواقع التصيد والاحتيال</h3><p data-t="t69">مواقع التصيد والاحتيال المعروفة تتوقف قبل أن تُحمَّل، مع زر للمتابعة إن أُدرج موقع بالخطأ.</p></li>
+        <li><h3 data-t="t70">مواقيت الصلاة وآية كل يوم</h3><p data-t="t71">مواقيت الصلاة للمدينة التي تختارها، تُحسب على جهازك دون موقعك، وآية من القرآن كل يوم.</p></li>
+        <li><h3 data-t="t72">إعداداتك في صفحة البداية</h3><p data-t="t73">على الحواسيب، تفتح علامات التبويب الجديدة صفحة AkhiBrowser مع مربع بحث، والمواقع التي تزورها أكثر، وآية اليوم، وكل الإعدادات. يمكنك إيقافها.</p></li>
+        <li><h3 data-t="t56">فحص الصور على جهازك</h3><p data-t="t57">تبقى الصور مموّهة حتى تُفحص. الصور غير الآمنة تبقى مموّهة، والصورة التي لا يمكن فحصها تُعرض.</p></li>
+        <li><h3 data-t="t23">12 لغة</h3><p data-t="t24">الإنجليزية والعربية والفارسية والكردية (السورانية) والأردية والتركية والفرنسية والألمانية والهولندية والإسبانية والإندونيسية والملايوية، من اليمين إلى اليسار حيث يلزم.</p></li>
+        <li><h3 data-t="t25">خفيف على الأجهزة القديمة</h3><p data-t="t26">لا يُفحص إلا ما يظهر على الشاشة، والصور التي سبق فحصها تُجاب من ذاكرة مؤقتة. ولا ينتظر تحميلُ الصفحات النموذجَ أبدًا.</p></li>
+        <li><h3 data-t="t58">تصحيح عمى الألوان</h3><p data-t="t59">إعداد اختياري على الجهاز يجعل التمييز بين الأحمر والأخضر أسهل، لنوعَي عمى الألوان الأحمر والأخضر.</p></li>
+      </ul>
+      <div class="showcase">
+        <article class="tile">
+          <figure class="demo">
+            <div class="stack">
+          <img class="shot" src="/assets/check-before.png" width="520" height="520" alt="منظر طبيعي مموّه مع العبارة: Checking on your device." data-a="alt:a3">
+          <img class="shot after" src="/assets/check-after.png" width="520" height="520" alt="المنظر نفسه، واضحًا، مع العبارة: Checked: shown." data-a="alt:a4">
+          <img class="shot after kept" src="/assets/check-hidden.png" width="520" height="520" alt="صورة شخص تبقى مموّهة، مع العبارة: Checked: hidden." data-a="alt:a10">
+        </div>
+            <figcaption data-t="t31">صور توضيحية</figcaption>
+          </figure>
+          <div>
+            <h3 data-t="t27">تبقى الصور مموّهة حتى تُفحص</h3>
+            <p data-t="t28">نموذج على الجهاز يفحص الصور والخلفيات والفيديوهات وعناصر canvas قبل أن تظهر، فلا يومض شيء على الشاشة أولًا. والصور غير الآمنة تبقى مموّهة.</p>
+            <p data-t="t29">يضيف Premium أدوات لاختيار تمويه النساء أو الرجال أو كليهما، ويستطيع التعرّف على الحجاب فتبقى المرأة المحجبة ظاهرة. أدوات الصور الاختيارية هذه تستخدم نماذج على الجهاز.</p>
+            <p data-t="t30">قد تفوت المرشّحاتِ بعضُ الأشياء، والصورة التي لا يمكن فحصها تُعرض. وهي لا تغني عن رعاية الوالدين.</p>
+          </div>
+        </article>
+        <article class="tile">
+          <figure class="demo">
+            <img class="shot" src="/assets/blocked.png" width="520" height="620" alt="صفحة تقول: This page is blocked. يحجب AkhiBrowser مواقع الخمر والمخدرات والقمار. وتحتها آية من القرآن، 2:219، بالعربية والإنجليزية، مع رابط إلى quran.com." data-a="alt:a5">
+            <figcaption data-t="t32">ما يظهر عند حجب موقع</figcaption>
+          </figure>
+          <div>
+            <h3 data-t="t33">يُحجب قبل أن يُحمَّل</h3>
+            <p data-t="t34">مواقع الإباحية والخمر والمخدرات والتدخين الإلكتروني والقمار تتوقف هنا، وكذلك الصفحات التي تصف نفسها بأنها للبالغين.</p>
+          </div>
+        </article>
+        <article class="tile">
+          <figure class="demo">
+            <img class="shot" src="/assets/music.png" width="520" height="520" alt="موجة صوتية لأصوات، مع العبارة: Background music: removed." data-a="alt:a6">
+            <figcaption data-t="t37">رسم توضيحي</figcaption>
+          </figure>
+          <div>
+            <h3 data-t="t35">تبقى الأصوات، وتذهب الموسيقى</h3>
+            <p data-t="t36">ميزة بلا موسيقى تنقّي صوت الفيديو أثناء مشاهدتك، على جهازك. وتستخدم الهواتف والحواسيب البطيئة نموذجًا خفيفًا، لتواكب الأجهزة القديمة.</p>
+          </div>
+        </article>
+        <article class="tile">
+          <figure class="demo phone">
+            <img src="/assets/android.png" width="540" height="1200" alt="الصفحة الرئيسية لـ AkhiBrowser على Android: شريط بحث، وشعار AkhiBrowser، والعبارة: You&#x27;re protected." data-a="alt:a7">
+          </figure>
+          <div>
+            <h3 data-t="t38">على هاتفك أيضًا</h3>
+            <p data-t="t39">الحماية نفسها على Android، دون مربعات أو قصص مموّلة في الصفحة الرئيسية. لتغييرها، افتح القائمة، ثم الإضافات، ثم AkhiBrowser.</p>
+          </div>
+        </article>
+      </div>
+      <p class="cta"><a class="btn" href="#download" data-t="cta">حمّله مجانًا</a></p>
+    </div>
+  </section>
+
+  <section id="accessibility">
+    <div class="wrap">
+      <h2 data-t="x0">إمكانية الوصول</h2>
+      <p class="intro" data-t="x1">لمن لديهم عمى ألوان أو ضعف في السمع، ولكل من يحتاج إلى مساعدة أكثر قليلًا على الإنترنت.</p>
+      <ul class="list">
+        <li><h3 data-t="x2">عمى الألوان</h3><p data-t="x3">فعّل تصحيح عمى الألوان من درع AkhiBrowser. يعدّل ألوان صفحات الويب ليسهل التمييز بين الأحمر والأخضر، لنوعَي عمى الألوان الأحمر والأخضر. وهو متوقف افتراضيًا، ولا يساعد في عمى الألوان الأزرق والأصفر.</p></li>
+        <li><h3 data-t="x4">ضعف السمع</h3><p data-t="x5">ميزة بلا موسيقى تزيل الموسيقى الخلفية من الفيديوهات وتُبقي الأصوات، مما قد يجعل متابعة الكلام أسهل. لا تُنشئ ترجمة نصية بنفسها، والترجمة التي يوفرها الموقع تبقى تعمل كالمعتاد.</p></li>
+        <li><h3 data-t="x6">من Firefox</h3><p data-t="x7">تبقى أدوات Firefox نفسها في المتصفح، مثل دعم قارئات الشاشة وتكبير الصفحة ووضع القراءة. لم نختبرها بشكل منفصل في AkhiBrowser.</p></li>
+        <li><h3 data-t="x8">هذه الصفحة</h3><p data-t="x9">تعمل بلوحة المفاتيح، ولصورها أوصاف نصية، والصورة المتحركة تبقى ثابتة إن طلبت من جهازك تقليل الحركة. ليس للفيديوهات ترجمة نصية بعد، لكنها تعرض رسالتها نصًا على الشاشة، وهذه الصفحة تقول الشيء نفسه.</p></li>
+      </ul>
+      <p class="note" data-t="x10">هل هناك شيء لا يعمل معك؟ أخبرنا على <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a>.</p>
+      <p class="cta"><a class="btn" href="#download" data-t="cta">حمّله مجانًا</a></p>
+    </div>
+  </section>
+
+  <section id="security">
+    <div class="wrap">
+      <h2 data-t="s0">هل هو آمن؟</h2>
+      <p class="intro" data-t="s1">AkhiBrowser هو Firefox مع مرشّحات مضافة. والأجزاء التي تحميك على الإنترنت تأتي من Firefox.</p>
+      <ul class="list">
+        <li><h3 data-t="s2">Firefox في الأساس</h3><p data-t="s3">المحرّك نفسه وبيئة العزل نفسها في Firefox، اللذان يفصلان كل موقع عن ملفاتك وعن المواقع الأخرى. ونطاقات البرمجيات الخبيثة المعروفة محجوبة أيضًا.</p></li>
+        <li><h3 data-t="s4">تحديثات موقّعة</h3><p data-t="s5">مرة في اليوم يتحقق المتصفح من وجود إصدار جديد. على Windows يثبّت التحديث بعد التحقق من توقيعه. وعلى Android يطلب منك تثبيته، ويتحقق أولًا من المجموع الاختباري للملف. تصلك إصلاحات أمان Firefox مع هذه التحديثات، فثبّتها عندما تصل.</p></li>
+        <li><h3 data-t="s8">ما الذي هو مفتوح المصدر</h3><p data-t="s9">AkhiBrowser مبني على Firefox. تعديلاتنا على Firefox، وكل ملف تحت رخصة Firefox (MPL)، علنية على <a href="https://github.com/halgurdh/akhiBrowser">GitHub</a>. أما الحماية نفسها، أي إضافة AkhiBrowser وPremium وخدمة التراخيص، فهي شيفرتنا الخاصة وغير علنية، كما في معظم التطبيقات المدفوعة. ما يرسله المتصفح، وإلى من، مذكور تحت <a href="/ar/privacy/">الخصوصية</a>.</p></li>
+      </ul>
+      <p class="note" data-t="s10">وجدت مشكلة أمنية؟ أخبرنا على <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a>.</p>
+      <p class="cta"><a class="btn" href="#download" data-t="cta">حمّله مجانًا</a></p>
+    </div>
+  </section>
+
+  <section id="premium">
+    <div class="wrap">
+      <h2 data-t="t47">Premium، إن أردته</h2>
+      <p class="intro" data-t="t48">كل حماية مذكورة أعلاه تبقى مجانية. Premium لك أنت: تحكم أكبر في الصور وإنترنت أهدأ. وFamily Premium للوالدين: كل ما في Premium، مع أدوات الرقابة الأبوية، على ما يصل إلى عشرة أجهزة. كل ميزة متوقفة حتى تفعّلها، وبياناتها تبقى على الجهاز.</p>
+      <p class="intro" data-t="t48b">Premium متوفر فقط في متصفح AkhiBrowser، بمفتاح ترخيص. إضافة AkhiBrowser المجانية لـ Chrome وFirefox فيها الحماية المجانية المذكورة أعلاه، دون Premium. ويقدّم المتصفح أيضًا ما لا تستطيعه الإضافة: لا بيانات قياس ولا دراسات ولا تقارير أعطال إلى Mozilla، وuBlock Origin مدمج، وحماية صارمة من التتبع.</p>
+      <figure class="plans-compare">
+        <img class="shot" src="/assets/plans.webp" srcset="/assets/plans.webp 1x, /assets/plans@2x.webp 2x" width="1600" height="900" loading="lazy" decoding="async" alt="مقارنة خطط AkhiBrowser: المجانية (€0)، وPremium (€3.99 شهريًا أو €39 سنويًا أو €119 مدى الحياة)، وFamily Premium (€59.99 سنويًا، 3 أيام مجانًا، 10 أجهزة)، والمدرسة / المسجد (€30 شهريًا، حتى 500 جهاز)، مع ميزاتها." data-a="alt:aPlans">
+      </figure>
+      <h3 class="plan-title" data-t="t82">Premium، لك أنت</h3>
+      <ul class="list">
+        <li><h3 data-t="t60">اختر من يُموَّه</h3><p data-t="t61">موّه النساء أو الرجال أو كليهما. ويمكن للتعرّف على الحجاب أن يُبقي النساء المحجبات ظاهرات.</p></li>
+        <li><h3 data-t="t74">الوضع الصارم</h3><p data-t="t75">كل صورة وفيديو يبقى مموّهًا حتى تنقر عليه، على كل المواقع أو على المواقع التي تختارها.</p></li>
+        <li><h3 data-t="t78">إنترنت أهدأ</h3><p data-t="t79">YouTube دون توصيات أو Shorts أو تشغيل تلقائي، والتعليقات مخفية، والألفاظ النابية محجوبة في نصوص الصفحات.</p></li>
+      </ul>
+      <h3 class="plan-title" data-t="t83">Family Premium، للوالدين</h3>
+      <ul class="list">
+        <li><h3 data-t="t62">الرقابة الأبوية</h3><p data-t="t63">عيّن رمز PIN، واحجب مواقع مختارة، واسمح بالمواقع المعتمدة فقط، وحدّد وقت النوم وساعات الدراسة، أو ضع حدًا يوميًا للتصفح.</p></li>
+        <li><h3 data-t="t64">ملخص النشاط</h3><p data-t="t65">اطّلع على الصفحات المحجوبة في الأيام السبعة الأخيرة بحسب السبب، دون عناوين الصفحات. يبقى الملخص على جهازك.</p></li>
+        <li><h3 data-t="t66">تقييد خلاصات التواصل</h3><p data-t="t67">أخفِ خلاصات الفيديوهات القصيرة وضع حدًا يوميًا لمواقع التواصل الاجتماعي في AkhiBrowser، لا في تطبيقات التواصل الاجتماعي.</p></li>
+        <li><h3 data-t="t80">أوقف الإنترنت مؤقتًا، واحفظ نسخة من الإعدادات</h3><p data-t="t81">أوقف التصفح الآن برمز PIN، وانقل أدوات الرقابة الأبوية إلى جهاز آخر في ملف مقفل برمز PIN.</p></li>
+        <li><h3 data-t="t76">استراحة الصلاة</h3><p data-t="t77">مواقع التواصل الاجتماعي والفيديو والألعاب، أو كل المواقع، تتوقف بضع دقائق بعد كل وقت صلاة.</p></li>
+        <li><h3 data-t="f1">فحص الحلال والأماكن الحلال</h3><p data-t="f2">تحذير على صفحات المنتجات التي فيها لحم خنزير أو كحول أو جيلاتين أو أرقام E مشكوك فيها، والأماكن الموسومة بالحلال على خرائط Google ومواقع التوصيل.</p></li>
+        <li><h3 data-t="f3">تحذير من الربا، وحظر صناديق الغنائم</h3><p data-t="f4">تحذير على صفحات القروض بفائدة وبطاقات الائتمان والشراء الآن والدفع لاحقًا، وحظر مواقع فتح الصناديق والمقامرة بالأغراض.</p></li>
+        <li><h3 data-t="f5">تلاوة القرآن، والمصادر الموثوقة</h3><p data-t="f6">تابع تلاوة على YouTube آية بآية مع معناها، واطّلع على مصادر العلماء أولًا عندما تبحث عن الإسلام.</p></li>
+        <li><h3 data-t="f7">Deen Time</h3><p data-t="f8">YouTube بالقنوات التي اخترتها فقط، لأطفالك.</p></li>
+      </ul>
+      <p class="note" data-t="f9">جديد في 1.3.0: فحص الحلال، والأماكن الحلال، والتحذير من الربا، وحظر صناديق الغنائم، ومتابعة التلاوة، والمصادر الموثوقة، وDeen Time. وأصبح إيقاف الصلاة جزءًا من Family Premium.</p>
+      <div class="buy-guide" role="note">
+        <h3 data-t="bg0">أيّ اشتراك يناسبني؟</h3>
+        <ul>
+          <li data-t="bg1"><strong>هل لديك هاتف Android؟</strong> نزّل AkhiBrowser من متجر Google Play، وفعّل Premium داخل AkhiBrowser: القائمة، ثم الإضافات، ثم AkhiBrowser.</li>
+          <li data-t="bg2"><strong>تشتري من هذا الموقع؟</strong> استخدم الأزرار أدناه. تحصل على مفتاح ترخيص بالبريد، لـ 3 أجهزة كحد أقصى، أو 10 مع Family. AkhiBrowser متوفر لـ Windows وAndroid؛ لا توجد نسخة لـ iPhone أو Mac (بعد).</li>
+          <li data-t="bg3"><strong>مدرسة أو مسجد؟</strong> اختر «مدرسة / مسجد» أدناه.</li>
+          <li data-t="bg4"><strong>هدية؟</strong> أهدِ Family Premium بالأزرار أدناه، أو من داخل AkhiBrowser. المفتاح الذي تهديه يعمل على Windows وعلى Android.</li>
+        </ul>
+      </div>
+      <div class="android-buy" hidden>
+        <p data-t="andb">على هاتفك، اشترِ Premium من AkhiBrowser المثبّت من Google Play: القائمة، ثم الإضافات، ثم AkhiBrowser، ثم Premium. يتولى Google Play عملية الدفع.</p>
+        <a class="store store-play" href="https://play.google.com/store/apps/details?id=org.akhibrowser"><img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" width="646" height="250" loading="lazy" alt="احصل عليه من Google Play" data-a="alt:aPlay"></a>
+        <p><button type="button" class="linklike" id="show-plans" data-t="andall">تشتري لحاسوب؟ اعرض كل طرق الدفع</button></p>
+      </div>
+      <div class="plans">
+        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/monthly" data-t="t49">Premium شهري<small>3.99 € شهريًا</small></a>
+        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/yearly" data-t="t50">Premium سنوي<small>39.00 € سنويًا</small></a>
+        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/lifetime" data-t="t51">Premium مدى الحياة<small>119 € مرة واحدة</small></a>
+        <a class="btn" href="https://akhi-license.akhibrowser.workers.dev/buy/family" data-t="t85">Family Premium<small>59.99 € سنويًا، 3 أيام مجانًا</small></a>
+        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/gift" data-t="gift1">أهدِ Family Premium<small>59.99 € مرة واحدة: سنة لعائلة أخرى</small></a>
+      </div>
+      <p class="note vip-note" hidden data-t="vip1">رابط VIP الخاص بك يمنحك خصم 10% على Family Premium: 53.99 € سنويًا بدلًا من 59.99 €، كل سنة تبقى فيها مشتركًا. يعرض Stripe السعر قبل الدفع.</p>
+      <div class="plan-school" id="school">
+        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/school" data-t="sm1">مدرسة / مسجد<small>30 € شهريًا</small></a>
+        <p class="note" data-t="sm2">كل ما في Family Premium، بمفتاح واحد لما يصل إلى 500 جهاز. تدفع المدرسة أو المسجد وتوزّعه مجانًا على عائلاتها: مثلًا 50 عائلة لكل منها 10 أجهزة.</p>
+      </div>
+      <p class="note" data-t="t52">في AkhiBrowser من Google Play، اشترِ Premium عبر Google Play أو الصق مفتاحًا من هذا الموقع. وفي النسخ الأخرى، يعرض Stripe السعر قبل أن تدفع، وتحصل على مفتاح ترخيص دون إنشاء حساب. يعمل مفتاح Premium على ما يصل إلى ثلاثة أجهزة في الوقت نفسه، ومفتاح Family على ما يصل إلى عشرة، ومفتاح مدرسة / مسجد على ما يصل إلى 500. اشتريت Premium أو Premium مدى الحياة قبل الإصدار 1.2.1؟ تحتفظ بأدوات الرقابة الأبوية التي كانت لديك. الشهري والسنوي وFamily: ادفع بالبطاقة كاشتراك، أو مرة واحدة عبر iDEAL أو PayPal لشهر أو سنة بالسعر نفسه، دون تجديد. يبدأ اشتراك Family بالبطاقة بثلاثة أيام مجانًا. ونرسل هدية Family Premium بالبريد إلى من تهديه إياها.</p>
+      <div class="cancel" id="cancel">
+        <h3 data-t="c0">كيف تلغي الاشتراك</h3>
+        <ol>
+          <li data-t="c1">افتح درع AkhiBrowser في شريط الأدوات. على Android: القائمة، ثم الإضافات، ثم AkhiBrowser.</li>
+          <li data-t="c2">تحت Premium، اضغط إدارة الاشتراك. يفتح هذا اشتراكك على Stripe.</li>
+          <li data-t="c3">اختر الإلغاء، ثم أكّد.</li>
+        </ol>
+        <p class="note" data-t="c4">ينتهي Premium بعد ذلك، وتبقى كل الحماية المجانية تعمل. الشراء مدى الحياة ليس اشتراكًا، فلا شيء لإلغائه.</p>
+        <p class="note" data-t="c5">لا تستطيع الوصول إلى المتصفح؟ راسل <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a> من عنوان البريد الذي دفعت به.</p>
+        <h3 data-t="gp0">الشراء عبر Google Play</h3>
+        <p data-t="gp1">غيّره أو ألغِه من Google Play: في متجر Play، اضغط على صورة ملفك الشخصي، ثم الدفعات والاشتراكات، ثم الاشتراكات، ثم AkhiBrowser. يبقى Premium يعمل حتى نهاية الفترة التي دفعت ثمنها.</p>
+        <h3 data-t="gp2">Premium على حاسوبك أيضًا</h3>
+        <ol>
+          <li data-t="gp3">في AkhiBrowser على هاتفك: القائمة، ثم الإضافات، ثم AkhiBrowser. ضمن Premium، اضغط احصل على مفتاح ترخيص.</li>
+          <li data-t="gp4">انسخ المفتاح، أو اضغط أرسل لي المفتاح بالبريد وافتح الرسالة على حاسوبك.</li>
+          <li data-t="gp5">في AkhiBrowser على Windows، افتح درع AkhiBrowser في شريط الأدوات والصق المفتاح ضمن Premium.</li>
+        </ol>
+        <p class="note" data-t="gp6">يعمل المفتاح على 3 أجهزة كحد أقصى، أو 10 مع Family. إذا ألغيت على Google Play، ينتهي على حاسوبك أيضًا.</p>
+        <h3 data-t="gp7">اشتريت من هذا الموقع، أو حصلت على مفتاح هدية أو مفتاح مدرسة / مسجد؟</h3>
+        <p data-t="gp8">يعمل مفتاحك في AkhiBrowser على Windows وعلى Android: القائمة، ثم الإضافات، ثم AkhiBrowser، ثم Premium، والصق المفتاح. ويمكن للمدرسة أو المسجد أيضًا <a href="https://akhi-license.akhibrowser.workers.dev/school">الحصول على مفتاح لكل أسرة</a>. كل مفتاح يمنح سنة من Family Premium، تبدأ من يوم منحه.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="roadmap">
+    <div class="wrap">
+      <h2 data-t="t87">خارطة الطريق: iPhone وMac</h2>
+      <p class="intro" data-t="t88">AkhiBrowser متوفر اليوم لنظامي Windows وAndroid. سيُعلن عن نسختي iOS وmacOS لاحقًا، دون موعد بعد. هدفنا أن نبدأ العمل عليهما عندما تشترك 100 أسرة في Family Premium.</p>
+      <p class="cta"><a class="btn" href="#download" data-t="cta">حمّله مجانًا</a></p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p data-t="t53">AkhiBrowser مبني على <a href="https://www.firefox.com/">Firefox</a>، وليس من صنع Mozilla ولا تعتمده. تعتمد إزالة الموسيقى الخلفية على <a href="https://github.com/mohamedsadiqaguenaou/NoMusic">NoMusic</a> من Mohamed Sadiq.</p>
+    <p><a href="https://www.youtube.com/@akhibrowser">YouTube</a> &middot; <a href="/ar/newsletter/" data-t="nlb">النشرة: آية كل أسبوع</a> &middot; <a href="https://github.com/halgurdh/akhiBrowser" data-t="t54">الشيفرة المصدرية على GitHub</a> &middot; <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a></p>
+    <p>&copy; <span data-year>2026</span> AkhiBrowser &middot; KvK 82581509 &middot; <span data-t="loc">ألمير، هولندا</span></p>
+    <p class="powered"><span data-t="p0">مدعوم من</span> <a href="https://cdgbrands.com">CDGBrands</a></p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  const NL = {
+"afn": "Twee programma's, elk met een eigen formulier: <a href=\"#schools\">voor scholen en moskeeën<\/a> en <a href=\"#vip\">voor influencers (VIP)<\/a>.",
+"afh1": "Voor scholen en moskeeën",
+"afh2": "Voor influencers: het VIP-programma",
+"vipf1": "VIP-aanmelding",
+"vipf2": "Je naam",
+"vipf3": "E-mailadres",
+"vipf4": "Naam van je kanaal of merk",
+"vipf5": "Waar post je, en hoeveel volgers heb je?",
+"vipf6": "Aanmelden als VIP",
+"vipf7": "We antwoorden binnen een paar dagen. Nodigen we je uit, dan krijg je je code en links per e-mail.",
+"mm26": "Je website",
+"mm27": "Toon onze organisatie, met een link naar onze website, op de sponsorpagina",
+"mm28": "Onze sponsors en partners",
+"nv0": "Menu",
+"nv1": "Alle functies",
+"nv2": "iPhone en Mac",
+"nv3": "Abonnementen en prijzen",
+"nv4": "School / Moskee",
+"nv5": "Opzeggen of beheren",
+"nv6": "Wat de browser verstuurt",
+"nv7": "Beveiliging en updates",
+"nv8": "Privacybeleid (Engels)",
+"nv9": "Samenwerken",
+"nv10": "Aanraden bij jouw school of moskee",
+"nv11": "VIP voor influencers",
+"nv12": "Alle gidsen",
+"nv13": "Downloaden",
+"nv15": "Kit voor scholen en moskeeën",
+"nv14": "Tips voor ouders",
+"t0": "Video's",
+"t1": "Functies",
+"t2": "<span>De halal browser<\/span> die het web filtert op je eigen apparaat.",
+"hb1": "Wat is een halal browser?",
+"hb2": "De beste halal browsers",
+"t3": "Een halal browser voor moslims die je privacy respecteert, gebouwd op Firefox. Eén browser die alles doet, op je eigen apparaat: hij houdt reclame en haram sites tegen, houdt afbeeldingen wazig tot ze zijn gecontroleerd en haalt de muziek uit video's, zonder te volgen wat je bezoekt.",
+"t4w": "Windows-installer (.exe)<small>Windows 10 of 11, 64-bit<\/small>",
+"aPlay": "Ontdek het op Google Play",
+"t4b": "iOS en macOS: binnenkort<small>Bekijk de roadmap<\/small>",
+"aStore": "Downloaden uit de Microsoft Store",
+"t7": "Chrome-extensie<small>Gratis, nu beschikbaar<\/small>",
+"t7f": "Firefox-add-on<small>Gratis, nu beschikbaar<\/small>",
+"t7b": "De Chrome- en Firefox-extensies zijn een lichtere, gratis versie: hij blokkeert 18+- en haram sites, maakt afbeeldingen wazig en haalt achtergrondmuziek weg, maar heeft geen Premium of ouderlijk toezicht en geen eigen reclameblokkering, en hij kan worden verwijderd. Arabisch in de extensies komt binnenkort.",
+"t11": "Gratis bescherming.",
+"t12": "Zo werkt het",
+"t13": "Meteen aan, vanaf de eerste pagina",
+"t14": "Deze bescherming zit er gratis bij. Je kunt elk onderdeel uitzetten via het AkhiBrowser-schild. Premium is optioneel en staat uit tot je het zelf aanzet.",
+"t15": "Geen reclame en trackers",
+"t16": "uBlock Origin wordt voor je geïnstalleerd en blijft aan. Daaronder houdt AkhiBrowser zelf ook nog bekende reclame-, tracker- en malwaresites tegen.",
+"t17": "Geen 18+- en haram sites",
+"t18": "18+-sites en sites over alcohol, drugs, vapen en gokken gaan niet open. SafeSearch staat altijd aan op Google, Bing, DuckDuckGo en Yahoo, en op YouTube staat de beperkte modus aan.",
+"t19": "Ook je zoekopdrachten",
+"t20": "Zoeken naar 18+- of haram inhoud wordt tegengehouden, in 11 talen. Vragen erover mogen gewoon, zoals \"waarom is alcohol haram\".",
+"t21": "Geen muziek",
+"t22": "Haalt de achtergrondmuziek uit video's en laat de stemmen staan. Dat gebeurt op je eigen apparaat.",
+"t23": "12 talen",
+"t24": "Engels, Arabisch, Perzisch, Koerdisch (Sorani), Urdu, Turks, Frans, Duits, Nederlands, Spaans, Indonesisch en Maleis, van rechts naar links waar dat nodig is.",
+"t25": "Werkt ook op oude apparaten",
+"t26": "Alleen wat op je scherm staat wordt gecontroleerd, en afbeeldingen die al eerder langskwamen hoeven niet opnieuw. Pagina's hoeven nooit op de controle te wachten.",
+"t27": "Afbeeldingen blijven wazig tot ze zijn gecontroleerd",
+"t28": "Je apparaat bekijkt zelf afbeeldingen, achtergronden en video's, zodat er niets eerst even in beeld flitst. Is iets niet in orde, dan blijft het wazig.",
+"t29": "Premium laat je kiezen of je vrouwen, mannen of allebei wazig maakt. Met Hijab herkennen blijft een bedekte vrouw zichtbaar. Deze optionele beeldcontrole gebruikt modellen op je eigen apparaat.",
+"t30": "Filters kunnen iets missen, en een afbeelding die niet te controleren is, wordt gewoon getoond. Ze vervangen dus niet de aandacht van een ouder.",
+"t31": "Voorbeelden",
+"t32": "Dit zie je bij een geblokkeerde site",
+"t33": "Tegengehouden voordat het laadt",
+"t34": "18+-sites en sites over alcohol, drugs, vapen en gokken gaan niet open. Ook pagina's die zichzelf als 18+ aanmerken, worden tegengehouden.",
+"t35": "De stemmen blijven, de muziek verdwijnt",
+"t36": "Terwijl je kijkt, haalt No music de muziek uit het geluid, op je eigen apparaat. Op telefoons en trage computers draait een lichtere versie, zodat ook oudere apparaten het aankunnen.",
+"t37": "Illustratie",
+"t38": "Ook op je telefoon",
+"t39": "Op Android krijg je dezelfde bescherming, zonder gesponsorde tegels of verhalen op de startpagina. De instellingen vind je in het menu, onder Extensies en dan AkhiBrowser.",
+"t40": "Wat er van je apparaat af gaat",
+"t41": "Je geschiedenis, pagina's en afbeeldingen blijven op je apparaat. Wij krijgen niets van wat je doet, en Mozilla krijgt geen gebruiksgegevens of crashrapporten. Een browser moet nu eenmaal met een paar diensten praten, en dit zijn ze:",
+"t42": "<strong>Sitenamen, naar Cloudflare.<\/strong> Om 18+-sites al op netwerkniveau tegen te houden, zoekt de browser sitenamen op via de family-DNS van Cloudflare. Cloudflare ziet dus de namen van de sites die je bezoekt.",
+"t43": "<strong>Downloads.<\/strong> uBlock Origin van addons.mozilla.org, lijsten om reclame te blokkeren, en videocodecs van Mozilla, Cisco en Google.",
+"t44": "<strong>Updatecontrole.<\/strong> Eén keer per dag vraagt de browser aan GitHub of er een nieuwe versie is.",
+"t90": "<strong>Een anonieme telling, naar ons.<\/strong> Eén keer per dag telt de browser zichzelf mee: de versie, het systeem en of Premium aan staat, zonder id en zonder iets van wat je bezoekt. Uit te zetten in de instellingen, bij Anoniem meetellen.",
+"t45": "<strong>Je Premium-sleutel, als je die invult.<\/strong> Onze licentieserver controleert hem samen met een willekeurige installatiecode, zodat een sleutel op 3 apparaten tegelijk werkt. De server bewaart geen namen, e-mailadressen of surfgegevens.",
+"t46": "<a href=\"https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md\">Privacybeleid (Engels)<\/a>",
+"t55": "<strong>Websiteanalyse.<\/strong> Deze site laadt Google Tag Manager. Google ontvangt het IP-adres en technische informatie over het verzoek; analysetags die in GTM zijn ingeschakeld kunnen ook paginaweergaven en gebeurtenissen verzamelen. Zie <a href=\"https:\/\/policies.google.com\/privacy\">Googles privacybeleid<\/a>.",
+"t47": "Premium, als je dat wilt",
+"t48b": "Premium zit alleen in de AkhiBrowser-browser, met een licentiesleutel. De gratis AkhiBrowser-extensie voor Chrome en Firefox heeft de gratis bescherming hierboven, zonder Premium. De browser geeft ook wat een extensie niet kan: geen telemetrie, onderzoeken of crashrapporten naar Mozilla, uBlock Origin ingebouwd en strikte bescherming tegen volgen.",
+"s0": "Is het veilig?",
+"s1": "AkhiBrowser is Firefox met filters erbij. Wat je online veilig houdt, komt van Firefox.",
+"s2": "Firefox eronder",
+"s3": "Dezelfde engine en sandbox als Firefox, die elke website gescheiden houden van je bestanden en van andere sites. Bekende malwaredomeinen worden ook tegengehouden.",
+"s4": "Ondertekende updates",
+"s5": "Eén keer per dag kijkt de browser of er een nieuwe versie is. Op Windows installeert hij de update nadat hij de handtekening heeft gecontroleerd. Op Android vraagt hij je om te installeren, en controleert hij eerst de checksum van het bestand. Beveiligingsfixes van Firefox krijg je met deze updates, dus installeer ze als ze komen.",
+"s8": "Wat is open source",
+"s9": "AkhiBrowser is gebouwd op Firefox. Onze wijzigingen aan Firefox, en alle bestanden onder de licentie van Firefox (MPL), staan openbaar op <a href=\"https://github.com/halgurdh/akhiBrowser\">GitHub<\/a>. De bescherming zelf, de AkhiBrowser-extensie, Premium en de licentieservice, is onze eigen code en niet openbaar, zoals bij de meeste betaalde apps. Wat de browser verstuurt en naar wie, staat bij <a href=\"/nl/privacy/\">Privacy<\/a>.",
+"s10": "Een beveiligingsprobleem gevonden? Laat het ons weten via <a href=\"mailto:support@akhibrowser.com\">support@akhibrowser.com<\/a>.",
+"t48": "Alles hierboven blijft gratis. Premium is voor jezelf: meer controle over afbeeldingen en een rustiger web. Family Premium is voor ouders: alles uit Premium, plus ouderlijk toezicht, op maximaal tien apparaten. Elke functie staat uit tot je hem aanzet, en de gegevens blijven op je apparaat.",
+"cta": "Download gratis",
+"t49": "Premium per maand<small>€3,99 per maand<\/small>",
+"t50": "Premium per jaar<small>€39,00 per jaar<\/small>",
+"t51": "Levenslang Premium<small>€119 eenmalig<\/small>",
+"t52": "In AkhiBrowser uit Google Play koop je Premium via Google Play, of plak je een sleutel van deze website. In andere versies zie je de prijs bij Stripe voordat je betaalt. Je krijgt een licentiesleutel zonder account. Een Premium-sleutel werkt op maximaal drie apparaten tegelijk, een Family-sleutel op maximaal tien, een School / Moskee-sleutel op maximaal 500. Premium of Levenslang gekocht vóór versie 1.2.1? Dan houd je het ouderlijk toezicht dat je had. Per maand, per jaar en Family: betaal met je kaart als abonnement, of eenmalig met iDEAL of PayPal voor een maand of een jaar tegen dezelfde prijs, zonder verlenging. Een Family-abonnement met je kaart begint met 3 dagen gratis. Een cadeau van Family Premium mailen we naar degene aan wie je het geeft.",
+"t53": "AkhiBrowser is gebouwd op <a href=\"https://www.firefox.com/\">Firefox<\/a>, maar is niet gemaakt of goedgekeurd door Mozilla. Het weghalen van achtergrondmuziek bouwt voort op <a href=\"https://github.com/mohamedsadiqaguenaou/NoMusic\">NoMusic<\/a> van Mohamed Sadiq.",
+"t54": "Broncode op GitHub",
+"t56": "Afbeeldingen op je apparaat gecontroleerd",
+"t57": "Afbeeldingen blijven wazig tot ze zijn gecontroleerd. Onveilige afbeeldingen blijven wazig; een afbeelding die niet kan worden gecontroleerd, wordt getoond.",
+"t58": "Kleurcorrectie",
+"t59": "Een optionele instelling op je apparaat maakt rood en groen beter uit elkaar te houden bij de twee soorten rood-groenblindheid.",
+"t60": "Kies wie wazig wordt",
+"t61": "Maak vrouwen, mannen of allebei wazig. Met Hijab herkennen kunnen bedekte vrouwen zichtbaar blijven.",
+"t62": "Ouderlijk toezicht",
+"t63": "Stel een pincode in, blokkeer gekozen sites, sta alleen goedgekeurde sites toe, plan bedtijd en schooluren of stel een dagelijkse limiet in.",
+"t64": "Activiteitenoverzicht",
+"t65": "Bekijk per reden hoeveel pagina's er de afgelopen zeven dagen zijn geblokkeerd, zonder adressen. Het overzicht blijft op je apparaat.",
+"t66": "Beperk sociale feeds",
+"t67": "Verberg korte video's en stel een dagelijkse limiet in voor sociale websites in AkhiBrowser, niet in sociale apps.",
+"t68": "Geen phishing- en oplichtingssites",
+"t69": "Bekende phishing- en oplichtingssites gaan niet open, met een knop om toch door te gaan als een site per ongeluk op de lijst staat.",
+"t70": "Gebedstijden en elke dag een vers",
+"t71": "Gebedstijden voor de stad die je kiest, berekend op je apparaat zonder je locatie, en elke dag een vers uit de Koran.",
+"t72": "Je instellingen op de startpagina",
+"t73": "Op computers openen nieuwe tabbladen de pagina van AkhiBrowser met een zoekveld, je meest bezochte sites, het vers van de dag en alle instellingen. Je kunt het uitzetten.",
+"t74": "Strenge modus",
+"t75": "Elke afbeelding en video blijft wazig tot je erop tikt, op alle sites of op de sites die je kiest.",
+"t76": "Gebedspauze",
+"t77": "Sociale media, video- en gamesites, of alle sites, pauzeren een paar minuten na elke gebedstijd.",
+"t78": "Een rustiger web",
+"t79": "YouTube zonder aanbevelingen, Shorts of automatisch afspelen, reacties verborgen, en scheldwoorden onleesbaar in de tekst van pagina's.",
+"t80": "Internet pauzeren, instellingen bewaren",
+"t81": "Pauzeer het surfen meteen met de pincode, en zet het ouderlijk toezicht over naar een ander apparaat in een bestand dat met de pincode is beveiligd.",
+"t82": "Premium, voor jezelf",
+"t83": "Family Premium, voor ouders",
+"t86": "Vergelijk met Kahf Browser",
+"t89": "Browsers vergelijken",
+"t87": "Roadmap: iPhone en Mac",
+"t88": "AkhiBrowser is er nu voor Windows en Android. Versies voor iOS en macOS volgen later, nog zonder datum. Ons doel is eraan te beginnen zodra 100 gezinnen Family Premium hebben.",
+"t85": "Family Premium<small>€59,99 per jaar, 3 dagen gratis<\/small>",
+"gift1": "Geef Family Premium cadeau<small>€59,99 eenmalig: een jaar voor een ander gezin<\/small>",
+"vip1": "Je VIP-link geeft je 10% korting op Family Premium: €53,99 per jaar in plaats van €59,99, elk jaar dat je blijft. Stripe laat de prijs zien voordat je betaalt.",
+"vip2": "Influencer? Ons VIP-affiliateprogramma voor Family Premium: je volgers krijgen 10% korting en jij krijgt 10% van elke betaling, elk jaar dat ze blijven. 200 gezinnen leveren je zo'n €900 per jaar op, jaar na jaar.",
+"sm1": "School / Moskee<small>€30 per maand<\/small>",
+"sm2": "Alles uit Family Premium, met één sleutel voor maximaal 500 apparaten. De school of moskee betaalt en geeft hem gratis aan haar gezinnen: bijvoorbeeld 50 gezinnen met elk 10 apparaten.",
+"f1": "Halal-check en halal plekken",
+"f2": "Een waarschuwing op productpagina's met varken, alcohol, gelatine of twijfelachtige E-nummers, en de plekken die als halal gemarkeerd zijn op Google Maps en bezorgsites.",
+"f3": "Riba-waarschuwing, lootboxen geblokkeerd",
+"f4": "Een waarschuwing op pagina's voor leningen met rente, creditcards en achteraf betalen, en case-opening- en skin-goksites geblokkeerd.",
+"f5": "Koranrecitatie, betrouwbare bronnen",
+"f6": "Volg een recitatie op YouTube vers voor vers met de betekenis, en zie eerst geleerde bronnen als je iets zoekt over de islam.",
+"f7": "Deen Time",
+"f8": "YouTube met alleen de kanalen die jij kiest, voor je kinderen.",
+"f9": "Nieuw in 1.3.0: halal-check, halal plekken, riba-waarschuwing, lootbox-blokkade, recitatie volgen, betrouwbare bronnen en Deen Time. Gebedspauze hoort nu bij Family Premium.",
+"af1": "Raad AkhiBrowser aan bij jouw school of moskee",
+"af2": "Ken je een school, moskee of islamitisch centrum dat AkhiBrowser kan gebruiken? Word affiliate: je krijgt 20% van elke School / Moskee-betaling van hen, elke maand, zolang ze geabonneerd blijven. Een betaling telt mee zodra hij 30 dagen oud is, en we betalen maandelijks uit.",
+"sc1": "De school of moskee betaalt",
+"sc2": "€30<small>per maand<\/small>",
+"sc3": "School / Moskee-abonnement: alles uit Family Premium, één sleutel voor maximaal 500 apparaten, om gratis aan hun gezinnen te geven.",
+"sc4": "Jij krijgt",
+"sc5": "€6<small>per maand, per school<\/small>",
+"sc6": "20% van elke betaling, zolang ze geabonneerd blijven.",
+"af3": "Je naam",
+"af4": "E-mailadres",
+"af5": "School, moskee of organisatie",
+"af7": "Aanmelden voor scholen en moskeeën",
+"af8": "We mailen je binnen een paar dagen je eigen link. Je gegevens gebruiken we alleen hiervoor. Tegen robots laadt het formulier Cloudflare Turnstile zodra je het gaat invullen.",
+"kt1": "Kit voor scholen en moskeeën",
+"kt2": "Met het School / Moskee-abonnement geeft je school of moskee AkhiBrowser Premium gratis aan haar gezinnen: één sleutel voor maximaal 500 apparaten. Deze pagina maakt het bericht en de poster voor je.",
+"kt3": "1. Haal de sleutel",
+"kt4": "Neem het <a href=\"/#school\">School / Moskee-abonnement<\/a>, €30 per maand, dat je op elk moment kunt opzeggen. Je krijgt de sleutel op het scherm en per e-mail.",
+"kt5": "2. Deel hem met je gezinnen",
+"kt6": "Plak de sleutel hieronder voor een kant-en-klaar bericht voor je WhatsApp-groep of nieuwsbrief, en een poster om te printen. De sleutel blijft op deze pagina: er gaat niets naar ons.",
+"kt7": "3. Gezinnen installeren AkhiBrowser",
+"kt8": "Ze downloaden AkhiBrowser, plakken de sleutel bij Premium en stellen het in met de <a href=\"/nl/setup/\">tips voor ouders<\/a>.",
+"kt9": "Je School / Moskee-sleutel",
+"kt10": "Naam van je school of moskee",
+"kt11": "Bericht voor je gezinnen",
+"kt12": "Bericht kopiëren",
+"kt13": "Delen via WhatsApp",
+"kt14": "Poster printen",
+"kt15": "Deel de sleutel alleen binnen je gemeenschap, niet op openbare sociale media: hij werkt op maximaal 500 apparaten, en iedereen die hem heeft kan er een van gebruiken.",
+"kt16": "Assalamu alaikum! {NAME} geeft elk gezin AkhiBrowser Premium gratis: een halal browser die haram sites en reclame tegenhoudt, afbeeldingen wazig maakt en de muziek uit video's haalt.\n\n1. Download AkhiBrowser: https://akhibrowser.com/#download\n2. Open het AkhiBrowser-schild, plak deze sleutel bij Premium en druk op Activeren:\n{KEY}\n3. Stel je het in voor je kinderen? Tips: https://akhibrowser.com/nl/setup/\n\nHoud de sleutel alsjeblieft binnen onze gemeenschap.",
+"kt17": "Gratis voor je gezin, van {NAME}",
+"kt18": "AkhiBrowser Premium: de halal browser die haram sites en reclame tegenhoudt, afbeeldingen wazig maakt en de muziek uit video's haalt.",
+"kt19": "Scan om te downloaden en vraag ons om de sleutel.",
+"kt20": "onze school of moskee",
+"su1": "Tips voor ouders: dicht de gaten",
+"su2": "AkhiBrowser beschermt wat er in AkhiBrowser gebeurt. Een kind dat een andere browser of app opent, gaat eromheen. Deze stappen dichten die gaten, de meeste in een paar minuten.",
+"su3": "Geef je kind een eigen account",
+"su4": "Op Windows een standaardaccount, geen beheerder, zodat je kind geen andere browsers kan installeren of instellingen kan wijzigen. Op Android een Google-account voor je kind, beheerd met Google Family Link.",
+"su5": "Maak AkhiBrowser de standaardbrowser",
+"su6": "Links uit andere apps openen dan in AkhiBrowser. Windows: Instellingen, Apps, Standaard-apps. Android: Instellingen, Apps, Standaard-apps, Browser-app.",
+"su7": "Blokkeer de andere browsers",
+"su8": "Op Android blokkeer je Chrome en elke andere browser in Family Link, bij de app-limieten van je kind. Op Windows verwijder je de browsers die je kind niet nodig heeft, en blokkeer je de rest in Microsoft Family Safety, bij apps en games.",
+"su9": "Filter de hele telefoon of het thuisnetwerk",
+"su10": "AkhiBrowser zoekt sites op via de family-DNS van Cloudflare. Gebruik die ook voor alle apps: zet op Android Privé-DNS op family.cloudflare-dns.com (Instellingen, Netwerk en internet; het pad verschilt per telefoon). Zet op je router de DNS-servers op 1.1.1.3 en 1.0.0.3, voor elk apparaat op je wifi.",
+"su11": "Stel de ouder-pincode in",
+"su12": "Stel in de instellingen van AkhiBrowser een ouder-pincode in, zodat de beschermingen niet zonder jou uit kunnen.",
+"su13": "Praat met je kind",
+"su14": "Geen filter houdt alles tegen. Vertel je kind waarom deze regels er zijn, en dat het altijd bij je terecht kan als het iets verkeerds ziet.",
+"mm1": "Hoe we geld verdienen",
+"mm2": "AkhiBrowser is gratis, toont geen reclame en verkoopt of deelt nooit wat je doet. Zo betaalt hij zichzelf, op alle manieren:",
+"mm3": "Premium",
+"mm4": "Optionele betaalde functies voor jezelf, voor gezinnen en voor scholen en moskeeën. Het meeste geld komt hiervandaan.",
+"mm5": "Zoekpartners",
+"mm6": "Als een zoekmachine een partnercontract met ons heeft, krijgt een zoekopdracht die je in AkhiBrowser begint onze partnercode mee, en de zoekmachine geeft ons een klein deel van wat hij verdient. Alleen de code wordt toegevoegd: niets over jou of je zoekopdracht komt bij ons.",
+"mm7": "Partnerwinkels, alleen als jij dat kiest",
+"mm8": "Uit tenzij je het aanzet: als je zelf naar een partnerwinkel gaat, voegen we onze code toe en geeft de winkel ons een klein deel. Je betaalt hetzelfde, en een link van een andere site houdt zijn eigen code.",
+"mm9": "Tips op onze startpagina",
+"mm10": "Af en toe een tip met een affiliatelink, altijd als zodanig aangegeven. We veranderen nooit links op andere websites.",
+"mm11": "Affiliates, sponsors en partners",
+"mm12": "Mensen die scholen en moskeeën aanbrengen krijgen 20% van hun betalingen. Sponsors en organisaties kunnen AkhiBrowser steunen, maar krijgen nooit je gegevens of zeggenschap over wat er geblokkeerd wordt.",
+"mm13": "Wat we nooit doen: reclame tonen, je surfgedrag verkopen of delen, je volgen over sites heen, of geld laten bepalen wat er geblokkeerd wordt.",
+"mm14": "Word sponsor of partner",
+"mm15": "Je naam",
+"mm16": "E-mailadres",
+"mm17": "Organisatie",
+"mm18": "Wat voor partner?",
+"mm19": "Sponsor",
+"mm20": "Ecosysteempartner: een islamitische app, schoolplatform of organisatie",
+"mm21": "Zoekmachine",
+"mm22": "Winkel",
+"mm23": "Wat stel je voor?",
+"mm24": "Versturen",
+"mm25": "We antwoorden binnen een paar dagen. Een samenwerking moet AkhiBrowser privé houden: gegevens van onze gebruikers horen er nooit bij.",
+"a0": "De instellingen van AkhiBrowser: het vers van de dag, gebedstijden en de vijf beschermingen, allemaal aan: reclame en trackers geblokkeerd, achtergrondmuziek weg, 18+-inhoud geblokkeerd, haram sites geblokkeerd en naaktbeelden wazig.",
+"a1": "Trailer van AkhiBrowser: NoMusic haalt de achtergrondmuziek weg en laat de stem staan, het haramfilter houdt naakt en volwassen inhoud tegen op je eigen apparaat, en uBlock Origin zit erin, 25 seconden",
+"car0": "Functies van AkhiBrowser",
+"carPrev": "Vorige afbeelding",
+"carNext": "Volgende afbeelding",
+"carPause": "Pauzeren",
+"carPlay": "Afspelen",
+"car1": "Gratis: Sla je ogen neer. Automatisch. Elke afbeelding en video blijft wazig tot AI op je apparaat hem heeft gecontroleerd, zodat er niets in beeld flitst. Een nieuwspagina in AkhiBrowser met wazige afbeeldingen.",
+"car2": "Gratis: Houd de stem. Weg met de muziek. AkhiBrowser haalt de achtergrondmuziek uit video's terwijl ze spelen. Een lesvideo waarin de stem blijft en de muziek weg is.",
+"car3": "Gratis: Zoek “bier”. Krijg de waarheid. Haram zoekopdrachten worden tegengehouden of omgezet in vragen, in 11 talen, en SafeSearch staat altijd aan.",
+"car4": "Premium: Slim genoeg om de hijab te zien. Bedekte vrouwen worden getoond en onbedekte worden wazig. Jij kiest wie wazig wordt: vrouwen, mannen of allebei.",
+"car5": "Premium: YouTube, zonder het konijnenhol. Geen aanbevelingen, eindschermen, autoplay of Shorts, en reacties verborgen.",
+"car6": "Family Premium: Jij stelt de regels. Een pincode bewaakt ze. Een pincode voor ouders, een daglimiet, bedtijd en schooltijden.",
+"car7": "Family Premium: De adhan klinkt? De feed stopt. Sociale media, video- en gamesites pauzeren een paar minuten na elke gebedstijd.",
+"car8": "Family Premium: Halal of niet? Weet het vooraf. Een winkelpagina waarschuwt voor gelatine en een E-nummer, en een achteraf-betalen-aanbod krijgt een riba-waarschuwing.",
+"a2": "Korte video van AkhiBrowser: zij stopten er muziek in, dus wij haalden het eruit, 19 seconden",
+"a3": "Een wazig landschap met het label: Checking on your device.",
+"a4": "Hetzelfde landschap, scherp, met het label: Checked: shown.",
+"a10": "Een foto van een persoon die wazig blijft, met het label: Checked: hidden.",
+"a5": "Een pagina met de tekst: This page is blocked. AkhiBrowser blokkeert sites over alcohol, drugs en gokken. Daaronder een vers uit de Koran, 2:219, in het Arabisch en Engels, met een link naar quran.com.",
+"a6": "Een geluidsgolf van stemmen, met het label: Background music: removed.",
+"a7": "De startpagina van AkhiBrowser op Android: een zoekbalk, het AkhiBrowser-logo en het label: You're protected.",
+"aPlans": "De abonnementen van AkhiBrowser vergeleken: Gratis (€0), Premium (€3,99 per maand, €39 per jaar of €119 levenslang), Family Premium (€59,99 per jaar, 3 dagen gratis, 10 apparaten) en School / Moskee (€30 per maand, tot 500 apparaten), met hun functies.",
+"a9": "Korte video van AkhiBrowser: je wilt gewoon een les online kijken, NoMusic haalt de achtergrondmuziek weg en laat de stem staan, 21 seconden",
+"c0": "Zo zeg je je abonnement op",
+"c1": "Open het AkhiBrowser-schild in de werkbalk. Op Android: menu, dan Extensies, dan AkhiBrowser.",
+"c2": "Druk onder Premium op Abonnement beheren. Dan opent je abonnement bij Stripe.",
+"c3": "Kies voor opzeggen en bevestig dat.",
+"c4": "Daarna stopt Premium, en alle gratis bescherming blijft gewoon werken. Een levenslange aankoop is geen abonnement, dus die hoef je niet op te zeggen.",
+"c5": "Kun je niet bij de browser? Mail naar <a href=\"mailto:support@akhibrowser.com\">support@akhibrowser.com<\/a> met het e-mailadres waarmee je hebt betaald.",
+"bg0": "Welk abonnement past het beste bij mij?",
+"nlb": "Nieuwsbrief: elke week een vers",
+"faqf": "Veelgestelde vragen",
+"nvfaq": "Veelgestelde vragen",
+"bg1": "<strong>Heb je een Android-telefoon/tablet?<\/strong> Koop de AkhiBrowser in de Google Play Store, en zet Premium aan in de AkhiBrowser. Navigeer naar: Menu, Extensies, AkhiBrowser.",
+"bg2": "<strong>Koop je op deze website?<\/strong> Gebruik de knoppen hieronder. Je krijgt een licentiesleutel per e-mail, voor maximaal 3 apparaten, of 10 met Family. De AkhiBrowser is er voor Windows en Android; er is (nog) geen versie voor iPhone of Mac.",
+"bg3": "<strong>Een school of moskee?<\/strong> Kies hieronder School / Moskee.",
+"bg4": "<strong>Een cadeau?<\/strong> Geef Family Premium cadeau met de knoppen hieronder, of in de AkhiBrowser. De sleutel die je geeft werkt op Windows en op Android.",
+"gp0": "Gekocht via Google Play",
+"gp1": "Wijzigen of opzeggen doe je in Google Play: tik in de Play Store op je profielfoto, dan Betalingen en abonnementen, Abonnementen, AkhiBrowser. Premium blijft werken tot het einde van de periode die je hebt betaald.",
+"gp2": "Premium ook op je computer",
+"gp3": "In AkhiBrowser op je telefoon: menu, dan Extensies, dan AkhiBrowser. Druk onder Premium op Licentiesleutel aanvragen.",
+"gp4": "Kopieer de sleutel, of druk op Mail mij de sleutel en open de e-mail op je computer.",
+"gp5": "Open in AkhiBrowser op Windows het AkhiBrowser-schild in de werkbalk en plak de sleutel onder Premium.",
+"gp6": "De sleutel werkt op maximaal 3 apparaten, of 10 met Family. Zeg je op in Google Play, dan stopt hij ook op je computer.",
+"gp7": "Gekocht op deze website, of een cadeau- of School / Moskee-sleutel gekregen?",
+"gp8": "Je sleutel werkt in AkhiBrowser op Windows en op Android: menu, Extensies, AkhiBrowser, Premium, plak de sleutel. Een school of moskee kan ook <a href=\"https://akhi-license.akhibrowser.workers.dev/school\">een sleutel per gezin krijgen<\/a>. Elke sleutel is een jaar Family Premium, vanaf de dag dat hij wordt gegeven.",
+"andb": "Koop Premium op je telefoon in AkhiBrowser uit Google Play: menu, Extensies, AkhiBrowser, Premium. Google Play regelt de betaling.",
+"andall": "Koop je voor een computer? Toon alle manieren om te betalen",
+"x0": "Toegankelijkheid",
+"x1": "Voor mensen die kleurenblind of slechthorend zijn, en voor iedereen die op het web wat meer hulp kan gebruiken.",
+"x2": "Kleurenblind",
+"x3": "Zet de correctie voor kleurenblindheid aan via het AkhiBrowser-schild. Die past de kleuren van websites aan, zodat je rood en groen makkelijker uit elkaar houdt. Dit werkt voor de twee soorten rood-groenblindheid. Hij staat standaard uit en helpt niet bij blauw-geelblindheid.",
+"x4": "Slechthorend",
+"x5": "Geen muziek haalt de achtergrondmuziek uit video's en laat de stemmen staan. Daardoor kan gesproken tekst makkelijker te volgen zijn. Zelf ondertiteling maken doet het niet, maar ondertiteling die een site aanbiedt, blijft gewoon werken.",
+"x6": "Van Firefox",
+"x7": "De hulpmiddelen van Firefox zelf blijven in de browser, zoals ondersteuning voor schermlezers, inzoomen en de Lezerweergave. Die hebben we niet apart getest in AkhiBrowser.",
+"x8": "Deze pagina",
+"x9": "Hij werkt met een toetsenbord, de afbeeldingen hebben een tekstbeschrijving, en de bewegende afbeelding staat stil als je op je apparaat minder beweging hebt ingesteld. De video's hebben nog geen ondertiteling, maar laten hun boodschap als tekst in beeld zien, en deze pagina vertelt hetzelfde.",
+"x10": "Werkt er iets niet voor jou? Laat het ons weten via <a href=\"mailto:support@akhibrowser.com\">support@akhibrowser.com<\/a>.",
+"x11": "Toegankelijkheid",
+"k0": "<i><\/i>Nu in de Microsoft Store",
+"k1": "gratis beschermingen, meteen aan",
+"k2": "talen",
+"k3": "pagina's, afbeeldingen of geschiedenis naar ons",
+"k4": "apparaten met één Family-sleutel",
+"h0": "AkhiBrowser presenteert",
+"h1": "In een wereld vol lawaai,",
+"h2": "houdt één browser het schoon.",
+"h3": "Haram sites, tegengehouden.",
+"h4": "Muziek, weggehaald.",
+"h5": "Je geschiedenis blijft op je apparaat.",
+"p0": "Mogelijk gemaakt door",
+"loc": "Almere, Nederland"
+};
+  const AR = {
+"afn": "برنامجان، لكل منهما نموذجه الخاص: <a href=\"#schools\">للمدارس والمساجد<\/a> و<a href=\"#vip\">للمؤثرين (VIP)<\/a>.",
+"afh1": "للمدارس والمساجد",
+"afh2": "للمؤثرين: برنامج VIP",
+"vipf1": "طلب الانضمام إلى VIP",
+"vipf2": "اسمك",
+"vipf3": "البريد الإلكتروني",
+"vipf4": "اسم قناتك أو علامتك",
+"vipf5": "أين تنشر، وكم عدد متابعيك؟",
+"vipf6": "قدّم كـ VIP",
+"vipf7": "نرد خلال أيام قليلة. عندما ندعوك، تصلك رمزك وروابطك بالبريد الإلكتروني.",
+"mm26": "موقعك الإلكتروني",
+"mm27": "اعرضوا مؤسستنا، مع رابط إلى موقعنا، في صفحة الرعاة",
+"mm28": "رعاتنا وشركاؤنا",
+"nv0": "القائمة",
+"nv1": "كل الميزات",
+"nv2": "iPhone وMac",
+"nv3": "الخطط والأسعار",
+"nv4": "مدرسة / مسجد",
+"nv5": "الإلغاء أو الإدارة",
+"nv6": "ما يرسله المتصفح",
+"nv7": "الأمان والتحديثات",
+"nv8": "سياسة الخصوصية (بالإنجليزية)",
+"nv9": "الشركاء",
+"nv10": "انصح به مدرستك أو مسجدك",
+"nv11": "VIP للمؤثرين",
+"nv12": "كل الأدلة",
+"nv13": "تحميل",
+"nv15": "حقيبة للمدارس والمساجد",
+"nv14": "نصائح للآباء",
+"t0": "شاهد",
+"t1": "الميزات",
+"n0": "الخصوصية",
+"n1": "المدونة",
+"t2": "<span>المتصفح الحلال<\/span> الذي يرشّح الإنترنت على جهازك.",
+"hb1": "ما هو المتصفح الحلال؟",
+"hb2": "أفضل المتصفحات الحلال",
+"t3": "متصفح حلال للمسلمين يحترم خصوصيتك، مبني على Firefox. متصفح واحد يقوم بكل شيء على جهازك: يحجب الإعلانات والمواقع المحرمة، ويموّه الصور حتى تُفحص، ويزيل الموسيقى من الفيديوهات، دون تتبّع ما تتصفحه.",
+"t4w": "مثبّت Windows (.exe)<small>Windows 10 أو 11، 64-بت<\/small>",
+"aPlay": "احصل عليه من Google Play",
+"t4b": "iOS وmacOS: قريبًا<small>اطّلع على خارطة الطريق<\/small>",
+"aStore": "حمّله من Microsoft Store",
+"t7": "احصل على إضافة Chrome<small>مجانية، متوفرة الآن<\/small>",
+"t7f": "احصل على إضافة Firefox<small>مجانية، متوفرة الآن<\/small>",
+"t7b": "إضافتا Chrome وFirefox نسخة أخف ومجانية: تحجب المواقع الإباحية والمحرمة، وتموّه الصور، وتزيل الموسيقى الخلفية، لكن ليس فيها Premium ولا رقابة أبوية ولا حاجب إعلانات خاص بها، ويمكن إزالتها. اللغة العربية في الإضافتين قادمة قريبًا.",
+"t11": "الحماية مجانية.",
+"t12": "شاهده وهو يعمل",
+"t13": "مفعّلة من الصفحة الأولى",
+"t14": "هذه الحماية مجانية ومدمجة. يمكن إيقاف كل واحدة منها من درع AkhiBrowser. ميزات Premium اختيارية ومتوقفة حتى تفعّلها.",
+"t15": "حجب الإعلانات وأدوات التتبع",
+"t16": "يُثبَّت uBlock Origin لك ويبقى مفعّلًا، وتحته حاجب مدمج لنطاقات الإعلانات والتتبع والبرمجيات الخبيثة.",
+"t17": "حجب المواقع الإباحية والمحرمة",
+"t18": "مواقع الإباحية والخمر والمخدرات والتدخين الإلكتروني والقمار. ويُفرض SafeSearch على Google وBing وDuckDuckGo وYahoo، وكذلك الوضع المقيّد في YouTube.",
+"t19": "ترشيح عمليات البحث",
+"t20": "عمليات البحث عن المحتوى الإباحي أو المحرم محجوبة بـ 11 لغة. أما الأسئلة عنها فتبقى مسموحة، مثل «لماذا الخمر حرام».",
+"t21": "بلا موسيقى",
+"t22": "يزيل الموسيقى الخلفية من الفيديوهات ويُبقي الأصوات، باستخدام نموذج كلام يعمل على جهازك.",
+"t23": "12 لغة",
+"t24": "الإنجليزية والعربية والفارسية والكردية (السورانية) والأردية والتركية والفرنسية والألمانية والهولندية والإسبانية والإندونيسية والملايوية، من اليمين إلى اليسار حيث يلزم.",
+"t25": "خفيف على الأجهزة القديمة",
+"t26": "لا يُفحص إلا ما يظهر على الشاشة، والصور التي سبق فحصها تُجاب من ذاكرة مؤقتة. ولا ينتظر تحميلُ الصفحات النموذجَ أبدًا.",
+"t27": "تبقى الصور مموّهة حتى تُفحص",
+"t28": "نموذج على الجهاز يفحص الصور والخلفيات والفيديوهات وعناصر canvas قبل أن تظهر، فلا يومض شيء على الشاشة أولًا. والصور غير الآمنة تبقى مموّهة.",
+"t29": "يضيف Premium أدوات لاختيار تمويه النساء أو الرجال أو كليهما، ويستطيع التعرّف على الحجاب فتبقى المرأة المحجبة ظاهرة. أدوات الصور الاختيارية هذه تستخدم نماذج على الجهاز.",
+"t30": "قد تفوت المرشّحاتِ بعضُ الأشياء، والصورة التي لا يمكن فحصها تُعرض. وهي لا تغني عن رعاية الوالدين.",
+"t31": "صور توضيحية",
+"t32": "ما يظهر عند حجب موقع",
+"t33": "يُحجب قبل أن يُحمَّل",
+"t34": "مواقع الإباحية والخمر والمخدرات والتدخين الإلكتروني والقمار تتوقف هنا، وكذلك الصفحات التي تصف نفسها بأنها للبالغين.",
+"t35": "تبقى الأصوات، وتذهب الموسيقى",
+"t36": "ميزة بلا موسيقى تنقّي صوت الفيديو أثناء مشاهدتك، على جهازك. وتستخدم الهواتف والحواسيب البطيئة نموذجًا خفيفًا، لتواكب الأجهزة القديمة.",
+"t37": "رسم توضيحي",
+"t38": "على هاتفك أيضًا",
+"t39": "الحماية نفسها على Android، دون مربعات أو قصص مموّلة في الصفحة الرئيسية. لتغييرها، افتح القائمة، ثم الإضافات، ثم AkhiBrowser.",
+"t40": "ما الذي يغادر جهازك",
+"t41": "سجلّك وصفحاتك وصورك تبقى على جهازك. لا يصلنا شيء مما تفعله، ولا تذهب إلى Mozilla أي بيانات قياس أو دراسات أو تقارير أعطال. ومع ذلك لا بد للمتصفح أن يتواصل مع بعض الخدمات، وهذه هي كلها:",
+"t42": "<strong>أسماء المواقع، إلى Cloudflare.<\/strong> لحجب المواقع الإباحية على مستوى الشبكة، يبحث المتصفح عن الأسماء عبر DNS العائلي من Cloudflare، فترى Cloudflare أسماء المواقع التي تزورها.",
+"t43": "<strong>التنزيلات.<\/strong> uBlock Origin من addons.mozilla.org، وقوائم حجب الإعلانات، وبرامج ترميز الفيديو من Mozilla وCisco وGoogle.",
+"t44": "<strong>التحقق من التحديثات.<\/strong> مرة في اليوم، يسأل المتصفح GitHub إن كان هناك إصدار جديد.",
+"t90": "<strong>عدّ دون هوية، إلينا.<\/strong> مرة في اليوم يحسب المتصفح نفسه: الإصدار والنظام وهل Premium مفعّل، بلا معرّف ولا شيء مما تزوره. يمكنك إيقافه في الإعدادات، تحت «احسبني دون هوية».",
+"t45": "<strong>مفتاح Premium، إن أدخلته.<\/strong> يُتحقق منه عبر خادم التراخيص لدينا، مع معرّف تثبيت عشوائي، حتى يعمل المفتاح على 3 أجهزة في الوقت نفسه. لا يحتفظ الخادم بأسماء ولا عناوين بريد ولا بيانات تصفح.",
+"t46": "<a href=\"https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md\">سياسة الخصوصية (بالإنجليزية)<\/a>",
+"t55": "<strong>تحليلات الموقع.<\/strong> يحمّل هذا الموقع Google Tag Manager. تتلقى Google عنوان IP للاتصال ومعلومات تقنية عن الطلب؛ وقد تجمع أيضًا وسوم التحليلات المفعّلة في حاوية GTM مشاهدات الصفحات والأحداث. انظر <a href=\"https:\/\/policies.google.com\/privacy\">سياسة خصوصية Google<\/a>.",
+"t47": "Premium، إن أردته",
+"t48": "كل حماية مذكورة أعلاه تبقى مجانية. Premium لك أنت: تحكم أكبر في الصور وإنترنت أهدأ. وFamily Premium للوالدين: كل ما في Premium، مع أدوات الرقابة الأبوية، على ما يصل إلى عشرة أجهزة. كل ميزة متوقفة حتى تفعّلها، وبياناتها تبقى على الجهاز.",
+"t48b": "Premium متوفر فقط في متصفح AkhiBrowser، بمفتاح ترخيص. إضافة AkhiBrowser المجانية لـ Chrome وFirefox فيها الحماية المجانية المذكورة أعلاه، دون Premium. ويقدّم المتصفح أيضًا ما لا تستطيعه الإضافة: لا بيانات قياس ولا دراسات ولا تقارير أعطال إلى Mozilla، وuBlock Origin مدمج، وحماية صارمة من التتبع.",
+"s0": "هل هو آمن؟",
+"s1": "AkhiBrowser هو Firefox مع مرشّحات مضافة. والأجزاء التي تحميك على الإنترنت تأتي من Firefox.",
+"s2": "Firefox في الأساس",
+"s3": "المحرّك نفسه وبيئة العزل نفسها في Firefox، اللذان يفصلان كل موقع عن ملفاتك وعن المواقع الأخرى. ونطاقات البرمجيات الخبيثة المعروفة محجوبة أيضًا.",
+"s4": "تحديثات موقّعة",
+"s5": "مرة في اليوم يتحقق المتصفح من وجود إصدار جديد. على Windows يثبّت التحديث بعد التحقق من توقيعه. وعلى Android يطلب منك تثبيته، ويتحقق أولًا من المجموع الاختباري للملف. تصلك إصلاحات أمان Firefox مع هذه التحديثات، فثبّتها عندما تصل.",
+"s8": "ما الذي هو مفتوح المصدر",
+"s9": "AkhiBrowser مبني على Firefox. تعديلاتنا على Firefox، وكل ملف تحت رخصة Firefox (MPL)، علنية على <a href=\"https://github.com/halgurdh/akhiBrowser\">GitHub<\/a>. أما الحماية نفسها، أي إضافة AkhiBrowser وPremium وخدمة التراخيص، فهي شيفرتنا الخاصة وغير علنية، كما في معظم التطبيقات المدفوعة. ما يرسله المتصفح، وإلى من، مذكور تحت <a href=\"/ar/privacy/\">الخصوصية<\/a>.",
+"s10": "وجدت مشكلة أمنية؟ أخبرنا على <a href=\"mailto:support@akhibrowser.com\">support@akhibrowser.com<\/a>.",
+"cta": "حمّله مجانًا",
+"t49": "Premium شهري<small>3.99 € شهريًا<\/small>",
+"t50": "Premium سنوي<small>39.00 € سنويًا<\/small>",
+"t51": "Premium مدى الحياة<small>119 € مرة واحدة<\/small>",
+"t52": "في AkhiBrowser من Google Play، اشترِ Premium عبر Google Play أو الصق مفتاحًا من هذا الموقع. وفي النسخ الأخرى، يعرض Stripe السعر قبل أن تدفع، وتحصل على مفتاح ترخيص دون إنشاء حساب. يعمل مفتاح Premium على ما يصل إلى ثلاثة أجهزة في الوقت نفسه، ومفتاح Family على ما يصل إلى عشرة، ومفتاح مدرسة / مسجد على ما يصل إلى 500. اشتريت Premium أو Premium مدى الحياة قبل الإصدار 1.2.1؟ تحتفظ بأدوات الرقابة الأبوية التي كانت لديك. الشهري والسنوي وFamily: ادفع بالبطاقة كاشتراك، أو مرة واحدة عبر iDEAL أو PayPal لشهر أو سنة بالسعر نفسه، دون تجديد. يبدأ اشتراك Family بالبطاقة بثلاثة أيام مجانًا. ونرسل هدية Family Premium بالبريد إلى من تهديه إياها.",
+"t53": "AkhiBrowser مبني على <a href=\"https://www.firefox.com/\">Firefox<\/a>، وليس من صنع Mozilla ولا تعتمده. تعتمد إزالة الموسيقى الخلفية على <a href=\"https://github.com/mohamedsadiqaguenaou/NoMusic\">NoMusic<\/a> من Mohamed Sadiq.",
+"t54": "الشيفرة المصدرية على GitHub",
+"t56": "فحص الصور على جهازك",
+"t57": "تبقى الصور مموّهة حتى تُفحص. الصور غير الآمنة تبقى مموّهة، والصورة التي لا يمكن فحصها تُعرض.",
+"t58": "تصحيح عمى الألوان",
+"t59": "إعداد اختياري على الجهاز يجعل التمييز بين الأحمر والأخضر أسهل، لنوعَي عمى الألوان الأحمر والأخضر.",
+"t60": "اختر من يُموَّه",
+"t61": "موّه النساء أو الرجال أو كليهما. ويمكن للتعرّف على الحجاب أن يُبقي النساء المحجبات ظاهرات.",
+"t62": "الرقابة الأبوية",
+"t63": "عيّن رمز PIN، واحجب مواقع مختارة، واسمح بالمواقع المعتمدة فقط، وحدّد وقت النوم وساعات الدراسة، أو ضع حدًا يوميًا للتصفح.",
+"t64": "ملخص النشاط",
+"t65": "اطّلع على الصفحات المحجوبة في الأيام السبعة الأخيرة بحسب السبب، دون عناوين الصفحات. يبقى الملخص على جهازك.",
+"t66": "تقييد خلاصات التواصل",
+"t67": "أخفِ خلاصات الفيديوهات القصيرة وضع حدًا يوميًا لمواقع التواصل الاجتماعي في AkhiBrowser، لا في تطبيقات التواصل الاجتماعي.",
+"t68": "حجب مواقع التصيد والاحتيال",
+"t69": "مواقع التصيد والاحتيال المعروفة تتوقف قبل أن تُحمَّل، مع زر للمتابعة إن أُدرج موقع بالخطأ.",
+"t70": "مواقيت الصلاة وآية كل يوم",
+"t71": "مواقيت الصلاة للمدينة التي تختارها، تُحسب على جهازك دون موقعك، وآية من القرآن كل يوم.",
+"t72": "إعداداتك في صفحة البداية",
+"t73": "على الحواسيب، تفتح علامات التبويب الجديدة صفحة AkhiBrowser مع مربع بحث، والمواقع التي تزورها أكثر، وآية اليوم، وكل الإعدادات. يمكنك إيقافها.",
+"t74": "الوضع الصارم",
+"t75": "كل صورة وفيديو يبقى مموّهًا حتى تنقر عليه، على كل المواقع أو على المواقع التي تختارها.",
+"t76": "استراحة الصلاة",
+"t77": "مواقع التواصل الاجتماعي والفيديو والألعاب، أو كل المواقع، تتوقف بضع دقائق بعد كل وقت صلاة.",
+"t78": "إنترنت أهدأ",
+"t79": "YouTube دون توصيات أو Shorts أو تشغيل تلقائي، والتعليقات مخفية، والألفاظ النابية محجوبة في نصوص الصفحات.",
+"t80": "أوقف الإنترنت مؤقتًا، واحفظ نسخة من الإعدادات",
+"t81": "أوقف التصفح الآن برمز PIN، وانقل أدوات الرقابة الأبوية إلى جهاز آخر في ملف مقفل برمز PIN.",
+"t82": "Premium، لك أنت",
+"t83": "Family Premium، للوالدين",
+"t85": "Family Premium<small>59.99 € سنويًا، 3 أيام مجانًا<\/small>",
+"gift1": "أهدِ Family Premium<small>59.99 € مرة واحدة: سنة لعائلة أخرى<\/small>",
+"vip1": "رابط VIP الخاص بك يمنحك خصم 10% على Family Premium: 53.99 € سنويًا بدلًا من 59.99 €، كل سنة تبقى فيها مشتركًا. يعرض Stripe السعر قبل الدفع.",
+"vip2": "مؤثر على وسائل التواصل؟ برنامج شركاء VIP لخطة Family Premium: يحصل متابعوك على خصم 10%، وتحصل أنت على 10% من كل دفعة لهم، كل سنة يبقون فيها. 200 عائلة تجلب لك نحو 900 € سنويًا، سنة بعد سنة.",
+"sm1": "مدرسة / مسجد<small>30 € شهريًا<\/small>",
+"sm2": "كل ما في Family Premium، بمفتاح واحد لما يصل إلى 500 جهاز. تدفع المدرسة أو المسجد وتوزّعه مجانًا على عائلاتها: مثلًا 50 عائلة لكل منها 10 أجهزة.",
+"f1": "فحص الحلال والأماكن الحلال",
+"f2": "تحذير على صفحات المنتجات التي فيها لحم خنزير أو كحول أو جيلاتين أو أرقام E مشكوك فيها، والأماكن الموسومة بالحلال على خرائط Google ومواقع التوصيل.",
+"f3": "تحذير من الربا، وحظر صناديق الغنائم",
+"f4": "تحذير على صفحات القروض بفائدة وبطاقات الائتمان والشراء الآن والدفع لاحقًا، وحظر مواقع فتح الصناديق والمقامرة بالأغراض.",
+"f5": "تلاوة القرآن، والمصادر الموثوقة",
+"f6": "تابع تلاوة على YouTube آية بآية مع معناها، واطّلع على مصادر العلماء أولًا عندما تبحث عن الإسلام.",
+"f7": "Deen Time",
+"f8": "YouTube بالقنوات التي اخترتها فقط، لأطفالك.",
+"f9": "جديد في 1.3.0: فحص الحلال، والأماكن الحلال، والتحذير من الربا، وحظر صناديق الغنائم، ومتابعة التلاوة، والمصادر الموثوقة، وDeen Time. وأصبح إيقاف الصلاة جزءًا من Family Premium.",
+"af1": "انصح مدرستك أو مسجدك بـ AkhiBrowser",
+"af2": "تعرف مدرسة أو مسجدًا أو مركزًا إسلاميًا يمكنه الاستفادة من AkhiBrowser؟ كن شريكًا بالعمولة: تحصل على 20% من كل دفعة لهم في خطة مدرسة / مسجد، كل شهر، ما داموا مشتركين. تُحتسب الدفعة بعد مرور 30 يومًا عليها، وندفع العمولة شهريًا.",
+"sc1": "تدفع المدرسة أو المسجد",
+"sc2": "30 €<small>شهريًا<\/small>",
+"sc3": "خطة مدرسة / مسجد: كل ما في Family Premium، بمفتاح واحد لما يصل إلى 500 جهاز، توزَّع مجانًا على عائلاتهم.",
+"sc4": "تحصل أنت على",
+"sc5": "6 €<small>شهريًا، عن كل مدرسة<\/small>",
+"sc6": "20% من كل دفعة، ما داموا مشتركين.",
+"af3": "اسمك",
+"af4": "البريد الإلكتروني",
+"af5": "المدرسة أو المسجد أو المؤسسة",
+"af7": "قدّم طلبك للمدارس والمساجد",
+"af8": "نرسل إليك رابطك الخاص بالبريد خلال أيام قليلة. لا نستخدم بياناتك إلا لهذا الغرض. لمنع الروبوتات، يحمّل النموذج Cloudflare Turnstile عندما تبدأ في تعبئته.",
+"kt1": "حقيبة للمدارس والمساجد",
+"kt2": "مع خطة مدرسة / مسجد، تمنح مدرستك أو مسجدك AkhiBrowser Premium لعائلاتها مجانًا: مفتاح واحد لما يصل إلى 500 جهاز. هذه الصفحة تكتب لك الرسالة والملصق.",
+"kt3": "1. احصل على المفتاح",
+"kt4": "اشترك في <a href=\"/#school\">خطة مدرسة / مسجد<\/a>، بـ 30 € شهريًا، ويمكنك إلغاؤها في أي وقت. تحصل على المفتاح على الشاشة وبالبريد الإلكتروني.",
+"kt5": "2. شاركه مع عائلاتك",
+"kt6": "الصق المفتاح أدناه لتحصل على رسالة جاهزة لمجموعة WhatsApp أو النشرة، وملصق للطباعة. يبقى المفتاح في هذه الصفحة: لا يُرسل إلينا شيء.",
+"kt7": "3. تثبّت العائلات AkhiBrowser",
+"kt8": "يحمّلون AkhiBrowser، ويلصقون المفتاح في قسم Premium، ويضبطونه باتباع <a href=\"/ar/setup/\">نصائح للآباء<\/a>.",
+"kt9": "مفتاح مدرسة / مسجد الخاص بك",
+"kt10": "اسم مدرستك أو مسجدك",
+"kt11": "رسالة لعائلاتك",
+"kt12": "نسخ الرسالة",
+"kt13": "مشاركة عبر WhatsApp",
+"kt14": "طباعة الملصق",
+"kt15": "شارك المفتاح داخل مجتمعك فقط، وليس على وسائل التواصل العامة: فهو يعمل على ما يصل إلى 500 جهاز، ويمكن لأي شخص لديه أن يستخدم واحدًا منها.",
+"kt16": "السلام عليكم! يقدّم {NAME} لكل عائلة AkhiBrowser Premium مجانًا: متصفح حلال يحجب المواقع المحرمة والإعلانات، ويموّه الصور، ويزيل الموسيقى من الفيديوهات.\n\n1. حمّل AkhiBrowser: https://akhibrowser.com/#download\n2. افتح درع AkhiBrowser، والصق هذا المفتاح في قسم Premium واضغط تفعيل:\n{KEY}\n3. تضبطه لأطفالك؟ نصائح: https://akhibrowser.com/ar/setup/\n\nنرجو أن يبقى المفتاح داخل مجتمعنا.",
+"kt17": "مجانًا لعائلتك، من {NAME}",
+"kt18": "AkhiBrowser Premium: المتصفح الحلال الذي يحجب المواقع المحرمة والإعلانات، ويموّه الصور، ويزيل الموسيقى من الفيديوهات.",
+"kt19": "امسح الرمز للتحميل، ثم اطلب منا المفتاح.",
+"kt20": "مدرستنا أو مسجدنا",
+"su1": "نصائح للآباء: سُدّ الثغرات",
+"su2": "يحمي AkhiBrowser ما يحدث داخل AkhiBrowser. الطفل الذي يفتح متصفحًا أو تطبيقًا آخر يتجاوزه. هذه الخطوات تسدّ تلك الثغرات، ومعظمها يستغرق دقائق.",
+"su3": "أنشئ لطفلك حسابًا خاصًا",
+"su4": "على Windows حساب عادي وليس حساب مسؤول، حتى لا يستطيع طفلك تثبيت متصفحات أخرى أو تغيير الإعدادات. على Android حساب Google لطفلك تديره عبر Google Family Link.",
+"su5": "اجعل AkhiBrowser المتصفح الافتراضي",
+"su6": "عندها تُفتح الروابط من التطبيقات الأخرى في AkhiBrowser. Windows: الإعدادات، التطبيقات، التطبيقات الافتراضية. Android: الإعدادات، التطبيقات، التطبيقات الافتراضية، تطبيق المتصفح.",
+"su7": "احظر المتصفحات الأخرى",
+"su8": "على Android احظر Chrome وأي متصفح آخر في Family Link، ضمن حدود تطبيقات طفلك. على Windows أزل المتصفحات التي لا يحتاجها طفلك، واحظر الباقي في Microsoft Family Safety، ضمن التطبيقات والألعاب.",
+"su9": "رشّح الهاتف كله أو شبكة المنزل",
+"su10": "يبحث AkhiBrowser عن المواقع عبر DNS العائلي من Cloudflare. استخدمه لكل التطبيقات أيضًا: على Android اضبط DNS الخاص على family.cloudflare-dns.com (الإعدادات، الشبكة والإنترنت؛ يختلف المسار قليلًا حسب الهاتف). وعلى الراوتر اضبط خوادم DNS على 1.1.1.3 و1.0.0.3، لكل جهاز على شبكة Wi-Fi.",
+"su11": "عيّن رمز PIN للوالدين",
+"su12": "عيّن رمز PIN للوالدين في إعدادات AkhiBrowser، حتى لا يمكن إيقاف الحماية من دونك.",
+"su13": "تحدّث مع طفلك",
+"su14": "لا يوجد مرشّح يلتقط كل شيء. أخبر طفلك لماذا وُضعت هذه القواعد، وأنه يستطيع دائمًا أن يأتي إليك إذا رأى شيئًا خاطئًا.",
+"mm1": "كيف نكسب المال",
+"mm2": "AkhiBrowser مجاني، ولا يعرض إعلانات، ولا يبيع ما تفعله أو يشاركه أبدًا. هكذا يغطي تكاليفه، بكل الطرق:",
+"mm3": "Premium",
+"mm4": "ميزات مدفوعة اختيارية لك وللأسر وللمدارس والمساجد. يأتي معظم المال من هنا.",
+"mm5": "شركاء البحث",
+"mm6": "عندما يكون لمحرك بحث عقد شراكة معنا، يحمل البحث الذي تبدؤه في AkhiBrowser رمز الشراكة الخاص بنا، ويمنحنا المحرك حصة صغيرة مما يكسبه. يُضاف الرمز فقط: لا يصلنا شيء عنك أو عن بحثك.",
+"mm7": "متاجر شريكة، فقط إن اخترت ذلك",
+"mm8": "متوقف ما لم تفعّله: عندما تذهب بنفسك إلى متجر شريك، نضيف رمزنا ويمنحنا المتجر حصة صغيرة. تدفع السعر نفسه، والرابط القادم من موقع آخر يحتفظ برمزه.",
+"mm9": "نصائح في صفحة البداية",
+"mm10": "بين حين وآخر نصيحة برابط تسويق بالعمولة، موسومة دائمًا بذلك. لا نغيّر روابط المواقع الأخرى أبدًا.",
+"mm11": "المسوّقون والرعاة والشركاء",
+"mm12": "من يجلب مدارس ومساجد يحصل على 20% من دفعاتهم. يمكن للرعاة والمؤسسات دعم AkhiBrowser، لكنهم لا يحصلون أبدًا على بياناتك ولا على رأي فيما يُحظر.",
+"mm13": "ما لا نفعله أبدًا: عرض الإعلانات، أو بيع تصفحك أو مشاركته، أو تتبعك عبر المواقع، أو ترك المال يغيّر ما يُحظر.",
+"mm14": "كن راعيًا أو شريكًا",
+"mm15": "اسمك",
+"mm16": "البريد الإلكتروني",
+"mm17": "المؤسسة",
+"mm18": "أي نوع من الشراكة؟",
+"mm19": "راعٍ",
+"mm20": "شريك في المنظومة: تطبيق إسلامي أو منصة مدرسية أو مؤسسة",
+"mm21": "محرك بحث",
+"mm22": "متجر",
+"mm23": "ما الذي تقترحه؟",
+"mm24": "إرسال",
+"mm25": "نرد خلال أيام قليلة. يجب أن تُبقي الشراكة AkhiBrowser خاصًا: بيانات مستخدمينا لا تكون جزءًا منها أبدًا.",
+"t86": "مقارنة مع Kahf Browser",
+"t89": "مقارنة المتصفحات",
+"t87": "خارطة الطريق: iPhone وMac",
+"t88": "AkhiBrowser متوفر اليوم لنظامي Windows وAndroid. سيُعلن عن نسختي iOS وmacOS لاحقًا، دون موعد بعد. هدفنا أن نبدأ العمل عليهما عندما تشترك 100 أسرة في Family Premium.",
+"a0": "إعدادات AkhiBrowser: آية اليوم، ومواقيت الصلاة، والحمايات الخمس كلها مفعّلة: حجب الإعلانات وأدوات التتبع، وإزالة الموسيقى الخلفية، وحجب المحتوى الإباحي، وحجب المواقع المحرمة، وتمويه الصور العارية.",
+"a1": "إعلان AkhiBrowser: تزيل NoMusic الموسيقى الخلفية وتُبقي الصوت، ويحجب مرشّح المحرّمات العُري والمحتوى الإباحي على جهازك، وuBlock Origin مدمج، 25 ثانية",
+"car0": "ميزات AkhiBrowser",
+"carPrev": "الصورة السابقة",
+"carNext": "الصورة التالية",
+"carPause": "إيقاف مؤقت",
+"carPlay": "تشغيل",
+"car1": "مجاني: غضّ بصرك. تلقائيًا. كل صورة وفيديو يبقى مموّهًا حتى يفحصه الذكاء الاصطناعي على جهازك، فلا يظهر شيء فجأة. صفحة أخبار في AkhiBrowser بصور مموّهة.",
+"car2": "مجاني: أبقِ الصوت. واترك الموسيقى. يزيل AkhiBrowser الموسيقى الخلفية من الفيديوهات أثناء تشغيلها. فيديو محاضرة بقي فيه الصوت وأُزيلت الموسيقى.",
+"car3": "مجاني: ابحث عن «بيرة». واعرف الحقيقة. عمليات البحث المحرّمة تُحجب أو تتحول إلى أسئلة، بـ11 لغة، وSafeSearch مفعّل دائمًا.",
+"car4": "Premium: ذكي بما يكفي ليرى الحجاب. تظهر المحجبات وتُموَّه غير المحجبات. أنت تختار من يُموَّه: النساء أو الرجال أو كلاهما.",
+"car5": "Premium: YouTube بلا دوّامة. لا توصيات ولا شاشات نهاية ولا تشغيل تلقائي ولا Shorts، والتعليقات مخفية.",
+"car6": "Family Premium: أنت تضع القواعد. ورمز PIN يحفظها. رمز PIN للوالدين، وحد يومي، ووقت النوم وساعات المدرسة.",
+"car7": "Family Premium: الأذان يرتفع؟ تتوقف الصفحات. مواقع التواصل والفيديو والألعاب تتوقف بضع دقائق بعد كل وقت صلاة.",
+"car8": "Family Premium: حلال أم لا؟ اعرف أولًا. صفحة متجر تحذّر من الجيلاتين ورقم E، وعرض ادفع لاحقًا يحمل تحذيرًا من الربا.",
+"a2": "مقطع قصير لـ AkhiBrowser: وضعوا الموسيقى، فأزلناها، 19 ثانية",
+"a3": "منظر طبيعي مموّه مع العبارة: Checking on your device.",
+"a4": "المنظر نفسه، واضحًا، مع العبارة: Checked: shown.",
+"a10": "صورة شخص تبقى مموّهة، مع العبارة: Checked: hidden.",
+"a5": "صفحة تقول: This page is blocked. يحجب AkhiBrowser مواقع الخمر والمخدرات والقمار. وتحتها آية من القرآن، 2:219، بالعربية والإنجليزية، مع رابط إلى quran.com.",
+"a6": "موجة صوتية لأصوات، مع العبارة: Background music: removed.",
+"a7": "الصفحة الرئيسية لـ AkhiBrowser على Android: شريط بحث، وشعار AkhiBrowser، والعبارة: You're protected.",
+"aPlans": "مقارنة خطط AkhiBrowser: المجانية (€0)، وPremium (€3.99 شهريًا أو €39 سنويًا أو €119 مدى الحياة)، وFamily Premium (€59.99 سنويًا، 3 أيام مجانًا، 10 أجهزة)، والمدرسة / المسجد (€30 شهريًا، حتى 500 جهاز)، مع ميزاتها.",
+"a9": "مقطع قصير لـ AkhiBrowser: تريد فقط مشاهدة محاضرة على الإنترنت، فتزيل NoMusic الموسيقى الخلفية وتُبقي الصوت، 21 ثانية",
+"c0": "كيف تلغي الاشتراك",
+"c1": "افتح درع AkhiBrowser في شريط الأدوات. على Android: القائمة، ثم الإضافات، ثم AkhiBrowser.",
+"c2": "تحت Premium، اضغط إدارة الاشتراك. يفتح هذا اشتراكك على Stripe.",
+"c3": "اختر الإلغاء، ثم أكّد.",
+"c4": "ينتهي Premium بعد ذلك، وتبقى كل الحماية المجانية تعمل. الشراء مدى الحياة ليس اشتراكًا، فلا شيء لإلغائه.",
+"c5": "لا تستطيع الوصول إلى المتصفح؟ راسل <a href=\"mailto:support@akhibrowser.com\">support@akhibrowser.com<\/a> من عنوان البريد الذي دفعت به.",
+"bg0": "أيّ اشتراك يناسبني؟",
+"nlb": "النشرة: آية كل أسبوع",
+"faqf": "الأسئلة الشائعة",
+"nvfaq": "الأسئلة الشائعة",
+"bg1": "<strong>هل لديك هاتف Android؟<\/strong> نزّل AkhiBrowser من متجر Google Play، وفعّل Premium داخل AkhiBrowser: القائمة، ثم الإضافات، ثم AkhiBrowser.",
+"bg2": "<strong>تشتري من هذا الموقع؟<\/strong> استخدم الأزرار أدناه. تحصل على مفتاح ترخيص بالبريد، لـ 3 أجهزة كحد أقصى، أو 10 مع Family. AkhiBrowser متوفر لـ Windows وAndroid؛ لا توجد نسخة لـ iPhone أو Mac (بعد).",
+"bg3": "<strong>مدرسة أو مسجد؟<\/strong> اختر «مدرسة / مسجد» أدناه.",
+"bg4": "<strong>هدية؟<\/strong> أهدِ Family Premium بالأزرار أدناه، أو من داخل AkhiBrowser. المفتاح الذي تهديه يعمل على Windows وعلى Android.",
+"gp0": "الشراء عبر Google Play",
+"gp1": "غيّره أو ألغِه من Google Play: في متجر Play، اضغط على صورة ملفك الشخصي، ثم الدفعات والاشتراكات، ثم الاشتراكات، ثم AkhiBrowser. يبقى Premium يعمل حتى نهاية الفترة التي دفعت ثمنها.",
+"gp2": "Premium على حاسوبك أيضًا",
+"gp3": "في AkhiBrowser على هاتفك: القائمة، ثم الإضافات، ثم AkhiBrowser. ضمن Premium، اضغط احصل على مفتاح ترخيص.",
+"gp4": "انسخ المفتاح، أو اضغط أرسل لي المفتاح بالبريد وافتح الرسالة على حاسوبك.",
+"gp5": "في AkhiBrowser على Windows، افتح درع AkhiBrowser في شريط الأدوات والصق المفتاح ضمن Premium.",
+"gp6": "يعمل المفتاح على 3 أجهزة كحد أقصى، أو 10 مع Family. إذا ألغيت على Google Play، ينتهي على حاسوبك أيضًا.",
+"gp7": "اشتريت من هذا الموقع، أو حصلت على مفتاح هدية أو مفتاح مدرسة / مسجد؟",
+"gp8": "يعمل مفتاحك في AkhiBrowser على Windows وعلى Android: القائمة، ثم الإضافات، ثم AkhiBrowser، ثم Premium، والصق المفتاح. ويمكن للمدرسة أو المسجد أيضًا <a href=\"https://akhi-license.akhibrowser.workers.dev/school\">الحصول على مفتاح لكل أسرة<\/a>. كل مفتاح يمنح سنة من Family Premium، تبدأ من يوم منحه.",
+"andb": "على هاتفك، اشترِ Premium من AkhiBrowser المثبّت من Google Play: القائمة، ثم الإضافات، ثم AkhiBrowser، ثم Premium. يتولى Google Play عملية الدفع.",
+"andall": "تشتري لحاسوب؟ اعرض كل طرق الدفع",
+"x0": "إمكانية الوصول",
+"x1": "لمن لديهم عمى ألوان أو ضعف في السمع، ولكل من يحتاج إلى مساعدة أكثر قليلًا على الإنترنت.",
+"x2": "عمى الألوان",
+"x3": "فعّل تصحيح عمى الألوان من درع AkhiBrowser. يعدّل ألوان صفحات الويب ليسهل التمييز بين الأحمر والأخضر، لنوعَي عمى الألوان الأحمر والأخضر. وهو متوقف افتراضيًا، ولا يساعد في عمى الألوان الأزرق والأصفر.",
+"x4": "ضعف السمع",
+"x5": "ميزة بلا موسيقى تزيل الموسيقى الخلفية من الفيديوهات وتُبقي الأصوات، مما قد يجعل متابعة الكلام أسهل. لا تُنشئ ترجمة نصية بنفسها، والترجمة التي يوفرها الموقع تبقى تعمل كالمعتاد.",
+"x6": "من Firefox",
+"x7": "تبقى أدوات Firefox نفسها في المتصفح، مثل دعم قارئات الشاشة وتكبير الصفحة ووضع القراءة. لم نختبرها بشكل منفصل في AkhiBrowser.",
+"x8": "هذه الصفحة",
+"x9": "تعمل بلوحة المفاتيح، ولصورها أوصاف نصية، والصورة المتحركة تبقى ثابتة إن طلبت من جهازك تقليل الحركة. ليس للفيديوهات ترجمة نصية بعد، لكنها تعرض رسالتها نصًا على الشاشة، وهذه الصفحة تقول الشيء نفسه.",
+"x10": "هل هناك شيء لا يعمل معك؟ أخبرنا على <a href=\"mailto:support@akhibrowser.com\">support@akhibrowser.com<\/a>.",
+"x11": "إمكانية الوصول",
+"k0": "<i><\/i>متوفر الآن في متجر Microsoft",
+"k1": "حمايات مجانية، تعمل من الصفحة الأولى",
+"k2": "لغة",
+"k3": "صفحات أو صور أو سجل تصفح يُرسل إلينا",
+"k4": "أجهزة بمفتاح Family واحد",
+"h0": "AkhiBrowser يقدّم",
+"h1": "في عالمٍ مليءٍ بالضجيج،",
+"h2": "متصفحٌ واحد يُبقيه نظيفًا.",
+"h3": "المواقع المحرّمة، محجوبة.",
+"h4": "الموسيقى، محذوفة.",
+"h5": "سجلّك يبقى على جهازك.",
+"p0": "مدعوم من",
+"loc": "ألمير، هولندا"
+};
+  const DICTS = { nl: NL, ar: AR };
+  const META = {
+    nl: {
+      title: "AkhiBrowser: halal browser voor moslims, houdt haram tegen",
+      description: "AkhiBrowser is een gratis halal browser voor moslims, op basis van Firefox, die reclame, 18+- en haram sites tegenhoudt, afbeeldingen wazig houdt tot ze zijn gecontroleerd en de muziek uit video's haalt. Alles gebeurt op je eigen apparaat.",
+    },
+    ar: {
+      title: "AkhiBrowser: متصفح حلال للمسلمين، يحجب الحرام ويموّه الصور",
+      description: "AkhiBrowser متصفح حلال مجاني للمسلمين، مبني على Firefox. يحجب الإعلانات والمواقع الإباحية والمحرمة، ويموّه الصور حتى تُفحص، ويزيل الموسيقى الخلفية من الفيديوهات، وكل ذلك على جهازك.",
+    },
+  };
+  const LANGS = ["en", "nl", "ar"];
+  const description = document.querySelector('meta[name="description"]');
+  META.en = { title: document.title, description: description.content };
+  const textNodes = [...document.querySelectorAll("[data-t]")].map(node => [node, node.innerHTML]);
+  const attrNodes = [...document.querySelectorAll("[data-a]")].map(node => {
+    const [name, key] = node.dataset.a.split(":");
+    return [node, name, key, node.getAttribute(name)];
+  });
+  // links to the blog and comparison pages go to the pages in the chosen language
+  const pageLinks = [...document.querySelectorAll('a[href^="/blog/"], a[href^="/compare/"], a[href^="/affiliate/"], a[href^="/money/"], a[href^="/privacy/"], a[href^="/setup/"], a[href^="/kit/"]')].map(node => [node, node.getAttribute("href")]);
+  const menu = document.getElementById("lang");
+
+  function show(lang) {
+    const dict = DICTS[lang] || {};
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+    document.title = META[lang].title;
+    description.content = META[lang].description;
+    for (const [node, en] of textNodes) {
+      node.innerHTML = dict[node.dataset.t] ?? en;
+    }
+    for (const [node, name, key, en] of attrNodes) {
+      node.setAttribute(name, dict[key] ?? en);
+    }
+    for (const [node, href] of pageLinks) {
+      node.setAttribute("href", lang === "en" ? href : `/${lang}${href}`);
+    }
+    menu.value = lang;
+  }
+
+  let saved = null;
+  try {
+    saved = localStorage.getItem("lang");
+  } catch (e) {}
+  // otherwise the first of the device's languages that the page has, and English if there is none
+  const device = (navigator.languages || [navigator.language]).map(l => String(l).slice(0, 2).toLowerCase()).find(l => LANGS.includes(l));
+  // /nl/ and /ar/ are this page already in that language (tools/build_home.py): they keep it
+  const fixed = document.documentElement.dataset.home;
+  if (fixed) {
+    menu.value = fixed;
+  } else {
+    show(LANGS.includes(saved) ? saved : device || "en");
+  }
+  // a choice in the menu opens the home page in that language, and is remembered
+  menu.addEventListener("change", () => {
+    try {
+      localStorage.setItem("lang", menu.value);
+    } catch (e) {}
+    location.href = menu.value === "en" ? "/" : `/${menu.value}/`;
+  });
+  menu.hidden = false;
+  for (const node of document.querySelectorAll("[data-year]")) node.textContent = new Date().getFullYear();
+})();
+</script>
+<script>
+// The feature pictures: one at a time, moving on every 5 seconds until someone pauses, hovers or uses the controls
+(function () {
+  const root = document.querySelector(".carousel");
+  if (!root) {
+    return;
+  }
+  const track = root.querySelector(".track");
+  const slides = [...track.children];
+  const dots = root.querySelector(".dots");
+  const play = root.querySelector(".car-play");
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let paused = still;
+  let hovering = false;
+  let timer = null;
+
+  const buttons = slides.map((slide, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.setAttribute("aria-label", String(i + 1) + " / " + slides.length);
+    b.addEventListener("click", () => { stop(); go(i); });
+    dots.append(b);
+    return b;
+  });
+
+  function current() {
+    return Math.round(track.scrollLeft / track.clientWidth);
+  }
+  function go(i) {
+    const n = (i + slides.length) % slides.length;
+    track.scrollTo({ left: n * track.clientWidth });
+  }
+  function mark() {
+    const n = current();
+    buttons.forEach((b, i) => b.setAttribute("aria-current", i === n ? "true" : "false"));
+  }
+  function setLabel() {
+    const lang = document.documentElement.lang;
+    play.dataset.a = paused ? "aria-label:carPlay" : "aria-label:carPause";
+    const words = { en: ["Play", "Pause"], nl: ["Afspelen", "Pauzeren"], ar: ["\u062a\u0634\u063a\u064a\u0644", "\u0625\u064a\u0642\u0627\u0641 \u0645\u0624\u0642\u062a"] }[lang] || ["Play", "Pause"];
+    play.setAttribute("aria-label", paused ? words[0] : words[1]);
+    play.innerHTML = paused ? "&#9654;" : "&#10074;&#10074;";
+  }
+  function tick() {
+    clearInterval(timer);
+    timer = paused ? null : setInterval(() => {
+      if (!hovering && !document.hidden) {
+        go(current() + 1);
+      }
+    }, 5000);
+  }
+  function stop() {
+    paused = true;
+    setLabel();
+    tick();
+  }
+
+  root.querySelectorAll("[data-dir]").forEach(b => b.addEventListener("click", () => {
+    stop();
+    go(current() + Number(b.dataset.dir));
+  }));
+  play.addEventListener("click", () => {
+    paused = !paused;
+    setLabel();
+    tick();
+  });
+  track.addEventListener("keydown", e => {
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+      e.preventDefault();
+      stop();
+      go(current() + (e.key === "ArrowRight" ? 1 : -1));
+    }
+  });
+  root.addEventListener("pointerenter", () => { hovering = true; });
+  root.addEventListener("pointerleave", () => { hovering = false; });
+  root.addEventListener("focusin", () => { hovering = true; });
+  root.addEventListener("focusout", () => { hovering = false; });
+  track.addEventListener("touchstart", stop, { passive: true });
+  track.addEventListener("scroll", () => requestAnimationFrame(mark), { passive: true });
+  document.getElementById("lang").addEventListener("change", setLabel);
+
+  mark();
+  setLabel();
+  tick();
+})();
+</script>
+<script>
+// the menu: one group open at a time, closed by a click elsewhere, Escape or a chosen link; a button on phones
+(function () {
+  const links = document.getElementById("menu");
+  const button = document.querySelector(".menu-btn");
+  const drops = [...links.querySelectorAll(".drop")];
+  function closeAll(except) {
+    for (const drop of drops) {
+      if (drop !== except) {
+        drop.open = false;
+      }
+    }
+  }
+  function setOpen(open) {
+    links.classList.toggle("open", open);
+    button.setAttribute("aria-expanded", String(open));
+    if (!open) {
+      closeAll();
+    }
+  }
+  for (const drop of drops) {
+    drop.addEventListener("toggle", () => {
+      if (drop.open) {
+        closeAll(drop);
+      }
+    });
+  }
+  button.addEventListener("click", () => setOpen(!links.classList.contains("open")));
+  links.addEventListener("click", e => {
+    if (e.target.closest("a")) {
+      setOpen(false);
+    }
+  });
+  document.addEventListener("click", e => {
+    if (!e.target.closest("nav")) {
+      setOpen(false);
+    }
+  });
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && (links.classList.contains("open") || drops.some(drop => drop.open))) {
+      setOpen(false);
+      button.offsetParent ? button.focus() : drops[0].querySelector("summary").focus();
+    }
+  });
+})();
+</script>
+<script>
+// Cloudflare Turnstile, the check against robots on the forms: loaded only once someone starts filling one in
+(function () {
+  let loaded = false;
+  function load() {
+    if (loaded) {
+      return;
+    }
+    loaded = true;
+    const script = document.createElement("script");
+    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+    script.async = true;
+    document.head.append(script);
+  }
+  for (const form of document.querySelectorAll("form.affiliate")) {
+    form.addEventListener("focusin", load);
+    form.addEventListener("pointerdown", load);
+  }
+})();
+</script>
+<script>
+(function () {
+  const CODE = /^[a-z0-9]{2,24}-[A-Za-z0-9_-]{8}$/;
+  let ref = new URLSearchParams(location.search).get("ref");
+  try {
+    if (ref && CODE.test(ref)) {
+      localStorage.setItem("akhiRef", ref);
+    } else {
+      ref = localStorage.getItem("akhiRef");
+    }
+  } catch (e) {}
+  // Android phones buy in the app from Google Play: the website's buttons only on request
+  if (/Android/i.test(navigator.userAgent)) {
+    document.documentElement.classList.add("android");
+    document.querySelector(".android-buy").hidden = false;
+    document.getElementById("show-plans").addEventListener("click", () => {
+      document.querySelector(".plans").classList.add("shown");
+      document.querySelector(".buy-guide").classList.add("shown");
+      document.querySelector(".vip-note").classList.add("shown");
+      document.querySelector(".android-buy").hidden = true;
+    });
+  }
+  if (ref && CODE.test(ref)) {
+    for (const link of document.querySelectorAll('a[href$="/buy/school"], a[href$="/buy/family"]')) {
+      link.href += "?ref=" + encodeURIComponent(ref);
+    }
+    // installed from this link, the app reads the code: a VIP's 10% Family offer and their commission
+    for (const link of document.querySelectorAll('a[href^="https://play.google.com/store/apps/details?id=org.akhibrowser"]')) {
+      link.href += "&referrer=" + encodeURIComponent("ref=" + ref);
+    }
+    fetch("https://akhi-license.akhibrowser.workers.dev/ref?code=" + encodeURIComponent(ref))
+      .then(response => response.json())
+      .then(({ kind }) => {
+        if (kind === "vip") {
+          document.querySelector(".vip-note").hidden = false;
+        }
+      })
+      .catch(() => {});
+  }
+})();
+</script>
+<script>
+
+(function () {
+  const bar = document.getElementById("bar");
+  const progress = bar.querySelector(".progress");
+  let queued = false;
+  function measure() {
+    if (!bar.classList.contains("scrolled")) {
+      document.documentElement.style.setProperty("--bar-h", `${bar.offsetHeight}px`);
+    }
+  }
+  addEventListener("resize", measure);
+  const hero = document.querySelector(".hero");
+  const top = document.querySelector(".top");
+  const trailer = document.querySelector(".trailer");
+  const cards = [...trailer.querySelectorAll(".card")];
+  const motion = document.documentElement.classList.contains("motion");
+  function sizeTop() {
+    top.style.minHeight = "";
+    top.style.minHeight = `${Math.round(top.offsetHeight * 1.1)}px`;
+  }
+  sizeTop();
+  addEventListener("load", sizeTop);
+  addEventListener("resize", sizeTop);
+  document.getElementById("lang").addEventListener("change", sizeTop);
+  const parallax = motion && matchMedia("(min-width: 821px)").matches;
+  // where the hero ends without its parallax shift, and how far it can shift before the header clips it
+  function heroBounds() {
+    const shift = parseFloat(hero.style.translate.split(" ")[1]) || 0;
+    const end = hero.getBoundingClientRect().bottom + scrollY - shift;
+    return { shift, end, room: Math.max(0, top.getBoundingClientRect().bottom + scrollY - end - 16) };
+  }
+  document.addEventListener("click", e => {
+    const link = e.target.closest('a[href="#download"]');
+    if (!link) {
+      return;
+    }
+    e.preventDefault();
+    const { shift, room } = heroBounds();
+    const base = document.getElementById("download").getBoundingClientRect().top + scrollY - shift - bar.offsetHeight - innerHeight * .18;
+    const y = parallax ? (base / .7 * .3 <= room ? base / .7 : base + room) : base;
+    scrollTo({ top: Math.max(0, y), behavior: motion ? "smooth" : "auto" });
+    history.replaceState(null, "", "#download");
+  });
+  function update() {
+    queued = false;
+    const max = document.documentElement.scrollHeight - innerHeight;
+    bar.classList.toggle("scrolled", scrollY > 8);
+    progress.style.transform = `scaleX(${max > 0 ? Math.min(scrollY / max, 1) : 0})`;
+    if (parallax) {
+      const { end, room } = heroBounds();
+      if (scrollY < end + innerHeight * 2) {
+        const shift = Math.min(scrollY * .3, room);
+        hero.style.translate = `0 ${shift}px`;
+        hero.style.opacity = Math.min(1, Math.max(0, (end + shift - scrollY - bar.offsetHeight) / (innerHeight * .5)));
+      }
+    }
+    if (motion) {
+      top.style.setProperty("--lb", Math.max(0, 1 - scrollY / 300));
+    }
+  }
+
+  function showCards(p) {
+    cards.forEach((card, i) => {
+      const d = p - i - .5;
+      const last = i === cards.length - 1;
+      card.style.setProperty("--o", Math.min(1, Math.max(0, (.5 - Math.abs(last ? Math.min(d, 0) : d)) * 5)).toFixed(3));
+      card.style.setProperty("--x", Math.max(0, d).toFixed(3));
+    });
+  }
+  if (motion) {
+    const PER_CARD = 1700;
+    let started = 0;
+    let frame = 0;
+    function play(now) {
+      const p = Math.min((now - started) / PER_CARD, cards.length);
+      showCards(p);
+      frame = p < cards.length ? requestAnimationFrame(play) : 0;
+    }
+    showCards(0);
+    new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !frame) {
+        started = performance.now();
+        frame = requestAnimationFrame(play);
+      } else if (!entry.isIntersecting && entry.intersectionRatio === 0) {
+        cancelAnimationFrame(frame);
+        frame = 0;
+        showCards(0);
+      }
+    }, { threshold: [0, .6] }).observe(trailer);
+
+    const next = document.getElementById("watch");
+    let locked = false;
+    function go(el) {
+      locked = true;
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      const done = setTimeout(unlock, 1000);
+      function unlock() {
+        clearTimeout(done);
+        removeEventListener("scrollend", unlock);
+        setTimeout(() => { locked = false; }, 120);
+      }
+      addEventListener("scrollend", unlock, { once: true });
+    }
+    function snap(dir) {
+      const r = trailer.getBoundingClientRect();
+      if (dir > 0 && r.top <= 2 && r.top > -innerHeight * .5) {
+        go(next);
+        return true;
+      }
+      if (dir > 0 && r.top > 2 && r.top < innerHeight * .6) {
+        go(trailer);
+        return true;
+      }
+      if (dir < 0 && r.top < -2 && r.bottom > innerHeight * .4) {
+        go(trailer);
+        return true;
+      }
+      return false;
+    }
+    addEventListener("wheel", e => {
+      if (e.ctrlKey || Math.abs(e.deltaY) < Math.abs(e.deltaX)) {
+        return;
+      }
+      if (locked || snap(Math.sign(e.deltaY))) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+    const KEYS = { ArrowDown: 1, PageDown: 1, " ": 1, ArrowUp: -1, PageUp: -1 };
+    addEventListener("keydown", e => {
+      const dir = KEYS[e.key] * (e.key === " " && e.shiftKey ? -1 : 1);
+      if (!dir || e.altKey || e.ctrlKey || e.metaKey || e.target.closest("input, textarea, select, button, video, [contenteditable], .track")) {
+        return;
+      }
+      if (locked || snap(dir)) {
+        e.preventDefault();
+      }
+    });
+    let touchY = null;
+    addEventListener("touchstart", e => { touchY = e.touches[0].clientY; }, { passive: true });
+    addEventListener("touchmove", e => {
+      if (touchY === null) {
+        return;
+      }
+      const dy = touchY - e.touches[0].clientY;
+      if (locked) {
+        e.preventDefault();
+        return;
+      }
+      if (Math.abs(dy) > 12) {
+        touchY = null;
+        if (snap(Math.sign(dy))) {
+          e.preventDefault();
+        }
+      }
+    }, { passive: false });
+    addEventListener("touchend", () => { touchY = null; }, { passive: true });
+  }
+
+  const watch = document.querySelector(".watch");
+  const videos = [...watch.querySelectorAll("video")];
+  function stopped(video) {
+    video.classList.remove("on");
+    if (videos.every(v => v.paused)) {
+      watch.classList.remove("playing");
+      document.body.classList.remove("theater");
+    }
+  }
+  for (const video of videos) {
+    video.addEventListener("play", () => {
+      for (const other of videos) {
+        if (other !== video) {
+          other.pause();
+        }
+      }
+      video.classList.add("on");
+      watch.classList.add("playing");
+      document.body.classList.add("theater");
+    });
+    video.addEventListener("pause", () => stopped(video));
+    video.addEventListener("ended", () => stopped(video));
+  }
+  addEventListener("scroll", () => {
+    if (!queued) {
+      queued = true;
+      requestAnimationFrame(update);
+    }
+  }, { passive: true });
+  measure();
+  update();
+
+  if (!document.documentElement.classList.contains("motion")) {
+    return;
+  }
+
+  function countUp(el) {
+    const target = Number(el.dataset.count);
+    const start = performance.now();
+    function step(now) {
+      const t = Math.min((now - start) / 1400, 1);
+      el.textContent = Math.round(target * (1 - Math.pow(1 - t, 3)));
+      if (t < 1) {
+        requestAnimationFrame(step);
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
+  const seen = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) {
+        continue;
+      }
+      entry.target.classList.add("in");
+      const counter = entry.target.querySelector("[data-count]");
+      if (counter) {
+        countUp(counter);
+      }
+      seen.unobserve(entry.target);
+    }
+  }, { rootMargin: "0px 0px -8% 0px" });
+  const targets = "main h2, main .intro, main .note, .plan-title, .list > li, .demo, .flows li, .plans .btn, .watch video, .cancel, .stat-list li";
+  for (const el of document.querySelectorAll(targets)) {
+    const index = [...el.parentElement.children].indexOf(el);
+    el.style.setProperty("--d", `${Math.min(index, 6) * 70}ms`);
+    seen.observe(el);
+  }
+
+  if (!matchMedia("(pointer: fine)").matches) {
+    return;
+  }
+  for (const card of document.querySelectorAll(".list > li")) {
+    card.addEventListener("pointermove", e => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty("--mx", `${e.clientX - r.left}px`);
+      card.style.setProperty("--my", `${e.clientY - r.top}px`);
+    });
+  }
+  function tilt(area, shots) {
+    area.addEventListener("pointermove", e => {
+      const r = shots[0].getBoundingClientRect();
+      const x = Math.max(-1, Math.min(1, (e.clientX - r.left) / r.width - .5));
+      const y = Math.max(-1, Math.min(1, (e.clientY - r.top) / r.height - .5));
+      for (const shot of shots) {
+        shot.style.transform = `rotateY(${x * 12}deg) rotateX(${-y * 10}deg)`;
+      }
+    });
+    area.addEventListener("pointerleave", () => {
+      for (const shot of shots) {
+        shot.style.transform = "";
+      }
+    });
+  }
+  tilt(hero, [document.querySelector(".hero-art .shot")]);
+  for (const figure of document.querySelectorAll(".demo")) {
+    const shots = [...figure.querySelectorAll(".shot")];
+    if (shots.length) {
+      tilt(figure, shots);
+    }
+  }
+})();
+</script>
+<template id="pages">
+  <section id="kit">
+    <div class="wrap">
+      <h2 data-t="kt1">حقيبة للمدارس والمساجد</h2>
+      <p class="intro" data-t="kt2">مع خطة مدرسة / مسجد، تمنح مدرستك أو مسجدك AkhiBrowser Premium لعائلاتها مجانًا: مفتاح واحد لما يصل إلى 500 جهاز. هذه الصفحة تكتب لك الرسالة والملصق.</p>
+      <ul class="list">
+        <li><h3 data-t="kt3">1. احصل على المفتاح</h3><p data-t="kt4">اشترك في <a href="/ar/#school">خطة مدرسة / مسجد</a>، بـ 30 € شهريًا، ويمكنك إلغاؤها في أي وقت. تحصل على المفتاح على الشاشة وبالبريد الإلكتروني.</p></li>
+        <li><h3 data-t="kt5">2. شاركه مع عائلاتك</h3><p data-t="kt6">الصق المفتاح أدناه لتحصل على رسالة جاهزة لمجموعة WhatsApp أو النشرة، وملصق للطباعة. يبقى المفتاح في هذه الصفحة: لا يُرسل إلينا شيء.</p></li>
+        <li><h3 data-t="kt7">3. تثبّت العائلات AkhiBrowser</h3><p data-t="kt8">يحمّلون AkhiBrowser، ويلصقون المفتاح في قسم Premium، ويضبطونه باتباع <a href="/ar/setup/">نصائح للآباء</a>.</p></li>
+      </ul>
+      <form class="kit" id="kit" onsubmit="return false">
+        <label for="kit-key" data-t="kt9">مفتاح مدرسة / مسجد الخاص بك</label>
+        <input id="kit-key" autocomplete="off" spellcheck="false" placeholder="AKHI-...">
+        <label for="kit-name" data-t="kt10">اسم مدرستك أو مسجدك</label>
+        <input id="kit-name" autocomplete="organization">
+        <label for="kit-msg" data-t="kt11">رسالة لعائلاتك</label>
+        <textarea id="kit-msg" rows="11" readonly></textarea>
+        <span class="kit-actions"><button type="button" class="btn" id="kit-copy" data-t="kt12">نسخ الرسالة</button><a class="btn ghost" id="kit-wa" href="https://wa.me/" target="_blank" rel="noopener" data-t="kt13">مشاركة عبر WhatsApp</a><button type="button" class="btn ghost" id="kit-print" data-t="kt14">طباعة الملصق</button></span>
+        <span class="note" data-t="kt15">شارك المفتاح داخل مجتمعك فقط، وليس على وسائل التواصل العامة: فهو يعمل على ما يصل إلى 500 جهاز، ويمكن لأي شخص لديه أن يستخدم واحدًا منها.</span>
+        <span hidden id="kit-text" data-t="kt16">السلام عليكم! يقدّم {NAME} لكل عائلة AkhiBrowser Premium مجانًا: متصفح حلال يحجب المواقع المحرمة والإعلانات، ويموّه الصور، ويزيل الموسيقى من الفيديوهات.
+
+1. حمّل AkhiBrowser: https://akhibrowser.com/#download
+2. افتح درع AkhiBrowser، والصق هذا المفتاح في قسم Premium واضغط تفعيل:
+{KEY}
+3. تضبطه لأطفالك؟ نصائح: https://akhibrowser.com/ar/setup/
+
+نرجو أن يبقى المفتاح داخل مجتمعنا.</span>
+        <span hidden id="kit-org" data-t="kt20">مدرستنا أو مسجدنا</span>
+      </form>
+      <article class="poster" id="kit-poster">
+        <img src="/assets/akhi.svg" alt="" width="72" height="72">
+        <h3 id="kit-title" data-t="kt17">مجانًا لعائلتك، من {NAME}</h3>
+        <p data-t="kt18">AkhiBrowser Premium: المتصفح الحلال الذي يحجب المواقع المحرمة والإعلانات، ويموّه الصور، ويزيل الموسيقى من الفيديوهات.</p>
+        <span class="qr" id="kit-qr"></span>
+        <p class="poster-key" id="kit-poster-key"></p>
+        <p class="note" id="kit-scan" data-t="kt19">امسح الرمز للتحميل، ثم اطلب منا المفتاح.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="setup">
+    <div class="wrap">
+      <h2 data-t="su1">نصائح للآباء: سُدّ الثغرات</h2>
+      <p class="intro" data-t="su2">يحمي AkhiBrowser ما يحدث داخل AkhiBrowser. الطفل الذي يفتح متصفحًا أو تطبيقًا آخر يتجاوزه. هذه الخطوات تسدّ تلك الثغرات، ومعظمها يستغرق دقائق.</p>
+      <ul class="list">
+        <li><h3 data-t="su3">أنشئ لطفلك حسابًا خاصًا</h3><p data-t="su4">على Windows حساب عادي وليس حساب مسؤول، حتى لا يستطيع طفلك تثبيت متصفحات أخرى أو تغيير الإعدادات. على Android حساب Google لطفلك تديره عبر Google Family Link.</p></li>
+        <li><h3 data-t="su5">اجعل AkhiBrowser المتصفح الافتراضي</h3><p data-t="su6">عندها تُفتح الروابط من التطبيقات الأخرى في AkhiBrowser. Windows: الإعدادات، التطبيقات، التطبيقات الافتراضية. Android: الإعدادات، التطبيقات، التطبيقات الافتراضية، تطبيق المتصفح.</p></li>
+        <li><h3 data-t="su7">احظر المتصفحات الأخرى</h3><p data-t="su8">على Android احظر Chrome وأي متصفح آخر في Family Link، ضمن حدود تطبيقات طفلك. على Windows أزل المتصفحات التي لا يحتاجها طفلك، واحظر الباقي في Microsoft Family Safety، ضمن التطبيقات والألعاب.</p></li>
+        <li><h3 data-t="su9">رشّح الهاتف كله أو شبكة المنزل</h3><p data-t="su10">يبحث AkhiBrowser عن المواقع عبر DNS العائلي من Cloudflare. استخدمه لكل التطبيقات أيضًا: على Android اضبط DNS الخاص على family.cloudflare-dns.com (الإعدادات، الشبكة والإنترنت؛ يختلف المسار قليلًا حسب الهاتف). وعلى الراوتر اضبط خوادم DNS على 1.1.1.3 و1.0.0.3، لكل جهاز على شبكة Wi-Fi.</p></li>
+        <li><h3 data-t="su11">عيّن رمز PIN للوالدين</h3><p data-t="su12">عيّن رمز PIN للوالدين في إعدادات AkhiBrowser، حتى لا يمكن إيقاف الحماية من دونك.</p></li>
+        <li><h3 data-t="su13">تحدّث مع طفلك</h3><p data-t="su14">لا يوجد مرشّح يلتقط كل شيء. أخبر طفلك لماذا وُضعت هذه القواعد، وأنه يستطيع دائمًا أن يأتي إليك إذا رأى شيئًا خاطئًا.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="privacy">
+    <div class="wrap">
+      <h2 data-t="t40">ما الذي يغادر جهازك</h2>
+      <p class="intro" data-t="t41">سجلّك وصفحاتك وصورك تبقى على جهازك. لا يصلنا شيء مما تفعله، ولا تذهب إلى Mozilla أي بيانات قياس أو دراسات أو تقارير أعطال. ومع ذلك لا بد للمتصفح أن يتواصل مع بعض الخدمات، وهذه هي كلها:</p>
+      <ul class="flows">
+        <li data-t="t42"><strong>أسماء المواقع، إلى Cloudflare.</strong> لحجب المواقع الإباحية على مستوى الشبكة، يبحث المتصفح عن الأسماء عبر DNS العائلي من Cloudflare، فترى Cloudflare أسماء المواقع التي تزورها.</li>
+        <li data-t="t43"><strong>التنزيلات.</strong> uBlock Origin من addons.mozilla.org، وقوائم حجب الإعلانات، وبرامج ترميز الفيديو من Mozilla وCisco وGoogle.</li>
+        <li data-t="t44"><strong>التحقق من التحديثات.</strong> مرة في اليوم، يسأل المتصفح GitHub إن كان هناك إصدار جديد.</li>
+        <li data-t="t90"><strong>عدّ دون هوية، إلينا.</strong> مرة في اليوم يحسب المتصفح نفسه: الإصدار والنظام وهل Premium مفعّل، بلا معرّف ولا شيء مما تزوره. يمكنك إيقافه في الإعدادات، تحت «احسبني دون هوية».</li>
+        <li data-t="t45"><strong>مفتاح Premium، إن أدخلته.</strong> يُتحقق منه عبر خادم التراخيص لدينا، مع معرّف تثبيت عشوائي، حتى يعمل المفتاح على 3 أجهزة في الوقت نفسه. لا يحتفظ الخادم بأسماء ولا عناوين بريد ولا بيانات تصفح.</li>
+        <li data-t="t55"><strong>تحليلات الموقع.</strong> يحمّل هذا الموقع Google Tag Manager. تتلقى Google عنوان IP للاتصال ومعلومات تقنية عن الطلب؛ وقد تجمع أيضًا وسوم التحليلات المفعّلة في حاوية GTM مشاهدات الصفحات والأحداث. انظر <a href="https://policies.google.com/privacy">سياسة خصوصية Google</a>.</li>
+      </ul>
+      <p class="note" data-t="t46"><a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md">سياسة الخصوصية (بالإنجليزية)</a></p>
+    </div>
+  </section>
+
+  <section id="affiliate">
+    <div class="wrap">
+      <h2 data-t="af1">انصح مدرستك أو مسجدك بـ AkhiBrowser</h2>
+      <p class="intro" data-t="af2">تعرف مدرسة أو مسجدًا أو مركزًا إسلاميًا يمكنه الاستفادة من AkhiBrowser؟ كن شريكًا بالعمولة: تحصل على 20% من كل دفعة لهم في خطة مدرسة / مسجد، كل شهر، ما داموا مشتركين. تُحتسب الدفعة بعد مرور 30 يومًا عليها، وندفع العمولة شهريًا.</p>
+      <p class="note" data-t="afn">برنامجان، لكل منهما نموذجه الخاص: <a href="#schools">للمدارس والمساجد</a> و<a href="#vip">للمؤثرين (VIP)</a>.</p>
+      <h3 class="plan-title" id="schools" data-t="afh1">للمدارس والمساجد</h3>
+      <div class="school-card">
+        <div>
+          <span class="label" data-t="sc1">تدفع المدرسة أو المسجد</span>
+          <strong data-t="sc2">30 €<small>شهريًا</small></strong>
+          <p data-t="sc3">خطة مدرسة / مسجد: كل ما في Family Premium، بمفتاح واحد لما يصل إلى 500 جهاز، توزَّع مجانًا على عائلاتهم.</p>
+        </div>
+        <div class="earn">
+          <span class="label" data-t="sc4">تحصل أنت على</span>
+          <strong data-t="sc5">6 €<small>شهريًا، عن كل مدرسة</small></strong>
+          <p data-t="sc6">20% من كل دفعة، ما داموا مشتركين.</p>
+        </div>
+      </div>
+      <form class="affiliate" action="https://akhi-license.akhibrowser.workers.dev/affiliate" method="post">
+        <label><span data-t="af3">اسمك</span><input name="name" required maxlength="100" autocomplete="name"></label>
+        <label><span data-t="af4">البريد الإلكتروني</span><input name="email" type="email" required maxlength="200" autocomplete="email"></label>
+        <label><span data-t="af5">المدرسة أو المسجد أو المؤسسة</span><input name="organisation" required maxlength="200" autocomplete="organization"></label>
+        <label class="trap" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAF9TRz9CNNAJX1Cg" data-action="affiliate" data-theme="dark" data-language="auto"></div>
+        <button class="btn" type="submit" data-t="af7">قدّم طلبك للمدارس والمساجد</button>
+        <p class="note" data-t="af8">نرسل إليك رابطك الخاص بالبريد خلال أيام قليلة. لا نستخدم بياناتك إلا لهذا الغرض. لمنع الروبوتات، يحمّل النموذج Cloudflare Turnstile عندما تبدأ في تعبئته.</p>
+      </form>
+      <h3 class="plan-title" id="vip" data-t="afh2">للمؤثرين: برنامج VIP</h3>
+      <p class="note" data-t="vip2">مؤثر على وسائل التواصل؟ برنامج شركاء VIP لخطة Family Premium: يحصل متابعوك على خصم 10%، وتحصل أنت على 10% من كل دفعة لهم، كل سنة يبقون فيها. 200 عائلة تجلب لك نحو 900 € سنويًا، سنة بعد سنة.</p>
+      <form class="affiliate" id="vip-apply" action="https://akhi-license.akhibrowser.workers.dev/affiliate" method="post">
+        <input type="hidden" name="program" value="vip">
+        <label><span data-t="vipf2">اسمك</span><input name="name" required maxlength="100" autocomplete="name"></label>
+        <label><span data-t="vipf3">البريد الإلكتروني</span><input name="email" type="email" required maxlength="200" autocomplete="email"></label>
+        <label><span data-t="vipf4">اسم قناتك أو علامتك</span><input name="organisation" required maxlength="200"></label>
+        <label><span data-t="vipf5">أين تنشر، وكم عدد متابعيك؟</span><textarea name="about" rows="3" maxlength="2000"></textarea></label>
+        <label class="trap" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAF9TRz9CNNAJX1Cg" data-action="affiliate" data-theme="dark" data-language="auto"></div>
+        <button class="btn" type="submit" data-t="vipf6">قدّم كـ VIP</button>
+        <p class="note" data-t="vipf7">نرد خلال أيام قليلة. عندما ندعوك، تصلك رمزك وروابطك بالبريد الإلكتروني.</p>
+      </form>
+    </div>
+  </section>
+
+  <section id="money">
+    <div class="wrap">
+      <h2 data-t="mm1">كيف نكسب المال</h2>
+      <p class="intro" data-t="mm2">AkhiBrowser مجاني، ولا يعرض إعلانات، ولا يبيع ما تفعله أو يشاركه أبدًا. هكذا يغطي تكاليفه، بكل الطرق:</p>
+      <ul class="list">
+        <li><h3 data-t="mm3">Premium</h3><p data-t="mm4">ميزات مدفوعة اختيارية لك وللأسر وللمدارس والمساجد. يأتي معظم المال من هنا.</p></li>
+        <li><h3 data-t="mm5">شركاء البحث</h3><p data-t="mm6">عندما يكون لمحرك بحث عقد شراكة معنا، يحمل البحث الذي تبدؤه في AkhiBrowser رمز الشراكة الخاص بنا، ويمنحنا المحرك حصة صغيرة مما يكسبه. يُضاف الرمز فقط: لا يصلنا شيء عنك أو عن بحثك.</p></li>
+        <li><h3 data-t="mm7">متاجر شريكة، فقط إن اخترت ذلك</h3><p data-t="mm8">متوقف ما لم تفعّله: عندما تذهب بنفسك إلى متجر شريك، نضيف رمزنا ويمنحنا المتجر حصة صغيرة. تدفع السعر نفسه، والرابط القادم من موقع آخر يحتفظ برمزه.</p></li>
+        <li><h3 data-t="mm9">نصائح في صفحة البداية</h3><p data-t="mm10">بين حين وآخر نصيحة برابط تسويق بالعمولة، موسومة دائمًا بذلك. لا نغيّر روابط المواقع الأخرى أبدًا.</p></li>
+        <li><h3 data-t="mm11">المسوّقون والرعاة والشركاء</h3><p data-t="mm12">من يجلب مدارس ومساجد يحصل على 20% من دفعاتهم. يمكن للرعاة والمؤسسات دعم AkhiBrowser، لكنهم لا يحصلون أبدًا على بياناتك ولا على رأي فيما يُحظر.</p></li>
+      </ul>
+      <p class="note" data-t="mm13">ما لا نفعله أبدًا: عرض الإعلانات، أو بيع تصفحك أو مشاركته، أو تتبعك عبر المواقع، أو ترك المال يغيّر ما يُحظر.</p>
+      <div id="sponsors" hidden>
+        <h3 class="plan-title" data-t="mm28">رعاتنا وشركاؤنا</h3>
+        <ul class="sponsors"></ul>
+      </div>
+      <h3 class="plan-title" id="partner" data-t="mm14">كن راعيًا أو شريكًا</h3>
+      <form class="affiliate" action="https://akhi-license.akhibrowser.workers.dev/partner" method="post">
+        <label><span data-t="mm15">اسمك</span><input name="name" required maxlength="100" autocomplete="name"></label>
+        <label><span data-t="mm16">البريد الإلكتروني</span><input name="email" type="email" required maxlength="200" autocomplete="email"></label>
+        <label><span data-t="mm17">المؤسسة</span><input name="organisation" maxlength="200" autocomplete="organization"></label>
+        <label><span data-t="mm26">موقعك الإلكتروني</span><input name="site" inputmode="url" maxlength="200" autocomplete="url" placeholder="example.com"></label>
+        <label><span data-t="mm18">أي نوع من الشراكة؟</span><select name="kind">
+          <option value="sponsor" data-t="mm19">راعٍ</option>
+          <option value="ecosystem" data-t="mm20">شريك في المنظومة: تطبيق إسلامي أو منصة مدرسية أو مؤسسة</option>
+          <option value="search" data-t="mm21">محرك بحث</option>
+          <option value="shop" data-t="mm22">متجر</option>
+        </select></label>
+        <label><span data-t="mm23">ما الذي تقترحه؟</span><textarea name="about" rows="3" maxlength="2000"></textarea></label>
+        <label class="check"><input type="checkbox" name="listed" value="yes"> <span data-t="mm27">اعرضوا مؤسستنا، مع رابط إلى موقعنا، في صفحة الرعاة</span></label>
+        <label class="trap" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAF9TRz9CNNAJX1Cg" data-action="partner" data-theme="dark" data-language="auto"></div>
+        <button class="btn" type="submit" data-t="mm24">إرسال</button>
+        <p class="note" data-t="mm25">نرد خلال أيام قليلة. يجب أن تُبقي الشراكة AkhiBrowser خاصًا: بيانات مستخدمينا لا تكون جزءًا منها أبدًا.</p>
+      </form>
+    </div>
+  </section>
+
+</template>
+</body>
+</html>
