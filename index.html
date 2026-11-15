@@ -568,7 +568,6 @@ footer .powered a:hover { text-decoration: underline; }
   <div class="wrap">
     <div class="hero">
       <div>
-        <a class="badge" href="#download" data-t="k0"><i></i>Now on the Microsoft Store</a>
         <h1 data-t="t2"><span>The halal browser</span> that filters the web on your device.</h1>
         <p class="lead" data-t="t3">A private, halal browser for Muslims, built on Firefox. One browser does it all, on your device: it blocks ads and haram sites, blurs images until they are checked and takes the music out of videos, without tracking what you browse.</p>
         <div class="get" id="download">
@@ -834,7 +833,7 @@ footer .powered a:hover { text-decoration: underline; }
 <footer>
   <div class="wrap">
     <p data-t="t53">AkhiBrowser is built on <a href="https://www.firefox.com/">Firefox</a>, and is not made or endorsed by Mozilla. Background music removal builds on <a href="https://github.com/mohamedsadiqaguenaou/NoMusic">NoMusic</a> by Mohamed Sadiq.</p>
-    <p><a href="https://www.youtube.com/@akhibrowser">YouTube</a> &middot; <a href="/newsletter/" data-t="nlb">Newsletter: a verse each week</a> &middot; <a href="https://github.com/halgurdh/akhiBrowser" data-t="t54">Source on GitHub</a> &middot; <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a></p>
+    <p><a href="/faq/" data-t="faqf">Frequently asked questions</a> &middot; <a href="https://www.youtube.com/@akhibrowser">YouTube</a> &middot; <a href="/newsletter/" data-t="nlb">Newsletter: a verse each week</a> &middot; <a href="https://github.com/halgurdh/akhiBrowser" data-t="t54">Source on GitHub</a> &middot; <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a></p>
     <p>&copy; <span data-year>2026</span> AkhiBrowser &middot; KvK 82581509 &middot; <span data-t="loc">Almere, Netherlands</span></p>
     <p class="powered"><span data-t="p0">Powered by</span> <a href="https://cdgbrands.com">CDGBrands</a></p>
   </div>
@@ -1122,7 +1121,6 @@ footer .powered a:hover { text-decoration: underline; }
 "x9": "Hij werkt met een toetsenbord, de afbeeldingen hebben een tekstbeschrijving, en de bewegende afbeelding staat stil als je op je apparaat minder beweging hebt ingesteld. De video's hebben nog geen ondertiteling, maar laten hun boodschap als tekst in beeld zien, en deze pagina vertelt hetzelfde.",
 "x10": "Werkt er iets niet voor jou? Laat het ons weten via <a href=\"mailto:support@akhibrowser.com\">support@akhibrowser.com<\/a>.",
 "x11": "Toegankelijkheid",
-"k0": "<i><\/i>Nu in de Microsoft Store",
 "k1": "gratis beschermingen, meteen aan",
 "k2": "talen",
 "k3": "pagina's, afbeeldingen of geschiedenis naar ons",
@@ -1418,7 +1416,6 @@ footer .powered a:hover { text-decoration: underline; }
 "x9": "تعمل بلوحة المفاتيح، ولصورها أوصاف نصية، والصورة المتحركة تبقى ثابتة إن طلبت من جهازك تقليل الحركة. ليس للفيديوهات ترجمة نصية بعد، لكنها تعرض رسالتها نصًا على الشاشة، وهذه الصفحة تقول الشيء نفسه.",
 "x10": "هل هناك شيء لا يعمل معك؟ أخبرنا على <a href=\"mailto:support@akhibrowser.com\">support@akhibrowser.com<\/a>.",
 "x11": "إمكانية الوصول",
-"k0": "<i><\/i>متوفر الآن في متجر Microsoft",
 "k1": "حمايات مجانية، تعمل من الصفحة الأولى",
 "k2": "لغة",
 "k3": "صفحات أو صور أو سجل تصفح يُرسل إلينا",
@@ -1452,7 +1449,7 @@ footer .powered a:hover { text-decoration: underline; }
     return [node, name, key, node.getAttribute(name)];
   });
   // links to the blog and comparison pages go to the pages in the chosen language
-  const pageLinks = [...document.querySelectorAll('a[href^="/blog/"], a[href^="/compare/"], a[href^="/affiliate/"], a[href^="/money/"], a[href^="/privacy/"], a[href^="/setup/"], a[href^="/kit/"]')].map(node => [node, node.getAttribute("href")]);
+  const pageLinks = [...document.querySelectorAll('a[href^="/blog/"], a[href^="/compare/"], a[href^="/affiliate/"], a[href^="/money/"], a[href^="/privacy/"], a[href^="/setup/"], a[href^="/kit/"], a[href^="/faq/"], a[href^="/newsletter/"], a[href^="/delete-account/"]')].map(node => [node, node.getAttribute("href")]);
   const menu = document.getElementById("lang");
 
   function show(lang) {
