@@ -5,7 +5,8 @@ META), then run
 
     python tools/build_home.py
 
-It also keeps /nl/ and /ar/ in sitemap.xml.
+It also keeps /nl/ and /ar/ in sitemap.xml. On GitHub this runs by itself when index.html changes
+(.github/workflows/build-home.yml).
 """
 import html
 import json
