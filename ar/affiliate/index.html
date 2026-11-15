@@ -77,7 +77,7 @@
 
       <h1 data-t="af1">انصح مدرستك أو مسجدك بـ AkhiBrowser</h1>
       <p class="intro" data-t="af2">تعرف مدرسة أو مسجدًا أو مركزًا إسلاميًا يمكنه الاستفادة من AkhiBrowser؟ كن شريكًا بالعمولة: تحصل على 20% من كل دفعة لهم في خطة مدرسة / مسجد، كل شهر، ما داموا مشتركين. تُحتسب الدفعة بعد مرور 30 يومًا عليها، وندفع العمولة شهريًا.</p>
-      <p class="note" id="vip" data-t="vip2">مؤثر على وسائل التواصل؟ برنامج شركاء VIP لخطة Family Premium: يحصل متابعوك على خصم 10%، وتحصل أنت على 10% من كل دفعة لهم، كل سنة يبقون فيها. 200 عائلة تجلب لك نحو 900 € سنويًا، سنة بعد سنة. راسلنا على <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a>.</p>
+      <p class="note" id="vip" data-t="vip2">مؤثر على وسائل التواصل؟ برنامج شركاء VIP لخطة Family Premium: يحصل متابعوك على خصم 10%، وتحصل أنت على 10% من كل دفعة لهم، كل سنة يبقون فيها. 200 عائلة تجلب لك نحو 900 € سنويًا، سنة بعد سنة. <a href="#vip-apply">قدّم طلبك عبر نموذج VIP أدناه.</a></p>
       <div class="school-card">
         <div>
           <span class="label" data-t="sc1">تدفع المدرسة أو المسجد</span>
@@ -98,6 +98,18 @@
         <div class="cf-turnstile" data-sitekey="0x4AAAAAAF9TRz9CNNAJX1Cg" data-action="affiliate" data-theme="dark" data-language="auto"></div>
         <button class="btn" type="submit" data-t="af7">تقديم الطلب</button>
         <p class="note" data-t="af8">نرسل إليك رابطك الخاص بالبريد خلال أيام قليلة. لا نستخدم بياناتك إلا لهذا الغرض. لمنع الروبوتات، يحمّل النموذج Cloudflare Turnstile عندما تبدأ في تعبئته.</p>
+      </form>
+      <h3 class="plan-title" id="vip-apply" data-t="vipf1">طلب الانضمام إلى VIP</h3>
+      <form class="affiliate" action="https://akhi-license.akhibrowser.workers.dev/affiliate" method="post">
+        <input type="hidden" name="program" value="vip">
+        <label><span data-t="vipf2">اسمك</span><input name="name" required maxlength="100" autocomplete="name"></label>
+        <label><span data-t="vipf3">البريد الإلكتروني</span><input name="email" type="email" required maxlength="200" autocomplete="email"></label>
+        <label><span data-t="vipf4">اسم قناتك أو علامتك</span><input name="organisation" required maxlength="200"></label>
+        <label><span data-t="vipf5">أين تنشر، وكم عدد متابعيك؟</span><textarea name="about" rows="3" maxlength="2000"></textarea></label>
+        <label class="trap" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAF9TRz9CNNAJX1Cg" data-action="affiliate" data-theme="dark" data-language="auto"></div>
+        <button class="btn" type="submit" data-t="vipf6">قدّم كـ VIP</button>
+        <p class="note" data-t="vipf7">نرد خلال أيام قليلة. عندما ندعوك، تصلك رمزك وروابطك بالبريد الإلكتروني.</p>
       </form>
     
 </div>
