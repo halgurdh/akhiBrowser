@@ -48,6 +48,7 @@ jobs:
       - name: Install the build tools
         run: |
           mkdir -p artifacts
+          sudo apt-get install -y -qq msitools > /dev/null
           ./mach --no-interactive bootstrap --application-choice "Firefox for Desktop" > artifacts/bootstrap.log 2>&1 \
             || { tail -n 30 artifacts/bootstrap.log; exit 1; }
           "$HOME/.cargo/bin/rustup" target add x86_64-pc-windows-msvc
