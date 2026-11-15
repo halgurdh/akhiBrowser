@@ -77,7 +77,8 @@
 
       <h1 data-t="af1">انصح مدرستك أو مسجدك بـ AkhiBrowser</h1>
       <p class="intro" data-t="af2">تعرف مدرسة أو مسجدًا أو مركزًا إسلاميًا يمكنه الاستفادة من AkhiBrowser؟ كن شريكًا بالعمولة: تحصل على 20% من كل دفعة لهم في خطة مدرسة / مسجد، كل شهر، ما داموا مشتركين. تُحتسب الدفعة بعد مرور 30 يومًا عليها، وندفع العمولة شهريًا.</p>
-      <p class="note" id="vip" data-t="vip2">مؤثر على وسائل التواصل؟ برنامج شركاء VIP لخطة Family Premium: يحصل متابعوك على خصم 10%، وتحصل أنت على 10% من كل دفعة لهم، كل سنة يبقون فيها. 200 عائلة تجلب لك نحو 900 € سنويًا، سنة بعد سنة. <a href="#vip-apply">قدّم طلبك عبر نموذج VIP أدناه.</a></p>
+      <p class="note" data-t="afn">برنامجان، لكل منهما نموذجه الخاص: <a href="#schools">للمدارس والمساجد</a> و<a href="#vip">للمؤثرين (VIP)</a>.</p>
+      <h3 class="plan-title" id="schools" data-t="afh1">للمدارس والمساجد</h3>
       <div class="school-card">
         <div>
           <span class="label" data-t="sc1">تدفع المدرسة أو المسجد</span>
@@ -96,11 +97,12 @@
         <label><span data-t="af5">المدرسة أو المسجد أو المؤسسة</span><input name="organisation" required maxlength="200" autocomplete="organization"></label>
         <label class="trap" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
         <div class="cf-turnstile" data-sitekey="0x4AAAAAAF9TRz9CNNAJX1Cg" data-action="affiliate" data-theme="dark" data-language="auto"></div>
-        <button class="btn" type="submit" data-t="af7">تقديم الطلب</button>
+        <button class="btn" type="submit" data-t="af7">قدّم طلبك للمدارس والمساجد</button>
         <p class="note" data-t="af8">نرسل إليك رابطك الخاص بالبريد خلال أيام قليلة. لا نستخدم بياناتك إلا لهذا الغرض. لمنع الروبوتات، يحمّل النموذج Cloudflare Turnstile عندما تبدأ في تعبئته.</p>
       </form>
-      <h3 class="plan-title" id="vip-apply" data-t="vipf1">طلب الانضمام إلى VIP</h3>
-      <form class="affiliate" action="https://akhi-license.akhibrowser.workers.dev/affiliate" method="post">
+      <h3 class="plan-title" id="vip" data-t="afh2">للمؤثرين: برنامج VIP</h3>
+      <p class="note" data-t="vip2">مؤثر على وسائل التواصل؟ برنامج شركاء VIP لخطة Family Premium: يحصل متابعوك على خصم 10%، وتحصل أنت على 10% من كل دفعة لهم، كل سنة يبقون فيها. 200 عائلة تجلب لك نحو 900 € سنويًا، سنة بعد سنة.</p>
+      <form class="affiliate" id="vip-apply" action="https://akhi-license.akhibrowser.workers.dev/affiliate" method="post">
         <input type="hidden" name="program" value="vip">
         <label><span data-t="vipf2">اسمك</span><input name="name" required maxlength="100" autocomplete="name"></label>
         <label><span data-t="vipf3">البريد الإلكتروني</span><input name="email" type="email" required maxlength="200" autocomplete="email"></label>
