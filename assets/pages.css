@@ -129,6 +129,8 @@ nav { position: relative; }
 .affiliate .check { display: flex; gap: 10px; align-items: flex-start; }
 .affiliate .check input { margin-top: 3px; padding: 0; }
 .sponsors { list-style: none; padding: 0; display: grid; gap: 8px; }
+.affiliate .form-error { margin: 0; padding: 10px 12px; border-radius: 10px; background: rgba(255, 110, 90, .16); border: 1.5px solid #ff8a75; color: #fff; }
+.affiliate button:disabled { opacity: .7; cursor: wait; }
 .affiliate .trap { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 @media (max-width: 480px) {
   .school-card { grid-template-columns: 1fr; }
