@@ -1,0 +1,37 @@
+# Keeps the Dutch and Arabic home pages (/nl/ and /ar/) in step with index.html: when index.html changes,
+# tools/build_home.py builds them again and the result is committed.
+name: Build /nl/ and /ar/ home pages
+
+on:
+  push:
+    branches: [gh-pages]
+    paths: [index.html, tools/build_home.py]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-home
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python tools/build_home.py
+      - name: Commit the built pages
+        run: |
+          if git diff --quiet -- nl/index.html ar/index.html sitemap.xml; then
+            echo "Already up to date"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898699+github-actions[bot]@users.noreply.github.com"
+          git add nl/index.html ar/index.html sitemap.xml
+          git commit -m "Build /nl/ and /ar/ from index.html"
+          git push
