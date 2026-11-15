@@ -32,8 +32,13 @@ jobs:
     steps:
       - name: Free disk space
         run: |
-          sudo rm -rf /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
+          sudo swapoff -a && sudo rm -f /mnt/swapfile /swapfile
+          sudo fallocate -l 12G /swapfile && sudo chmod 600 /swapfile && sudo mkswap -q /swapfile && sudo swapon /swapfile
           df -h /
+          free -m
+          # memory and disk each minute, as GitHub stops the machine without a log when either runs out
+          (while sleep 60; do echo "$(date +%T) disk $(df -h / | awk 'NR==2{print $4}') free, memory $(free -m | awk '/Mem/{print $7}')M free, swap $(free -m | awk '/Swap/{print $3}')M used"; done) &
 
       - uses: actions/checkout@v4
         with:
@@ -74,7 +79,7 @@ jobs:
         run: |
           version=$(cat browser/config/akhi_version.txt)
           node browser/branding/akhi/tools/merge_akhi_extension.mjs artifacts/release-extension
-          AKHI_EXTENSION_DIR="$PWD/artifacts/release-extension" ./mach gradle :fenix:assembleRelease > artifacts/gradle.log 2>&1 \
+          AKHI_EXTENSION_DIR="$PWD/artifacts/release-extension" ./mach gradle --max-workers=2 :fenix:assembleRelease > artifacts/gradle.log 2>&1 \
             || { grep -nE "FAILURE|error:|What went wrong" -A5 artifacts/gradle.log | tail -n 40; exit 1; }
           mkdir -p out
           cp obj-akhi-android-arm64/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-arm64-v8a-release.apk \
