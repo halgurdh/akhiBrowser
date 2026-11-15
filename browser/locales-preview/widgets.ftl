@@ -27,3 +27,25 @@ preferences-ai-controls-custom-widgets-control =
 # Item in the list of features the "Block AI enhancements?" confirmation
 # dialog will block.
 preferences-ai-controls-block-confirmation-custom-widgets = Custom widgets
+
+# Opens the text field for describing a widget to make.
+widget-studio-compose-button =
+  .title = New widget
+
+# Text field describing the widget to make.
+widget-composer-input =
+  .placeholder = Describe a widget
+  .aria-label = Describe a widget
+
+# Makes the widget the prompt describes.
+widget-composer-submit-button =
+  .title = Create widget
+
+# Heading of the group in Firefox Labs that holds experiments in the Homepage, for example the custom widgets entry.
+experimental-features-group-custom-widgets =
+  .label = Homepage
+
+# Custom widgets are widgets that people create by describing them to AI.
+experimental-features-custom-widgets =
+    .label = Custom widgets
+experimental-features-custom-widgets-description = Build your own widgets for { -firefox-home-brand-name } or your sidebar just by describing what you want. For example, a habit tracker, word count tool, or dad joke generator. Each widget stays on your device. We don’t store your prompts, widgets, or widget data, and we don’t use your data to train AI. <a data-l10n-name="connect">Share feedback</a>

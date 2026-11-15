@@ -50,6 +50,8 @@ import mozilla.components.feature.logins.exceptions.LoginExceptionStorage
 import mozilla.components.feature.media.MediaSessionFeature
 import mozilla.components.feature.media.middleware.LastMediaAccessMiddleware
 import mozilla.components.feature.media.middleware.RecordingDevicesMiddleware
+import mozilla.components.feature.pictureinpicture.PictureInPictureMiddleware
+import mozilla.components.feature.pictureinpicture.PictureInPictureWindowFeature
 import mozilla.components.feature.prompts.PromptMiddleware
 import mozilla.components.feature.prompts.file.FileUploadsDirCleaner
 import mozilla.components.feature.prompts.file.FileUploadsDirCleanerMiddleware
@@ -135,6 +137,7 @@ import org.mozilla.fenix.nimbus.BaselineFpp
 import org.mozilla.fenix.nimbus.FingerprintingProtection
 import org.mozilla.fenix.nimbus.FxNimbus
 import org.mozilla.fenix.perf.StrictModeManager
+import org.mozilla.fenix.pictureinpicture.PictureInPictureActivity
 import org.mozilla.fenix.settings.advanced.getSelectedLocale
 import org.mozilla.fenix.settings.downloads.DownloadLocationManager
 import org.mozilla.fenix.share.DefaultSentFromFirefoxManager
@@ -145,7 +148,9 @@ import org.mozilla.fenix.summarization.eligibility.DefaultSummarizationEligibili
 import org.mozilla.fenix.summarization.eligibility.SummarizationEligibilityChecker
 import org.mozilla.fenix.summarization.onboarding.FenixSummarizationFeatureConfiguration
 import org.mozilla.fenix.summarization.onboarding.SummarizationFeatureDiscoveryConfiguration
+import org.mozilla.fenix.tabgroups.FenixTabGroupsFeatureDiscoveryConfiguration
 import org.mozilla.fenix.tabgroups.middleware.TabGroupMiddleware
+import org.mozilla.fenix.tabstray.repository.uistate.DefaultTabManagerUiStateRepository
 import org.mozilla.fenix.telemetry.TelemetryMiddleware
 import org.mozilla.fenix.translations.TranslationsEnabledSettings
 import org.mozilla.fenix.utils.Settings.DeleteDownloadBehavior
@@ -412,6 +417,7 @@ class Core(
                 AboutHomeMiddleware(homepageTitle = context.getString(R.string.tab_tray_homepage_tab)),
                 BrowserVisualCompletenessMiddleware(visualCompletenessQueue),
                 TabGroupMiddleware(tabGroupRepository = tabGroupRepository, scope = applicationScope),
+                PictureInPictureMiddleware(),
             )
 
         BrowserStore(
@@ -452,6 +458,7 @@ class Core(
                 )
 
                 MediaSessionFeature(context, MediaSessionService::class.java, this).start()
+                PictureInPictureWindowFeature(context, this, PictureInPictureActivity::class.java).start()
                 CarUxRestrictionsFeature(
                         applicationContext = context,
                         store = this,
@@ -696,6 +703,18 @@ class Core(
         FenixSummarizationFeatureConfiguration(
             settings = context.components.settings,
             summarizationSettingsBinding = summarizationSettingsBinding,
+        )
+    }
+
+    val tabManagerUiStateRepository by lazy {
+        DefaultTabManagerUiStateRepository(context = context, stateFlowScope = applicationScope)
+    }
+
+    val tabGroupDiscoveryFeatureConfiguration by lazy {
+        FenixTabGroupsFeatureDiscoveryConfiguration(
+            settings = context.components.settings,
+            tabGroupUiStateRepository = tabManagerUiStateRepository,
+            scope = applicationScope,
         )
     }
 

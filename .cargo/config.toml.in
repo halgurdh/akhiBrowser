@@ -20,9 +20,9 @@ git = "https://github.com/franziskuskiefer/cose-rust"
 rev = "43c22248d136c8b38fe42ea709d08da6355cf04b"
 replace-with = "vendored-sources"
 
-[source."git+https://github.com/gfx-rs/wgpu?rev=49325ca0a13bdc0787b1601138096cce743dd29e"]
+[source."git+https://github.com/gfx-rs/wgpu?rev=4fe54b0207a2ec7e0d65af900b1218b3c1529699"]
 git = "https://github.com/gfx-rs/wgpu"
-rev = "49325ca0a13bdc0787b1601138096cce743dd29e"
+rev = "4fe54b0207a2ec7e0d65af900b1218b3c1529699"
 replace-with = "vendored-sources"
 
 [source."git+https://github.com/glandium/allocator-api2?rev=ad5f3d56a5a4519eff52af4ff85293431466ef5c"]
@@ -119,9 +119,9 @@ replace-with = "vendored-sources"
 git = "https://github.com/mozilla/nss-rs"
 replace-with = "vendored-sources"
 
-[source."git+https://github.com/rust-minidump/minidump-writer.git?rev=3ab1604f91db05ec3f3a84d779a2871df7d9afd7"]
+[source."git+https://github.com/rust-minidump/minidump-writer.git?rev=d5ec275ce1276947f09f205a581fe2b3cf90178f"]
 git = "https://github.com/rust-minidump/minidump-writer.git"
-rev = "3ab1604f91db05ec3f3a84d779a2871df7d9afd7"
+rev = "d5ec275ce1276947f09f205a581fe2b3cf90178f"
 replace-with = "vendored-sources"
 
 [source."git+https://github.com/servo/rust-cssparser?rev=9f3ceddf398f5ce4ab76fdad1b42ccb6c578a926"]

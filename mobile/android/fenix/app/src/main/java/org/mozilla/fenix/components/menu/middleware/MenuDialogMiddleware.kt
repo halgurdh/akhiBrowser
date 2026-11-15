@@ -145,7 +145,7 @@ class MenuDialogMiddleware(
                 visible = showMenuItem,
                 highlighted = summarizeMenuSettings.shouldHighlightMenuItem && isNormalTab,
                 overflowMenuHighlighted = summarizeMenuSettings.shouldHighlightOverflowMenuItem && isNormalTab,
-                showNewFeatureBadge = true,
+                showNewFeatureBadge = false,
                 enabled = showMenuItem && isNormalTab && isSummarizationEligible,
             )
         store.dispatch(MenuAction.InitializeSummarizationMenuState(summarizationState))
@@ -181,7 +181,7 @@ class MenuDialogMiddleware(
         val selectedTab = store.state.browserMenuState?.selectedTab
         if (selectedTab.isCustomTab()) return
         val url = selectedTab?.content?.url ?: return
-        pinnedSiteStorage.getPinnedSites().firstOrNull { it.url == url } ?: return
+        if (pinnedSiteStorage.getPinnedSites().none { it.url == url }) return
 
         store.dispatch(MenuAction.UpdatePinnedState(isPinned = true))
     }

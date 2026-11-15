@@ -90,7 +90,7 @@ bool isGroupDelim(char16_t aSymbol) {
 
 bool nsCSPParser::isValidBase64Value(const nsAString& aValue) {
   // Using grammar at
-  // https://w3c.github.io/webappsec-csp/#grammardef-nonce-source
+  // https://w3c.github.io/webappsec-csp/#grammardef-base64-value
 
   const char16_t* cur = aValue.BeginReading();
   const char16_t* end = aValue.EndReading();
@@ -206,7 +206,7 @@ bool nsCSPParser::schemeChar() {
          accept(DASH) || accept(DOT);
 }
 
-// port = ":" ( 1*DIGIT / "*" )
+// ":" port-part, where port-part = 1*DIGIT / "*"
 bool nsCSPParser::port() {
   CSPPARSERLOG(("nsCSPParser::port, mCurToken: %s, mCurValue: %s",
                 NS_ConvertUTF16toUTF8(mCurToken).get(),
@@ -350,7 +350,9 @@ bool nsCSPParser::subHost() {
   return true;
 }
 
-// host = "*" / [ "*." ] 1*host-char *( "." 1*host-char )
+// host-part = "*" / [ "*." ] 1*host-char *( "." 1*host-char ) [ "." ]
+//
+// Non-standard: A trailing "." isn't supported.
 nsCSPHostSrc* nsCSPParser::host() {
   CSPPARSERLOG(("nsCSPParser::host, mCurToken: %s, mCurValue: %s",
                 NS_ConvertUTF16toUTF8(mCurToken).get(),
@@ -403,8 +405,15 @@ nsCSPHostSrc* nsCSPParser::host() {
   return new nsCSPHostSrc(mCurValue);
 }
 
-// keyword-source = "'self'" / "'unsafe-inline'" / "'unsafe-eval'" /
-// "'wasm-unsafe-eval'"
+// keyword-source = "'self'" / "'unsafe-inline'" / "'unsafe-eval'"
+//                  / "'strict-dynamic'" / "'unsafe-hashes'"
+//                  / "'report-sample'" / "'unsafe-allow-redirects'"
+//                  / "'wasm-unsafe-eval'" / "'trusted-types-eval'"
+//                  / "'report-sha256'" / "'report-sha384'"
+//                  / "'report-sha512'" / "'unsafe-webtransport-hashes'"
+//
+// Non-standard: 'unsafe-allow-redirects', 'report-sha256', 'report-sha384',
+// 'report-sha512' and 'unsafe-webtransport-hashes' aren't supported.
 nsCSPBaseSrc* nsCSPParser::keywordSource() {
   CSPPARSERLOG(("nsCSPParser::keywordSource, mCurToken: %s, mCurValue: %s",
                 NS_ConvertUTF16toUTF8(mCurToken).get(),
@@ -476,7 +485,8 @@ nsCSPBaseSrc* nsCSPParser::keywordSource() {
   return nullptr;
 }
 
-// host-source = [ scheme "://" ] host [ port ] [ path ]
+// host-source = [ scheme-part "://" ] host-part [ ":" port-part ]
+//               [ path-part ]
 nsCSPHostSrc* nsCSPParser::hostSource() {
   CSPPARSERLOG(("nsCSPParser::hostSource, mCurToken: %s, mCurValue: %s",
                 NS_ConvertUTF16toUTF8(mCurToken).get(),
@@ -509,14 +519,14 @@ nsCSPHostSrc* nsCSPParser::hostSource() {
   if (!path(cspHost)) {
     // If the host [port] is followed by a path, it has to be a valid path,
     // otherwise we pass the nullptr, indicating an error, up the callstack.
-    // see also http://www.w3.org/TR/CSP11/#source-list
+    // see also https://w3c.github.io/webappsec-csp/#grammardef-path-part
     delete cspHost;
     return nullptr;
   }
   return cspHost;
 }
 
-// scheme-source = scheme ":"
+// scheme-source = scheme-part ":"
 nsCSPSchemeSrc* nsCSPParser::schemeSource() {
   CSPPARSERLOG(("nsCSPParser::schemeSource, mCurToken: %s, mCurValue: %s",
                 NS_ConvertUTF16toUTF8(mCurToken).get(),
@@ -543,7 +553,7 @@ nsCSPSchemeSrc* nsCSPParser::schemeSource() {
   return new nsCSPSchemeSrc(scheme);
 }
 
-// nonce-source = "'nonce-" nonce-value "'"
+// nonce-source = "'nonce-" base64-value "'"
 nsCSPNonceSrc* nsCSPParser::nonceSource() {
   CSPPARSERLOG(("nsCSPParser::nonceSource, mCurToken: %s, mCurValue: %s",
                 NS_ConvertUTF16toUTF8(mCurToken).get(),
@@ -570,11 +580,36 @@ nsCSPNonceSrc* nsCSPParser::nonceSource() {
 
   // cache if encountering hash or nonce to invalidate unsafe-inline
   mHasHashOrNonce = true;
-  return new nsCSPNonceSrc(
-      Substring(expr, dashIndex + 1, expr.Length() - dashIndex + 1));
+  return new nsCSPNonceSrc(Substring(expr, dashIndex + 1));
 }
 
-// hash-source = "'" hash-algo "-" base64-value "'"
+static bool ExtractAlgorithmAndHash(const nsAString& aExpr,
+                                    nsAString& aOutAlgorithm,
+                                    nsAString& aOutHash) {
+  int32_t dashIndex = aExpr.FindChar(DASH);
+  if (dashIndex < 0) {
+    return false;
+  }
+
+  const nsAString& algorithm = Substring(aExpr, 0, dashIndex);
+  const nsAString& hash = Substring(aExpr, dashIndex + 1);
+
+  if (!nsCSPParser::isValidBase64Value(hash)) {
+    return false;
+  }
+
+  for (auto hashSourceValidFn : kHashSourceValidFns) {
+    if (algorithm.LowerCaseEqualsASCII(hashSourceValidFn)) {
+      aOutAlgorithm = algorithm;
+      aOutHash = hash;
+      return true;
+    }
+  }
+
+  return false;
+}
+
+// hash-source = "'" hash-algorithm "-" base64-value "'"
 nsCSPHashSrc* nsCSPParser::hashSource() {
   CSPPARSERLOG(("nsCSPParser::hashSource, mCurToken: %s, mCurValue: %s",
                 NS_ConvertUTF16toUTF8(mCurToken).get(),
@@ -588,27 +623,16 @@ nsCSPHashSrc* nsCSPParser::hashSource() {
   // Trim surrounding single quotes
   const nsAString& expr = Substring(mCurToken, 1, mCurToken.Length() - 2);
 
-  int32_t dashIndex = expr.FindChar(DASH);
-  if (dashIndex < 0) {
+  nsAutoString algorithm;
+  nsAutoString hash;
+  if (!ExtractAlgorithmAndHash(expr, algorithm, hash)) {
     return nullptr;
   }
 
-  if (!isValidBase64Value(Substring(expr, dashIndex + 1))) {
-    return nullptr;
-  }
+  // Cache if encountering hash or nonce to invalidate unsafe-inline
+  mHasHashOrNonce = true;
 
-  nsAutoString algo(Substring(expr, 0, dashIndex));
-  nsAutoString hash(
-      Substring(expr, dashIndex + 1, expr.Length() - dashIndex + 1));
-
-  for (auto hashSourceValidFn : kHashSourceValidFns) {
-    if (algo.LowerCaseEqualsASCII(hashSourceValidFn)) {
-      // cache if encountering hash or nonce to invalidate unsafe-inline
-      mHasHashOrNonce = true;
-      return new nsCSPHashSrc(algo, hash);
-    }
-  }
-  return nullptr;
+  return new nsCSPHashSrc(algorithm, hash);
 }
 
 // source-expression = scheme-source / host-source / keyword-source
@@ -707,8 +731,14 @@ void nsCSPParser::logWarningForIgnoringNoneKeywordToConsole() {
                            params);
 }
 
-// source-list = *WSP [ source-expression *( 1*WSP source-expression ) *WSP ]
-//               / *WSP "'none'" *WSP
+// https://w3c.github.io/webappsec-csp/#framework-directive-source-list
+// serialized-source-list = ( source-expression *( required-ascii-whitespace
+//                            source-expression ) ) / "'none'"
+//
+// Unlike the grammar, this also accepts an empty source list and 'none' next
+// to other source expressions, as the spec's algorithms do, see the notes in
+// step 3 of https://w3c.github.io/webappsec-csp/#match-url-to-source-list
+// and https://github.com/w3c/webappsec-csp/issues/411.
 void nsCSPParser::sourceList(nsTArray<nsCSPBaseSrc*>& outSrcs) {
   bool isNone = false;
 
@@ -725,7 +755,8 @@ void nsCSPParser::sourceList(nsTArray<nsCSPBaseSrc*>& outSrcs) {
 
     // Special case handling for none:
     // Ignore 'none' if any other src is available.
-    // (See http://www.w3.org/TR/CSP11/#parsing)
+    // (See the note in step 3 of
+    // https://w3c.github.io/webappsec-csp/#match-url-to-source-list)
     if (CSP_IsKeyword(mCurToken, CSP_NONE)) {
       isNone = true;
       continue;
