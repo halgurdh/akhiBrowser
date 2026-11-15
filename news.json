@@ -1,0 +1,29 @@
+{
+  "notice": "Shown in the weekly newsletter (license server, sendNewsletter): the first 3 items. title/text in English, title_nl/text_nl and title_ar/text_ar optional.",
+  "items": [
+    {
+      "title": "Block words",
+      "text": "Family Premium: searches, web addresses and pages with words you choose don't open.",
+      "title_nl": "Woorden blokkeren",
+      "text_nl": "Family Premium: zoekopdrachten, webadressen en pagina's met woorden die jij kiest gaan niet open.",
+      "title_ar": "حظر الكلمات",
+      "text_ar": "Family Premium: لا تُفتح عمليات البحث والعناوين والصفحات التي فيها كلمات تختارها."
+    },
+    {
+      "title": "Blocked apps, easier",
+      "text": "Tick several apps and save them with your PIN once; a reinstalled app stays blocked.",
+      "title_nl": "Apps blokkeren, makkelijker",
+      "text_nl": "Vink meerdere apps aan en sla ze in één keer op met je PIN; een opnieuw geïnstalleerde app blijft geblokkeerd.",
+      "title_ar": "حظر التطبيقات أسهل",
+      "text_ar": "اختر عدة تطبيقات واحفظها برقم PIN مرة واحدة؛ والتطبيق المعاد تثبيته يبقى محظورًا."
+    },
+    {
+      "title": "AkhiBrowser on Android",
+      "text": "AkhiBrowser is in the Google Play Store, for phones and tablets.",
+      "title_nl": "AkhiBrowser op Android",
+      "text_nl": "AkhiBrowser staat in de Google Play Store, voor telefoons en tablets.",
+      "title_ar": "AkhiBrowser على Android",
+      "text_ar": "AkhiBrowser متوفر في متجر Google Play للهواتف والأجهزة اللوحية."
+    }
+  ]
+}
