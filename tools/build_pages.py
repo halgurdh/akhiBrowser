@@ -67,6 +67,33 @@ TURNSTILE = """<script>
 </script>"""
 
 
+SPONSORS_SCRIPT = """<script>
+// the approved sponsors and partners who agreed to be listed, from the license server; their kind as the form names it
+(async function () {
+  const box = document.getElementById("sponsors");
+  if (!box) {
+    return;
+  }
+  try {
+    const response = await fetch("https://akhi-license.akhibrowser.workers.dev/sponsors");
+    const { sponsors = [] } = response.ok ? await response.json() : {};
+    const kinds = Object.fromEntries([...document.querySelectorAll('select[name="kind"] option')].map(o => [o.value, o.textContent.split(":")[0]]));
+    for (const { name, kind, url } of sponsors) {
+      const item = document.createElement("li");
+      const label = url && /^https?:\\/\\//.test(url) ? Object.assign(document.createElement("a"), { href: url, rel: "noopener sponsored" }) : document.createElement("strong");
+      label.textContent = name;
+      item.append(label);
+      if (kinds[kind]) {
+        item.append(` · ${kinds[kind]}`);
+      }
+      box.querySelector("ul").append(item);
+    }
+    box.hidden = !sponsors.length;
+  } catch (e) {}
+})();
+</script>
+"""
+
 KIT_SCRIPT = """<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script>
 // the kit for schools and mosques: the message and the poster are made here, the key isn't sent anywhere
@@ -299,7 +326,7 @@ def main():
         builders = [
             index_page(lang),
             home_page(lang, "affiliate", "affiliate/"),
-            home_page(lang, "money", "money/"),
+            home_page(lang, "money", "money/", scripts=TURNSTILE + SPONSORS_SCRIPT),
             home_page(lang, "privacy", "privacy/"),
             home_page(lang, "setup", "setup/"),
             home_page(lang, "kit", "kit/", scripts=KIT_SCRIPT),

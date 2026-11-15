@@ -85,11 +85,16 @@
         <li><h3 data-t="mm11">Affiliates, sponsors and partners</h3><p data-t="mm12">People who bring in schools and mosques get 20% of their payments. Sponsors and organisations can support AkhiBrowser, but never get your data or a say in what is blocked.</p></li>
       </ul>
       <p class="note" data-t="mm13">What we never do: show ads, sell or share your browsing, track you across sites, or let money change what is blocked.</p>
+      <div id="sponsors" hidden>
+        <h3 class="plan-title" data-t="mm28">Our sponsors and partners</h3>
+        <ul class="sponsors"></ul>
+      </div>
       <h3 class="plan-title" id="partner" data-t="mm14">Become a sponsor or partner</h3>
       <form class="affiliate" action="https://akhi-license.akhibrowser.workers.dev/partner" method="post">
         <label><span data-t="mm15">Your name</span><input name="name" required maxlength="100" autocomplete="name"></label>
         <label><span data-t="mm16">Email address</span><input name="email" type="email" required maxlength="200" autocomplete="email"></label>
         <label><span data-t="mm17">Organisation</span><input name="organisation" maxlength="200" autocomplete="organization"></label>
+        <label><span data-t="mm26">Your website</span><input name="site" type="url" inputmode="url" maxlength="200" autocomplete="url" placeholder="https://"></label>
         <label><span data-t="mm18">What kind of partner?</span><select name="kind">
           <option value="sponsor" data-t="mm19">Sponsor</option>
           <option value="ecosystem" data-t="mm20">Ecosystem partner: an Islamic app, school platform or organisation</option>
@@ -97,6 +102,7 @@
           <option value="shop" data-t="mm22">Shop</option>
         </select></label>
         <label><span data-t="mm23">What do you propose?</span><textarea name="about" rows="3" maxlength="2000"></textarea></label>
+        <label class="check"><input type="checkbox" name="listed" value="yes"> <span data-t="mm27">Show our organisation, with a link to our website, on the sponsors page</span></label>
         <label class="trap" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
         <div class="cf-turnstile" data-sitekey="0x4AAAAAAF9TRz9CNNAJX1Cg" data-action="partner" data-theme="dark" data-language="auto"></div>
         <button class="btn" type="submit" data-t="mm24">Send</button>
@@ -110,6 +116,31 @@
   <p>AkhiBrowser is built on <a href="https://www.firefox.com/">Firefox</a>, and is not made or endorsed by Mozilla. Filters can miss things, and they don't replace a parent's care. <a href="/">Home</a> · <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a></p>
   <p>&copy; <span data-year>2026</span> AkhiBrowser</p>
 </footer>
+<script>
+// the approved sponsors and partners who agreed to be listed, from the license server; their kind as the form names it
+(async function () {
+  const box = document.getElementById("sponsors");
+  if (!box) {
+    return;
+  }
+  try {
+    const response = await fetch("https://akhi-license.akhibrowser.workers.dev/sponsors");
+    const { sponsors = [] } = response.ok ? await response.json() : {};
+    const kinds = Object.fromEntries([...document.querySelectorAll('select[name="kind"] option')].map(o => [o.value, o.textContent.split(":")[0]]));
+    for (const { name, kind, url } of sponsors) {
+      const item = document.createElement("li");
+      const label = url && /^https?:\/\//.test(url) ? Object.assign(document.createElement("a"), { href: url, rel: "noopener sponsored" }) : document.createElement("strong");
+      label.textContent = name;
+      item.append(label);
+      if (kinds[kind]) {
+        item.append(` · ${kinds[kind]}`);
+      }
+      box.querySelector("ul").append(item);
+    }
+    box.hidden = !sponsors.length;
+  } catch (e) {}
+})();
+</script>
 <script>
 document.querySelectorAll("[data-year]").forEach(n => n.textContent = new Date().getFullYear());
 document.title = document.title.replace("2026", new Date().getFullYear());
