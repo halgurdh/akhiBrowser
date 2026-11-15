@@ -119,6 +119,12 @@ h1 { font-size: clamp(40px, 6.4vw, 66px); letter-spacing: -.02em; }
 .lead { margin-top: 20px; font-size: clamp(19px, 2.2vw, 22px); color: var(--soft); max-width: 30em; }
 .shot { border-radius: 16px; box-shadow: 0 24px 60px rgba(0, 0, 0, .45); }
 
+.rate { margin-top: 28px; }
+.rate p { margin: 0 0 10px; color: var(--soft); font-size: 15px; }
+.rate div { display: flex; flex-wrap: wrap; gap: 8px; }
+.rate a { padding: 7px 14px; border-radius: 999px; color: #fff; font-size: 14px; font-weight: 600; text-decoration: none; box-shadow: inset 0 0 0 1px rgba(244, 190, 52, .45); background: rgba(244, 190, 52, .08); transition: background-color .2s; }
+.rate a:hover { background: rgba(244, 190, 52, .2); color: #fff; }
+.rate-top { margin: 22px 0 0; }
 .get { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; max-width: 540px; margin-top: 32px; }
 .get .store { display: flex; align-items: center; line-height: 0; }
 .get .store img { width: min(100%, 250px); height: auto; }
@@ -590,6 +596,10 @@ footer .powered a:hover { text-decoration: underline; }
       <div>
         <h1 data-t="t2"><span>المتصفح الحلال</span> الذي يرشّح الإنترنت على جهازك.</h1>
         <p class="lead" data-t="t3">متصفح حلال للمسلمين يحترم خصوصيتك، مبني على Firefox. متصفح واحد يقوم بكل شيء على جهازك: يحجب الإعلانات والمواقع المحرمة، ويموّه الصور حتى تُفحص، ويزيل الموسيقى من الفيديوهات، دون تتبّع ما تتصفحه.</p>
+        <div class="rate rate-top">
+          <p data-t="rv1">تستخدم AkhiBrowser؟ اترك تقييمًا: فهو يساعد أسرًا أخرى على إيجاده.</p>
+          <div><a href="https://play.google.com/store/apps/details?id=org.akhibrowser&amp;showAllReviews=true">★ Google Play</a><a href="https://apps.microsoft.com/detail/9n8kmf22z6k4">★ Microsoft Store</a><a href="https://chromewebstore.google.com/detail/akhibrowser/ghkpflipnhahpjdnpoclaakbecnopamk/reviews">★ Chrome</a><a href="https://addons.mozilla.org/en-US/firefox/addon/akhibrowser/reviews/">★ Firefox</a></div>
+        </div>
         <div class="get" id="download">
           <a class="store" href="https://apps.microsoft.com/detail/9n8kmf22z6k4?referrer=appbadge&amp;mode=direct" target="_self"><img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200" alt="حمّله من Microsoft Store" data-a="alt:aStore"></a>
           <a class="btn ghost os-win" href="https://get.microsoft.com/installer/download/9N8KMF22Z6K4?cid=website_cta_psi" data-t="t4w">مثبّت Windows (.exe)<small>Windows 10 أو 11، 64-بت</small></a>
@@ -817,6 +827,10 @@ footer .powered a:hover { text-decoration: underline; }
         <p class="note" data-t="sm2">كل ما في Family Premium، بمفتاح واحد لما يصل إلى 500 جهاز. تدفع المدرسة أو المسجد وتوزّعه مجانًا على عائلاتها: مثلًا 50 عائلة لكل منها 10 أجهزة.</p>
       </div>
       <p class="note" data-t="t52">في AkhiBrowser من Google Play، اشترِ Premium عبر Google Play أو الصق مفتاحًا من هذا الموقع. وفي النسخ الأخرى، يعرض Stripe السعر قبل أن تدفع، وتحصل على مفتاح ترخيص دون إنشاء حساب. يعمل مفتاح Premium على ما يصل إلى ثلاثة أجهزة في الوقت نفسه، ومفتاح Family على ما يصل إلى عشرة، ومفتاح مدرسة / مسجد على ما يصل إلى 500. اشتريت Premium أو Premium مدى الحياة قبل الإصدار 1.2.1؟ تحتفظ بأدوات الرقابة الأبوية التي كانت لديك. الشهري والسنوي وFamily: ادفع بالبطاقة كاشتراك، أو مرة واحدة عبر iDEAL أو PayPal لشهر أو سنة بالسعر نفسه، دون تجديد. يبدأ اشتراك Family بالبطاقة بثلاثة أيام مجانًا. ونرسل هدية Family Premium بالبريد إلى من تهديه إياها.</p>
+      <div class="rate">
+        <p data-t="rv1">تستخدم AkhiBrowser؟ اترك تقييمًا: فهو يساعد أسرًا أخرى على إيجاده.</p>
+        <div><a href="https://play.google.com/store/apps/details?id=org.akhibrowser&amp;showAllReviews=true">★ Google Play</a><a href="https://apps.microsoft.com/detail/9n8kmf22z6k4">★ Microsoft Store</a><a href="https://chromewebstore.google.com/detail/akhibrowser/ghkpflipnhahpjdnpoclaakbecnopamk/reviews">★ Chrome</a><a href="https://addons.mozilla.org/en-US/firefox/addon/akhibrowser/reviews/">★ Firefox</a></div>
+      </div>
       <div class="cancel" id="cancel">
         <h3 data-t="c0">كيف تلغي الاشتراك</h3>
         <ol>
@@ -1115,6 +1129,7 @@ footer .powered a:hover { text-decoration: underline; }
 "nlb": "Nieuwsbrief: elke week een vers",
 "faqf": "Veelgestelde vragen",
 "rv0": "Tevreden over AkhiBrowser? Met een review vinden andere gezinnen het ook:",
+"rv1": "Gebruik je AkhiBrowser? Laat een review achter: zo vinden andere gezinnen het ook.",
 "nvfaq": "Veelgestelde vragen",
 "bg1": "<strong>Heb je een Android-telefoon/tablet?<\/strong> Koop de AkhiBrowser in de Google Play Store, en zet Premium aan in de AkhiBrowser. Navigeer naar: Menu, Extensies, AkhiBrowser.",
 "bg2": "<strong>Koop je op deze website?<\/strong> Gebruik de knoppen hieronder. Je krijgt een licentiesleutel per e-mail, voor maximaal 3 apparaten, of 10 met Family. De AkhiBrowser is er voor Windows en Android; er is (nog) geen versie voor iPhone of Mac.",
@@ -1411,6 +1426,7 @@ footer .powered a:hover { text-decoration: underline; }
 "nlb": "النشرة: آية كل أسبوع",
 "faqf": "الأسئلة الشائعة",
 "rv0": "راضٍ عن AkhiBrowser؟ تقييمك يساعد أسرًا أخرى على إيجاده:",
+"rv1": "تستخدم AkhiBrowser؟ اترك تقييمًا: فهو يساعد أسرًا أخرى على إيجاده.",
 "nvfaq": "الأسئلة الشائعة",
 "bg1": "<strong>هل لديك هاتف Android؟<\/strong> نزّل AkhiBrowser من متجر Google Play، وفعّل Premium داخل AkhiBrowser: القائمة، ثم الإضافات، ثم AkhiBrowser.",
 "bg2": "<strong>تشتري من هذا الموقع؟<\/strong> استخدم الأزرار أدناه. تحصل على مفتاح ترخيص بالبريد، لـ 3 أجهزة كحد أقصى، أو 10 مع Family. AkhiBrowser متوفر لـ Windows وAndroid؛ لا توجد نسخة لـ iPhone أو Mac (بعد).",
