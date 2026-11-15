@@ -77,7 +77,8 @@
 
       <h1 data-t="af1">Raad AkhiBrowser aan bij jouw school of moskee</h1>
       <p class="intro" data-t="af2">Ken je een school, moskee of islamitisch centrum dat AkhiBrowser kan gebruiken? Word affiliate: je krijgt 20% van elke School / Moskee-betaling van hen, elke maand, zolang ze geabonneerd blijven. Een betaling telt mee zodra hij 30 dagen oud is, en we betalen maandelijks uit.</p>
-      <p class="note" id="vip" data-t="vip2">Influencer? Ons VIP-affiliateprogramma voor Family Premium: je volgers krijgen 10% korting en jij krijgt 10% van elke betaling, elk jaar dat ze blijven. 200 gezinnen leveren je zo'n €900 per jaar op, jaar na jaar. <a href="#vip-apply">Meld je aan met het VIP-formulier hieronder.</a></p>
+      <p class="note" data-t="afn">Twee programma's, elk met een eigen formulier: <a href="#schools">voor scholen en moskeeën</a> en <a href="#vip">voor influencers (VIP)</a>.</p>
+      <h3 class="plan-title" id="schools" data-t="afh1">Voor scholen en moskeeën</h3>
       <div class="school-card">
         <div>
           <span class="label" data-t="sc1">De school of moskee betaalt</span>
@@ -96,11 +97,12 @@
         <label><span data-t="af5">School, moskee of organisatie</span><input name="organisation" required maxlength="200" autocomplete="organization"></label>
         <label class="trap" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
         <div class="cf-turnstile" data-sitekey="0x4AAAAAAF9TRz9CNNAJX1Cg" data-action="affiliate" data-theme="dark" data-language="auto"></div>
-        <button class="btn" type="submit" data-t="af7">Aanmelden</button>
+        <button class="btn" type="submit" data-t="af7">Aanmelden voor scholen en moskeeën</button>
         <p class="note" data-t="af8">We mailen je binnen een paar dagen je eigen link. Je gegevens gebruiken we alleen hiervoor. Tegen robots laadt het formulier Cloudflare Turnstile zodra je het gaat invullen.</p>
       </form>
-      <h3 class="plan-title" id="vip-apply" data-t="vipf1">VIP-aanmelding</h3>
-      <form class="affiliate" action="https://akhi-license.akhibrowser.workers.dev/affiliate" method="post">
+      <h3 class="plan-title" id="vip" data-t="afh2">Voor influencers: het VIP-programma</h3>
+      <p class="note" data-t="vip2">Influencer? Ons VIP-affiliateprogramma voor Family Premium: je volgers krijgen 10% korting en jij krijgt 10% van elke betaling, elk jaar dat ze blijven. 200 gezinnen leveren je zo'n €900 per jaar op, jaar na jaar.</p>
+      <form class="affiliate" id="vip-apply" action="https://akhi-license.akhibrowser.workers.dev/affiliate" method="post">
         <input type="hidden" name="program" value="vip">
         <label><span data-t="vipf2">Je naam</span><input name="name" required maxlength="100" autocomplete="name"></label>
         <label><span data-t="vipf3">E-mailadres</span><input name="email" type="email" required maxlength="200" autocomplete="email"></label>
