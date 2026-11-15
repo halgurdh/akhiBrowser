@@ -119,15 +119,47 @@
     }
   }
 
-  // Google Play installs from the site, in Play Console and GA under source akhibrowser.com; the app reads only ref=
+  // Google Play installs from the site, in Play Console under where the visitor came from: the campaign's UTM tags
+  // when they came with some (kept for the visit in sessionStorage, so a later page still has them), else
+  // akhibrowser.com. The app reads only ref= of the referrer, so these don't touch an affiliate's code.
+  var UTM = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"];
+  function campaignOf() {
+    var params = new URLSearchParams(location.search);
+    var found = {};
+    var any = false;
+    UTM.forEach(function (name) {
+      var value = params.get(name);
+      if (value && /^[\w.\-~ ]{1,100}$/.test(value)) {
+        found[name] = value;
+        any = true;
+      }
+    });
+    try {
+      if (any) {
+        sessionStorage.setItem("akhi-utm", JSON.stringify(found));
+        return found;
+      }
+      return JSON.parse(sessionStorage.getItem("akhi-utm") || "null");
+    } catch (e) {
+      return any ? found : null;
+    }
+  }
   function tagPlayLinks() {
     var links = document.querySelectorAll('a[href*="play.google.com/store/apps/details?id=org.akhibrowser"]');
     var lang = (document.documentElement.lang || "en").split("-")[0];
+    var campaign = campaignOf() || {
+      utm_source: "akhibrowser.com",
+      utm_medium: "website",
+      utm_campaign: lang + location.pathname,
+    };
+    var referrer = Object.keys(campaign)
+      .map(function (name) {
+        return name + "=" + encodeURIComponent(campaign[name]);
+      })
+      .join("&");
     for (var i = 0; i < links.length; i++) {
       if (!/[?&]referrer=/.test(links[i].href)) {
-        links[i].href +=
-          "&referrer=" +
-          encodeURIComponent("utm_source=akhibrowser.com&utm_medium=website&utm_campaign=" + lang + location.pathname);
+        links[i].href += "&referrer=" + encodeURIComponent(referrer);
       }
     }
   }
