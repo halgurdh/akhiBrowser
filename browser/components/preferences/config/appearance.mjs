@@ -371,7 +371,7 @@ SettingGroupManager.registerGroups({
   },
   browserIconEntry: {
     l10nId: "appearance-browser-icon-entry-group",
-    iconSrc: "chrome://browser/skin/sidebar/firefox.svg",
+    iconSrc: "chrome://branding/content/about-logo.svg",
     headingLevel: 2,
     controlAttrs: { badge: "new" },
     items: [
