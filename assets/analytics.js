@@ -38,6 +38,7 @@
     if (granted) {
       window.dataLayer.push({ event: "consent_granted" });
       reddit();
+      confirmedSignUp();
     }
   }
 
@@ -58,6 +59,15 @@
       window.rdt("track", "PageVisit");
     }
     return window.rdt;
+  }
+
+  // the newsletter page after its confirm link (?confirmed=<the sign-up's event id>): the pixel's SignUp, with the id
+  // the license server used, so Reddit counts it once; also when Allow is pressed on this page only now
+  function confirmedSignUp() {
+    var id = new URLSearchParams(location.search).get("confirmed");
+    if (id && /^[A-Za-z0-9-]{8,64}$/.test(id) && /\/newsletter\/$/.test(location.pathname) && stored() === "granted") {
+      reddit()("track", "SignUp", { conversionId: id });
+    }
   }
 
   function showBanner() {
@@ -224,10 +234,10 @@
     }
   }
 
-  // an affiliate or partner application (Lead) or a newsletter sign-up (SignUp), after consent: the Reddit ad click and
-  // an event id go with the form, so the license server sends it to Reddit. An application is also the pixel's Lead
-  // with the same id, so Reddit counts it once; a sign-up has no pixel event, as it counts only once the address is
-  // confirmed, from the mail.
+  // an affiliate or partner application (Lead) or a newsletter sign-up (SignUp), after consent: an event id, and the
+  // Reddit ad click when there is one, go with the form, so the license server sends it to Reddit. An application is
+  // also the pixel's Lead with the same id, so Reddit counts it once. A sign-up counts only once the address is
+  // confirmed: the confirm link leads back to the newsletter page with the id (confirmedSignUp).
   var FORMS = /akhi-license\.akhibrowser\.workers\.dev\/(newsletter|affiliate|partner)$/;
   function hidden(form, name, value) {
     var input = form.querySelector('input[type="hidden"][name="' + name + '"]');
@@ -248,9 +258,9 @@
     form.dataset.reddit = "1";
     var id = eventId();
     var click = redditClick();
+    hidden(form, "rdt_id", id);
     if (click) {
       hidden(form, "rdt", click);
-      hidden(form, "rdt_id", id);
     }
     if (match[1] === "newsletter") {
       return;
@@ -285,6 +295,7 @@
     if (stored() === "granted") {
       reddit();
     }
+    confirmedSignUp();
     tagPlayLinks();
     if (!stored()) {
       showBanner();
