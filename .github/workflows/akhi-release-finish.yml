@@ -1,0 +1,77 @@
+# After an "AkhiBrowser Release" run built a version without publishing it, this publishes it without the PC: the
+# GitHub release (notes only), the website, Linux and macOS, and akhi-branding's signing job with Google Play and the
+# signed Windows update on the GitHub release. It acts only on the version in the repository variable FINISH_VERSION
+# (with FINISH_NOTES and FINISH_PLAY_TRACK), only once (not when release v<version> exists), and only after a release
+# run that succeeded on that version.
+name: AkhiBrowser Release finish
+
+on:
+  workflow_run:
+    workflows: ["AkhiBrowser Release"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: "The AkhiBrowser Release run whose builds to publish"
+        type: string
+        required: true
+
+permissions:
+  actions: write
+  contents: write
+
+jobs:
+  finish:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      VERSION: ${{ vars.FINISH_VERSION }}
+      NOTES: ${{ vars.FINISH_NOTES }}
+      PLAY_TRACK: ${{ vars.FINISH_PLAY_TRACK || 'production' }}
+      RUN_ID: ${{ inputs.run_id || github.event.workflow_run.id }}
+      AKHI_OPS_TOKEN: ${{ secrets.AKHI_OPS_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            .github
+            browser/config
+
+      - name: This run, this version, not yet published?
+        id: check
+        run: |
+          go=no
+          if [ -z "$VERSION" ]; then
+            echo "No FINISH_VERSION"
+          elif [ "$(gh run view "$RUN_ID" --repo "$GITHUB_REPOSITORY" --json conclusion -q .conclusion)" != "success" ]; then
+            echo "Release run $RUN_ID didn't succeed"
+          elif [ "$(tr -d "[:space:]" < browser/config/akhi_version.txt)" != "$VERSION" ]; then
+            echo "main isn't at $VERSION"
+          elif gh release view "v$VERSION" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            echo "v$VERSION is already published"
+          else
+            go=yes
+          fi
+          echo "go=$go" >> "$GITHUB_OUTPUT"
+
+      - name: Publish
+        if: steps.check.outputs.go == 'yes'
+        env:
+          RELEASE_TOKEN: ${{ secrets.AKHI_RELEASE_TOKEN }}
+        run: |
+          report="$RUNNER_TEMP/report.md"
+          sha=$(git rev-parse HEAD)
+          gh release create "v$VERSION" --repo "$GITHUB_REPOSITORY" --target "$sha" --latest \
+            --title "AkhiBrowser $VERSION" --notes "${NOTES:-AkhiBrowser $VERSION}"
+          echo "GitHub release v$VERSION published (notes only)" > "$report"
+          gh workflow run website-latest-release.yml --repo "$GITHUB_REPOSITORY" --ref main
+          for workflow in akhi-linux.yml akhi-macos.yml; do
+            gh workflow run "$workflow" --repo "$GITHUB_REPOSITORY" --ref main -f ref="v$VERSION"
+          done
+          echo "Linux and macOS are building" >> "$report"
+          GH_TOKEN="$RELEASE_TOKEN" gh workflow run cloud-release.yml --repo halgurdh/akhi-branding --ref main \
+            -f android_draft="android-build-$RUN_ID-1" -f windows_draft="windows-build-$RUN_ID-1" \
+            -f play_track="$PLAY_TRACK" -f msstore=none -f version="$VERSION" -f notes="$NOTES" -f windows_update=true
+          echo "Signing job started: Google Play $PLAY_TRACK, the Windows update on the GitHub release; the Microsoft Store follows with Microsoft Store when free" >> "$report"
+          cat "$report"
+          bash .github/scripts/notify.sh "AkhiBrowser $VERSION: publishing" "$report"
