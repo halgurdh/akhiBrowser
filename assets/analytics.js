@@ -96,7 +96,9 @@
       "border-radius:14px;background:#03282e;color:#fff;font:14px/1.45 system-ui,sans-serif;box-shadow:0 8px 30px #0008}" +
       ".akhi-consent p{flex:1 1 260px;margin:0}.akhi-consent a{color:#f4be34}" +
       ".akhi-consent button{font:inherit;font-weight:600;border-radius:999px;padding:8px 16px;cursor:pointer;border:1px solid #f4be34}" +
-      ".akhi-consent button{background:#f4be34;color:#03282e;min-width:120px}";
+      ".akhi-consent button{background:#f4be34;color:#03282e;min-width:120px}" +
+      ".akhi-consent button.no{background:transparent;color:#fff;border-color:#ffffff80}" +
+      ".akhi-consent button.no:hover{border-color:#fff;background:#ffffff14}";
     var text = document.createElement("p");
     text.textContent = t[0] + " ";
     var link = document.createElement("a");
