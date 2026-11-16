@@ -1,8 +1,8 @@
 # Merges Mozilla's main into the branch firefox-daily every day at 00:00 UTC, and at once when CISA's list of exploited
 # vulnerabilities gets a Firefox entry (checked every 2 hours). firefox-daily keeps its merges, so a conflict solved there
 # once stays solved; AkhiBrowser's main is merged into it first.
-# When firefox-daily has something main lacks, it's built and smoke tested (akhi-linux.yml), and main fast-forwards to
-# it when both pass. A conflict is handed to Claude, whose fix comes as a pull request into firefox-daily to approve;
+# When firefox-daily has something main lacks, it's built for Linux, Android and Windows (akhi-linux.yml,
+# akhi-android.yml, akhi-windows.yml) and smoke tested on Linux and Windows, and main fast-forwards to it when all pass. A conflict is handed to Claude, whose fix comes as a pull request into firefox-daily to approve;
 # something AkhiBrowser removed coming back stops it. Each stop opens an issue and mails the user (notify.sh).
 # Secrets: AKHI_SUBMODULES_TOKEN (the build), AKHI_OPS_TOKEN (the mails), ANTHROPIC_API_KEY (conflicts; without it
 # only the issue and the mail), AKHI_PUSH_TOKEN (optional: a token with contents and workflows write on this repository,
@@ -230,8 +230,24 @@ jobs:
       ref: ${{ needs.sync.outputs.sha }}
     secrets: inherit
 
+  build-android:
+    needs: sync
+    if: needs.sync.outputs.pending == 'true'
+    uses: ./.github/workflows/akhi-android.yml
+    with:
+      ref: ${{ needs.sync.outputs.sha }}
+    secrets: inherit
+
+  build-windows:
+    needs: sync
+    if: needs.sync.outputs.pending == 'true'
+    uses: ./.github/workflows/akhi-windows.yml
+    with:
+      ref: ${{ needs.sync.outputs.sha }}
+    secrets: inherit
+
   promote:
-    needs: [sync, build]
+    needs: [sync, build, build-android, build-windows]
     if: always() && needs.build.result != 'skipped'
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -250,10 +266,13 @@ jobs:
           SHA: ${{ needs.sync.outputs.sha }}
           BUILD: ${{ needs.build.result }}
           SMOKE: ${{ needs.build.outputs.smoke }}
+          ANDROID: ${{ needs.build-android.result }}
+          WINDOWS: ${{ needs.build-windows.result }}
+          WINDOWS_SMOKE: ${{ needs.build-windows.outputs.smoke }}
         run: |
           short=${SHA:0:12}
-          if [ "$BUILD" != "success" ] || [ "$SMOKE" != "success" ]; then
-            echo "firefox-daily $short didn't pass: build $BUILD, smoke test ${SMOKE:-not run}. main stays where it is; the logs are in the private draft release of halgurdh/akhi-extension." > "$RUNNER_TEMP/r.md"
+          if [ "$BUILD" != "success" ] || [ "$SMOKE" != "success" ] || [ "$ANDROID" != "success" ] || [ "$WINDOWS" != "success" ] || [ "$WINDOWS_SMOKE" != "success" ]; then
+            echo "firefox-daily $short didn't pass: Linux build $BUILD, smoke test ${SMOKE:-not run}; Android build $ANDROID; Windows build $WINDOWS, smoke test ${WINDOWS_SMOKE:-not run}. main stays where it is; the logs are in the private draft releases of halgurdh/akhi-extension." > "$RUNNER_TEMP/r.md"
             gh issue create --title "Firefox sync: firefox-daily didn't build or pass the smoke test ($(date -u +%F))" --body-file "$RUNNER_TEMP/r.md"
             bash .github/scripts/notify.sh "AkhiBrowser: the Firefox update didn't build" "$RUNNER_TEMP/r.md"
             exit 0
@@ -271,5 +290,5 @@ jobs:
             bash .github/scripts/notify.sh "AkhiBrowser: main couldn't take the Firefox update" "$RUNNER_TEMP/r.md"
             exit 1
           fi
-          echo "main is now at $short: the latest Firefox merged, built and smoke tested on Linux. The next release takes it." > "$RUNNER_TEMP/r.md"
+          echo "main is now at $short: the latest Firefox merged, built for Linux, Android and Windows, and smoke tested on Linux and Windows. The next release takes it." > "$RUNNER_TEMP/r.md"
           bash .github/scripts/notify.sh "AkhiBrowser: Firefox update is in main" "$RUNNER_TEMP/r.md"

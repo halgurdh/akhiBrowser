@@ -1,8 +1,8 @@
 # AkhiBrowser for Android (arm64) built on GitHub: the direct APK and the Google Play bundle, with the extension and
 # Premium merged. Signed with a throwaway key made in the run: the private signing job of akhi-branding signs them again
 # with AkhiBrowser's key before anything is published, so the real key never reaches this public repository.
-# Runs by hand (Run workflow). Its output goes to a draft release of the private
-# halgurdh/akhi-extension, not to the log or an artifact of this public repository.
+# Runs by hand (Run workflow), from akhi-release.yml and from firefox-sync.yml. Its output goes to a draft release of the
+# private halgurdh/akhi-extension (output draft), not to the log or an artifact of this public repository.
 # Needs the secret AKHI_SUBMODULES_TOKEN: read access to the submodules, read and write to the contents of
 # halgurdh/akhi-extension.
 name: AkhiBrowser Android
@@ -18,6 +18,18 @@ on:
         description: "A test build under this version, set in the run only (empty: the tree's version)"
         type: string
         default: ""
+  workflow_call:
+    inputs:
+      ref:
+        type: string
+        default: ""
+      test_version:
+        type: string
+        default: ""
+    outputs:
+      draft:
+        description: The draft release in halgurdh/akhi-extension with the APK and the Play bundle
+        value: ${{ jobs.build.outputs.draft }}
 
 permissions:
   contents: read
@@ -31,6 +43,8 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     timeout-minutes: 355
+    outputs:
+      draft: android-build-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
       - name: Free disk space
         run: |
