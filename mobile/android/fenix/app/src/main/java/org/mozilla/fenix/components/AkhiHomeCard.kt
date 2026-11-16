@@ -69,6 +69,15 @@ internal object AkhiHomeCard {
         }
     }
 
+    /**
+     * AkhiBrowser's language as the extension last sent it ("nl", "ar", "en-US"...): its language setting, else the
+     * browser's. Null before the extension or the home screen has sent or loaded it.
+     */
+    fun language(): String? =
+        content.value
+            ?.let { runCatching { JSONObject(it).optString("language") }.getOrNull() }
+            ?.takeIf { it.isNotEmpty() }
+
     private fun load(context: Context) {
         if (!isLoaded) {
             isLoaded = true
