@@ -101,7 +101,7 @@ jobs:
         run: |
           df -h /
           mkdir -p artifacts
-          tar -C artifacts -cJf build-logs.tar.xz .
+          tar -C artifacts --exclude 'msstore-*' -cJf build-logs.tar.xz .
           files=(build-logs.tar.xz)
           for f in obj-akhi-windows-x64/dist/release/*; do [ -f "$f" ] && files+=("$f"); done
           gh release create "windows-build-${{ github.run_id }}-${{ github.run_attempt }}" "${files[@]}" \
