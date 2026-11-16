@@ -126,6 +126,8 @@ nav { position: relative; }
 .affiliate { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; max-width: 32em; margin-top: 24px; }
 .affiliate label { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; font-size: 15px; }
 .affiliate input, .affiliate textarea, .affiliate select { min-width: 0; font: inherit; padding: 10px 12px; border-radius: 10px; border: 1.5px solid var(--line); background: rgba(0, 0, 0, .18); color: #fff; }
+/* a required field: a gold star after its label (screen readers hear "required" from the field itself) */
+.affiliate label:has(> :is(input, select, textarea)[required]) > span::after { content: " *"; content: " *" / ""; color: var(--gold); font-weight: 700; }
 .affiliate select option { background: var(--ink); }
 .affiliate .btn { justify-self: start; border: 0; cursor: pointer; font: inherit; font-weight: 650; }
 .affiliate .check { display: flex; gap: 10px; align-items: flex-start; }
