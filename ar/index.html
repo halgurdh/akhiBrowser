@@ -56,6 +56,10 @@
 </script>
 <link rel="icon" href="/assets/akhi.svg" type="image/svg+xml">
 <script>
+// Android phones get Google Play first in the download buttons, set before the page is drawn so nothing moves
+if (/Android/i.test(navigator.userAgent)) {
+  document.documentElement.classList.add("android");
+}
 if ("IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
   document.documentElement.classList.add("motion");
   try {
@@ -151,6 +155,14 @@ h1 { font-size: clamp(40px, 6.4vw, 66px); letter-spacing: -.02em; }
 a.btn.soon { cursor: pointer; }
 a.btn.soon:hover { background: #ffd76a; }
 .get .btn[class*="os-"] { position: relative; padding-inline-start: 56px; text-align: start; }
+.get-android { display: none; }
+.android .hero > div:first-child { display: flex; flex-direction: column; }
+.android .hero > div:first-child > * { order: 2; }
+.android .hero > div:first-child > h1 { order: 0; }
+.android .hero > div:first-child > .get { order: 1; margin-top: 24px; grid-template-columns: minmax(0, 1fr); }
+.android .get > a:not(.store-play), .android .hero .note[data-t="t7b"] { display: none; }
+.android .get .store-play { justify-content: center; }
+.android .get-android { display: block; margin: 0; color: var(--soft); font-size: 14px; text-align: center; }
 .get .btn[class*="os-"]::before { content: ""; position: absolute; inset-inline-start: 18px; top: 50%; width: 24px; height: 24px; margin-top: -12px; background: currentColor; -webkit-mask: var(--logo) center / contain no-repeat; mask: var(--logo) center / contain no-repeat; }
 .os-win { --logo: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h11.4v11.4H0zm12.6 0H24v11.4H12.6zM0 12.6h11.4V24H0zm12.6 0H24V24H12.6z'/%3E%3C/svg%3E"); }
 .os-android { --logo: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18.4395 5.5586c-.675 1.1664-1.352 2.3318-2.0274 3.498-.0366-.0155-.0742-.0286-.1113-.043-1.8249-.6957-3.484-.8-4.42-.787-1.8551.0185-3.3544.4643-4.2597.8203-.084-.1494-1.7526-3.021-2.0215-3.4864a1.1451 1.1451 0 0 0-.1406-.1914c-.3312-.364-.9054-.4859-1.379-.203-.475.282-.7136.9361-.3886 1.5019 1.9466 3.3696-.0966-.2158 1.9473 3.3593.0172.031-.4946.2642-1.3926 1.0177C2.8987 12.176.452 14.772 0 18.9902h24c-.119-1.1108-.3686-2.099-.7461-3.0683-.7438-1.9118-1.8435-3.2928-2.7402-4.1836a12.1048 12.1048 0 0 0-2.1309-1.6875c.6594-1.122 1.312-2.2559 1.9649-3.3848.2077-.3615.1886-.7956-.0079-1.1191a1.1001 1.1001 0 0 0-.8515-.5332c-.5225-.0536-.9392.3128-1.0488.5449zm-.0391 8.461c.3944.5926.324 1.3306-.1563 1.6503-.4799.3197-1.188.0985-1.582-.4941-.3944-.5927-.324-1.3307.1563-1.6504.4727-.315 1.1812-.1086 1.582.4941zM7.207 13.5273c.4803.3197.5506 1.0577.1563 1.6504-.394.5926-1.1038.8138-1.584.4941-.48-.3197-.5503-1.0577-.1563-1.6504.4008-.6021 1.1087-.8106 1.584-.4941z'/%3E%3C/svg%3E"); }
@@ -606,6 +618,7 @@ footer .powered a:hover { text-decoration: underline; }
           <a class="btn ghost os-chrome" href="https://chromewebstore.google.com/detail/akhibrowser/ghkpflipnhahpjdnpoclaakbecnopamk" data-t="t7">احصل على إضافة Chrome<small>مجانية، متوفرة الآن</small></a>
           <a class="btn ghost os-firefox" href="https://addons.mozilla.org/en-US/firefox/addon/akhibrowser/" data-t="t7f">احصل على إضافة Firefox<small>مجانية، متوفرة الآن</small></a>
           <a class="store store-play" href="https://play.google.com/store/apps/details?id=org.akhibrowser"><img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" width="646" height="250" alt="احصل عليه من Google Play" data-a="alt:aPlay"></a>
+          <p class="get-android" data-t="t4a">على الكمبيوتر؟ افتح akhibrowser.com هناك للحصول على Windows وChrome وFirefox. أو <a href="https://github.com/halgurdh/akhiBrowser/releases/latest/download/AkhiBrowser-android-arm64-v8a.apk">نزّل ملف APK</a>.</p>
           <a class="btn soon os-apple" href="#roadmap" data-t="t4b">iOS وmacOS: قريبًا<small>اطّلع على خارطة الطريق</small></a>
         </div>
         <p class="note" data-t="t7b">إضافتا Chrome وFirefox نسخة أخف ومجانية: تحجب المواقع الإباحية والمحرمة، وتموّه الصور، وتزيل الموسيقى الخلفية، لكن ليس فيها Premium ولا رقابة أبوية ولا حاجب إعلانات خاص بها، ويمكن إزالتها. اللغة العربية في الإضافتين قادمة قريبًا.</p>
@@ -920,6 +933,7 @@ footer .powered a:hover { text-decoration: underline; }
 "t7f": "Firefox-add-on<small>Gratis, nu beschikbaar<\/small>",
 "t7b": "De Chrome- en Firefox-extensies zijn een lichtere, gratis versie: hij blokkeert 18+- en haram sites, maakt afbeeldingen wazig en haalt achtergrondmuziek weg, maar heeft geen Premium of ouderlijk toezicht en geen eigen reclameblokkering, en hij kan worden verwijderd. Arabisch in de extensies komt binnenkort.",
 "t11": "Gratis bescherming.",
+"t4a": "Op een computer? Open daar akhibrowser.com voor Windows, Chrome en Firefox. Of <a href=\"https://github.com/halgurdh/akhiBrowser/releases/latest/download/AkhiBrowser-android-arm64-v8a.apk\">download de APK<\/a>.",
 "t12": "Zo werkt het",
 "t13": "Meteen aan, vanaf de eerste pagina",
 "t14": "Deze bescherming zit er gratis bij. Je kunt elk onderdeel uitzetten via het AkhiBrowser-schild. Premium is optioneel en staat uit tot je het zelf aanzet.",
@@ -1217,6 +1231,7 @@ footer .powered a:hover { text-decoration: underline; }
 "t7f": "احصل على إضافة Firefox<small>مجانية، متوفرة الآن<\/small>",
 "t7b": "إضافتا Chrome وFirefox نسخة أخف ومجانية: تحجب المواقع الإباحية والمحرمة، وتموّه الصور، وتزيل الموسيقى الخلفية، لكن ليس فيها Premium ولا رقابة أبوية ولا حاجب إعلانات خاص بها، ويمكن إزالتها. اللغة العربية في الإضافتين قادمة قريبًا.",
 "t11": "الحماية مجانية.",
+"t4a": "على الكمبيوتر؟ افتح akhibrowser.com هناك للحصول على Windows وChrome وFirefox. أو <a href=\"https://github.com/halgurdh/akhiBrowser/releases/latest/download/AkhiBrowser-android-arm64-v8a.apk\">نزّل ملف APK<\/a>.",
 "t12": "شاهده وهو يعمل",
 "t13": "مفعّلة من الصفحة الأولى",
 "t14": "هذه الحماية مجانية ومدمجة. يمكن إيقاف كل واحدة منها من درع AkhiBrowser. ميزات Premium اختيارية ومتوقفة حتى تفعّلها.",
