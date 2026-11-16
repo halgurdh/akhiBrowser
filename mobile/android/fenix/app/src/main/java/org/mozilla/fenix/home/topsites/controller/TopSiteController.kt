@@ -274,7 +274,8 @@ class DefaultTopSiteController(
                 TopSites.openDefault.record(TopSites.OpenDefaultExtra(source = source.sourceName))
             is TopSite.Frecent -> TopSites.openFrecency.record(TopSites.OpenFrecencyExtra(source = source.sourceName))
             is TopSite.Pinned -> TopSites.openPinned.record(TopSites.OpenPinnedExtra(source = source.sourceName))
-            is TopSite.Provided -> {
+            // AkhiBrowser: a sponsor's tile (AkhiSponsorTiles) has no click address; the server counts the click
+            is TopSite.Provided -> if (topSite.clickUrl.isNotEmpty()) {
                 sendMozAdsClickInteraction(clickUrl = topSite.clickUrl)
 
                 TopSites.openContileTopSite.record(TopSites.OpenContileTopSiteExtra(source = source.sourceName)).also {
@@ -361,6 +362,10 @@ class DefaultTopSiteController(
     }
 
     override fun handleTopSiteImpression(topSite: TopSite.Provided, position: Int) {
+        // AkhiBrowser: nothing is sent for a sponsor's tile (AkhiSponsorTiles), which has no impression address
+        if (topSite.impressionUrl.isEmpty()) {
+            return
+        }
         sendMozAdsImpressionInteraction(impressionUrl = topSite.impressionUrl)
 
         TopSites.contileImpression.record(

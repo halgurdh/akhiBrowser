@@ -148,6 +148,8 @@ const TOP_SITES_BLOCKED_SPONSORS_PREF = "browser.topsites.blockedSponsors";
 const CONTILE_CACHE_VALID_FOR_PREF = "browser.topsites.contile.cacheValidFor";
 const CONTILE_CACHE_LAST_FETCH_PREF = "browser.topsites.contile.lastFetch";
 const CONTILE_CACHE_VALID_FOR_FALLBACK = 3 * 60 * 60; // 3 hours in seconds
+// AkhiBrowser: set by the AkhiBrowser extension while Premium is active, which shows no sponsor shortcuts
+const AKHI_PREMIUM_PREF = "extensions.akhi.premiumActive";
 
 // Partners of sponsored tiles.
 const SPONSORED_TILE_PARTNER_AMP = "amp";
@@ -418,6 +420,17 @@ export class ContileIntegration {
     // The Share-of-Voice object managed by Shepherd and sent via Contile.
     this._sov = null;
     this.cache = this.PersistentCache(CACHE_KEY, true);
+    // AkhiBrowser: the sponsor shortcuts go, or come back, as soon as Premium starts or ends
+    this._onAkhiPremium = () => {
+      if (Services.prefs.getBoolPref(AKHI_PREMIUM_PREF, false)) {
+        this._resetContileCache();
+      }
+      // set at startup, possibly before the feed has its store: _fetchSites reads the pref once it runs
+      if (this._topSitesFeed.store) {
+        this.refresh();
+      }
+    };
+    Services.prefs.addObserver(AKHI_PREMIUM_PREF, this._onAkhiPremium);
   }
 
   get sites() {
@@ -678,7 +691,8 @@ export class ContileIntegration {
       !lazy.NimbusFeatures.newtab.getVariable(
         NIMBUS_VARIABLE_CONTILE_ENABLED
       ) ||
-      !this._topSitesFeed.store.getState().Prefs.values[SHOW_SPONSORED_PREF]
+      !this._topSitesFeed.store.getState().Prefs.values[SHOW_SPONSORED_PREF] ||
+      Services.prefs.getBoolPref(AKHI_PREMIUM_PREF, false)
     ) {
       if (this._sites.length) {
         this._sites = [];
@@ -1192,7 +1206,9 @@ export class TopSitesFeed {
       let hostname = lazy.NewTabUtils.shortURL(site);
       let link = {
         isDefault: true,
-        url: site.url,
+        // AkhiBrowser: a click goes through the license server, which counts it for the sponsor; the tile is still
+        // named, de-duplicated and dismissed by the sponsor's own website (hostname, from site.url)
+        url: site.akhi_url || site.url,
         hostname,
         label: site.name,
         show_sponsored_label: hostname !== "yandex",

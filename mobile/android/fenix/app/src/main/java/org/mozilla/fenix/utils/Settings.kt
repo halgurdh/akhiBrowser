@@ -2419,8 +2419,8 @@ class Settings(
     var showContileFeature by
         booleanPreference(
             key = appContext.getPreferenceKey(R.string.pref_key_enable_contile),
-            // AkhiBrowser: no sponsored content
-            default = false,
+            // AkhiBrowser: the shortcuts of AkhiBrowser's own sponsors (AkhiSponsorTiles), never with Premium
+            default = true,
         )
 
     /** Blocklist used to filter items from the home screen that have previously been removed. */
