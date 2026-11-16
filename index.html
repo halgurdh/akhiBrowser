@@ -1521,6 +1521,24 @@ footer .powered a:hover { text-decoration: underline; }
     for (const [node, href] of pageLinks) {
       node.setAttribute("href", lang === "en" ? href : `/${lang}${href}`);
     }
+    // the license server's pages and forms in the chosen language, after the texts above, which may hold such links
+    for (const link of document.querySelectorAll('a[href^="https://akhi-license.akhibrowser.workers.dev/"]')) {
+      const url = new URL(link.href);
+      if (/^\/(buy\/|school$|mosque$|redeem$)/.test(url.pathname)) {
+        url.searchParams.set("lang", lang);
+        link.href = url.href;
+      }
+    }
+    for (const form of document.querySelectorAll('form[action^="https://akhi-license.akhibrowser.workers.dev/"]')) {
+      let input = form.querySelector('input[name="lang"]');
+      if (!input) {
+        input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "lang";
+        form.append(input);
+      }
+      input.value = lang;
+    }
     menu.value = lang;
   }
 
@@ -1723,8 +1741,10 @@ footer .powered a:hover { text-decoration: underline; }
     });
   }
   if (ref && CODE.test(ref)) {
-    for (const link of document.querySelectorAll('a[href$="/buy/school"], a[href$="/buy/family"]')) {
-      link.href += "?ref=" + encodeURIComponent(ref);
+    for (const link of document.querySelectorAll('a[href*="/buy/school"], a[href*="/buy/family"]')) {
+      const url = new URL(link.href);
+      url.searchParams.set("ref", ref);
+      link.href = url.href;
     }
     // installed from this link, the app reads the code: a VIP's 10% Family offer and their commission
     for (const link of document.querySelectorAll('a[href^="https://play.google.com/store/apps/details?id=org.akhibrowser"]')) {
