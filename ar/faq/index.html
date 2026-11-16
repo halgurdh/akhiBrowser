@@ -288,6 +288,7 @@ addEventListener("pageshow", () => { menu.value = menu.querySelector("[selected]
     en: {
       name: "Please fill in your name.",
       email: "Please fill in a valid email address, like name@example.com.",
+      site: "Please check your website address, like yourname.com, or leave it empty.",
       organisation: "Please fill in the name of your school, mosque, organisation or channel.",
       robot: "One moment: we're still checking that you're not a robot. Wait a few seconds and press the button again.",
       sending: "Sending…",
@@ -295,6 +296,7 @@ addEventListener("pageshow", () => { menu.value = menu.querySelector("[selected]
     nl: {
       name: "Vul je naam in.",
       email: "Vul een geldig e-mailadres in, zoals naam@voorbeeld.nl.",
+      site: "Controleer het adres van je website, zoals jouwnaam.nl, of laat het leeg.",
       organisation: "Vul de naam van je school, moskee, organisatie of kanaal in.",
       robot: "Even geduld: we controleren nog of je geen robot bent. Wacht een paar seconden en druk dan opnieuw op de knop.",
       sending: "Bezig met versturen…",
@@ -302,6 +304,7 @@ addEventListener("pageshow", () => { menu.value = menu.querySelector("[selected]
     ar: {
       name: "يرجى كتابة اسمك.",
       email: "يرجى كتابة بريد إلكتروني صحيح، مثل name@example.com.",
+      site: "يرجى التحقق من عنوان موقعك، مثل yourname.com، أو تركه فارغًا.",
       organisation: "يرجى كتابة اسم مدرستك أو مسجدك أو مؤسستك أو قناتك.",
       robot: "لحظة من فضلك: ما زلنا نتحقق من أنك لست روبوتًا. انتظر بضع ثوانٍ ثم اضغط الزر مرة أخرى.",
       sending: "جارٍ الإرسال…",
@@ -310,8 +313,27 @@ addEventListener("pageshow", () => { menu.value = menu.querySelector("[selected]
   if (!words) {
     return;
   }
+  // the same checks as the license server: a domain that ends in a top-level domain of letters
+  const HOST = /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+(?:[a-z]{2,63}|xn--[a-z0-9-]{2,59})$/;
+  const isEmail = text => /^[^@\s<>,;"]+@[^@\s<>,;"]+$/.test(text) && HOST.test(text.slice(text.lastIndexOf("@") + 1).toLowerCase());
+  const isSite = text => {
+    try {
+      const url = new URL(/^https?:\/\//i.test(text) ? text : `https://${text}`);
+      return /^https?:$/.test(url.protocol) && !url.username && !url.password && HOST.test(url.hostname);
+    } catch (e) {
+      return false;
+    }
+  };
   for (const form of document.querySelectorAll("form.affiliate")) {
     form.noValidate = true;
+    // the license server's page after sending, in this page's language
+    if (!form.elements.namedItem("lang")) {
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "lang";
+      input.value = lang;
+      form.append(input);
+    }
     const message = document.createElement("p");
     message.className = "form-error";
     message.setAttribute("role", "alert");
@@ -324,7 +346,8 @@ addEventListener("pageshow", () => { menu.value = menu.querySelector("[selected]
       const field = name => form.elements.namedItem(name);
       const problem =
         (field("name") && !field("name").value.trim() && ["name", words.name]) ||
-        (!field("email").checkValidity() || !field("email").value.trim() ? ["email", words.email] : null) ||
+        (!isEmail(field("email").value.trim()) ? ["email", words.email] : null) ||
+        (field("site")?.value.trim() && !isSite(field("site").value.trim()) ? ["site", words.site] : null) ||
         (field("organisation")?.required && !field("organisation").value.trim() && ["organisation", words.organisation]) ||
         (field("consent") && !field("consent").checked && ["consent", "ضع علامة في المربع لتأكيد رغبتك في النشرة."]) ||
         (!form.querySelector('[name="cf-turnstile-response"]')?.value && [null, words.robot]) ||
