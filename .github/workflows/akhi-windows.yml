@@ -22,6 +22,8 @@ permissions:
   contents: read
 
 env:
+  # a test build under this version, set in the run only (nothing is committed); empty: the tree's version
+  TEST_VERSION: "1.3.5"
   MOZBUILD_STATE_PATH: ${{ github.workspace }}/.mozbuild
 
 jobs:
@@ -44,6 +46,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+
+      - name: Test version
+        if: env.TEST_VERSION != ''
+        run: python3 browser/branding/akhi/tools/set_version.py "$TEST_VERSION"
 
       - name: Install the build tools
         run: |
