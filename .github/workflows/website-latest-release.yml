@@ -1,0 +1,23 @@
+# Puts the latest release on akhibrowser.com: after a release is published, and once a day for releases made by
+# workflows (those don't start other workflows), it runs the workflow "Build the home pages" of gh-pages, which
+# writes the release's number and a link to its notes on the home page.
+name: Latest release on the website
+
+on:
+  release:
+    types: [published, edited, deleted]
+  schedule:
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  actions: write
+
+jobs:
+  website:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build the home pages of gh-pages
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run build-home.yml --repo "$GITHUB_REPOSITORY" --ref gh-pages

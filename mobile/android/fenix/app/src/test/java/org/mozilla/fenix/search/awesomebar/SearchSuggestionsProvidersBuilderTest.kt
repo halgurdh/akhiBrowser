@@ -12,6 +12,7 @@ import kotlin.test.assertNotNull
 import kotlinx.coroutines.test.TestScope
 import mozilla.components.browser.state.search.SearchEngine
 import mozilla.components.browser.state.search.SearchEngineProvider
+import mozilla.components.concept.awesomebar.AwesomeBar
 import mozilla.components.feature.awesomebar.provider.BookmarksStorageSuggestionProvider
 import mozilla.components.feature.awesomebar.provider.CombinedHistorySuggestionProvider
 import mozilla.components.feature.awesomebar.provider.FlightsOnlineSuggestionProvider
@@ -780,7 +781,7 @@ class SearchSuggestionsProvidersBuilderTest {
         val result = builder.getProvidersToAdd(state)
 
         assertEquals(1, result.filterIsInstance<SearchActionProvider>().size)
-        assertEquals(1, result.filterIsInstance<SearchSuggestionProvider>().size)
+        assertEquals(1, result.akhiUnwrapped().filterIsInstance<SearchSuggestionProvider>().size)
     }
 
     @Test
@@ -796,7 +797,7 @@ class SearchSuggestionsProvidersBuilderTest {
         val result = builder.getProvidersToAdd(state)
 
         assertEquals(1, result.filterIsInstance<SearchActionProvider>().size)
-        assertEquals(1, result.filterIsInstance<SearchSuggestionProvider>().size)
+        assertEquals(1, result.akhiUnwrapped().filterIsInstance<SearchSuggestionProvider>().size)
     }
 
     @Test
@@ -818,7 +819,7 @@ class SearchSuggestionsProvidersBuilderTest {
         val allResults = historyResult + bookmarksResult + tabsResult + noneResult
 
         assertEquals(0, allResults.filterIsInstance<SearchActionProvider>().size)
-        assertEquals(0, allResults.filterIsInstance<SearchSuggestionProvider>().size)
+        assertEquals(0, allResults.akhiUnwrapped().filterIsInstance<SearchSuggestionProvider>().size)
     }
 
     @Test
@@ -1097,7 +1098,7 @@ class SearchSuggestionsProvidersBuilderTest {
         assertNotNull(bookmarksProviders[0].resultsUriFilter) // the general bookmarks provider
         assertNotNull(bookmarksProviders[1].resultsUriFilter) // the filtered bookmarks provider
         assertEquals(1, result.filterIsInstance<SearchActionProvider>().size)
-        assertEquals(1, result.filterIsInstance<SearchSuggestionProvider>().size)
+        assertEquals(1, result.akhiUnwrapped().filterIsInstance<SearchSuggestionProvider>().size)
         val syncedTabsProviders: List<SyncedTabsStorageSuggestionProvider> =
             result.filterIsInstance<SyncedTabsStorageSuggestionProvider>()
         assertEquals(2, syncedTabsProviders.size)
@@ -1140,7 +1141,7 @@ class SearchSuggestionsProvidersBuilderTest {
         assertNull(bookmarksProviders[0].resultsUriFilter) // the general bookmarks provider
         assertNotNull(bookmarksProviders[1].resultsUriFilter) // the filtered bookmarks provider
         assertEquals(1, result.filterIsInstance<SearchActionProvider>().size)
-        assertEquals(1, result.filterIsInstance<SearchSuggestionProvider>().size)
+        assertEquals(1, result.akhiUnwrapped().filterIsInstance<SearchSuggestionProvider>().size)
         val syncedTabsProviders: List<SyncedTabsStorageSuggestionProvider> =
             result.filterIsInstance<SyncedTabsStorageSuggestionProvider>()
         assertEquals(2, syncedTabsProviders.size)
@@ -1177,7 +1178,7 @@ class SearchSuggestionsProvidersBuilderTest {
         assertEquals(0, result.filterIsInstance<HistoryStorageSuggestionProvider>().size)
         assertEquals(0, result.filterIsInstance<BookmarksStorageSuggestionProvider>().size)
         assertEquals(1, result.filterIsInstance<SearchActionProvider>().size)
-        assertEquals(0, result.filterIsInstance<SearchSuggestionProvider>().size)
+        assertEquals(0, result.akhiUnwrapped().filterIsInstance<SearchSuggestionProvider>().size)
         assertEquals(0, result.filterIsInstance<SyncedTabsStorageSuggestionProvider>().size)
         assertEquals(0, result.filterIsInstance<SessionSuggestionProvider>().size)
         assertEquals(1, result.filterIsInstance<SearchEngineSuggestionProvider>().size)
@@ -1505,7 +1506,7 @@ class SearchSuggestionsProvidersBuilderTest {
 
         val result = builder.getProvidersToAdd(state)
 
-        assertEquals(1, result.filterIsInstance<TrendingSearchProvider>().size)
+        assertEquals(1, result.akhiUnwrapped().filterIsInstance<TrendingSearchProvider>().size)
     }
 
     @Test
@@ -1516,7 +1517,7 @@ class SearchSuggestionsProvidersBuilderTest {
 
         val result = builder.getProvidersToAdd(state)
 
-        assertEquals(0, result.filterIsInstance<TrendingSearchProvider>().size)
+        assertEquals(0, result.akhiUnwrapped().filterIsInstance<TrendingSearchProvider>().size)
     }
 
     @Test
@@ -1683,3 +1684,7 @@ private fun getSearchProviderState(
         showRecentSearches = showRecentSearches,
         searchEngineSource = searchEngineSource,
     )
+
+// AkhiBrowser: the engine's suggestions and trending searches come wrapped in AkhiFilteredSuggestionProvider
+private fun Collection<AwesomeBar.SuggestionProvider>.akhiUnwrapped() =
+    map { (it as? AkhiFilteredSuggestionProvider)?.delegate ?: it }

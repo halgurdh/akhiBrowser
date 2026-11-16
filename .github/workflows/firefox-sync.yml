@@ -1,11 +1,13 @@
 # Merges Mozilla's main into the branch firefox-daily every day at 00:00 UTC, and at once when CISA's list of exploited
 # vulnerabilities gets a Firefox entry (checked every 2 hours). firefox-daily keeps its merges, so a conflict solved there
 # once stays solved; AkhiBrowser's main is merged into it first.
-# When firefox-daily has something main lacks, it's built and smoke tested (akhi-linux.yml), and main fast-forwards to
-# it when both pass. A conflict is handed to Claude, whose fix comes as a pull request into firefox-daily to approve;
+# When firefox-daily has something main lacks, it's built for Linux, Android and Windows (akhi-linux.yml,
+# akhi-android.yml, akhi-windows.yml) and smoke tested on Linux and Windows, and main fast-forwards to it when all pass. A conflict is handed to Claude, whose fix comes as a pull request into firefox-daily to approve;
 # something AkhiBrowser removed coming back stops it. Each stop opens an issue and mails the user (notify.sh).
-# Secrets: AKHI_SUBMODULES_TOKEN (the build), AKHI_OPS_TOKEN (the mails), ANTHROPIC_API_KEY (conflicts; without it
-# only the issue and the mail), AKHI_PUSH_TOKEN (optional: a token with contents and workflows write on this repository,
+# Secrets: AKHI_SUBMODULES_TOKEN (the build), AKHI_OPS_TOKEN (the mails), CLAUDE_CODE_OAUTH_TOKEN (conflicts, on the
+# Claude subscription: made with `claude setup-token`) or ANTHROPIC_API_KEY (conflicts, billed per use; without either
+# only the issue and the mail), AKHI_SUBMODULES_TOKEN also retries a refused push (with contents and workflows write, merges that change
+# .github/workflows go through), AKHI_PUSH_TOKEN (optional: a token with contents and workflows write on this repository,
 # for merges that change files under .github/workflows, which the workflow's own token can't push).
 name: Firefox sync
 
@@ -38,7 +40,7 @@ jobs:
       sha: ${{ steps.merge.outputs.sha }}
       pending: ${{ steps.merge.outputs.pending }}
     env:
-      HAS_CLAUDE: ${{ secrets.ANTHROPIC_API_KEY != '' }}
+      HAS_CLAUDE: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN != '' || secrets.ANTHROPIC_API_KEY != '' }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -107,9 +109,9 @@ jobs:
             exit 0
           fi
           if [ "$(git rev-parse HEAD)" != "${{ steps.start.outputs.daily }}" ]; then
-            if ! git push origin HEAD:refs/heads/firefox-daily 2> "$RUNNER_TEMP/push.log"; then
+            if ! { git push origin HEAD:refs/heads/firefox-daily 2> "$RUNNER_TEMP/push.log" || { [ -n "${{ secrets.AKHI_SUBMODULES_TOKEN }}" ] && git -c http.https://github.com/.extraheader= push "https://x-access-token:${{ secrets.AKHI_SUBMODULES_TOKEN }}@github.com/$GITHUB_REPOSITORY.git" HEAD:refs/heads/firefox-daily 2>> "$RUNNER_TEMP/push.log"; }; }; then
               { echo "### firefox-daily couldn't be pushed"; echo '```'; cat "$RUNNER_TEMP/push.log"; echo '```'
-                echo "If it's about workflow files, add the secret AKHI_PUSH_TOKEN (contents and workflows write)."; } > "$REPORT"
+                echo "If it's about workflow files: AKHI_SUBMODULES_TOKEN (the retry) needs Contents and Workflows write on this repository."; } > "$REPORT"
               echo "failed=true" >> "$GITHUB_OUTPUT"
               exit 0
             fi
@@ -138,7 +140,7 @@ jobs:
       - name: Conflicts without Claude
         if: (steps.start.outputs.conflict == 'true' || steps.merge.outputs.conflict == 'true') && env.HAS_CLAUDE != 'true' && !steps.waiting.outputs.url
         run: |
-          echo; echo "Solve them on firefox-daily: the next sync starts from there. (No ANTHROPIC_API_KEY secret, so Claude didn't try.)" >> "$REPORT"
+          echo; echo "Solve them on firefox-daily: the next sync starts from there. (No CLAUDE_CODE_OAUTH_TOKEN or ANTHROPIC_API_KEY secret, so Claude didn't try.)" >> "$REPORT"
 
       - name: Claude solves the conflicts
         id: claude
@@ -147,7 +149,8 @@ jobs:
         timeout-minutes: 60
         uses: anthropics/claude-code-action@8d70a0dd265122bd65b8e09d3d959e65373ae2a1 # v1.0.260
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          anthropic_api_key: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN == '' && secrets.ANTHROPIC_API_KEY || '' }}
           github_token: ${{ github.token }}
           claude_args: >-
             --max-turns 300
@@ -230,8 +233,24 @@ jobs:
       ref: ${{ needs.sync.outputs.sha }}
     secrets: inherit
 
+  build-android:
+    needs: sync
+    if: needs.sync.outputs.pending == 'true'
+    uses: ./.github/workflows/akhi-android.yml
+    with:
+      ref: ${{ needs.sync.outputs.sha }}
+    secrets: inherit
+
+  build-windows:
+    needs: sync
+    if: needs.sync.outputs.pending == 'true'
+    uses: ./.github/workflows/akhi-windows.yml
+    with:
+      ref: ${{ needs.sync.outputs.sha }}
+    secrets: inherit
+
   promote:
-    needs: [sync, build]
+    needs: [sync, build, build-android, build-windows]
     if: always() && needs.build.result != 'skipped'
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -250,10 +269,13 @@ jobs:
           SHA: ${{ needs.sync.outputs.sha }}
           BUILD: ${{ needs.build.result }}
           SMOKE: ${{ needs.build.outputs.smoke }}
+          ANDROID: ${{ needs.build-android.result }}
+          WINDOWS: ${{ needs.build-windows.result }}
+          WINDOWS_SMOKE: ${{ needs.build-windows.outputs.smoke }}
         run: |
           short=${SHA:0:12}
-          if [ "$BUILD" != "success" ] || [ "$SMOKE" != "success" ]; then
-            echo "firefox-daily $short didn't pass: build $BUILD, smoke test ${SMOKE:-not run}. main stays where it is; the logs are in the private draft release of halgurdh/akhi-extension." > "$RUNNER_TEMP/r.md"
+          if [ "$BUILD" != "success" ] || [ "$SMOKE" != "success" ] || [ "$ANDROID" != "success" ] || [ "$WINDOWS" != "success" ] || [ "$WINDOWS_SMOKE" != "success" ]; then
+            echo "firefox-daily $short didn't pass: Linux build $BUILD, smoke test ${SMOKE:-not run}; Android build $ANDROID; Windows build $WINDOWS, smoke test ${WINDOWS_SMOKE:-not run}. main stays where it is; the logs are in the private draft releases of halgurdh/akhi-extension." > "$RUNNER_TEMP/r.md"
             gh issue create --title "Firefox sync: firefox-daily didn't build or pass the smoke test ($(date -u +%F))" --body-file "$RUNNER_TEMP/r.md"
             bash .github/scripts/notify.sh "AkhiBrowser: the Firefox update didn't build" "$RUNNER_TEMP/r.md"
             exit 0
@@ -264,12 +286,12 @@ jobs:
             bash .github/scripts/notify.sh "AkhiBrowser: Firefox update waits for the next sync" "$RUNNER_TEMP/r.md"
             exit 0
           fi
-          if ! git push origin "$SHA:refs/heads/main" 2> "$RUNNER_TEMP/push.log"; then
+          if ! { git push origin "$SHA:refs/heads/main" 2> "$RUNNER_TEMP/push.log" || { [ -n "${{ secrets.AKHI_SUBMODULES_TOKEN }}" ] && git -c http.https://github.com/.extraheader= push "https://x-access-token:${{ secrets.AKHI_SUBMODULES_TOKEN }}@github.com/$GITHUB_REPOSITORY.git" "$SHA:refs/heads/main" 2>> "$RUNNER_TEMP/push.log"; }; }; then
             { echo "main couldn't move to firefox-daily $short:"; echo '```'; cat "$RUNNER_TEMP/push.log"; echo '```';
-              echo "If it's about workflow files, add the secret AKHI_PUSH_TOKEN (contents and workflows write)."; } > "$RUNNER_TEMP/r.md"
+              echo "If it's about workflow files: AKHI_SUBMODULES_TOKEN (the retry) needs Contents and Workflows write on this repository."; } > "$RUNNER_TEMP/r.md"
             gh issue create --title "Firefox sync: main couldn't fast-forward ($(date -u +%F))" --body-file "$RUNNER_TEMP/r.md"
             bash .github/scripts/notify.sh "AkhiBrowser: main couldn't take the Firefox update" "$RUNNER_TEMP/r.md"
             exit 1
           fi
-          echo "main is now at $short: the latest Firefox merged, built and smoke tested on Linux. The next release takes it." > "$RUNNER_TEMP/r.md"
+          echo "main is now at $short: the latest Firefox merged, built for Linux, Android and Windows, and smoke tested on Linux and Windows. The next release takes it." > "$RUNNER_TEMP/r.md"
           bash .github/scripts/notify.sh "AkhiBrowser: Firefox update is in main" "$RUNNER_TEMP/r.md"

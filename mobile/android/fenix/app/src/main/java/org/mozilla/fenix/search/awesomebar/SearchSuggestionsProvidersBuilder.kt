@@ -63,6 +63,11 @@ class SearchSuggestionsProvidersBuilder(
     val defaultSearchSuggestionProvider: SearchSuggestionProvider
     val defaultTrendingSearchProvider: TrendingSearchProvider
     val defaultSearchActionProvider: SearchActionProvider
+
+    // AkhiBrowser: Islamic searches first, and the engine's suggestions without adult and haram ones
+    val akhiIslamicSuggestionProvider: AkhiIslamicSuggestionProvider
+    val akhiFilteredSearchSuggestionProvider: AkhiFilteredSuggestionProvider
+    val akhiFilteredTrendingSearchProvider: AkhiFilteredSuggestionProvider
     var searchEngineSuggestionProvider: SearchEngineSuggestionProvider?
     val searchSuggestionProviderMap: MutableMap<SearchEngine, List<AwesomeBar.SuggestionProvider>>
     val combinedOnlineDataSource: CombinedOnlineSuggestionDataSource = CombinedOnlineSuggestionDataSource(scope = scope)
@@ -132,6 +137,15 @@ class SearchSuggestionsProvidersBuilder(
                 showDescription = false,
                 suggestionsHeader = suggestionsStringsProvider.forSearchEngineSuggestion(),
             )
+
+        akhiIslamicSuggestionProvider =
+            AkhiIslamicSuggestionProvider(
+                searchUseCase = searchUseCase,
+                icon = searchBitmap,
+                suggestionsHeader = suggestionsStringsProvider.forSearchEngineSuggestion(),
+            )
+        akhiFilteredSearchSuggestionProvider = AkhiFilteredSuggestionProvider(defaultSearchSuggestionProvider)
+        akhiFilteredTrendingSearchProvider = AkhiFilteredSuggestionProvider(defaultTrendingSearchProvider)
 
         searchEngineSuggestionProvider =
             SearchEngineSuggestionProvider(
@@ -277,6 +291,8 @@ class SearchSuggestionsProvidersBuilder(
 
         if (state.searchEngineSource is SearchEngineSource.Default) {
             providersToAdd.add(defaultSearchActionProvider)
+            // AkhiBrowser: the Islamic searches come from a list in the app, so they show even without the engine's
+            providersToAdd.add(akhiIslamicSuggestionProvider)
         }
 
         providersToAdd.add(requireNotNull(searchEngineSuggestionProvider))
@@ -291,7 +307,7 @@ class SearchSuggestionsProvidersBuilder(
                 state.searchEngineSource.searchEngine,
                 suggestionHeader,
             )
-            providersToAdd.add(defaultTrendingSearchProvider)
+            providersToAdd.add(akhiFilteredTrendingSearchProvider)
         }
 
         return providersToAdd
@@ -345,7 +361,8 @@ class SearchSuggestionsProvidersBuilder(
             is SearchEngineSource.Default ->
                 listOf(
                     defaultSearchActionProvider,
-                    defaultSearchSuggestionProvider,
+                    akhiIslamicSuggestionProvider,
+                    akhiFilteredSearchSuggestionProvider,
                 )
             is SearchEngineSource.Shortcut -> getSuggestionProviderForEngine(state.searchEngineSource.searchEngine)
             is SearchEngineSource.History -> emptyList()
@@ -406,16 +423,23 @@ class SearchSuggestionsProvidersBuilder(
                     searchUseCase = searchUseCase,
                     icon = searchBitmap,
                 ),
-                SearchSuggestionProvider(
-                    engine,
-                    searchUseCase,
-                    components.core.client,
-                    limit = METADATA_SHORTCUT_SUGGESTION_LIMIT,
-                    mode = SearchSuggestionProvider.Mode.MULTIPLE_SUGGESTIONS,
+                AkhiIslamicSuggestionProvider(
+                    searchUseCase = searchUseCase,
                     icon = searchBitmap,
-                    engine = engineForSpeculativeConnects,
-                    filterExactMatch = true,
-                    private = browsingModeManager.mode.isPrivate,
+                    searchEngine = engine,
+                ),
+                AkhiFilteredSuggestionProvider(
+                    SearchSuggestionProvider(
+                        engine,
+                        searchUseCase,
+                        components.core.client,
+                        limit = METADATA_SHORTCUT_SUGGESTION_LIMIT,
+                        mode = SearchSuggestionProvider.Mode.MULTIPLE_SUGGESTIONS,
+                        icon = searchBitmap,
+                        engine = engineForSpeculativeConnects,
+                        filterExactMatch = true,
+                        private = browsingModeManager.mode.isPrivate,
+                    ),
                 ),
             )
         }

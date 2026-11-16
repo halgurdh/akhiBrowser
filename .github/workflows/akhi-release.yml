@@ -1,0 +1,221 @@
+# A whole AkhiBrowser release on GitHub, without the PC (the cloud counterpart of tools/release.py and the "Release"
+# button of akhi-branding, which build on the PC):
+# 1. version: the submodules to their main, set_version.py, the extension's commit pushed to its main and the tree's
+#    "AkhiBrowser <version>" pushed to main (a dry run only sets the version inside the builds and commits nothing)
+# 2. Android and Windows built from that commit (akhi-android.yml, akhi-windows.yml), the Windows installer smoke tested
+# 3. when all pass: the GitHub release with the notes, the website, Linux and macOS, and the signing job of akhi-branding
+#    (cloud-release.yml) that signs, checks, uploads to Google Play and the Microsoft Store and mails how it went
+# Secrets: AKHI_SUBMODULES_TOKEN (the submodules, and pushing the extension's main), AKHI_OPS_TOKEN (the mails) and
+# AKHI_RELEASE_TOKEN, a token that may run the workflows of halgurdh/akhi-branding (Actions: read and write), to start
+# the signing job; without it AKHI_SUBMODULES_TOKEN is tried.
+name: AkhiBrowser Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version, like 1.3.5"
+        required: true
+      notes:
+        description: "Release notes (Google Play, GitHub)"
+        default: ""
+      play_track:
+        description: "Google Play track (internal goes to testers at once, others stay a draft)"
+        type: choice
+        options: [internal, alpha, beta, production, none]
+        default: internal
+      msstore:
+        description: "Microsoft Store: a draft submission, or sent to certification"
+        type: choice
+        options: [draft, certification, none]
+        default: draft
+      github:
+        description: "GitHub release with the notes (no files)"
+        type: boolean
+        default: true
+      linux_macos:
+        description: "Linux and macOS built after the GitHub release (private drafts)"
+        type: boolean
+        default: true
+      dry_run:
+        description: "Dry run: builds and signs under this version, but commits, publishes and uploads nothing"
+        type: boolean
+        default: false
+
+concurrency:
+  group: akhi-release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  VERSION: ${{ inputs.version }}
+  DRY_RUN: ${{ inputs.dry_run }}
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    outputs:
+      sha: ${{ steps.commit.outputs.sha }}
+      test_version: ${{ steps.commit.outputs.test_version }}
+    steps:
+      - name: A version like 1.3.5
+        run: |
+          echo "$VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$' || { echo "Not a version: $VERSION"; exit 1; }
+
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+          sparse-checkout: |
+            /browser/config/
+            /package.json
+            /.gitmodules
+            /browser/extensions/akhi/
+            /browser/extensions/akhi-premium/
+            /browser/branding/akhi/
+          sparse-checkout-cone-mode: false
+
+      - name: The submodules at their main
+        env:
+          TOKEN: ${{ secrets.AKHI_SUBMODULES_TOKEN }}
+        run: |
+          git config --global url."https://x-access-token:${TOKEN}@github.com/".insteadOf "https://github.com/"
+          git submodule update --init --depth 50 browser/extensions/akhi browser/extensions/akhi-premium browser/branding/akhi
+          for path in browser/extensions/akhi browser/extensions/akhi-premium browser/branding/akhi; do
+            pinned=$(git -C "$path" rev-parse HEAD)
+            git -C "$path" fetch -q origin main
+            if ! git -C "$path" merge-base --is-ancestor "$pinned" origin/main 2>/dev/null; then
+              git -C "$path" fetch -q --unshallow origin main 2>/dev/null || true
+              git -C "$path" merge-base --is-ancestor "$pinned" origin/main ||
+                { echo "$path: the tree's commit isn't in its main, merge them first"; exit 1; }
+            fi
+            git -C "$path" checkout -q -B main origin/main
+            echo "$path: $(git -C "$path" log -1 --format='%h %s')"
+          done
+
+      - name: Version and commits
+        id: commit
+        env:
+          TOKEN: ${{ secrets.AKHI_SUBMODULES_TOKEN }}
+        run: |
+          python3 browser/branding/akhi/tools/set_version.py "$VERSION"
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "Dry run: nothing committed, the builds set $VERSION themselves"
+            echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+            echo "test_version=$VERSION" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config --global user.name "AkhiBrowser release"
+          git config --global user.email "support@akhibrowser.com"
+          extension=browser/extensions/akhi
+          if [ -n "$(git -C "$extension" status --porcelain --untracked-files=no)" ]; then
+            git -C "$extension" commit -q -am "Version $VERSION"
+            git -C "$extension" push -q origin HEAD:main
+          fi
+          git config --global --unset-all "url.https://x-access-token:${TOKEN}@github.com/.insteadOf" || true
+          git add browser/config/akhi_version.txt package.json browser/extensions/akhi browser/extensions/akhi-premium browser/branding/akhi
+          if [ -n "$(git diff --cached --name-only)" ]; then
+            git commit -q -m "AkhiBrowser $VERSION"
+            git push -q origin HEAD:main
+          fi
+          git log -1 --format='%h %s'
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "test_version=" >> "$GITHUB_OUTPUT"
+
+  android:
+    needs: version
+    uses: ./.github/workflows/akhi-android.yml
+    with:
+      ref: ${{ needs.version.outputs.sha }}
+      test_version: ${{ needs.version.outputs.test_version }}
+    secrets: inherit
+
+  windows:
+    needs: version
+    uses: ./.github/workflows/akhi-windows.yml
+    with:
+      ref: ${{ needs.version.outputs.sha }}
+      test_version: ${{ needs.version.outputs.test_version }}
+    secrets: inherit
+
+  publish:
+    needs: [version, android, windows]
+    if: always() && needs.version.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      actions: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      AKHI_OPS_TOKEN: ${{ secrets.AKHI_OPS_TOKEN }}
+      SHA: ${{ needs.version.outputs.sha }}
+      ANDROID: ${{ needs.android.result }}
+      ANDROID_DRAFT: ${{ needs.android.outputs.draft }}
+      WINDOWS: ${{ needs.windows.result }}
+      WINDOWS_DRAFT: ${{ needs.windows.outputs.draft }}
+      WINDOWS_SMOKE: ${{ needs.windows.outputs.smoke }}
+      NOTES: ${{ inputs.notes }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github
+          persist-credentials: false
+
+      - name: Builds and smoke test passed?
+        run: |
+          report="$RUNNER_TEMP/report.md"
+          echo "AkhiBrowser $VERSION$([ "$DRY_RUN" = "true" ] && echo " (dry run)") from ${SHA:0:12}: Android $ANDROID ($ANDROID_DRAFT), Windows $WINDOWS ($WINDOWS_DRAFT), Windows smoke test ${WINDOWS_SMOKE:-not run}." > "$report"
+          cat "$report"
+          if [ "$ANDROID" != "success" ] || [ "$WINDOWS" != "success" ] || [ "$WINDOWS_SMOKE" != "success" ]; then
+            echo "Nothing published: the logs are in the private draft releases of halgurdh/akhi-extension." >> "$report"
+            bash .github/scripts/notify.sh "AkhiBrowser $VERSION: the release stopped" "$report"
+            exit 1
+          fi
+
+      - name: GitHub release and the website
+        if: inputs.dry_run == false && inputs.github
+        run: |
+          gh release create "v$VERSION" --repo "$GITHUB_REPOSITORY" --target "$SHA" --latest \
+            --title "AkhiBrowser $VERSION" --notes "${NOTES:-AkhiBrowser $VERSION}"
+          gh workflow run website-latest-release.yml --repo "$GITHUB_REPOSITORY" --ref main
+          echo "GitHub release v$VERSION published (notes only), the website follows" >> "$RUNNER_TEMP/report.md"
+
+      - name: Linux and macOS
+        if: inputs.dry_run == false && inputs.linux_macos
+        run: |
+          ref="v$VERSION"
+          ${{ inputs.github }} || ref="$SHA"
+          for workflow in akhi-linux.yml akhi-macos.yml; do
+            gh workflow run "$workflow" --repo "$GITHUB_REPOSITORY" --ref main -f ref="$ref"
+          done
+          echo "Linux and macOS are building (a few hours), to private drafts in akhi-extension" >> "$RUNNER_TEMP/report.md"
+
+      - name: The signing job of akhi-branding
+        env:
+          GH_TOKEN: ${{ secrets.AKHI_RELEASE_TOKEN || secrets.AKHI_SUBMODULES_TOKEN }}
+          PLAY_TRACK: ${{ inputs.dry_run && 'none' || inputs.play_track }}
+          MSSTORE: ${{ inputs.dry_run && 'none' || inputs.msstore }}
+        run: |
+          report="$RUNNER_TEMP/report.md"
+          if gh workflow run cloud-release.yml --repo halgurdh/akhi-branding --ref main \
+               -f android_draft="$ANDROID_DRAFT" -f windows_draft="$WINDOWS_DRAFT" \
+               -f play_track="$PLAY_TRACK" -f msstore="$MSSTORE" -f version="$VERSION" -f notes="$NOTES"; then
+            echo "The signing job of akhi-branding started (Google Play: $PLAY_TRACK, Microsoft Store: $MSSTORE); it mails when it's done." >> "$report"
+            bash .github/scripts/notify.sh "AkhiBrowser $VERSION: built, now signing" "$report"
+          else
+            {
+              echo "The signing job of akhi-branding couldn't be started: add the secret AKHI_RELEASE_TOKEN to this repository,"
+              echo "a fine-grained token for halgurdh/akhi-branding with Actions: read and write."
+              echo "Or start it by hand: akhi-branding, Actions, Sign and publish the GitHub builds, with android_draft"
+              echo "$ANDROID_DRAFT and windows_draft $WINDOWS_DRAFT."
+            } >> "$report"
+            cat "$report"
+            bash .github/scripts/notify.sh "AkhiBrowser $VERSION: built, signing not started" "$report"
+            exit 1
+          fi

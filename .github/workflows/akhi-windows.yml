@@ -1,0 +1,195 @@
+# AkhiBrowser for Windows x64: cross-compiled on Linux, as Mozilla builds its own Windows versions, as a Linux runner
+# frees more disk and is faster than a Windows one. configure downloads Mozilla's toolchains (clang-cl, the Windows SDK,
+# NSIS, wine). The installer isn't Authenticode signed; the update is signed by the signing job of akhi-branding.
+# The job smoke runs the installer's browser on a Windows machine against tools/smoke, as release.py does on the PC.
+# Runs by hand (Run workflow), from akhi-release.yml and from firefox-sync.yml. Like the Linux build, its output goes to
+# a draft release of the private halgurdh/akhi-extension (output draft), not to the log or an artifact of this public
+# repository.
+# Needs the secret AKHI_SUBMODULES_TOKEN: read access to the submodules, read and write to the contents of
+# halgurdh/akhi-extension.
+name: AkhiBrowser Windows
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: The commit or tag to build
+        type: string
+        default: ""
+      test_version:
+        description: "A test build under this version, set in the run only (empty: the tree's version)"
+        type: string
+        default: ""
+  workflow_call:
+    inputs:
+      ref:
+        type: string
+        default: ""
+      test_version:
+        type: string
+        default: ""
+    outputs:
+      draft:
+        description: The draft release in halgurdh/akhi-extension with the installer, the unsigned update and the .msix
+        value: ${{ jobs.build.outputs.draft }}
+      smoke:
+        description: The smoke test's outcome, success when every critical check passed
+        value: ${{ jobs.smoke.outputs.result }}
+
+permissions:
+  contents: read
+
+env:
+  TEST_VERSION: ${{ inputs.test_version }}
+  MOZBUILD_STATE_PATH: ${{ github.workspace }}/.mozbuild
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 355
+    outputs:
+      draft: windows-build-${{ github.run_id }}-${{ github.run_attempt }}
+      branding: ${{ steps.branding.outputs.sha }}
+      version: ${{ steps.branding.outputs.version }}
+    steps:
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
+          df -h /
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+          submodules: recursive
+          token: ${{ secrets.AKHI_SUBMODULES_TOKEN }}
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Test version
+        if: env.TEST_VERSION != ''
+        run: python3 browser/branding/akhi/tools/set_version.py "$TEST_VERSION"
+
+      - name: Version and branding, for the smoke test
+        id: branding
+        run: |
+          echo "sha=$(git -C browser/branding/akhi rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "version=$(cat browser/config/akhi_version.txt)" >> "$GITHUB_OUTPUT"
+
+      - name: Install the build tools
+        run: |
+          mkdir -p artifacts
+          sudo apt-get install -y -qq msitools > /dev/null
+          ./mach --no-interactive bootstrap --application-choice "Firefox for Desktop" > artifacts/bootstrap.log 2>&1 \
+            || { tail -n 30 artifacts/bootstrap.log; exit 1; }
+          "$HOME/.cargo/bin/rustup" target add x86_64-pc-windows-msvc
+          (cd browser/extensions/akhi/webext && npm ci --no-audit --no-fund > /dev/null 2>&1 || npm install --no-audit --no-fund > /dev/null)
+
+      - name: Build and package
+        run: |
+          python3 browser/branding/akhi/tools/build_windows_cross.py > artifacts/build.log 2>&1 \
+            || { grep -nE "error|Error" artifacts/build.log | tail -n 40; exit 1; }
+
+      - name: Microsoft Store package
+        id: msix
+        continue-on-error: true
+        run: |
+          # makemsix, Mozilla's Linux build of msix-packaging, instead of makeappx.exe
+          mkdir -p "$RUNNER_TEMP/msix" && (cd "$RUNNER_TEMP/msix" && "$GITHUB_WORKSPACE/mach" artifact toolchain --from-build linux64-msix-packaging > "$GITHUB_WORKSPACE/artifacts/msix-tool.log" 2>&1)
+          export MAKEAPPX=$(find "$RUNNER_TEMP/msix" -name makemsix -type f | head -n 1)
+          [ -n "$MAKEAPPX" ] || { tail -n 20 artifacts/msix-tool.log; exit 1; }
+          python3 browser/branding/akhi/tools/build_msstore.py --package-only \
+            --objdir obj-akhi-windows-x64 --mozconfig browser/branding/akhi/mozconfigs/akhi-windows-x64-cross \
+            --identity-name RezgariTech.AkhiBrowser --publisher "CN=F0209D67-61A9-4F82-9C24-608F78CBF40B" \
+            --publisher-display-name "Rezgari Tech" > artifacts/msix.log 2>&1 || { tail -n 40 artifacts/msix.log; exit 1; }
+          grep -E "^(ok|FAIL)" artifacts/msix.log
+          cp artifacts/msstore-*/AkhiBrowser-*-x64.msix obj-akhi-windows-x64/dist/release/
+
+      - name: Check the installer
+        id: check
+        continue-on-error: true
+        run: |
+          setup=obj-akhi-windows-x64/dist/release/AkhiBrowser-windows-x64-setup.exe
+          ls -la "$setup"
+          file "$setup" | tee artifacts/check.txt
+          sevenzip=$(command -v 7zz || ls "$MOZBUILD_STATE_PATH"/7zz/7zz 2>/dev/null || command -v 7z)
+          "$sevenzip" l "$setup" > artifacts/installer-contents.txt
+          for f in AkhiBrowser.exe xul.dll omni.ja browser/omni.ja; do
+            grep -qiE "core[/\\\\]${f//\//[/\\\\]}$" artifacts/installer-contents.txt && echo "$f: ok" || { echo "$f: missing"; missing=1; }
+          done | tee -a artifacts/check.txt
+          ! grep -q missing artifacts/check.txt
+
+      - name: Upload to a private draft release
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.AKHI_SUBMODULES_TOKEN }}
+        run: |
+          df -h /
+          mkdir -p artifacts
+          tar -C artifacts --exclude 'msstore-*' -cJf build-logs.tar.xz .
+          files=(build-logs.tar.xz)
+          for f in obj-akhi-windows-x64/dist/release/*; do [ -f "$f" ] && files+=("$f"); done
+          gh release create "windows-build-${{ github.run_id }}-${{ github.run_attempt }}" "${files[@]}" \
+            --repo halgurdh/akhi-extension --draft --title "Windows build ${{ github.run_id }}" \
+            --notes "Cross-compiled, unsigned, from ${{ inputs.ref || github.sha }}: ${{ job.status }}"
+
+  # the installer's browser on Windows against tools/smoke, with release.py's own smoke step and its critical tests
+  smoke:
+    needs: build
+    if: needs.build.result == 'success'
+    runs-on: windows-latest
+    timeout-minutes: 45
+    outputs:
+      result: ${{ steps.smoke.outcome }}
+    env:
+      GH_TOKEN: ${{ secrets.AKHI_SUBMODULES_TOKEN }}
+      DRAFT: ${{ needs.build.outputs.draft }}
+      VERSION: ${{ needs.build.outputs.version }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: halgurdh/akhi-branding
+          ref: ${{ needs.build.outputs.branding }}
+          path: browser/branding/akhi
+          token: ${{ secrets.AKHI_SUBMODULES_TOKEN }}
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: The installer from the draft
+        run: |
+          id=$(gh api "repos/halgurdh/akhi-extension/releases?per_page=100" --jq ".[] | select(.tag_name==\"$DRAFT\") | .id")
+          asset=$(gh api "repos/halgurdh/akhi-extension/releases/$id/assets?per_page=100" \
+            --jq '.[] | select(.name=="AkhiBrowser-windows-x64-setup.exe") | .id')
+          mkdir -p "artifacts/final-$VERSION"
+          gh api -H "Accept: application/octet-stream" "repos/halgurdh/akhi-extension/releases/assets/$asset" \
+            > "artifacts/final-$VERSION/AkhiBrowser-$VERSION-windows-x64-setup.exe"
+          ls -la "artifacts/final-$VERSION"
+
+      - name: Smoke test
+        id: smoke
+        run: |
+          cd browser/branding/akhi/tools
+          python - <<'PY'
+          import os, sys
+          import release
+          version = os.environ["VERSION"]
+          try:
+              release.smoke(version, release.ROOT / f"artifacts/final-{version}")
+          finally:
+              print("\n".join(release.notes))
+          PY
+
+      - name: Smoke logs to the draft
+        if: always()
+        continue-on-error: true
+        run: |
+          tar -czf smoke-logs.tar.gz -C artifacts --exclude 'final-*' --exclude 'smoke-app-*' .
+          gh release upload "$DRAFT" smoke-logs.tar.gz --repo halgurdh/akhi-extension --clobber
