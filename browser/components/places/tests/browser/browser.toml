@@ -188,11 +188,11 @@ https_first_disabled = true
 
 ["browser_library_openFlatContainer.js"]
 
+["browser_library_open.js"]
+
 ["browser_library_open_all.js"]
 
 ["browser_library_open_all_with_separator.js"]
-
-["browser_library_open_bookmark.js"]
 
 ["browser_library_open_leak.js"]
 
