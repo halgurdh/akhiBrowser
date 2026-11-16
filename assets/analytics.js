@@ -1,5 +1,5 @@
 /* akhibrowser.com: Google Analytics, the Reddit pixel (visits and download clicks from a Reddit ad) and a Reddit ad's download or purchase reported to Reddit by the license server, only after consent (Consent Mode v2, set to denied in each page's head), the
- * clicks that matter as events (downloads, plans), the visitor's GA id passed to the checkout so the purchase the
+ * clicks that matter as events (downloads, plans), a newsletter sign-up or an application from a Reddit ad, the visitor's GA id passed to the checkout so the purchase the
  * license server reports is theirs, and the website as the source of Google Play installs. */
 (function () {
   "use strict";
@@ -116,6 +116,11 @@
     }
   }
 
+  // an id for one event, given to the pixel and to the license server alike, so Reddit counts the event once
+  function eventId() {
+    return window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + "-" + Math.random().toString(36).slice(2, 12);
+  }
+
   // the visitor's GA client id ("GA1.1.123.456" → "123.456"), only there after consent
   function gaClientId() {
     var match = /(?:^|;\s*)_ga=GA\d\.\d\.(\d+\.\d+)/.exec(document.cookie);
@@ -138,7 +143,7 @@
         window.dataLayer.push({ event: "download_click", store: STORES[i][1], page_language: lang });
         if (stored() === "granted") {
           // the same id to the pixel and the license server, so Reddit counts it once, also when the pixel is blocked
-          var id = window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + "-" + Math.random().toString(36).slice(2, 12);
+          var id = eventId();
           reddit()("track", "Custom", { customEventName: "Download", conversionId: id });
           var click = redditClick();
           if (click && navigator.sendBeacon) {
@@ -218,6 +223,41 @@
       }
     }
   }
+
+  // a newsletter sign-up (SignUp) or an affiliate or partner application (Lead), after consent: the pixel's event, and
+  // the Reddit ad click with the event's id in the form, so the license server sends it to Reddit too, once (a SignUp
+  // when the address is confirmed)
+  var FORMS = /akhi-license\.akhibrowser\.workers\.dev\/(newsletter|affiliate|partner)$/;
+  function hidden(form, name, value) {
+    var input = form.querySelector('input[type="hidden"][name="' + name + '"]');
+    if (!input) {
+      input = document.createElement("input");
+      input.type = "hidden";
+      input.name = name;
+      form.appendChild(input);
+    }
+    input.value = value;
+  }
+  document.addEventListener("submit", function (event) {
+    var form = event.target;
+    var match = form && FORMS.exec(form.action || "");
+    if (!match || event.defaultPrevented || stored() !== "granted" || form.dataset.reddit) {
+      return;
+    }
+    form.dataset.reddit = "1";
+    var id = eventId();
+    reddit()("track", match[1] === "newsletter" ? "SignUp" : "Lead", { conversionId: id });
+    var click = redditClick();
+    if (click) {
+      hidden(form, "rdt", click);
+      hidden(form, "rdt_id", id);
+    }
+    // a moment for the pixel's event to leave before the page goes
+    event.preventDefault();
+    setTimeout(function () {
+      form.submit();
+    }, 300);
+  });
 
   document.addEventListener(
     "click",
