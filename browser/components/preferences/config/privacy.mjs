@@ -1365,14 +1365,7 @@ SettingGroupManager.registerGroups({
         control: "moz-box-item",
         items: [{ id: "ipProtectionBandwidth", control: "bandwidth-usage" }],
       },
-      {
-        id: "ipProtectionLinks",
-        control: "moz-box-link",
-        l10nId: "ip-protection-vpn-upgrade-link",
-        controlAttrs: {
-          href: "https://www.mozilla.org/products/vpn/?utm_medium=fx-desktop&utm_campaign=fx-vpn&utm_source=settings",
-        },
-      },
+      // AkhiBrowser: no ipProtectionLinks, the upsell to the paid Mozilla VPN
     ],
   },
   vpnSiteRules: {
