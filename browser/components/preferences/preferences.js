@@ -273,7 +273,7 @@ const CONFIG_PANES = Object.freeze({
     groupIds: [
       "appearance",
       "browserTheme",
-      "browserIconEntry",
+      // AkhiBrowser: no browserIconEntry, the picker of Firefox's logos as the browser's icon
       "windowDensity",
       "relatedSettings",
     ],

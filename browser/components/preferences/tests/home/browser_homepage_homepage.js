@@ -26,9 +26,7 @@ add_task(async function test_homepage_section_visible() {
 
   await fieldset.updateComplete;
 
-  let icon = fieldset.shadowRoot.querySelector(
-    'img[src*="window-firefox.svg"]'
-  );
+  let icon = fieldset.shadowRoot.querySelector('img[src*="about-logo.svg"]');
   ok(icon, "Homepage icon is present in shadow DOM");
 
   let homepageNewWindowsControl = await settingControlRenders(
