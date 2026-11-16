@@ -22,13 +22,13 @@ on:
       play_track:
         description: "Google Play track (internal goes to testers at once, others stay a draft)"
         type: choice
-        options: [internal, alpha, beta, production, none]
-        default: internal
+        options: [production, internal, alpha, beta, none]
+        default: production
       msstore:
-        description: "Microsoft Store: a draft submission, or sent to certification"
+        description: "Microsoft Store: to certification as soon as the Store is free (the job Microsoft Store when free), a draft, at once, or none"
         type: choice
-        options: [draft, certification, none]
-        default: draft
+        options: [when_free, draft, certification, none]
+        default: when_free
       github:
         description: "GitHub release with the notes (no files)"
         type: boolean
@@ -40,7 +40,7 @@ on:
       windows_update:
         description: "Also put the signed Windows .mar on the GitHub release, for installs from the old setup.exe"
         type: boolean
-        default: false
+        default: true
       dry_run:
         description: "Dry run: builds and signs under this version, but commits, publishes and uploads nothing"
         type: boolean
@@ -204,7 +204,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.AKHI_RELEASE_TOKEN || secrets.AKHI_SUBMODULES_TOKEN }}
           PLAY_TRACK: ${{ inputs.dry_run && 'none' || inputs.play_track }}
-          MSSTORE: ${{ inputs.dry_run && 'none' || inputs.msstore }}
+          MSSTORE: ${{ (inputs.dry_run || inputs.msstore == 'when_free') && 'none' || inputs.msstore }}
+          STORE_WHEN_FREE: ${{ !inputs.dry_run && inputs.msstore == 'when_free' }}
           WINDOWS_UPDATE: ${{ !inputs.dry_run && inputs.github && inputs.windows_update }}
         run: |
           report="$RUNNER_TEMP/report.md"
@@ -213,6 +214,13 @@ jobs:
                -f play_track="$PLAY_TRACK" -f msstore="$MSSTORE" -f version="$VERSION" -f notes="$NOTES" \
                -f windows_update="$WINDOWS_UPDATE"; then
             echo "The signing job of akhi-branding started (Google Play: $PLAY_TRACK, Microsoft Store: $MSSTORE); it mails when it's done." >> "$report"
+            if [ "$STORE_WHEN_FREE" = "true" ]; then
+              if gh workflow enable msstore-when-free.yml --repo halgurdh/akhi-branding; then
+                echo "Microsoft Store: sent to certification by Microsoft Store when free, once the Store takes a new submission" >> "$report"
+              else
+                echo "Microsoft Store: Microsoft Store when free couldn't be turned on; start it in akhi-branding" >> "$report"
+              fi
+            fi
             bash .github/scripts/notify.sh "AkhiBrowser $VERSION: built, now signing" "$report"
           else
             {
