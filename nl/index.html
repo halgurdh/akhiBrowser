@@ -828,15 +828,15 @@ footer .powered a:hover { text-decoration: underline; }
         <p><button type="button" class="linklike" id="show-plans" data-t="andall">Koop je voor een computer? Toon alle manieren om te betalen</button></p>
       </div>
       <div class="plans">
-        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/monthly" data-t="t49">Premium per maand<small>€3,99 per maand</small></a>
-        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/yearly" data-t="t50">Premium per jaar<small>€39,00 per jaar</small></a>
-        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/lifetime" data-t="t51">Levenslang Premium<small>€119 eenmalig</small></a>
-        <a class="btn" href="https://akhi-license.akhibrowser.workers.dev/buy/family" data-t="t85">Family Premium<small>€59,99 per jaar, 3 dagen gratis</small></a>
-        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/gift" data-t="gift1">Geef Family Premium cadeau<small>€59,99 eenmalig: een jaar voor een ander gezin</small></a>
+        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/monthly?lang=nl" data-t="t49">Premium per maand<small>€3,99 per maand</small></a>
+        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/yearly?lang=nl" data-t="t50">Premium per jaar<small>€39,00 per jaar</small></a>
+        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/lifetime?lang=nl" data-t="t51">Levenslang Premium<small>€119 eenmalig</small></a>
+        <a class="btn" href="https://akhi-license.akhibrowser.workers.dev/buy/family?lang=nl" data-t="t85">Family Premium<small>€59,99 per jaar, 3 dagen gratis</small></a>
+        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/gift?lang=nl" data-t="gift1">Geef Family Premium cadeau<small>€59,99 eenmalig: een jaar voor een ander gezin</small></a>
       </div>
       <p class="note vip-note" hidden data-t="vip1">Je VIP-link geeft je 10% korting op Family Premium: €53,99 per jaar in plaats van €59,99, elk jaar dat je blijft. Stripe laat de prijs zien voordat je betaalt.</p>
       <div class="plan-school" id="school">
-        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/school" data-t="sm1">School / Moskee<small>€30 per maand</small></a>
+        <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/school?lang=nl" data-t="sm1">School / Moskee<small>€30 per maand</small></a>
         <p class="note" data-t="sm2">Family Premium voor alle kinderen van je school of moskee: één sleutel voor maximaal 500 apparaten.</p>
       </div>
       <p class="note" data-t="t52">In AkhiBrowser uit Google Play koop je Premium via Google Play, of plak je een sleutel van deze website. In andere versies zie je de prijs bij Stripe voordat je betaalt. Je krijgt een licentiesleutel zonder account. Een Premium-sleutel werkt op maximaal drie apparaten tegelijk, een Family-sleutel op maximaal tien, een School / Moskee-sleutel op maximaal 500. Premium of Levenslang gekocht vóór versie 1.2.1? Dan houd je het ouderlijk toezicht dat je had. Per maand, per jaar en Family: betaal met je kaart als abonnement, of eenmalig met iDEAL of PayPal voor een maand of een jaar tegen dezelfde prijs, zonder verlenging. Een Family-abonnement met je kaart begint met 3 dagen gratis. Een cadeau van Family Premium mailen we naar degene aan wie je het geeft.</p>
@@ -863,7 +863,7 @@ footer .powered a:hover { text-decoration: underline; }
         </ol>
         <p class="note" data-t="gp6">De sleutel werkt op maximaal 3 apparaten, of 10 met Family. Zeg je op in Google Play, dan stopt hij ook op je computer.</p>
         <h3 data-t="gp7">Gekocht op deze website, of een cadeau- of School / Moskee-sleutel gekregen?</h3>
-        <p data-t="gp8">Je sleutel werkt in AkhiBrowser op Windows en op Android: menu, Extensies, AkhiBrowser, Premium, plak de sleutel. Een school of moskee kan ook <a href="https://akhi-license.akhibrowser.workers.dev/school">een sleutel per gezin krijgen</a>. Elke sleutel is een jaar Family Premium, vanaf de dag dat hij wordt gegeven.</p>
+        <p data-t="gp8">Je sleutel werkt in AkhiBrowser op Windows en op Android: menu, Extensies, AkhiBrowser, Premium, plak de sleutel. Een school of moskee kan ook <a href="https://akhi-license.akhibrowser.workers.dev/school?lang=nl">een sleutel per gezin krijgen</a>. Elke sleutel is een jaar Family Premium, vanaf de dag dat hij wordt gegeven.</p>
       </div>
     </div>
   </section>
@@ -1521,6 +1521,24 @@ footer .powered a:hover { text-decoration: underline; }
     for (const [node, href] of pageLinks) {
       node.setAttribute("href", lang === "en" ? href : `/${lang}${href}`);
     }
+    // the license server's pages and forms in the chosen language, after the texts above, which may hold such links
+    for (const link of document.querySelectorAll('a[href^="https://akhi-license.akhibrowser.workers.dev/"]')) {
+      const url = new URL(link.href);
+      if (/^\/(buy\/|school$|mosque$|redeem$)/.test(url.pathname)) {
+        url.searchParams.set("lang", lang);
+        link.href = url.href;
+      }
+    }
+    for (const form of document.querySelectorAll('form[action^="https://akhi-license.akhibrowser.workers.dev/"]')) {
+      let input = form.querySelector('input[name="lang"]');
+      if (!input) {
+        input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "lang";
+        form.append(input);
+      }
+      input.value = lang;
+    }
     menu.value = lang;
   }
 
@@ -1723,8 +1741,10 @@ footer .powered a:hover { text-decoration: underline; }
     });
   }
   if (ref && CODE.test(ref)) {
-    for (const link of document.querySelectorAll('a[href$="/buy/school"], a[href$="/buy/family"]')) {
-      link.href += "?ref=" + encodeURIComponent(ref);
+    for (const link of document.querySelectorAll('a[href*="/buy/school"], a[href*="/buy/family"]')) {
+      const url = new URL(link.href);
+      url.searchParams.set("ref", ref);
+      link.href = url.href;
     }
     // installed from this link, the app reads the code: a VIP's 10% Family offer and their commission
     for (const link of document.querySelectorAll('a[href^="https://play.google.com/store/apps/details?id=org.akhibrowser"]')) {
@@ -2093,6 +2113,7 @@ Houd de sleutel alsjeblieft binnen onze gemeenschap.</span>
         </div>
       </div>
       <form class="affiliate" action="https://akhi-license.akhibrowser.workers.dev/affiliate" method="post">
+        <input type="hidden" name="lang" value="nl">
         <label><span data-t="af3">Je naam</span><input name="name" required maxlength="100" autocomplete="name"></label>
         <label><span data-t="af4">E-mailadres</span><input name="email" type="email" required maxlength="200" autocomplete="email"></label>
         <label><span data-t="af5">School, moskee of organisatie</span><input name="organisation" required maxlength="200" autocomplete="organization"></label>
@@ -2104,6 +2125,7 @@ Houd de sleutel alsjeblieft binnen onze gemeenschap.</span>
       <h3 class="plan-title" id="vip" data-t="afh2">Voor influencers: het VIP-programma</h3>
       <p class="note" data-t="vip2">Influencer? Ons VIP-affiliateprogramma voor Family Premium: je volgers krijgen 10% korting en jij krijgt 10% van elke betaling, elk jaar dat ze blijven. 200 gezinnen leveren je zo'n €900 per jaar op, jaar na jaar.</p>
       <form class="affiliate" id="vip-apply" action="https://akhi-license.akhibrowser.workers.dev/affiliate" method="post">
+        <input type="hidden" name="lang" value="nl">
         <input type="hidden" name="program" value="vip">
         <label><span data-t="vipf2">Je naam</span><input name="name" required maxlength="100" autocomplete="name"></label>
         <label><span data-t="vipf3">E-mailadres</span><input name="email" type="email" required maxlength="200" autocomplete="email"></label>
@@ -2135,6 +2157,7 @@ Houd de sleutel alsjeblieft binnen onze gemeenschap.</span>
       </div>
       <h3 class="plan-title" id="partner" data-t="mm14">Word sponsor of partner</h3>
       <form class="affiliate" action="https://akhi-license.akhibrowser.workers.dev/partner" method="post">
+        <input type="hidden" name="lang" value="nl">
         <label><span data-t="mm15">Je naam</span><input name="name" required maxlength="100" autocomplete="name"></label>
         <label><span data-t="mm16">E-mailadres</span><input name="email" type="email" required maxlength="200" autocomplete="email"></label>
         <label><span data-t="mm17">Organisatie</span><input name="organisation" maxlength="200" autocomplete="organization"></label>
