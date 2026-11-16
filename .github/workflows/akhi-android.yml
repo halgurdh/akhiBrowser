@@ -56,6 +56,11 @@ jobs:
           mkdir -p artifacts
           ./mach --no-interactive bootstrap --application-choice "GeckoView/Firefox for Android" > artifacts/bootstrap.log 2>&1 \
             || { tail -n 30 artifacts/bootstrap.log; exit 1; }
+          # Gradle within 16 GB: the project asks 7 GB heap and 6 GB metaspace per daemon, and the machine stopped
+          mkdir -p "$HOME/.gradle"
+          printf '%s\n' \
+            "org.gradle.jvmargs=-Xmx5g -Xms1g -XX:MaxMetaspaceSize=1536m -XX:+UseParallelGC -XX:ReservedCodeCacheSize=384m" \
+            "kotlin.daemon.jvmargs=-Xmx2g" "org.gradle.workers.max=2" > "$HOME/.gradle/gradle.properties"
           (cd browser/extensions/akhi/webext && npm ci --no-audit --no-fund > /dev/null 2>&1 || npm install --no-audit --no-fund > /dev/null)
 
       - name: Build Gecko
@@ -78,12 +83,17 @@ jobs:
       - name: APK and Play bundle
         run: |
           version=$(cat browser/config/akhi_version.txt)
+          ./mach gradle --stop > /dev/null 2>&1 || true
+          pkill -f KotlinCompileDaemon || true
+          free -m
           node browser/branding/akhi/tools/merge_akhi_extension.mjs artifacts/release-extension
-          AKHI_EXTENSION_DIR="$PWD/artifacts/release-extension" ./mach gradle --max-workers=2 :fenix:assembleRelease > artifacts/gradle.log 2>&1 \
+          AKHI_EXTENSION_DIR="$PWD/artifacts/release-extension" ./mach gradle :fenix:assembleRelease > artifacts/gradle.log 2>&1 \
             || { grep -nE "FAILURE|error:|What went wrong" -A5 artifacts/gradle.log | tail -n 40; exit 1; }
           mkdir -p out
           cp obj-akhi-android-arm64/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-arm64-v8a-release.apk \
             "out/AkhiBrowser-$version-android-arm64-v8a.apk"
+          ./mach gradle --stop > /dev/null 2>&1 || true
+          pkill -f KotlinCompileDaemon || true
           python3 browser/branding/akhi/tools/build_play.py --signing "$AKHI_SIGNING_PROPERTIES" > artifacts/play.log 2>&1 \
             || { tail -n 40 artifacts/play.log; exit 1; }
           cp artifacts/play-$version/*.aab artifacts/play-$version/*universal.apk out/
