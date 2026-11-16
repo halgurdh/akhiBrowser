@@ -14,18 +14,10 @@ on:
         description: The commit or tag to build
         type: string
         default: ""
-      release_tag:
-        description: "A release to attach the build to, like v1.3.4 (empty: none)"
-        type: string
-        default: ""
   workflow_call:
     inputs:
       ref:
         description: The commit to build
-        type: string
-        required: false
-        default: ""
-      release_tag:
         type: string
         required: false
         default: ""
@@ -102,15 +94,3 @@ jobs:
           gh release create "linux-build-${{ github.run_id }}-${{ github.run_attempt }}" "${files[@]}" \
             --repo halgurdh/akhi-extension --draft --title "Linux build ${{ github.run_id }}" \
             --notes "From ${{ inputs.ref || github.sha }}: ${{ job.status }}"
-
-      - name: Attach to the release
-        if: inputs.release_tag != '' && steps.smoke.outcome == 'success'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TAG: ${{ inputs.release_tag }}
-        run: |
-          for f in obj-akhi-linux-x64/dist/release/*.tar.xz; do
-            versioned="$RUNNER_TEMP/$(basename "$f" | sed "s/^AkhiBrowser-/AkhiBrowser-${TAG#v}-/")"
-            cp "$f" "$versioned"
-            gh release upload "$TAG" "$f" "$versioned" --repo "${{ github.repository }}" --clobber
-          done
