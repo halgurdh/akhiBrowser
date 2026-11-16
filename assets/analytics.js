@@ -1,4 +1,4 @@
-/* akhibrowser.com: Google Analytics, the Reddit pixel (visits and download clicks from a Reddit ad) and a Reddit ad's purchase reported to Reddit, only after consent (Consent Mode v2, set to denied in each page's head), the
+/* akhibrowser.com: Google Analytics, the Reddit pixel (visits and download clicks from a Reddit ad) and a Reddit ad's download or purchase reported to Reddit by the license server, only after consent (Consent Mode v2, set to denied in each page's head), the
  * clicks that matter as events (downloads, plans), the visitor's GA id passed to the checkout so the purchase the
  * license server reports is theirs, and the website as the source of Google Play installs. */
 (function () {
@@ -137,7 +137,16 @@
       if (STORES[i][0].test(href)) {
         window.dataLayer.push({ event: "download_click", store: STORES[i][1], page_language: lang });
         if (stored() === "granted") {
-          reddit()("track", "Custom", { customEventName: "Download" });
+          // the same id to the pixel and the license server, so Reddit counts it once, also when the pixel is blocked
+          var id = window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + "-" + Math.random().toString(36).slice(2, 12);
+          reddit()("track", "Custom", { customEventName: "Download", conversionId: id });
+          var click = redditClick();
+          if (click && navigator.sendBeacon) {
+            navigator.sendBeacon(
+              "https://akhi-license.akhibrowser.workers.dev/reddit/download",
+              new URLSearchParams({ rdt: click, store: STORES[i][1], id: id })
+            );
+          }
           return true;
         }
         return;
