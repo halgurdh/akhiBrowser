@@ -1,0 +1,109 @@
+# AkhiBrowser for Windows x64: cross-compiled on Linux, as Mozilla builds its own Windows versions, as a Linux runner
+# frees more disk and is faster than a Windows one. configure downloads Mozilla's toolchains (clang-cl, the Windows SDK,
+# NSIS, wine). The installer isn't Authenticode signed and has no signed update yet: that stays on the PC.
+# Runs by hand (Run workflow). Like the Linux build, its output goes to a draft
+# release of the private halgurdh/akhi-extension, not to the log or an artifact of this public repository.
+# Needs the secret AKHI_SUBMODULES_TOKEN: read access to the submodules, read and write to the contents of
+# halgurdh/akhi-extension.
+name: AkhiBrowser Windows
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: The commit or tag to build
+        type: string
+        default: ""
+      test_version:
+        description: "A test build under this version, set in the run only (empty: the tree's version)"
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+env:
+  TEST_VERSION: ${{ inputs.test_version }}
+  MOZBUILD_STATE_PATH: ${{ github.workspace }}/.mozbuild
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 355
+    steps:
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
+          df -h /
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+          submodules: recursive
+          token: ${{ secrets.AKHI_SUBMODULES_TOKEN }}
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Test version
+        if: env.TEST_VERSION != ''
+        run: python3 browser/branding/akhi/tools/set_version.py "$TEST_VERSION"
+
+      - name: Install the build tools
+        run: |
+          mkdir -p artifacts
+          sudo apt-get install -y -qq msitools > /dev/null
+          ./mach --no-interactive bootstrap --application-choice "Firefox for Desktop" > artifacts/bootstrap.log 2>&1 \
+            || { tail -n 30 artifacts/bootstrap.log; exit 1; }
+          "$HOME/.cargo/bin/rustup" target add x86_64-pc-windows-msvc
+          (cd browser/extensions/akhi/webext && npm ci --no-audit --no-fund > /dev/null 2>&1 || npm install --no-audit --no-fund > /dev/null)
+
+      - name: Build and package
+        run: |
+          python3 browser/branding/akhi/tools/build_windows_cross.py > artifacts/build.log 2>&1 \
+            || { grep -nE "error|Error" artifacts/build.log | tail -n 40; exit 1; }
+
+      - name: Microsoft Store package
+        id: msix
+        continue-on-error: true
+        run: |
+          # makemsix, Mozilla's Linux build of msix-packaging, instead of makeappx.exe
+          mkdir -p "$RUNNER_TEMP/msix" && (cd "$RUNNER_TEMP/msix" && "$GITHUB_WORKSPACE/mach" artifact toolchain --from-build linux64-msix-packaging > "$GITHUB_WORKSPACE/artifacts/msix-tool.log" 2>&1)
+          export MAKEAPPX=$(find "$RUNNER_TEMP/msix" -name makemsix -type f | head -n 1)
+          [ -n "$MAKEAPPX" ] || { tail -n 20 artifacts/msix-tool.log; exit 1; }
+          python3 browser/branding/akhi/tools/build_msstore.py --package-only \
+            --objdir obj-akhi-windows-x64 --mozconfig browser/branding/akhi/mozconfigs/akhi-windows-x64-cross \
+            --identity-name RezgariTech.AkhiBrowser --publisher "CN=F0209D67-61A9-4F82-9C24-608F78CBF40B" \
+            --publisher-display-name "Rezgari Tech" > artifacts/msix.log 2>&1 || { tail -n 40 artifacts/msix.log; exit 1; }
+          grep -E "^(ok|FAIL)" artifacts/msix.log
+          cp artifacts/msstore-*/AkhiBrowser-*-x64.msix obj-akhi-windows-x64/dist/release/
+
+      - name: Check the installer
+        id: check
+        continue-on-error: true
+        run: |
+          setup=obj-akhi-windows-x64/dist/release/AkhiBrowser-windows-x64-setup.exe
+          ls -la "$setup"
+          file "$setup" | tee artifacts/check.txt
+          sevenzip=$(command -v 7zz || ls "$MOZBUILD_STATE_PATH"/7zz/7zz 2>/dev/null || command -v 7z)
+          "$sevenzip" l "$setup" > artifacts/installer-contents.txt
+          for f in AkhiBrowser.exe xul.dll omni.ja browser/omni.ja; do
+            grep -qiE "core[/\\\\]${f//\//[/\\\\]}$" artifacts/installer-contents.txt && echo "$f: ok" || { echo "$f: missing"; missing=1; }
+          done | tee -a artifacts/check.txt
+          ! grep -q missing artifacts/check.txt
+
+      - name: Upload to a private draft release
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.AKHI_SUBMODULES_TOKEN }}
+        run: |
+          df -h /
+          mkdir -p artifacts
+          tar -C artifacts --exclude 'msstore-*' -cJf build-logs.tar.xz .
+          files=(build-logs.tar.xz)
+          for f in obj-akhi-windows-x64/dist/release/*; do [ -f "$f" ] && files+=("$f"); done
+          gh release create "windows-build-${{ github.run_id }}-${{ github.run_attempt }}" "${files[@]}" \
+            --repo halgurdh/akhi-extension --draft --title "Windows build ${{ github.run_id }}" \
+            --notes "Cross-compiled, unsigned, from ${{ inputs.ref || github.sha }}: ${{ job.status }}"
