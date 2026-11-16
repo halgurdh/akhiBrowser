@@ -1,11 +1,13 @@
-# Keeps the Dutch and Arabic home pages (/nl/ and /ar/) in step with index.html: when index.html changes,
-# tools/build_home.py builds them again and the result is committed.
-name: Build /nl/ and /ar/ home pages
+# Keeps the home pages up to date, on every push to gh-pages and when asked (the workflow "Latest release on the
+# website" on main asks after a release, and once a day):
+#  - tools/update_release.py puts the latest GitHub release on index.html: its number, and a link to its notes;
+#  - tools/build_home.py builds the Dutch and Arabic home pages (/nl/ and /ar/) from index.html.
+# The result is committed.
+name: Build the home pages
 
 on:
   push:
     branches: [gh-pages]
-    paths: [index.html, tools/build_home.py]
   workflow_dispatch:
 
 permissions:
@@ -23,15 +25,20 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: The latest release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python tools/update_release.py
       - run: python tools/build_home.py
-      - name: Commit the built pages
+      - name: Commit the pages
         run: |
-          if git diff --quiet -- nl/index.html ar/index.html sitemap.xml; then
+          if git diff --quiet -- index.html nl/index.html ar/index.html sitemap.xml; then
             echo "Already up to date"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898699+github-actions[bot]@users.noreply.github.com"
-          git add nl/index.html ar/index.html sitemap.xml
-          git commit -m "Build /nl/ and /ar/ from index.html"
+          git add index.html nl/index.html ar/index.html sitemap.xml
+          git commit -m "Home pages: the latest release, /nl/ and /ar/ built from index.html"
+          git pull --rebase
           git push
