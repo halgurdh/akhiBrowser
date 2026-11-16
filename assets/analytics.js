@@ -1,22 +1,22 @@
-/* akhibrowser.com: Google Analytics, the Reddit pixel (visits and download clicks from a Reddit ad) and a Reddit ad's download or purchase reported to Reddit by the license server, only after consent (Consent Mode v2, set to denied in each page's head), the
- * clicks that matter as events (downloads, plans), the visitor's GA id passed to the checkout so the purchase the
+/* akhibrowser.com: Google Analytics, the Reddit pixel (visits and download clicks from a Reddit ad) and a Reddit ad's download, sign-up, application or purchase reported to Reddit by the license server, only after consent (Consent Mode v2, set to denied in each page's head), the
+ * clicks that matter as events (downloads, plans), a newsletter sign-up or an application from a Reddit ad, the visitor's GA id passed to the checkout so the purchase the
  * license server reports is theirs, and the website as the source of Google Play installs. */
 (function () {
   "use strict";
   var KEY = "akhi-consent";
   var TEXT = {
-    en: ["We'd like to count visits and downloads with Google Analytics, and tell Reddit when one of its ads led to a download or purchase. No ads here, nothing sold.", "Allow", "No thanks", "Privacy"],
-    nl: ["We tellen graag bezoeken en downloads met Google Analytics, en laten Reddit weten wanneer een advertentie tot een download of aankoop leidde. Geen advertenties hier, niets verkocht.", "Toestaan", "Nee, bedankt", "Privacy"],
-    ar: ["نود أن نحسب الزيارات والتنزيلات باستخدام Google Analytics، وأن نخبر Reddit عندما يؤدي أحد إعلاناته إلى تنزيل أو عملية شراء. لا إعلانات هنا ولا بيع لبياناتك.", "سماح", "لا، شكرًا", "الخصوصية"],
-    de: ["Wir würden Besuche und Downloads gern mit Google Analytics zählen und Reddit mitteilen, wenn eine seiner Anzeigen zu einem Download oder Kauf geführt hat. Keine Werbung hier, nichts wird verkauft.", "Erlauben", "Nein, danke", "Datenschutz"],
-    fr: ["Nous aimerions compter les visites et les téléchargements avec Google Analytics, et indiquer à Reddit quand l'une de ses annonces a mené à un téléchargement ou un achat. Pas de pub ici, rien n'est vendu.", "Autoriser", "Non merci", "Confidentialité"],
-    es: ["Nos gustaría contar visitas y descargas con Google Analytics, y avisar a Reddit cuando uno de sus anuncios lleve a una descarga o una compra. Sin anuncios aquí, no vendemos nada.", "Permitir", "No, gracias", "Privacidad"],
-    tr: ["Ziyaretleri ve indirmeleri Google Analytics ile saymak ve bir Reddit reklamı indirmeye veya satın almaya yol açtığında Reddit'e bildirmek istiyoruz. Burada reklam yok, hiçbir şey satılmaz.", "İzin ver", "Hayır, teşekkürler", "Gizlilik"],
-    id: ["Kami ingin menghitung kunjungan dan unduhan dengan Google Analytics, dan memberi tahu Reddit saat salah satu iklannya menghasilkan unduhan atau pembelian. Tanpa iklan di sini, tidak ada yang dijual.", "Izinkan", "Tidak, terima kasih", "Privasi"],
-    ms: ["Kami ingin mengira lawatan dan muat turun dengan Google Analytics, dan memberitahu Reddit apabila salah satu iklannya membawa kepada muat turun atau pembelian. Tiada iklan di sini, tiada yang dijual.", "Benarkan", "Tidak, terima kasih", "Privasi"],
-    ur: ["ہم Google Analytics سے وزٹ اور ڈاؤن لوڈ گننا چاہتے ہیں، اور Reddit کو بتانا چاہتے ہیں جب اس کا کوئی اشتہار ڈاؤن لوڈ یا خریداری تک لے جائے۔ یہاں کوئی اشتہار نہیں، کچھ فروخت نہیں ہوتا۔", "اجازت دیں", "نہیں، شکریہ", "رازداری"],
-    fa: ["می‌خواهیم بازدیدها و دانلودها را با Google Analytics بشماریم و وقتی یکی از تبلیغات Reddit به دانلود یا خرید منجر شد به Reddit اطلاع دهیم. اینجا تبلیغی نیست، چیزی فروخته نمی‌شود.", "اجازه", "نه، ممنون", "حریم خصوصی"],
-    ckb: ["دەمانەوێت سەردان و داگرتنەکان بە Google Analytics بژمێرین، و ئاگاداری Reddit بکەینەوە کاتێک یەکێک لە ڕیکلامەکانی بووە هۆی داگرتن یان کڕین. لێرە هیچ ڕیکلامێک نییە، هیچ شتێک نافرۆشرێت.", "ڕێگەدان", "نەخێر، سوپاس", "تایبەتمەندی"],
+    en: ["We'd like to count visits and downloads with Google Analytics, and tell Reddit when one of its ads led to a download, a sign-up or a purchase. No ads here, nothing sold.", "Allow", "No thanks", "Privacy"],
+    nl: ["We tellen graag bezoeken en downloads met Google Analytics, en laten Reddit weten wanneer een advertentie tot een download, een aanmelding of een aankoop leidde. Geen advertenties hier, niets verkocht.", "Toestaan", "Nee, bedankt", "Privacy"],
+    ar: ["نود أن نحسب الزيارات والتنزيلات باستخدام Google Analytics، وأن نخبر Reddit عندما يؤدي أحد إعلاناته إلى تنزيل أو تسجيل أو عملية شراء. لا إعلانات هنا ولا بيع لبياناتك.", "سماح", "لا، شكرًا", "الخصوصية"],
+    de: ["Wir würden Besuche und Downloads gern mit Google Analytics zählen und Reddit mitteilen, wenn eine seiner Anzeigen zu einem Download, einer Anmeldung oder einem Kauf geführt hat. Keine Werbung hier, nichts wird verkauft.", "Erlauben", "Nein, danke", "Datenschutz"],
+    fr: ["Nous aimerions compter les visites et les téléchargements avec Google Analytics, et indiquer à Reddit quand l'une de ses annonces a mené à un téléchargement, une inscription ou un achat. Pas de pub ici, rien n'est vendu.", "Autoriser", "Non merci", "Confidentialité"],
+    es: ["Nos gustaría contar visitas y descargas con Google Analytics, y avisar a Reddit cuando uno de sus anuncios lleve a una descarga, un registro o una compra. Sin anuncios aquí, no vendemos nada.", "Permitir", "No, gracias", "Privacidad"],
+    tr: ["Ziyaretleri ve indirmeleri Google Analytics ile saymak ve bir Reddit reklamı indirmeye, kayda veya satın almaya yol açtığında Reddit'e bildirmek istiyoruz. Burada reklam yok, hiçbir şey satılmaz.", "İzin ver", "Hayır, teşekkürler", "Gizlilik"],
+    id: ["Kami ingin menghitung kunjungan dan unduhan dengan Google Analytics, dan memberi tahu Reddit saat salah satu iklannya menghasilkan unduhan, pendaftaran, atau pembelian. Tanpa iklan di sini, tidak ada yang dijual.", "Izinkan", "Tidak, terima kasih", "Privasi"],
+    ms: ["Kami ingin mengira lawatan dan muat turun dengan Google Analytics, dan memberitahu Reddit apabila salah satu iklannya membawa kepada muat turun, pendaftaran atau pembelian. Tiada iklan di sini, tiada yang dijual.", "Benarkan", "Tidak, terima kasih", "Privasi"],
+    ur: ["ہم Google Analytics سے وزٹ اور ڈاؤن لوڈ گننا چاہتے ہیں، اور Reddit کو بتانا چاہتے ہیں جب اس کا کوئی اشتہار ڈاؤن لوڈ، سائن اپ یا خریداری تک لے جائے۔ یہاں کوئی اشتہار نہیں، کچھ فروخت نہیں ہوتا۔", "اجازت دیں", "نہیں، شکریہ", "رازداری"],
+    fa: ["می‌خواهیم بازدیدها و دانلودها را با Google Analytics بشماریم و وقتی یکی از تبلیغات Reddit به دانلود، ثبت‌نام یا خرید منجر شد به Reddit اطلاع دهیم. اینجا تبلیغی نیست، چیزی فروخته نمی‌شود.", "اجازه", "نه، ممنون", "حریم خصوصی"],
+    ckb: ["دەمانەوێت سەردان و داگرتنەکان بە Google Analytics بژمێرین، و ئاگاداری Reddit بکەینەوە کاتێک یەکێک لە ڕیکلامەکانی بووە هۆی داگرتن، تۆمارکردن یان کڕین. لێرە هیچ ڕیکلامێک نییە، هیچ شتێک نافرۆشرێت.", "ڕێگەدان", "نەخێر، سوپاس", "تایبەتمەندی"],
   };
 
   function gtag() {
@@ -116,6 +116,11 @@
     }
   }
 
+  // an id for one event, given to the pixel and to the license server alike, so Reddit counts the event once
+  function eventId() {
+    return window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + "-" + Math.random().toString(36).slice(2, 12);
+  }
+
   // the visitor's GA client id ("GA1.1.123.456" → "123.456"), only there after consent
   function gaClientId() {
     var match = /(?:^|;\s*)_ga=GA\d\.\d\.(\d+\.\d+)/.exec(document.cookie);
@@ -138,7 +143,7 @@
         window.dataLayer.push({ event: "download_click", store: STORES[i][1], page_language: lang });
         if (stored() === "granted") {
           // the same id to the pixel and the license server, so Reddit counts it once, also when the pixel is blocked
-          var id = window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + "-" + Math.random().toString(36).slice(2, 12);
+          var id = eventId();
           reddit()("track", "Custom", { customEventName: "Download", conversionId: id });
           var click = redditClick();
           if (click && navigator.sendBeacon) {
@@ -218,6 +223,45 @@
       }
     }
   }
+
+  // an affiliate or partner application (Lead) or a newsletter sign-up (SignUp), after consent: the Reddit ad click and
+  // an event id go with the form, so the license server sends it to Reddit. An application is also the pixel's Lead
+  // with the same id, so Reddit counts it once; a sign-up has no pixel event, as it counts only once the address is
+  // confirmed, from the mail.
+  var FORMS = /akhi-license\.akhibrowser\.workers\.dev\/(newsletter|affiliate|partner)$/;
+  function hidden(form, name, value) {
+    var input = form.querySelector('input[type="hidden"][name="' + name + '"]');
+    if (!input) {
+      input = document.createElement("input");
+      input.type = "hidden";
+      input.name = name;
+      form.appendChild(input);
+    }
+    input.value = value;
+  }
+  document.addEventListener("submit", function (event) {
+    var form = event.target;
+    var match = form && FORMS.exec(form.action || "");
+    if (!match || event.defaultPrevented || stored() !== "granted" || form.dataset.reddit) {
+      return;
+    }
+    form.dataset.reddit = "1";
+    var id = eventId();
+    var click = redditClick();
+    if (click) {
+      hidden(form, "rdt", click);
+      hidden(form, "rdt_id", id);
+    }
+    if (match[1] === "newsletter") {
+      return;
+    }
+    reddit()("track", "Lead", { conversionId: id });
+    // a moment for the pixel's event to leave before the page goes
+    event.preventDefault();
+    setTimeout(function () {
+      form.submit();
+    }, 300);
+  });
 
   document.addEventListener(
     "click",
