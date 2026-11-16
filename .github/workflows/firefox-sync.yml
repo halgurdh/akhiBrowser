@@ -6,7 +6,8 @@
 # something AkhiBrowser removed coming back stops it. Each stop opens an issue and mails the user (notify.sh).
 # Secrets: AKHI_SUBMODULES_TOKEN (the build), AKHI_OPS_TOKEN (the mails), CLAUDE_CODE_OAUTH_TOKEN (conflicts, on the
 # Claude subscription: made with `claude setup-token`) or ANTHROPIC_API_KEY (conflicts, billed per use; without either
-# only the issue and the mail), AKHI_PUSH_TOKEN (optional: a token with contents and workflows write on this repository,
+# only the issue and the mail), AKHI_SUBMODULES_TOKEN also retries a refused push (with contents and workflows write, merges that change
+# .github/workflows go through), AKHI_PUSH_TOKEN (optional: a token with contents and workflows write on this repository,
 # for merges that change files under .github/workflows, which the workflow's own token can't push).
 name: Firefox sync
 
@@ -108,9 +109,9 @@ jobs:
             exit 0
           fi
           if [ "$(git rev-parse HEAD)" != "${{ steps.start.outputs.daily }}" ]; then
-            if ! git push origin HEAD:refs/heads/firefox-daily 2> "$RUNNER_TEMP/push.log"; then
+            if ! { git push origin HEAD:refs/heads/firefox-daily 2> "$RUNNER_TEMP/push.log" || { [ -n "${{ secrets.AKHI_SUBMODULES_TOKEN }}" ] && git -c http.https://github.com/.extraheader= push "https://x-access-token:${{ secrets.AKHI_SUBMODULES_TOKEN }}@github.com/$GITHUB_REPOSITORY.git" HEAD:refs/heads/firefox-daily 2>> "$RUNNER_TEMP/push.log"; }; }; then
               { echo "### firefox-daily couldn't be pushed"; echo '```'; cat "$RUNNER_TEMP/push.log"; echo '```'
-                echo "If it's about workflow files, add the secret AKHI_PUSH_TOKEN (contents and workflows write)."; } > "$REPORT"
+                echo "If it's about workflow files: AKHI_SUBMODULES_TOKEN (the retry) needs Contents and Workflows write on this repository."; } > "$REPORT"
               echo "failed=true" >> "$GITHUB_OUTPUT"
               exit 0
             fi
@@ -285,9 +286,9 @@ jobs:
             bash .github/scripts/notify.sh "AkhiBrowser: Firefox update waits for the next sync" "$RUNNER_TEMP/r.md"
             exit 0
           fi
-          if ! git push origin "$SHA:refs/heads/main" 2> "$RUNNER_TEMP/push.log"; then
+          if ! { git push origin "$SHA:refs/heads/main" 2> "$RUNNER_TEMP/push.log" || { [ -n "${{ secrets.AKHI_SUBMODULES_TOKEN }}" ] && git -c http.https://github.com/.extraheader= push "https://x-access-token:${{ secrets.AKHI_SUBMODULES_TOKEN }}@github.com/$GITHUB_REPOSITORY.git" "$SHA:refs/heads/main" 2>> "$RUNNER_TEMP/push.log"; }; }; then
             { echo "main couldn't move to firefox-daily $short:"; echo '```'; cat "$RUNNER_TEMP/push.log"; echo '```';
-              echo "If it's about workflow files, add the secret AKHI_PUSH_TOKEN (contents and workflows write)."; } > "$RUNNER_TEMP/r.md"
+              echo "If it's about workflow files: AKHI_SUBMODULES_TOKEN (the retry) needs Contents and Workflows write on this repository."; } > "$RUNNER_TEMP/r.md"
             gh issue create --title "Firefox sync: main couldn't fast-forward ($(date -u +%F))" --body-file "$RUNNER_TEMP/r.md"
             bash .github/scripts/notify.sh "AkhiBrowser: main couldn't take the Firefox update" "$RUNNER_TEMP/r.md"
             exit 1
