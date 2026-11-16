@@ -52,8 +52,9 @@ AkhiBrowser is a web browser built on Firefox.
 - **Video codecs (Windows)**, downloaded from Mozilla, Cisco and Google so that videos play.
 - **An anonymous count, once a day, to our license server** (akhi-license.akhibrowser.workers.dev, on Cloudflare): the
   browser's version, its system, whether this is its first count of the week or month or after a new install, and
-  whether Premium is on (free, Premium or Family). There is no id, and nothing of what you visit. The server only keeps
-  the sums per day, so it can't tell two browsers apart; your IP address is only used against abuse and not kept. You
+  whether Premium is on (free, Premium or Family). Cloudflare adds the country the request comes from, which the server
+  also counts per day. There is no id, and nothing of what you visit. The server only keeps the sums per day, so it
+  can't tell two browsers apart; your IP address is only used against abuse and not kept. You
   can turn it off in the AkhiBrowser settings, under "Count me anonymously".
 - **Update check (Windows, and the Android app from GitHub).** Once a day the browser asks GitHub whether a new release
   is out, and downloads it from GitHub. GitHub sees your IP address, under

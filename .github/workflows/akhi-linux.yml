@@ -9,6 +9,11 @@ name: AkhiBrowser Linux
 
 on:
   workflow_dispatch:
+    inputs:
+      ref:
+        description: The commit or tag to build
+        type: string
+        default: ""
   workflow_call:
     inputs:
       ref:
@@ -34,6 +39,8 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     timeout-minutes: 355
+    permissions:
+      contents: write
     outputs:
       smoke: ${{ steps.smoke.outcome }}
     steps:
