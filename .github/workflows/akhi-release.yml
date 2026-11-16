@@ -37,6 +37,10 @@ on:
         description: "Linux and macOS built after the GitHub release (private drafts)"
         type: boolean
         default: true
+      windows_update:
+        description: "Also put the signed Windows .mar on the GitHub release, for installs from the old setup.exe"
+        type: boolean
+        default: false
       dry_run:
         description: "Dry run: builds and signs under this version, but commits, publishes and uploads nothing"
         type: boolean
@@ -201,11 +205,13 @@ jobs:
           GH_TOKEN: ${{ secrets.AKHI_RELEASE_TOKEN || secrets.AKHI_SUBMODULES_TOKEN }}
           PLAY_TRACK: ${{ inputs.dry_run && 'none' || inputs.play_track }}
           MSSTORE: ${{ inputs.dry_run && 'none' || inputs.msstore }}
+          WINDOWS_UPDATE: ${{ !inputs.dry_run && inputs.github && inputs.windows_update }}
         run: |
           report="$RUNNER_TEMP/report.md"
           if gh workflow run cloud-release.yml --repo halgurdh/akhi-branding --ref main \
                -f android_draft="$ANDROID_DRAFT" -f windows_draft="$WINDOWS_DRAFT" \
-               -f play_track="$PLAY_TRACK" -f msstore="$MSSTORE" -f version="$VERSION" -f notes="$NOTES"; then
+               -f play_track="$PLAY_TRACK" -f msstore="$MSSTORE" -f version="$VERSION" -f notes="$NOTES" \
+               -f windows_update="$WINDOWS_UPDATE"; then
             echo "The signing job of akhi-branding started (Google Play: $PLAY_TRACK, Microsoft Store: $MSSTORE); it mails when it's done." >> "$report"
             bash .github/scripts/notify.sh "AkhiBrowser $VERSION: built, now signing" "$report"
           else
