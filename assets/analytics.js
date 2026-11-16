@@ -1,22 +1,22 @@
-/* akhibrowser.com: Google Analytics, the Reddit pixel (visits and download clicks from a Reddit ad) and a Reddit ad's download, sign-up, application or purchase reported to Reddit by the license server, only after consent (Consent Mode v2, set to denied in each page's head), the
+/* akhibrowser.com: Google Analytics, the Reddit pixel (visits and download clicks from a Reddit ad) and a Reddit ad's download, sign-up, application or purchase reported to Reddit by the license server, only after consent (Google Tag Manager itself loads only then; Consent Mode v2 is set to denied in each page's head), the
  * clicks that matter as events (downloads, plans), a newsletter sign-up or an application from a Reddit ad, the visitor's GA id passed to the checkout so the purchase the
  * license server reports is theirs, and the website as the source of Google Play installs. */
 (function () {
   "use strict";
   var KEY = "akhi-consent";
   var TEXT = {
-    en: ["We'd like to count visits and downloads with Google Analytics, and tell Reddit when one of its ads led to a download, a sign-up or a purchase. No ads here, nothing sold.", "Allow", "No thanks", "Privacy"],
-    nl: ["We tellen graag bezoeken en downloads met Google Analytics, en laten Reddit weten wanneer een advertentie tot een download, een aanmelding of een aankoop leidde. Geen advertenties hier, niets verkocht.", "Toestaan", "Nee, bedankt", "Privacy"],
-    ar: ["نود أن نحسب الزيارات والتنزيلات باستخدام Google Analytics، وأن نخبر Reddit عندما يؤدي أحد إعلاناته إلى تنزيل أو تسجيل أو عملية شراء. لا إعلانات هنا ولا بيع لبياناتك.", "سماح", "لا، شكرًا", "الخصوصية"],
-    de: ["Wir würden Besuche und Downloads gern mit Google Analytics zählen und Reddit mitteilen, wenn eine seiner Anzeigen zu einem Download, einer Anmeldung oder einem Kauf geführt hat. Keine Werbung hier, nichts wird verkauft.", "Erlauben", "Nein, danke", "Datenschutz"],
-    fr: ["Nous aimerions compter les visites et les téléchargements avec Google Analytics, et indiquer à Reddit quand l'une de ses annonces a mené à un téléchargement, une inscription ou un achat. Pas de pub ici, rien n'est vendu.", "Autoriser", "Non merci", "Confidentialité"],
-    es: ["Nos gustaría contar visitas y descargas con Google Analytics, y avisar a Reddit cuando uno de sus anuncios lleve a una descarga, un registro o una compra. Sin anuncios aquí, no vendemos nada.", "Permitir", "No, gracias", "Privacidad"],
-    tr: ["Ziyaretleri ve indirmeleri Google Analytics ile saymak ve bir Reddit reklamı indirmeye, kayda veya satın almaya yol açtığında Reddit'e bildirmek istiyoruz. Burada reklam yok, hiçbir şey satılmaz.", "İzin ver", "Hayır, teşekkürler", "Gizlilik"],
-    id: ["Kami ingin menghitung kunjungan dan unduhan dengan Google Analytics, dan memberi tahu Reddit saat salah satu iklannya menghasilkan unduhan, pendaftaran, atau pembelian. Tanpa iklan di sini, tidak ada yang dijual.", "Izinkan", "Tidak, terima kasih", "Privasi"],
-    ms: ["Kami ingin mengira lawatan dan muat turun dengan Google Analytics, dan memberitahu Reddit apabila salah satu iklannya membawa kepada muat turun, pendaftaran atau pembelian. Tiada iklan di sini, tiada yang dijual.", "Benarkan", "Tidak, terima kasih", "Privasi"],
-    ur: ["ہم Google Analytics سے وزٹ اور ڈاؤن لوڈ گننا چاہتے ہیں، اور Reddit کو بتانا چاہتے ہیں جب اس کا کوئی اشتہار ڈاؤن لوڈ، سائن اپ یا خریداری تک لے جائے۔ یہاں کوئی اشتہار نہیں، کچھ فروخت نہیں ہوتا۔", "اجازت دیں", "نہیں، شکریہ", "رازداری"],
-    fa: ["می‌خواهیم بازدیدها و دانلودها را با Google Analytics بشماریم و وقتی یکی از تبلیغات Reddit به دانلود، ثبت‌نام یا خرید منجر شد به Reddit اطلاع دهیم. اینجا تبلیغی نیست، چیزی فروخته نمی‌شود.", "اجازه", "نه، ممنون", "حریم خصوصی"],
-    ckb: ["دەمانەوێت سەردان و داگرتنەکان بە Google Analytics بژمێرین، و ئاگاداری Reddit بکەینەوە کاتێک یەکێک لە ڕیکلامەکانی بووە هۆی داگرتن، تۆمارکردن یان کڕین. لێرە هیچ ڕیکلامێک نییە، هیچ شتێک نافرۆشرێت.", "ڕێگەدان", "نەخێر، سوپاس", "تایبەتمەندی"],
+    en: ["Can we see how people find AkhiBrowser? Google Analytics and Reddit help us count visits and downloads, and which of our ads work. We never sell your data.", "Allow", "No thanks", "Privacy"],
+    nl: ["Mogen we zien hoe mensen AkhiBrowser vinden? Google Analytics en Reddit helpen ons bezoeken en downloads te tellen, en welke advertenties werken. We verkopen je gegevens nooit.", "Toestaan", "Nee, bedankt", "Privacy"],
+    ar: ["هل تسمح لنا بمعرفة كيف يجد الناس AkhiBrowser؟ يساعدنا Google Analytics وReddit على عدّ الزيارات والتنزيلات ومعرفة أي إعلاناتنا تنجح. لا نبيع بياناتك أبدًا.", "سماح", "لا، شكرًا", "الخصوصية"],
+    de: ["Dürfen wir sehen, wie Menschen AkhiBrowser finden? Google Analytics und Reddit helfen uns, Besuche und Downloads zu zählen und zu sehen, welche unserer Anzeigen wirken. Wir verkaufen deine Daten nie.", "Erlauben", "Nein, danke", "Datenschutz"],
+    fr: ["Pouvons-nous voir comment les gens trouvent AkhiBrowser ? Google Analytics et Reddit nous aident à compter les visites et les téléchargements, et à savoir quelles annonces fonctionnent. Nous ne vendons jamais vos données.", "Autoriser", "Non merci", "Confidentialité"],
+    es: ["¿Podemos ver cómo la gente encuentra AkhiBrowser? Google Analytics y Reddit nos ayudan a contar visitas y descargas, y a saber qué anuncios funcionan. Nunca vendemos tus datos.", "Permitir", "No, gracias", "Privacidad"],
+    tr: ["İnsanların AkhiBrowser'ı nasıl bulduğunu görebilir miyiz? Google Analytics ve Reddit, ziyaretleri ve indirmeleri saymamıza ve hangi reklamlarımızın işe yaradığını görmemize yardımcı olur. Verilerinizi asla satmayız.", "İzin ver", "Hayır, teşekkürler", "Gizlilik"],
+    id: ["Bolehkah kami melihat bagaimana orang menemukan AkhiBrowser? Google Analytics dan Reddit membantu kami menghitung kunjungan dan unduhan, serta iklan mana yang berhasil. Kami tidak pernah menjual data Anda.", "Izinkan", "Tidak, terima kasih", "Privasi"],
+    ms: ["Bolehkah kami melihat bagaimana orang menemui AkhiBrowser? Google Analytics dan Reddit membantu kami mengira lawatan dan muat turun, serta iklan mana yang berkesan. Kami tidak pernah menjual data anda.", "Benarkan", "Tidak, terima kasih", "Privasi"],
+    ur: ["کیا ہم دیکھ سکتے ہیں کہ لوگ AkhiBrowser کیسے ڈھونڈتے ہیں؟ Google Analytics اور Reddit وزٹ اور ڈاؤن لوڈ گننے اور یہ جاننے میں مدد کرتے ہیں کہ ہمارے کون سے اشتہار کام کرتے ہیں۔ ہم آپ کا ڈیٹا کبھی نہیں بیچتے۔", "اجازت دیں", "نہیں، شکریہ", "رازداری"],
+    fa: ["اجازه می‌دهید ببینیم مردم چگونه AkhiBrowser را پیدا می‌کنند؟ Google Analytics و Reddit به ما کمک می‌کنند بازدیدها و دانلودها را بشماریم و ببینیم کدام تبلیغات ما مؤثرند. ما هرگز داده‌های شما را نمی‌فروشیم.", "اجازه", "نه، ممنون", "حریم خصوصی"],
+    ckb: ["دەتوانین ببینین خەڵک چۆن AkhiBrowser دەدۆزنەوە؟ Google Analytics و Reddit یارمەتیمان دەدەن سەردان و داگرتنەکان بژمێرین و بزانین کام ڕیکلامەکانمان کاریگەرن. هەرگیز زانیارییەکانت نافرۆشین.", "ڕێگەدان", "نەخێر، سوپاس", "تایبەتمەندی"],
   };
 
   function gtag() {
@@ -30,12 +30,23 @@
       return null;
     }
   }
+  // Google Tag Manager only after consent: before it nothing of Google loads
+  function googleTags() {
+    if (!document.querySelector('script[src*="googletagmanager.com/gtm.js"]')) {
+      var script = document.createElement("script");
+      script.async = true;
+      script.src = "https://www.googletagmanager.com/gtm.js?id=GTM-PW3SL6DM";
+      document.head.appendChild(script);
+    }
+  }
+
   function choose(granted) {
     try {
       localStorage.setItem(KEY, granted ? "granted" : "denied");
     } catch (e) {}
     gtag("consent", "update", { analytics_storage: granted ? "granted" : "denied" });
     if (granted) {
+      googleTags();
       window.dataLayer.push({ event: "consent_granted" });
       reddit();
       confirmedSignUp();
@@ -85,7 +96,7 @@
       "border-radius:14px;background:#03282e;color:#fff;font:14px/1.45 system-ui,sans-serif;box-shadow:0 8px 30px #0008}" +
       ".akhi-consent p{flex:1 1 260px;margin:0}.akhi-consent a{color:#f4be34}" +
       ".akhi-consent button{font:inherit;font-weight:600;border-radius:999px;padding:8px 16px;cursor:pointer;border:1px solid #f4be34}" +
-      ".akhi-consent .yes{background:#f4be34;color:#03282e}.akhi-consent .no{background:transparent;color:#fff}";
+      ".akhi-consent button{background:#f4be34;color:#03282e;min-width:120px}";
     var text = document.createElement("p");
     text.textContent = t[0] + " ";
     var link = document.createElement("a");
@@ -293,6 +304,7 @@
   function start() {
     redditClick();
     if (stored() === "granted") {
+      googleTags();
       reddit();
     }
     confirmedSignUp();
