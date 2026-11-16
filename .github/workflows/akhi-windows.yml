@@ -65,6 +65,21 @@ jobs:
           python3 browser/branding/akhi/tools/build_windows_cross.py > artifacts/build.log 2>&1 \
             || { grep -nE "error|Error" artifacts/build.log | tail -n 40; exit 1; }
 
+      - name: Microsoft Store package
+        id: msix
+        continue-on-error: true
+        run: |
+          # makemsix, Mozilla's Linux build of msix-packaging, instead of makeappx.exe
+          mkdir -p "$RUNNER_TEMP/msix" && (cd "$RUNNER_TEMP/msix" && "$GITHUB_WORKSPACE/mach" artifact toolchain --from-build linux64-msix-packaging > "$GITHUB_WORKSPACE/artifacts/msix-tool.log" 2>&1)
+          export MAKEAPPX=$(find "$RUNNER_TEMP/msix" -name makemsix -type f | head -n 1)
+          [ -n "$MAKEAPPX" ] || { tail -n 20 artifacts/msix-tool.log; exit 1; }
+          python3 browser/branding/akhi/tools/build_msstore.py --package-only \
+            --objdir obj-akhi-windows-x64 --mozconfig browser/branding/akhi/mozconfigs/akhi-windows-x64-cross \
+            --identity-name RezgariTech.AkhiBrowser --publisher "CN=F0209D67-61A9-4F82-9C24-608F78CBF40B" \
+            --publisher-display-name "Rezgari Tech" > artifacts/msix.log 2>&1 || { tail -n 40 artifacts/msix.log; exit 1; }
+          grep -E "^(ok|FAIL)" artifacts/msix.log
+          cp artifacts/msstore-*/AkhiBrowser-*-x64.msix obj-akhi-windows-x64/dist/release/
+
       - name: Check the installer
         id: check
         continue-on-error: true
