@@ -5,6 +5,12 @@
 package org.mozilla.fenix.components
 
 import android.content.Context
+import android.hardware.GeomagneticField
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,12 +24,18 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -41,6 +53,7 @@ import org.mozilla.fenix.R
 import org.mozilla.fenix.ext.asActivity
 import org.mozilla.fenix.ext.components
 import java.time.LocalDate
+import kotlin.math.roundToInt
 
 /**
  * The prayer times and the verse of the day on the home screen. The built-in extension works them out and sends them
@@ -53,6 +66,11 @@ internal object AkhiHomeCard {
     private const val CONTENT = "home_card"
     private const val MINUTE_MS = 60_000L
     private const val COLLAPSED_VERSE_LINES = 3
+    private const val FULL_TURN = 360f
+    private const val HALF_TURN = 180f
+
+    // how much of each compass reading is taken, so the arrow turns smoothly instead of trembling
+    private const val COMPASS_SMOOTHING = 0.15f
 
     private val content = MutableStateFlow<String?>(null)
     private var isLoaded = false
@@ -166,6 +184,15 @@ internal object AkhiHomeCard {
             if (day != null) {
                 Times(card.getString("prayerTitle"), card.getString("city"), day, now) { open("prayer") }
             }
+            card.optJSONObject("qibla")?.let { qibla ->
+                Qibla(
+                    title = card.optString("qiblaTitle"),
+                    fromNorth = card.optString("qiblaFromNorth"),
+                    bearing = qibla.getDouble("bearing").toFloat(),
+                    latitude = qibla.getDouble("lat"),
+                    longitude = qibla.getDouble("lon"),
+                )
+            }
             if (verse != null) {
                 Verse(card.getString("verseTitle"), verse) { open(null) }
             }
@@ -243,4 +270,88 @@ internal object AkhiHomeCard {
             )
         }
     }
+
+    /**
+     * The phone's heading from true north in degrees, from its rotation sensor, while the card is shown; null on a
+     * phone without one. Corrected for the magnetic declination of the prayer city.
+     */
+    @Composable
+    private fun rememberHeading(latitude: Double, longitude: Double): Float? {
+        val context = LocalContext.current
+        val heading = remember { mutableStateOf<Float?>(null) }
+        DisposableEffect(latitude, longitude) {
+            val sensors = context.getSystemService(Context.SENSOR_SERVICE) as? SensorManager
+            val sensor = sensors?.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)
+            val declination = GeomagneticField(
+                latitude.toFloat(),
+                longitude.toFloat(),
+                0f,
+                System.currentTimeMillis(),
+            ).declination
+            val rotation = FloatArray(9)
+            val orientation = FloatArray(3)
+            val listener = object : SensorEventListener {
+                override fun onSensorChanged(event: SensorEvent) {
+                    SensorManager.getRotationMatrixFromVector(rotation, event.values)
+                    SensorManager.getOrientation(rotation, orientation)
+                    val reading = (Math.toDegrees(orientation[0].toDouble()).toFloat() + declination + FULL_TURN) % FULL_TURN
+                    val last = heading.value
+                    heading.value = if (last == null) {
+                        reading
+                    } else {
+                        // the short way round, so 359° to 1° doesn't spin the arrow
+                        val change = ((reading - last + HALF_TURN + FULL_TURN) % FULL_TURN) - HALF_TURN
+                        (last + change * COMPASS_SMOOTHING + FULL_TURN) % FULL_TURN
+                    }
+                }
+
+                override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) = Unit
+            }
+            if (sensor != null) {
+                sensors.registerListener(listener, sensor, SensorManager.SENSOR_DELAY_UI)
+            }
+            onDispose { sensors?.unregisterListener(listener) }
+        }
+        return heading.value
+    }
+
+    /**
+     * The direction of the Kaaba from the prayer city: an arrow that points to it as the phone turns, or, without a
+     * compass, its angle from north.
+     */
+    @Composable
+    private fun Qibla(title: String, fromNorth: String, bearing: Float, latitude: Double, longitude: Double) {
+        val heading = rememberHeading(latitude, longitude)
+        val arrowColor = MaterialTheme.colorScheme.primary
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics(mergeDescendants = true) { contentDescription = "$title · $fromNorth" },
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Canvas(
+                modifier = Modifier
+                    .size(24.dp)
+                    .rotate(bearing - (heading ?: 0f)),
+            ) {
+                val arrow = Path().apply {
+                    moveTo(size.width / 2, 0f)
+                    lineTo(size.width * 0.85f, size.height)
+                    lineTo(size.width / 2, size.height * 0.72f)
+                    lineTo(size.width * 0.15f, size.height)
+                    close()
+                }
+                drawPath(arrow, arrowColor)
+            }
+            Text(
+                text = "$title · ${if (heading == null) fromNorth else "${bearing.roundToInt()}°"}",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+    }
+
 }
