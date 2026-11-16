@@ -7,6 +7,7 @@ package org.mozilla.fenix.components
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -14,8 +15,14 @@ import com.android.billingclient.api.AcknowledgePurchaseParams
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingFlowParams
+import com.android.billingclient.api.BillingProgramAvailabilityDetails.BillingChoiceAvailabilityDetails.ChoiceScreenType
+import com.android.billingclient.api.BillingProgramReportingDetailsParams
 import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.ConsumeParams
+import com.android.billingclient.api.DeveloperBillingOptionParams
+import com.android.billingclient.api.DeveloperProvidedBillingDetails
+import com.android.billingclient.api.DeveloperProvidedBillingListener
+import com.android.billingclient.api.EnableBillingProgramParams
 import com.android.billingclient.api.PendingPurchasesParams
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.PurchasesUpdatedListener
@@ -35,8 +42,12 @@ import java.lang.ref.WeakReference
  * and on a Google Play build sells and checks Premium with Play Billing. Each message is {id, type, ...}, answered with
  * {id, ...} on the port. Play keeps the purchases. The status says the product and purchase token too: the extension
  * sends them to the license server only when the buyer asks for a key for their other devices (lib/premium.js).
+ *
+ * Billing choice (EEA and UK, once Google approved it): where Play offers it, the purchase flow shows Play's own choice
+ * screen with akhibrowser.com next to Google Play. Choosing the website opens the license server's checkout with the
+ * external transaction token, which the server reports to Google (server/src/index.js, reportPlayChoiceCheckout).
  */
-internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedListener {
+internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedListener, DeveloperProvidedBillingListener {
     private val appContext = context.applicationContext
     private val mainHandler = Handler(Looper.getMainLooper())
     private var port: Port? = null
@@ -50,6 +61,12 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
             .setListener(this)
             .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
             .enableAutoServiceReconnection()
+            .enableBillingProgram(
+                EnableBillingProgramParams.newBuilder()
+                    .setBillingProgram(BillingClient.BillingProgram.BILLING_CHOICE)
+                    .setDeveloperProvidedBillingListener(this)
+                    .build(),
+            )
             .build()
     }
 
@@ -272,23 +289,85 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
                         replyError(id)
                         return@post
                     }
-                    val params = BillingFlowParams.newBuilder()
-                        .setProductDetailsParamsList(
-                            listOf(
-                                BillingFlowParams.ProductDetailsParams.newBuilder()
-                                    .setProductDetails(productDetails)
-                                    .setOfferToken(offerToken)
-                                    .build(),
-                            ),
-                        )
-                        .build()
-                    pendingBuyId = id
-                    if (!billingClient.launchBillingFlow(activity, params).isOk()) {
-                        pendingBuyId = null
-                        replyError(id)
+                    val productParams = listOf(
+                        BillingFlowParams.ProductDetailsParams.newBuilder()
+                            .setProductDetails(productDetails)
+                            .setOfferToken(offerToken)
+                            .build(),
+                    )
+                    // gifts and a VIP's offer stay on Play: the website can't carry the gift's recipient or the VIP
+                    val webPlan = if (isGift || offer.isNotEmpty()) null else plan
+                    withWebOption(webPlan) { webOption ->
+                        val params = BillingFlowParams.newBuilder()
+                            .setProductDetailsParamsList(productParams)
+                            .apply { if (webOption != null) enableDeveloperBillingOption(webOption) }
+                            .build()
+                        pendingBuyId = id
+                        if (!billingClient.launchBillingFlow(activity, params).isOk()) {
+                            pendingBuyId = null
+                            replyError(id)
+                        }
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Calls back with the website as a choice next to Google Play, when billing choice is available to this user with
+     * Play's own choice screen and external links, else with null. webPlan: the license server's plan, null for Play only.
+     */
+    private fun withWebOption(webPlan: String?, onResult: (DeveloperBillingOptionParams?) -> Unit) {
+        if (webPlan == null) {
+            onResult(null)
+            return
+        }
+        billingClient.isBillingProgramAvailableAsync(BillingClient.BillingProgram.BILLING_CHOICE) { result, availability ->
+            val choice = availability.billingChoiceAvailabilityDetails
+            if (!result.isOk() || choice == null || choice.choiceScreenType != ChoiceScreenType.GOOGLE_RENDERED ||
+                !choice.isExternalLinkAvailable
+            ) {
+                mainHandler.post { onResult(null) }
+                return@isBillingProgramAvailableAsync
+            }
+            // a new token for each purchase, made right before the flow starts
+            billingClient.createBillingProgramReportingDetailsAsync(
+                BillingProgramReportingDetailsParams.newBuilder()
+                    .setBillingProgram(BillingClient.BillingProgram.BILLING_CHOICE)
+                    .setDeveloperBillingType(BillingProgramReportingDetailsParams.DeveloperBillingType.EXTERNAL_LINK)
+                    .build(),
+            ) { tokenResult, details ->
+                val token = details?.externalTransactionToken
+                mainHandler.post {
+                    onResult(
+                        if (tokenResult.isOk() && !token.isNullOrEmpty()) {
+                            DeveloperBillingOptionParams.newBuilder()
+                                .setBillingProgram(BillingClient.BillingProgram.BILLING_CHOICE)
+                                .setLinkUri(
+                                    Uri.parse(LICENSE_SERVER).buildUpon()
+                                        .appendPath("buy")
+                                        .appendPath(webPlan)
+                                        .appendQueryParameter("play", token)
+                                        .build(),
+                                )
+                                .setExternalTransactionToken(token)
+                                .setLaunchMode(DeveloperBillingOptionParams.LaunchMode.LAUNCH_IN_EXTERNAL_BROWSER_OR_APP)
+                                .build()
+                        } else {
+                            null
+                        },
+                    )
+                }
+            }
+        }
+    }
+
+    // the user chose the website on Play's choice screen: Play opens the checkout, the key comes by email
+    override fun onUserSelectedDeveloperBilling(details: DeveloperProvidedBillingDetails) {
+        mainHandler.post {
+            val id = pendingBuyId ?: return@post
+            pendingBuyId = null
+            reply(id, JSONObject().put("result", "web"))
         }
     }
 
@@ -326,6 +405,9 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
 
     companion object {
         const val NATIVE_APP = "akhiStore"
+
+        // the license server of lib/premium.js, whose checkout takes a billing choice token (/buy/<plan>?play=)
+        private const val LICENSE_SERVER = "https://akhi-license.akhibrowser.workers.dev"
 
         // As set up in the Play Console. Family is its own product because a purchase doesn't say its base plan.
         private const val SUBSCRIPTION_PRODUCT = "akhi_premium"
