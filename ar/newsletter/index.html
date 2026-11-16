@@ -150,6 +150,17 @@ addEventListener("pageshow", () => { menu.value = menu.querySelector("[selected]
 })();
 </script>
 <script>
+// back from the confirm link in the mail (?confirmed=): the address is confirmed, so the page says so instead of the form
+(function () {
+  if (new URLSearchParams(location.search).has("confirmed")) {
+    const article = document.querySelector("main article");
+    article.querySelector("h1").textContent = 'تم اشتراكك';
+    article.querySelector(".lead").textContent = 'شكرًا لك. تصل النشرة مرة في الأسبوع إن شاء الله، وفي كل رسالة رابط لإيقافها.';
+    article.querySelector("form").remove();
+  }
+})();
+</script>
+<script>
 // Cloudflare Turnstile, the check against robots on the forms: loaded once someone starts filling one in
 (function () {
   let loaded = false;
