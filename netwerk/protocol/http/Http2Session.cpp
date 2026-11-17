@@ -22,6 +22,7 @@
 #include "Http2StreamTunnel.h"
 #include "Http2WebTransportSession.h"
 #include "LoadContextInfo.h"
+#include "mozilla/CheckedInt.h"
 #include "mozilla/EndianUtils.h"
 #include "mozilla/Preferences.h"
 #include "mozilla/Sprintf.h"
@@ -929,8 +930,13 @@ void Http2Session::CreateFrameHeader(charType dest, uint16_t frameLength,
 char* Http2Session::EnsureOutputBuffer(uint32_t spaceNeeded) {
   // this is an infallible allocation (if an allocation is
   // needed, which is probably isn't)
-  EnsureBuffer(mOutputQueueBuffer, mOutputQueueUsed + spaceNeeded,
-               mOutputQueueUsed, mOutputQueueSize);
+  CheckedInt<uint32_t> newSize =
+      CheckedInt<uint32_t>(mOutputQueueUsed) + spaceNeeded;
+  if (!newSize.isValid()) {
+    NS_ABORT_OOM(UINT32_MAX);
+  }
+  EnsureBuffer(mOutputQueueBuffer, newSize.value(), mOutputQueueUsed,
+               mOutputQueueSize);
   return mOutputQueueBuffer.get() + mOutputQueueUsed;
 }
 
@@ -1065,10 +1071,10 @@ void Http2Session::SendHello() {
   MOZ_ASSERT(OnSocketThread(), "not on socket thread");
   LOG3(("Http2Session::SendHello %p\n", this));
 
-  // sized for magic + 6 settings and a session window update and 6 priority
+  // sized for magic + 7 settings and a session window update and 6 priority
   // frames 24 magic, 33 for settings (9 header + 4 settings @6), 13 for window
   // update, 6 priority frames at 14 (9 + 5) each
-  static const uint32_t maxSettings = 6;
+  static const uint32_t maxSettings = 7;
   static const uint32_t prioritySize =
       kPriorityGroupCount * (kFrameHeaderBytes + 5);
   static const uint32_t maxDataLen =
@@ -1134,6 +1140,19 @@ void Http2Session::SendHello() {
   NetworkEndian::writeUint32(
       packet + kFrameHeaderBytes + (6 * numberOfEntries) + 2, kMaxFrameData);
   numberOfEntries++;
+
+  uint32_t maxHeaderListSize =
+      StaticPrefs::network_http_http2_max_header_list_size();
+  if (maxHeaderListSize &&
+      StaticPrefs::network_http_http2_send_max_header_list_size()) {
+    NetworkEndian::writeUint16(
+        packet + kFrameHeaderBytes + (6 * numberOfEntries),
+        SETTINGS_TYPE_MAX_HEADER_LIST);
+    NetworkEndian::writeUint32(
+        packet + kFrameHeaderBytes + (6 * numberOfEntries) + 2,
+        maxHeaderListSize);
+    numberOfEntries++;
+  }
 
   bool disableRFC7540Priorities =
       !StaticPrefs::network_http_http2_enabled_deps() ||
@@ -3704,7 +3723,7 @@ nsresult Http2Session::OnReadSegment(const char* buf, uint32_t count,
   // for other routines to use - but this is an all-or-nothing function,
   // so if it will not all fit just return WOULD_BLOCK
 
-  if ((mOutputQueueUsed + count) > (mOutputQueueSize - kQueueReserved)) {
+  if (!OutputQueueHasRoom(count)) {
     return NS_BASE_STREAM_WOULD_BLOCK;
   }
 
@@ -3717,12 +3736,18 @@ nsresult Http2Session::OnReadSegment(const char* buf, uint32_t count,
   return NS_OK;
 }
 
+bool Http2Session::OutputQueueHasRoom(uint32_t aCount) const {
+  CheckedInt<uint32_t> needed =
+      CheckedInt<uint32_t>(mOutputQueueUsed) + aCount + kQueueReserved;
+  return needed.isValid() && needed.value() <= mOutputQueueSize;
+}
+
 nsresult Http2Session::CommitToSegmentSize(uint32_t count,
                                            bool forceCommitment) {
   if (mOutputQueueUsed && !mAttemptingEarlyData) FlushOutputQueue();
 
   // would there be enough room to buffer this if needed?
-  if ((mOutputQueueUsed + count) <= (mOutputQueueSize - kQueueReserved)) {
+  if (OutputQueueHasRoom(count)) {
     return NS_OK;
   }
 
@@ -3736,16 +3761,28 @@ nsresult Http2Session::CommitToSegmentSize(uint32_t count,
     RealignOutputQueue();
 
     // is there enough room now?
-    if ((mOutputQueueUsed + count) <= (mOutputQueueSize - kQueueReserved)) {
+    if (OutputQueueHasRoom(count)) {
       return NS_OK;
     }
   }
 
   // resize the buffers as needed
-  EnsureOutputBuffer(count + kQueueReserved);
+  CheckedInt<uint32_t> newSize =
+      CheckedInt<uint32_t>(mOutputQueueUsed) + count + kQueueReserved;
+  if (!newSize.isValid() ||
+      newSize.value() >
+          StaticPrefs::network_http_http2_max_output_queue_size()) {
+    LOG3(
+        ("Http2Session::CommitToSegmentSize %p output queue would exceed "
+         "the limit used=%u count=%u",
+         this, mOutputQueueUsed, count));
+    return NS_ERROR_OUT_OF_MEMORY;
+  }
 
-  MOZ_ASSERT((mOutputQueueUsed + count) <= (mOutputQueueSize - kQueueReserved),
-             "buffer not as large as expected");
+  EnsureBuffer(mOutputQueueBuffer, newSize.value(), mOutputQueueUsed,
+               mOutputQueueSize);
+
+  MOZ_ASSERT(OutputQueueHasRoom(count), "buffer not as large as expected");
 
   return NS_OK;
 }

@@ -283,7 +283,6 @@ class VpnMenuItemProviderTest {
         assertEquals(
             expectedItem(
                 badgeTextRes = R.string.ip_protection_menu_paused,
-                badgeState = MenuItemState.DISABLED,
                 state = MenuItemState.DISABLED,
             ),
             provider.itemsFlow.value.single(),
@@ -331,7 +330,6 @@ class VpnMenuItemProviderTest {
             role = role,
             state = state,
             onClickEvent = MenuAction.IPProtectionToggle,
-            debounceClicks = false,
             badge = MenuItemBadge(text = Text.Resource(badgeTextRes), state = badgeState),
             actionButton =
                 MenuItemActionButton(

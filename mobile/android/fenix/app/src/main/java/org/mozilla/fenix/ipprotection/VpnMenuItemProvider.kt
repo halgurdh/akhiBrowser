@@ -136,7 +136,6 @@ class VpnMenuItemProvider(
                     else -> Role.Switch
                 },
             onClickEvent = MenuAction.IPProtectionToggle,
-            debounceClicks = false,
             summary = dataLimitSummary,
             badge = MenuItemBadge(text = Text.Resource(status.badgeTextRes), state = status.badgeState),
             actionButton =
@@ -198,7 +197,7 @@ private val IPProtectionStatus.badgeState: MenuItemState
             IPProtectionStatus.AwaitingService,
             IPProtectionStatus.Activating -> MenuItemState.ACTIVE
             IPProtectionStatus.ConnectionError -> MenuItemState.WARNING
-            IPProtectionStatus.DataLimitReached -> MenuItemState.DISABLED
+            IPProtectionStatus.DataLimitReached,
             IPProtectionStatus.Unavailable,
             IPProtectionStatus.Uninitialized,
             IPProtectionStatus.Disabled,

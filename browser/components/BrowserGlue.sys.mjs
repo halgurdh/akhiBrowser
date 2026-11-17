@@ -73,6 +73,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
   TelemetryReportingPolicy:
     "resource://gre/modules/TelemetryReportingPolicy.sys.mjs",
   TRRRacer: "resource:///modules/TRRPerformance.sys.mjs",
+  WeaveService: "moz-src:///services/sync/Weave.sys.mjs",
   WebChannel: "resource://gre/modules/WebChannel.sys.mjs",
   WebProtocolHandlerRegistrar:
     "moz-src:///browser/components/protocolhandler/WebProtocolHandlerRegistrar.sys.mjs",
@@ -109,12 +110,6 @@ if (AppConstants.ENABLE_WEBDRIVER) {
 }
 
 const PREF_PDFJS_ISDEFAULT_CACHE_STATE = "pdfjs.enabledCache.state";
-
-ChromeUtils.defineLazyGetter(
-  lazy,
-  "WeaveService",
-  () => Cc["@mozilla.org/weave/service;1"].getService().wrappedJSObject
-);
 
 if (AppConstants.MOZ_CRASHREPORTER) {
   ChromeUtils.defineESModuleGetters(lazy, {
@@ -594,7 +589,8 @@ BrowserGlue.prototype = {
         cmdLine.findFlag("width", false) != -1 ||
         cmdLine.findFlag("height", false) != -1 ||
         cmdLine.findFlag("left", false) != -1 ||
-        cmdLine.findFlag("top", false) != -1
+        cmdLine.findFlag("top", false) != -1 ||
+        cmdLine.findFlag("start-maximized", false) != -1
       ) {
         return false;
       }
@@ -1645,9 +1641,10 @@ BrowserGlue.prototype = {
       return;
     }
 
-    const willPrompt = await lazy.DefaultBrowserCheck.willCheckDefaultBrowser(
+    let willPrompt = await lazy.DefaultBrowserCheck.willCheckDefaultBrowser(
       /* isStartupCheck */ true
     );
+    let defaultPromptSuppressed = false;
     if (willPrompt) {
       let win = lazy.BrowserWindowTracker.getTopWindow({
         allowFromInactiveWorkspace: true,
@@ -1659,10 +1656,13 @@ BrowserGlue.prototype = {
       await setToDefaultFeature.ready();
       await setToDefaultFeature.recordExposureEvent();
 
-      const { showSpotlightPrompt, message } =
+      const { showSpotlightPrompt, message, disablePrompt } =
         setToDefaultFeature.getAllVariables();
 
-      if (showSpotlightPrompt && message) {
+      if (disablePrompt) {
+        defaultPromptSuppressed = true;
+        willPrompt = false;
+      } else if (showSpotlightPrompt && message) {
         // Show experimental spotlight in place of the default browser prompt.
         //
         // Note: Spotlight.showSpotlightDialog guards on gDialogBox.isOpen and
@@ -1678,10 +1678,10 @@ BrowserGlue.prototype = {
           win.gBrowser.selectedBrowser
         );
         return;
+      } else {
+        // Intentionally don't await the returned user's response promise.
+        lazy.DefaultBrowserCheck.prompt(win);
       }
-
-      // Intentionally don't await the returned user's response promise.
-      lazy.DefaultBrowserCheck.prompt(win);
     }
 
     await lazy.ASRouter.waitForInitialized;
@@ -1691,7 +1691,11 @@ BrowserGlue.prototype = {
       })?.gBrowser.selectedBrowser,
       // triggerId and triggerContext
       id: "defaultBrowserCheck",
-      context: { willShowDefaultPrompt: willPrompt, source: "startup" },
+      context: {
+        willShowDefaultPrompt: willPrompt,
+        defaultPromptSuppressed,
+        source: "startup",
+      },
     });
   },
 
