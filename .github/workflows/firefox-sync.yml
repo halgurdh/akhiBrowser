@@ -184,6 +184,7 @@ jobs:
           {
             echo "The daily Firefox sync stopped with conflicts; Claude solved them in this pull request. Merge it into"
             echo "firefox-daily: the next sync builds it and moves main forward when the build and smoke test pass."
+            echo "To merge it, comment **merge** here, or reply \"merge\" to this mail."
             echo; cat "$REPORT"; echo
           } > "$RUNNER_TEMP/pr.md"
           draft=""
