@@ -588,8 +588,9 @@ SettingGroupManager.registerGroups({
             id: "supportShareIdeas",
             l10nId: "support-share-ideas",
             control: "moz-box-link",
+            // AkhiBrowser: feedback to AkhiBrowser, not to Mozilla Connect
             controlAttrs: {
-              href: "https://connect.mozilla.org/",
+              href: "mailto:support@akhibrowser.com",
             },
           },
         ],
@@ -605,13 +606,9 @@ SettingGroupManager.registerGroups({
         id: "newsletterSignUp",
         l10nId: "newsletter-sign-up-link",
         control: "moz-box-link",
+        // AkhiBrowser: its own newsletter, not Firefox's
         controlAttrs: {
-          href: `https://www.firefox.com/newsletter/?${new URLSearchParams({
-            utm_source: "firefox-settings",
-            utm_campaign: "newsletter-signup",
-            utm_medium: "referral",
-            utm_content: "about-firefox",
-          })}`,
+          href: "https://akhibrowser.com/newsletter/",
         },
       },
     ],

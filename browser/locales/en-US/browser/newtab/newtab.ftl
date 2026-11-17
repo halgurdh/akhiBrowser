@@ -1027,7 +1027,7 @@ newtab-widget-message-focus-forecasts-body = Keep your day flowing with { -brand
 # Strings for the default promo card
 
 newtab-promo-card-title = Support { -brand-product-name }
-newtab-promo-card-body = Our sponsors support our mission to build a better web
+newtab-promo-card-body = Our sponsors help keep { -brand-product-name } free, and never get your data
 newtab-promo-card-cta = Learn more
 
 # "Make Firefox yours" refers to about:newtab. The call to action here ("Try it now")
@@ -1296,7 +1296,7 @@ home-prefs-widgets-header =
     .label = Widgets
 
 home-prefs-mission-message2 =
-    .message = Our sponsors support our mission to build a better web.
+    .message = Our sponsors help keep { -brand-product-name } free, and never get your data.
 
 home-prefs-manage-topics-link2 =
     .label = Manage topics

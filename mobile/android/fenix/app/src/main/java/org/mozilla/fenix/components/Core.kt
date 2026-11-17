@@ -674,11 +674,14 @@ class Core(
         )
     }
 
+    // AkhiBrowser: the shortcuts of AkhiBrowser's own sponsors, in place of Mozilla's (macTopSitesProvider)
+    val akhiSponsorTiles by lazy { AkhiSponsorTiles(context, client) }
+
     val topSitesStorage by lazy {
         DefaultTopSitesStorage(
             pinnedSitesStorage = pinnedSiteStorage,
             historyStorage = historyStorage,
-            topSitesProvider = macTopSitesProvider,
+            topSitesProvider = akhiSponsorTiles,
             defaultTopSitesProvider = defaultTopSitesProvider,
         )
     }

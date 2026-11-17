@@ -233,7 +233,8 @@ let renderingPromise = Promise.resolve();
 async function maybeRenderLabsRecipes() {
   firefoxLabs = await FirefoxLabs.create();
 
-  let shouldHide = firefoxLabs.count === 0;
+  // AkhiBrowser: no Firefox Labs, whose features are Mozilla's experiments
+  let shouldHide = true;
   setCategoryVisibility(shouldHide);
 
   if (shouldHide) {

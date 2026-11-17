@@ -38,6 +38,8 @@ object AkhiExtension {
                 it.registerBackgroundMessageHandler(AkhiHomeCard.NATIVE_APP, AkhiHomeCard.Messages(context))
                 it.registerBackgroundMessageHandler(AkhiAppBlock.NATIVE_APP, AkhiAppBlock.Messages(context))
                 it.registerBackgroundMessageHandler(AkhiPhoneFilter.NATIVE_APP, AkhiPhoneFilter.Messages(context))
+                it.registerBackgroundMessageHandler(AkhiSponsorTiles.NATIVE_APP, AkhiSponsorTiles.Messages(context))
+                it.registerBackgroundMessageHandler(AkhiHistory.NATIVE_APP, AkhiHistory.Messages(context))
             },
             onError = { throwable -> logger.error("Failed to install AkhiBrowser webextension", throwable) },
         )

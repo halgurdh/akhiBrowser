@@ -1346,7 +1346,7 @@ SettingGroupManager.registerGroups({
           {
             control: "img",
             controlAttrs: {
-              src: "chrome://browser/skin/preferences/fox-ai.svg",
+              src: "chrome://branding/content/about-logo.svg",
             },
           },
         ],

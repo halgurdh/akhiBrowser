@@ -664,10 +664,10 @@ export class AboutPreferences {
                   control: "a",
                   l10nId: "home-prefs-mission-message-learn-more-link-srd",
                   slot: "support-link",
+                  // AkhiBrowser: how its own sponsors work, on akhibrowser.com
                   controlAttrs: {
-                    is: "moz-support-link",
-                    "support-page": "sponsor-privacy",
-                    "utm-content": "inproduct",
+                    href: "https://akhibrowser.com/money/#sponsors",
+                    target: "_blank",
                   },
                 },
               ],
