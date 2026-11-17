@@ -59,7 +59,7 @@ env:
 
 jobs:
   version:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
       contents: write
@@ -71,7 +71,7 @@ jobs:
         run: |
           echo "$VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$' || { echo "Not a version: $VERSION"; exit 1; }
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: main
           fetch-depth: 1
@@ -150,7 +150,7 @@ jobs:
   publish:
     needs: [version, android, windows]
     if: always() && needs.version.result == 'success'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
       contents: write
@@ -166,7 +166,7 @@ jobs:
       WINDOWS_SMOKE: ${{ needs.windows.outputs.smoke }}
       NOTES: ${{ inputs.notes }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           sparse-checkout: .github
           persist-credentials: false

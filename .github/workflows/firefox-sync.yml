@@ -34,7 +34,7 @@ env:
 
 jobs:
   sync:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 120
     outputs:
       sha: ${{ steps.merge.outputs.sha }}
@@ -184,6 +184,7 @@ jobs:
           {
             echo "The daily Firefox sync stopped with conflicts; Claude solved them in this pull request. Merge it into"
             echo "firefox-daily: the next sync builds it and moves main forward when the build and smoke test pass."
+            echo "To merge it, comment **merge** here, or reply \"merge\" to this mail."
             echo; cat "$REPORT"; echo
           } > "$RUNNER_TEMP/pr.md"
           draft=""
@@ -252,7 +253,7 @@ jobs:
   promote:
     needs: [sync, build, build-android, build-windows]
     if: always() && needs.build.result != 'skipped'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v5
