@@ -672,7 +672,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
             defaultPinnedSitesBinding,
             TopSitesRefresher(
                 settings = components.settings,
-                topSitesProvider = components.core.macTopSitesProvider,
+                topSitesProvider = components.core.akhiSponsorTiles,
                 startupPathProvider = startupPathProvider,
                 visualCompletenessQueue = components.performance.visualCompletenessQueue,
             ),
@@ -723,10 +723,6 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity, Crash
             ),
             true,
         )
-
-        if (components.settings.showContileFeature) {
-            components.core.macTopSitesUpdater.startPeriodicWork()
-        }
 
         if (!components.settings.hiddenEnginesRestored) {
             components.settings.hiddenEnginesRestored = true

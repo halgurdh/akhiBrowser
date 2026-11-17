@@ -502,7 +502,7 @@ function setupHomepageGroup(prefWindow) {
   return {
     inProgress: true,
     headingLevel: 2,
-    iconSrc: "chrome://browser/skin/window-firefox.svg",
+    iconSrc: "chrome://branding/content/about-logo.svg",
     l10nId: "home-homepage-title",
     subcategory: "homepage",
     items: [

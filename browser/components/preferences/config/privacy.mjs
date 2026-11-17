@@ -4,7 +4,6 @@
 
 /* global gSubDialog, gotoPref, confirmRestartPrompt, CONFIRM_RESTART_PROMPT_RESTART_NOW */
 
-import { ADDITIONAL_LOCATIONS_AVAILABLE } from "chrome://browser/content/ipprotection/ipprotection-constants.mjs";
 import { DefaultBrowserHelper } from "chrome://browser/content/preferences/DefaultBrowserHelper.mjs";
 import { SettingGroupManager } from "chrome://browser/content/preferences/config/SettingGroupManager.mjs";
 import { Preferences } from "chrome://global/content/preferences/Preferences.mjs";
@@ -1367,51 +1366,7 @@ SettingGroupManager.registerGroups({
         control: "moz-box-item",
         items: [{ id: "ipProtectionBandwidth", control: "bandwidth-usage" }],
       },
-      {
-        id: "ipProtectionMozVPNPromo",
-        control: "moz-promo",
-        l10nId: "ipprotection-locations-subview-promo",
-        controlAttrs: {
-          imagealignment: "end",
-          imagesrc:
-            "chrome://browser/content/ipprotection/assets/mozilla-vpn-promo.svg",
-          type: "vibrant",
-        },
-        items: [
-          {
-            id: "mozVPNPromoButton",
-            l10nId: "ipprotection-locations-subview-promo-button",
-            control: "moz-button",
-            slot: "actions",
-            controlAttrs: {
-              type: "primary",
-            },
-          },
-        ],
-      },
-      {
-        id: "ipProtectionSetToDefaultPromo",
-        control: "moz-promo",
-        l10nId: "ipprotection-locations-subview-set-default-promo",
-        l10nArgs: { count: ADDITIONAL_LOCATIONS_AVAILABLE },
-        controlAttrs: {
-          imagealignment: "end",
-          imagesrc:
-            "chrome://browser/content/ipprotection/assets/location-pin.svg",
-          type: "vibrant",
-        },
-        items: [
-          {
-            id: "setToDefaultPromoButton",
-            l10nId: "ipprotection-locations-subview-set-default-promo-button",
-            control: "moz-button",
-            slot: "actions",
-            controlAttrs: {
-              type: "primary",
-            },
-          },
-        ],
-      },
+      // AkhiBrowser: no ipProtectionLinks, the upsell to the paid Mozilla VPN
     ],
   },
   vpnSiteRules: {
