@@ -138,13 +138,17 @@ jobs:
           fi
 
       - name: Conflicts without Claude
-        if: (steps.start.outputs.conflict == 'true' || steps.merge.outputs.conflict == 'true') && env.HAS_CLAUDE != 'true' && !steps.waiting.outputs.url
+        if: (steps.start.outputs.conflict == 'true' || steps.merge.outputs.conflict == 'true') && (env.HAS_CLAUDE != 'true' || github.event_name == 'push') && !steps.waiting.outputs.url
         run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            echo; echo "Claude can't run on a push (the action doesn't take that event): the next scheduled sync lets Claude solve them, or start the sync by hand." >> "$REPORT"
+            exit 0
+          fi
           echo; echo "Solve them on firefox-daily: the next sync starts from there. (No CLAUDE_CODE_OAUTH_TOKEN or ANTHROPIC_API_KEY secret, so Claude didn't try.)" >> "$REPORT"
 
       - name: Claude solves the conflicts
         id: claude
-        if: (steps.start.outputs.conflict == 'true' || steps.merge.outputs.conflict == 'true') && env.HAS_CLAUDE == 'true' && !steps.waiting.outputs.url
+        if: (steps.start.outputs.conflict == 'true' || steps.merge.outputs.conflict == 'true') && env.HAS_CLAUDE == 'true' && !steps.waiting.outputs.url && github.event_name != 'push'
         continue-on-error: true
         timeout-minutes: 60
         uses: anthropics/claude-code-action@8d70a0dd265122bd65b8e09d3d959e65373ae2a1 # v1.0.260
