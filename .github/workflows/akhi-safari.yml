@@ -20,14 +20,14 @@ jobs:
     runs-on: macos-15
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           repository: halgurdh/akhi-extension
           ref: ${{ inputs.extension_ref }}
           token: ${{ secrets.AKHI_SUBMODULES_TOKEN }}
           persist-credentials: false
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
 

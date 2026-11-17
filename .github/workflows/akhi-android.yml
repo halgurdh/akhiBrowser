@@ -56,14 +56,14 @@ jobs:
           # memory and disk each minute, as GitHub stops the machine without a log when either runs out
           (while sleep 60; do echo "$(date +%T) disk $(df -h / | awk 'NR==2{print $4}') free, memory $(free -m | awk '/Mem/{print $7}')M free, swap $(free -m | awk '/Swap/{print $3}')M used"; done) &
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: ${{ inputs.ref }}
           submodules: recursive
           token: ${{ secrets.AKHI_SUBMODULES_TOKEN }}
           persist-credentials: false
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
 
