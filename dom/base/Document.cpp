@@ -7155,6 +7155,18 @@ void Document::GetReferrer(nsACString& aReferrer) const {
   URLDecorationStripper::StripTrackingIdentifiers(referrer, aReferrer);
 }
 
+bool Document::IsCookieAverse() const {
+  // If we are a document that "has no browsing context."
+  if (!GetInnerWindow()) {
+    return true;
+  }
+
+  // If we are a document "whose URL's scheme is not a network scheme."
+  // NB: Unlike the spec, file: URIs are allowed to store cookies unless
+  // network.cookie.blockFileScheme is set.
+  return !net::CookieCommons::IsSchemeSupported(NodePrincipal());
+}
+
 void Document::GetCookie(nsAString& aCookie, ErrorResult& aRv) {
   aCookie.Truncate();  // clear current cookie in case service fails;
                        // no cookie isn't an error condition.
@@ -13245,11 +13257,11 @@ void Document::OnPageHide(bool aPersisted, EventTarget* aDispatchStartTarget,
     nsCOMPtr<nsIObserverService> os = mozilla::services::GetObserverService();
     if (os) {
       nsIPrincipal* principal = NodePrincipal();
-      os->NotifyObservers(ToSupports(this),
-                          principal->IsSystemPrincipal()
-                              ? "chrome-page-hidden"
-                              : "content-page-hidden",
-                          nullptr);
+      os->NotifyWhenScriptSafe(ToSupports(this),
+                               principal->IsSystemPrincipal()
+                                   ? "chrome-page-hidden"
+                                   : "content-page-hidden",
+                               nullptr);
     }
 
     // Now send out a PageHide event.

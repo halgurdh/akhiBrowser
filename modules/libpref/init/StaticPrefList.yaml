@@ -2750,6 +2750,12 @@
   value: true
   mirror: always
 
+# Expose CycleCollectorUnlinkTester, for testing use-after-unlink issues.
+- name: dom.cc.unlink_test
+  type: RelaxedAtomicBool
+  value: false
+  mirror: always
+
 # Master gate for the web custom format support in the Async Clipboard API.
 - name: dom.clipboard.customFormatSupport.enabled
   type: RelaxedAtomicBool
@@ -3252,13 +3258,6 @@
   mirror: always
 
 - name: dom.fetch.streaming_upload
-  type: RelaxedAtomicBool
-  value: true
-  mirror: always
-
-# Whether to validate that a fetch request's principal is compatible with the
-# remote type of the process it originates from.
-- name: dom.fetch.validatePrincipalForRemoteType
   type: RelaxedAtomicBool
   value: true
   mirror: always
@@ -4383,7 +4382,7 @@
 # https://w3c.github.io/push-api/#declarative-push-message
 - name: dom.push.declarative.enabled
   type: RelaxedAtomicBool
-  value: false
+  value: true
   mirror: always
 
 # Indicate the deprecated aesgcm support in PushManager.supportedContentEncodings.
@@ -4399,7 +4398,7 @@
 # https://w3c.github.io/push-api/#extensions-to-the-serviceworkerregistration-interface
 - name: dom.push.window_pushmanager.enabled
   type: bool
-  value: false
+  value: true
   mirror: always
 
 # Whether QuotaExceededError is a DOMException derived interface carrying
@@ -5139,13 +5138,6 @@
 - name: dom.security.skip_remote_script_assertion_in_system_priv_context
   type: RelaxedAtomicBool
   value: false
-  mirror: always
-
-# If and only if true, support for Trusted Types
-# (https://w3c.github.io/trusted-types/dist/spec/) is enabled.
-- name: dom.security.trusted_types.enabled
-  type: RelaxedAtomicBool
-  value: true
   mirror: always
 
 # If true, record the security.trusted_types_readiness Glean metric when a
@@ -8027,6 +8019,16 @@
 - name: gfx.font-list.use_font_match_api.force-enabled
   type: bool
   value: false
+  mirror: once
+#endif
+
+# [Windows] Whether the set of installed font file paths is built in the parent
+# process. When it is, the sandbox uses it to allow child processes to read
+# installed font files, rather than adding individual rules for each font.
+#if defined(XP_WIN)
+- name: gfx.font-path-set.enabled
+  type: bool
+  value: @IS_NIGHTLY_BUILD@
   mirror: once
 #endif
 
@@ -11259,12 +11261,9 @@
   mirror: always
 
 # Is support for CSS background-clip: border-area enabled?
-#
-# NOTE(emilio): Before enabling on content, we need to add support for dotted /
-# dashed / double borders to the codepath, see bug 2046372.
 - name: layout.css.background-clip.border-area.enabled
   type: RelaxedAtomicBool
-  value: false
+  value: true
   mirror: always
   rust: true
 
@@ -15074,6 +15073,14 @@
   value: false
   mirror: always
 
+# Whether to block cookies for file:// URLs. Cookies already stored for
+# file:// documents are kept in storage but are no longer exposed; they become
+# visible again if this pref is turned off.
+- name: network.cookie.blockFileScheme
+  type: RelaxedAtomicBool
+  value: @IS_NIGHTLY_BUILD@
+  mirror: always
+
 # Whether to support CHIPS(Cookies Having Independent Partitioned State).
 - name: network.cookie.CHIPS.enabled
   type: RelaxedAtomicBool
@@ -17010,6 +17017,17 @@
   value: 100
   mirror: always
 
+# The most an HTTP/2 session may buffer for writing, in bytes. The session
+# fails rather than growing its output queue beyond this.
+# The queue normally stays at a few tens of KB and only grows while the socket
+# can't be written to. 256 MB is far above that, and matches the largest IPC
+# message (IPC::Channel::kMaximumMessageSize), which bounds the request data a
+# content process can send.
+- name: network.http.http2.max_output_queue_size
+  type: RelaxedAtomicUint32
+  value: 256 * 1024 * 1024
+  mirror: always
+
 - name: network.http.http2.default-hpack-buffer
   type: RelaxedAtomicInt32
   value: 65536 # 64K
@@ -17030,6 +17048,32 @@
 - name: network.http.http2.max_stream_id
   type: RelaxedAtomicInt32
   value: 0x7800000
+  mirror: always
+
+# When true, an HTTP/2 header block that repeats a pseudo-header field is
+# treated as malformed, as required by RFC 9113 Section 8.3.
+- name: network.http.http2.reject_duplicate_pseudo_headers
+  type: RelaxedAtomicBool
+  value: true
+  mirror: always
+
+# Max decoded size, in bytes, of an HTTP/2 response header block, counted as
+# in RFC 9113 Section 6.5.2 (name + value + 32 per field). Larger blocks reset
+# the stream. 0 means no limit.
+- name: network.http.http2.max_header_list_size
+  type: RelaxedAtomicUint32
+#ifdef NIGHTLY_BUILD
+  value: 262144 # 256K
+#else
+  value: 0
+#endif
+  mirror: always
+
+# When true and network.http.http2.max_header_list_size is non-zero, advertise
+# that limit to the server with SETTINGS_MAX_HEADER_LIST_SIZE.
+- name: network.http.http2.send_max_header_list_size
+  type: RelaxedAtomicBool
+  value: @IS_NIGHTLY_BUILD@
   mirror: always
 
 - name: network.http.move_to_pending_list_after_network_change
@@ -19763,6 +19807,7 @@
   mirror: always
   rust: true
 
+# Whether to enable ML-DSA in TLS and in certificate verification.
 - name: security.tls.enable_mldsa
   type: RelaxedAtomicBool
   value: false

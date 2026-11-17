@@ -1,0 +1,54 @@
+# Merges a pull request of the Firefox sync (firefox-sync-fix-* into firefox-daily) when its owner comments "merge"
+# on it: on GitHub, or by replying "merge" to its notification mail, which GitHub posts as a comment. Nobody else
+# can, and no code of the pull request runs here.
+# Secret: AKHI_SUBMODULES_TOKEN, a token with contents, pull requests and workflows write: a sync merge often changes
+# files under .github/workflows, which the workflow's own token can't merge.
+name: Firefox sync merge by comment
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  merge:
+    if: >-
+      github.event.issue.pull_request &&
+      github.event.comment.user.login == github.repository_owner &&
+      github.event.comment.author_association == 'OWNER'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ secrets.AKHI_SUBMODULES_TOKEN || github.token }}
+      GH_REPO: ${{ github.repository }}
+      PR: ${{ github.event.issue.number }}
+      BODY: ${{ github.event.comment.body }}
+    steps:
+      - name: A "merge" comment on a sync pull request?
+        id: check
+        run: |
+          first=$(printf '%s\n' "$BODY" | sed '/^[[:space:]]*$/d' | head -n 1 | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')
+          if [ "$first" != "merge" ] && [ "$first" != "/merge" ]; then
+            echo "Not a merge comment."
+            exit 0
+          fi
+          read -r base head < <(gh pr view "$PR" --json baseRefName,headRefName --jq '"\(.baseRefName) \(.headRefName)"')
+          if [ "$base" != "firefox-daily" ] || [[ "$head" != firefox-sync-fix-* ]]; then
+            echo "Not a Firefox sync pull request: $head into $base."
+            exit 0
+          fi
+          echo "go=true" >> "$GITHUB_OUTPUT"
+
+      - name: Merge
+        if: steps.check.outputs.go == 'true'
+        run: |
+          gh pr ready "$PR" 2>/dev/null || true
+          if gh pr merge "$PR" --merge --delete-branch; then
+            gh pr comment "$PR" --body "Merged into firefox-daily on your comment. The next sync builds it."
+          else
+            gh pr comment "$PR" --body "Couldn't merge this on your comment: see ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            exit 1
+          fi

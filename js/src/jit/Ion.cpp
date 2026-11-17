@@ -4,6 +4,7 @@
 
 #include "jit/Ion.h"
 
+#include "mozilla/BinarySearch.h"
 #include "mozilla/CheckedInt.h"
 #include "mozilla/DebugOnly.h"
 #include "mozilla/IntegerPrintfMacros.h"
@@ -49,6 +50,7 @@
 #include "jit/ScalarReplacement.h"
 #include "jit/ScriptFromCalleeToken.h"
 #include "jit/SimpleAllocator.h"
+#include "jit/Simulator.h"
 #include "jit/Sink.h"
 #include "jit/TypeAnalysis.h"
 #include "jit/UnrollLoops.h"
@@ -57,6 +59,7 @@
 #include "jit/WarpOracle.h"
 #include "jit/WasmBCE.h"
 #include "jit/WasmRefTypeAnalysis.h"
+#include "js/friend/StackLimits.h"
 #include "js/Printf.h"
 #include "js/UniquePtr.h"
 #include "util/Denormals.h"
@@ -83,6 +86,7 @@
 #  include <sys/system_properties.h>
 #endif
 
+using mozilla::BinarySearchIf;
 using mozilla::CheckedInt;
 using mozilla::DebugOnly;
 
@@ -867,6 +871,14 @@ void IonScript::copySafepointIndices(const CodegenSafepointIndex* si) {
 
 void IonScript::copyOsiIndices(const OsiIndex* oi) {
   memcpy(osiIndices(), oi, numOsiIndices() * sizeof(OsiIndex));
+
+#ifdef DEBUG
+  // getOsiIndex does a binary search.
+  for (size_t i = 1; i < numOsiIndices(); i++) {
+    MOZ_ASSERT(oi[i - 1].callPointDisplacement() <
+               oi[i].callPointDisplacement());
+  }
+#endif
 }
 
 void IonScript::copyRuntimeData(const uint8_t* data) {
@@ -934,14 +946,26 @@ const SafepointIndex* IonScript::getSafepointIndex(uint32_t disp) const {
 }
 
 const OsiIndex* IonScript::getOsiIndex(uint32_t disp) const {
-  const OsiIndex* end = osiIndices() + numOsiIndices();
-  for (const OsiIndex* it = osiIndices(); it != end; ++it) {
-    if (it->returnPointDisplacement() == disp) {
-      return it;
-    }
+  // OSI indices are recorded in code order, so they are sorted by
+  // displacement.
+  const OsiIndex* table = osiIndices();
+  size_t loc;
+  if (!BinarySearchIf(
+          table, 0, numOsiIndices(),
+          [disp](const OsiIndex& entry) {
+            uint32_t entryDisp = entry.returnPointDisplacement();
+            if (disp < entryDisp) {
+              return -1;
+            }
+            if (entryDisp < disp) {
+              return 1;
+            }
+            return 0;
+          },
+          &loc)) {
+    MOZ_CRASH("Failed to find OSI point return address");
   }
-
-  MOZ_CRASH("Failed to find OSI point return address");
+  return &table[loc];
 }
 
 const OsiIndex* IonScript::getOsiIndex(uint8_t* retAddr) const {
@@ -2431,6 +2455,20 @@ bool jit::IonCompileScriptForBaselineOSR(JSContext* cx, BaselineFrame* frame,
              ion->hasProfilingInstrumentation());
   MOZ_ASSERT(ion->osrPc() == pc);
 
+  // The new Ion frame may be bigger than the baseline frame; ensure
+  // that it doesn't exceed the stack limit.
+  uint8_t* newsp =
+      reinterpret_cast<uint8_t*>(frame->framePrefix()) - ion->frameSize();
+#ifdef JS_SIMULATOR
+  if (Simulator::Current()->overRecursed(uintptr_t(newsp))) {
+#else
+  AutoCheckRecursionLimit recursion(cx);
+  if (!recursion.checkWithStackPointerDontReport(cx, newsp)) {
+#endif
+    ReportOverRecursed(cx);
+    return false;
+  }
+
   ion->resetOsrPcMismatchCounter();
 
   JitSpew(JitSpew_BaselineOSR, "  OSR possible!");
@@ -2818,7 +2856,3 @@ size_t jit::SizeOfIonData(JSScript* script,
 
   return result;
 }
-
-// If you change these, please also change the comment in TempAllocator.
-/* static */ const size_t TempAllocator::BallastSize = 16 * 1024;
-/* static */ const size_t TempAllocator::PreferredLifoChunkSize = 32 * 1024;

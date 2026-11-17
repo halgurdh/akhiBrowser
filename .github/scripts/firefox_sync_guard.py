@@ -47,8 +47,14 @@ def main():
         if not re.search(r"// AkhiBrowser: " + re.escape(marker) + r"\n\s*" + re.escape(default), settings):
             failures.append(f"- `{SETTINGS}` lost `{marker}` / `{default}`: {keeps}")
     sponsored = len(re.findall(r"// AkhiBrowser: no sponsored content\n\s*default(Value)? = (\{ )?false", settings))
+    # the sponsored shortcuts setting is on for AkhiBrowser's own sponsors (AkhiSponsorTiles), never Mozilla's
+    if re.search(r"// AkhiBrowser: the shortcuts of AkhiBrowser's own sponsors \(AkhiSponsorTiles\)[^\n]*\n\s*default = true", settings):
+        sponsored += 1
     if sponsored < SPONSORED_OFF:
         failures.append(f"- `{SETTINGS}` has {sponsored} of {SPONSORED_OFF} sponsored content defaults off")
+    sources = "\n".join(path.read_text(encoding="utf-8") for path in Path(JAVA).rglob("*.kt"))
+    if "ContileTopSitesProvider(" in sources:
+        failures.append(f"- `{JAVA}` uses Mozilla's ContileTopSitesProvider again: Mozilla's sponsored shortcuts")
     diff = subprocess.run(
         ["git", "diff", before, "HEAD", "--", *WATCHED_PREFS],
         check=True,

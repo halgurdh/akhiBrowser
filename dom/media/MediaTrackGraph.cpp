@@ -313,15 +313,15 @@ void MediaTrackGraphImpl::ProcessChunkMetadataForInterval(MediaTrack* aTrack,
     const PrincipalHandle& principalHandle = chunk->GetPrincipalHandle();
     if (principalHandle != aSegment.GetLastPrincipalHandle()) {
       aSegment.SetLastPrincipalHandle(principalHandle);
+      if (aTrack->mCanonicals) {
+        aTrack->mCanonicals->mPrincipalHandle.Set(principalHandle);
+      }
       LOG(LogLevel::Debug,
           ("{}: MediaTrack {}, principalHandle "
            "changed in {}Chunk with duration {}",
            fmt::ptr(this), fmt::ptr(aTrack),
            aSegment.GetType() == MediaSegment::AUDIO ? "Audio" : "Video",
            (long long)chunk->GetDuration()));
-      for (const auto& listener : aTrack->mTrackListeners) {
-        listener->NotifyPrincipalHandleChanged(this, principalHandle);
-      }
     }
   }
 }
@@ -2248,7 +2248,9 @@ void MediaTrack::SetGraphImpl(MediaTrackGraphImpl* aGraph,
   MOZ_ASSERT(mSampleRate == aGraph->GraphRate());
   mGraph = aGraph;
   if (aFlags.contains(MediaTrack::Flag::EnableCanonicals)) {
-    mCanonicals.emplace(aGraph, 0);
+    mCanonicals.emplace(
+        aGraph, 0,
+        mSegment ? mSegment->GetLastPrincipalHandle() : PRINCIPAL_HANDLE_NONE);
   }
 }
 
@@ -2308,6 +2310,7 @@ void MediaTrack::DisconnectCanonicals() {
   }
   mCanonicals->mCurrentTime.DisconnectAll();
   mCanonicals->mEnded.DisconnectAll();
+  mCanonicals->mPrincipalHandle.DisconnectAll();
   mCanonicals.reset();
 }
 
@@ -2321,6 +2324,12 @@ AbstractCanonical<bool>& MediaTrack::CanonicalEnded() {
   MOZ_ASSERT(!mDestroyed);
   MOZ_ASSERT(mCanonicals, "Track was not created with EnableCanonicals");
   return mCanonicals->mEnded;
+}
+
+AbstractCanonical<PrincipalHandle>& MediaTrack::CanonicalPrincipalHandle() {
+  MOZ_ASSERT(!mDestroyed);
+  MOZ_ASSERT(mCanonicals, "Track was not created with EnableCanonicals");
+  return mCanonicals->mPrincipalHandle;
 }
 
 void MediaTrack::Destroy() {
@@ -2557,9 +2566,6 @@ void MediaTrack::AddListenerImpl(
   RefPtr<MediaTrackListener> l(aListener);
   mTrackListeners.AppendElement(std::move(l));
 
-  PrincipalHandle lastPrincipalHandle = mSegment->GetLastPrincipalHandle();
-  mTrackListeners.LastElement()->NotifyPrincipalHandleChanged(
-      Graph(), lastPrincipalHandle);
   if (mNotifiedEnded) {
     mTrackListeners.LastElement()->NotifyEnded(Graph());
   }
@@ -3716,9 +3722,9 @@ SourceMediaTrack* MediaTrackGraph::CreateSourceTrack(MediaSegment::Type aType,
 }
 
 ProcessedMediaTrack* MediaTrackGraph::CreateForwardedInputTrack(
-    MediaSegment::Type aType) {
+    MediaSegment::Type aType, MediaTrack::Flags aFlags) {
   ForwardedInputTrack* track = new ForwardedInputTrack(GraphRate(), aType);
-  AddTrack(track, {});
+  AddTrack(track, aFlags);
   return track;
 }
 
@@ -4419,10 +4425,17 @@ nsresult MediaTrackGraphImpl::Dispatch(
   }
 
   // Enforce tail-dispatch. The IOThread is exempt as it dispatches messages to
-  // AudioWorklet from JS.
-  MOZ_ASSERT_IF(!OnIPCIOThread(), RequiresTailDispatchFromCurrentThread());
+  // AudioWorklet from JS. So is the main thread during the final shutdown
+  // cycle collection, which runs after AbstractThread::ShutdownMainThread().
+  MOZ_ASSERT(OnIPCIOThread() || RequiresTailDispatchFromCurrentThread() ||
+             (NS_IsMainThread() &&
+              AppShutdown::IsInOrBeyond(ShutdownPhase::XPCOMShutdownFinal)));
 
-  if (aReason == TailDispatch || !RequiresTailDispatchFromCurrentThread()) {
+  // RequiresTailDispatchFromCurrentThread() returns false on the main thread
+  // when main thread dispatch is no longer available, in which case
+  // QueueMessageForTailDispatch() runs the event synchronously.
+  if (aReason == TailDispatch ||
+      (!NS_IsMainThread() && !RequiresTailDispatchFromCurrentThread())) {
     return TailDispatchMessage(event.forget());
   }
   return QueueMessageForTailDispatch(event.forget());
@@ -4581,6 +4594,7 @@ nsresult MediaTrackGraphImpl::QueueMessageForTailDispatch(
     if (AppShutdown::IsInOrBeyond(ShutdownPhase::AppShutdownNetTeardown)) {
       // Tail dispatcher may not be available on main thread once shutdown has
       // started, since shutdown is handled off the event loop.
+      MOZ_ASSERT(AbstractThread::GetCurrent());
       MOZ_ASSERT(!AbstractThread::GetCurrent()->HasTailTasksFor(this));
       return TailDispatchMessage(event.forget());
     }
