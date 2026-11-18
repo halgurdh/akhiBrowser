@@ -187,6 +187,20 @@
     return true;
   }
 
+  // the Reddit ad click in the Play link's referrer (rdt=), next to the UTM tags: the app reads it once after installing
+  // and has the license server tell Reddit about the install (POST /reddit/install), so ads are judged by installs
+  function addPlayClick(link, click) {
+    try {
+      var url = new URL(link.href);
+      var referrer = new URLSearchParams(url.searchParams.get("referrer") || "");
+      if (!referrer.has("rdt")) {
+        referrer.set("rdt", click);
+        url.searchParams.set("referrer", referrer.toString());
+        link.href = url.href;
+      }
+    } catch (e) {}
+  }
+
   function track(link) {
     var href = link.href || "";
     var lang = (document.documentElement.lang || "en").split("-")[0];
@@ -194,6 +208,10 @@
       if (STORES[i][0].test(href)) {
         window.dataLayer.push({ event: "download_click", store: STORES[i][1], page_language: lang });
         if (stored() === "granted") {
+          var adClick = STORES[i][1] === "play" ? redditClick() : null;
+          if (adClick) {
+            addPlayClick(link, adClick);
+          }
           if (fitsDevice(STORES[i][1]) && firstDownload()) {
             // the same id to the pixel and the license server, so Reddit counts it once, also when the pixel is blocked
             var id = eventId();
