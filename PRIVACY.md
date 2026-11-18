@@ -1,10 +1,10 @@
 # AkhiBrowser: privacy policy
 
-Last updated: 14-11-2026
+Last updated: 18-11-2026
 
 This policy covers the AkhiBrowser website, browser for Android and Windows, and extension for Firefox and Chrome.
 AkhiBrowser is made by Halgurd Hussein. The browser and extensions have no account of their own and no ads. Their only
-analytics is one anonymous count a day in the browser, without an id (see [What leaves your device](#what-leaves-your-device)).
+analytics is one anonymous count a day in the browser and the extensions, without an id (see [What leaves your device](#what-leaves-your-device)).
 We do not sell data.
 
 The browser and extension do their work on your device, but they have to contact a few services. The website loads
@@ -117,6 +117,13 @@ Uninstalling the browser deletes all of this. You can also clear it in Settings,
 ## The extension (Firefox and Chrome)
 
 The extension checks page addresses, images, audio and your settings on your device, and sends none of them to us.
+
+- **An anonymous count, once a day, to our license server**, as in the browser (see
+  [What leaves your device](#what-leaves-your-device)): the extension's version, your system, whether this is its first
+  count of the week or month or after a new install, and whether Premium is on. No id and nothing of what you visit.
+  You can turn it off in the extension's settings, under "Count me anonymously". In Firefox it is sent only if you
+  allow the add-on's technical and interaction data, which Firefox asks about when you install it and which you can
+  change in the add-on's permissions.
 
 - **Images.** To check an image, the extension may download it again from the site that already shows it, without your
   cookies.
