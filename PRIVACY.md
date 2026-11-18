@@ -56,6 +56,11 @@ AkhiBrowser is a web browser built on Firefox.
   also counts per day. There is no id, and nothing of what you visit. The server only keeps the sums per day, so it
   can't tell two browsers apart; your IP address is only used against abuse and not kept. You
   can turn it off in the AkhiBrowser settings, under "Count me anonymously".
+- **A Reddit ad install (the Android app from Google Play).** If you clicked an ad on Reddit, allowed analytics on the
+  website and installed the app from its Google Play link, that link carries Reddit's click id. The app sends it once
+  to our license server with a random id for that install, and the server passes them to Reddit with your IP address
+  and user agent, so Reddit can count installs from its ads. Nothing else is sent, and turning off "Count me
+  anonymously" stops this too.
 - **Update check (Windows, and the Android app from GitHub).** Once a day the browser asks GitHub whether a new release
   is out, and downloads it from GitHub. GitHub sees your IP address, under
   [GitHub's privacy statement](https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement).
