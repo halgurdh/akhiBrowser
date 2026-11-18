@@ -8,6 +8,9 @@ To add an article: add an entry to ARTICLES in content.py with its English and D
 text to content_ar.py, then run
 
     python tools/build_pages.py
+
+The pages it writes are its output: change their text here, in content.py, content_ar.py or index.html, not in
+the pages themselves, or the next build undoes it. /faq/, /newsletter/ and /delete-account/ are written by hand.
 """
 import html
 import json
@@ -18,12 +21,14 @@ from content import ARTICLES, COMPARE, COMPARE_BROWSERS, UI
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://akhibrowser.com"
-GTM = """<script async src="https://www.googletagmanager.com/gtm.js?id=GTM-PW3SL6DM"></script>
-<script>
+GTM = """<script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-</script>"""
+  gtag('consent', 'default', {analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', wait_for_update: 500});
+  try { if (localStorage.getItem('akhi-consent') === 'granted') gtag('consent', 'update', {analytics_storage: 'granted'}); } catch (e) {}
+  dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+</script>
+<script src="/assets/analytics.js" defer></script>"""
 
 
 LANGS = ("en", "nl", "ar")
@@ -64,8 +69,9 @@ TURNSTILE = """<script>
     form.addEventListener("pointerdown", load);
   }
 })();
-</script>
-<script>
+</script>"""
+# the forms: plain-language feedback, for the pages that have forms
+FORM_CHECKS = """<script>
 // the forms: plain-language feedback in the page's language instead of the browser's own warnings, which are easy to miss
 (function () {
   const lang = (document.documentElement.lang || "en").slice(0, 2);
@@ -246,13 +252,23 @@ def translated(markup, lang):
     def swap(match):
         return match.group(1) + words[match.group(3)] + match.group(4) if match.group(3) in words else match.group(0)
 
-    return re.sub(r'(<(\w+)\b[^>]*\bdata-t="([\w-]+)"[^>]*>).*?(</\2>)', swap, markup, flags=re.S)
+    markup = re.sub(r'(<(\w+)\b[^>]*\bdata-t="([\w-]+)"[^>]*>).*?(</\2>)', swap, markup, flags=re.S)
+
+    def attribute(match):
+        # data-a="name:key": the attribute in this language; the page is built per language, so data-a itself goes
+        tag, name, key = match.group(0), match.group(1), match.group(2)
+        tag = tag.replace(f' data-a="{name}:{key}"', "")
+        if key in words:
+            tag = re.sub(r'\b%s="[^"]*"' % re.escape(name), lambda m: f'{name}="{html.escape(words[key])}"', tag, count=1)
+        return tag
+
+    return re.sub(r'<[^>]*\bdata-a="([\w-]+):([\w-]+)"[^>]*>', attribute, markup)
 
 
 def menu_of(lang):
     markup = translated(HOME_MENU, lang)
     markup = re.sub(r'href="#', 'href="/#', markup)
-    markup = re.sub(r'href="/((?:blog|compare|affiliate|money|privacy|setup|kit)/[^"]*)"', lambda m: f'href="{url_of(lang, m.group(1))}"', markup)
+    markup = re.sub(r'href="/((?:blog|compare|affiliate|money|privacy|setup|kit|faq|newsletter|delete-account)/[^"]*)"', lambda m: f'href="{url_of(lang, m.group(1))}"', markup)
     return markup
 
 
@@ -278,7 +294,7 @@ def lang_menu(lang, path):
     return f'<select class="lang" id="lang" aria-label="{LANG_LABEL[lang]}">{options}</select>'
 
 
-def page(lang, path, title, description, body, json_ld=None, scripts=""):
+def page(lang, path, title, description, body, json_ld=None, scripts="", early_scripts=""):
     ui = UI[lang]
     title, description = plain(title), plain(description)
     canonical = SITE + url_of(lang, path)
@@ -323,7 +339,7 @@ def page(lang, path, title, description, body, json_ld=None, scripts=""):
   <p>{ui['footer']}</p>
   <p>&copy; <span data-year>{YEAR}</span> AkhiBrowser</p>
 </footer>
-{SCRIPT}
+{early_scripts}{SCRIPT}
 <script>
 {MENU_SCRIPT}</script>
 {scripts}
@@ -346,7 +362,7 @@ def article_page(lang, article):
         "headline": plain(text["title"]),
         "description": plain(text["description"]),
         "datePublished": article["date"],
-        "dateModified": article["date"],
+        "dateModified": article.get("modified", article["date"]),
         "inLanguage": lang,
         "image": f"{SITE}/assets/og.png",
         "author": {"@type": "Organization", "name": "AkhiBrowser", "url": SITE},
@@ -399,14 +415,17 @@ def compare_page(lang, data, path):
     return path, page(lang, path, text["seo_title"], text["description"], body)
 
 
-def home_page(lang, section, path, extra="", scripts=TURNSTILE):
+def home_page(lang, section, path, extra="", scripts=TURNSTILE + "\n" + FORM_CHECKS, early_scripts=""):
     """A section of index.html as its own page: its h2 is the page's title."""
     words = HOME_TEXTS[lang]
     markup = translated(HOME_SECTIONS[section], lang).replace("<h2", "<h1", 1).replace("</h2>", "</h1>", 1)
     title = html.unescape(re.sub(r"<[^>]+>", "", re.search(r"<h1[^>]*>(.*?)</h1>", markup, re.S).group(1)))
     intro = html.unescape(re.sub(r"<[^>]+>", "", re.search(r'<p class="intro"[^>]*>(.*?)</p>', markup, re.S).group(1)))
+    if lang != "en":
+        # the license server answers in the page's language, also without the forms' script
+        markup = re.sub(r'(<form class="affiliate"[^>]*>)', r'\1\n        <input type="hidden" name="lang" value="%s">' % lang, markup)
     body = f'<div class="home">\n{markup}\n{extra}</div>\n{cta(lang)}'
-    return path, page(lang, path, f"{title} | AkhiBrowser", intro, body, scripts=scripts)
+    return path, page(lang, path, f"{title} | AkhiBrowser", intro, body, scripts=scripts, early_scripts=early_scripts)
 
 
 def write(lang, path, content):
@@ -423,9 +442,9 @@ def main():
         builders = [
             index_page(lang),
             home_page(lang, "affiliate", "affiliate/"),
-            home_page(lang, "money", "money/", scripts=TURNSTILE + SPONSORS_SCRIPT),
-            home_page(lang, "privacy", "privacy/"),
-            home_page(lang, "setup", "setup/"),
+            home_page(lang, "money", "money/", early_scripts=SPONSORS_SCRIPT),
+            home_page(lang, "privacy", "privacy/", scripts=TURNSTILE),
+            home_page(lang, "setup", "setup/", scripts=TURNSTILE),
             home_page(lang, "kit", "kit/", scripts=KIT_SCRIPT),
             compare_page(lang, COMPARE_BROWSERS, "compare/browsers/"),
             compare_page(lang, COMPARE, "compare/kahf-browser/"),
@@ -433,7 +452,9 @@ def main():
         for path, content in builders:
             write(lang, path, content)
             paths.append(url_of(lang, path))
-    urls = ["/", "/nl/", "/ar/"] + paths  # /nl/ and /ar/: tools/build_home.py
+    # /nl/ and /ar/: tools/build_home.py; the account deletion, newsletter and FAQ pages are written by hand
+    by_hand = [url_of(lang, path) for path in ("delete-account/", "newsletter/", "faq/") for lang in LANGS]
+    urls = ["/", "/nl/", "/ar/"] + paths + by_hand
     sitemap = "\n".join(f"  <url><loc>{SITE}{u}</loc></url>" for u in urls)
     (ROOT / "sitemap.xml").write_text(
         f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{sitemap}\n</urlset>\n',
