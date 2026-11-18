@@ -158,6 +158,35 @@
     [/addons\.mozilla\.org/, "firefox"],
   ];
 
+  // a store that can install on this device: Google Play on Android, the Windows stores on Windows, the browser
+  // extensions on a computer. Nothing on an iPhone or iPad, where none of these installs anything.
+  function fitsDevice(store) {
+    var ua = navigator.userAgent || "";
+    if (/Android/i.test(ua)) {
+      return store === "play";
+    }
+    if (/iPhone|iPad|iPod/i.test(ua) || (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1)) {
+      return false;
+    }
+    if (/Windows/i.test(ua)) {
+      return store !== "play";
+    }
+    return store === "chrome" || store === "firefox";
+  }
+  // Reddit hears of a download once per visitor (30 days), so clicking every button, or one button ten times, is
+  // still one; Google Analytics keeps counting every click
+  var SENT = "akhi-download-sent";
+  function firstDownload() {
+    try {
+      var last = Number(localStorage.getItem(SENT) || 0);
+      if (Date.now() - last < 30 * 864e5) {
+        return false;
+      }
+      localStorage.setItem(SENT, String(Date.now()));
+    } catch (e) {}
+    return true;
+  }
+
   function track(link) {
     var href = link.href || "";
     var lang = (document.documentElement.lang || "en").split("-")[0];
@@ -165,15 +194,17 @@
       if (STORES[i][0].test(href)) {
         window.dataLayer.push({ event: "download_click", store: STORES[i][1], page_language: lang });
         if (stored() === "granted") {
-          // the same id to the pixel and the license server, so Reddit counts it once, also when the pixel is blocked
-          var id = eventId();
-          reddit()("track", "Custom", { customEventName: "Download", conversionId: id });
-          var click = redditClick();
-          if (click && navigator.sendBeacon) {
-            navigator.sendBeacon(
-              "https://akhi-license.akhibrowser.workers.dev/reddit/download",
-              new URLSearchParams({ rdt: click, store: STORES[i][1], id: id })
-            );
+          if (fitsDevice(STORES[i][1]) && firstDownload()) {
+            // the same id to the pixel and the license server, so Reddit counts it once, also when the pixel is blocked
+            var id = eventId();
+            reddit()("track", "Custom", { customEventName: "Download", conversionId: id });
+            var click = redditClick();
+            if (click && navigator.sendBeacon) {
+              navigator.sendBeacon(
+                "https://akhi-license.akhibrowser.workers.dev/reddit/download",
+                new URLSearchParams({ rdt: click, store: STORES[i][1], id: id })
+              );
+            }
           }
           return true;
         }
