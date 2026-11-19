@@ -109,6 +109,7 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
                 } else {
                     replyError(id)
                 }
+                "prices" -> if (BuildConfig.AKHI_PLAY_STORE) prices(id) else replyError(id)
                 "referrer" -> if (BuildConfig.AKHI_PLAY_STORE) referrer(id) else replyError(id)
                 "gifts" -> if (BuildConfig.AKHI_PLAY_STORE) gifts(id) else replyError(id)
                 "consume" -> if (BuildConfig.AKHI_PLAY_STORE) consumeGift(id, request.optString("purchaseToken")) else replyError(id)
@@ -248,6 +249,51 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
                 override fun onInstallReferrerServiceDisconnected() = Unit
             },
         )
+    }
+
+    /**
+     * The prices Play charges this user, in their currency and as Play writes them (local prices included), for the
+     * plan cards of the settings: {"prices": {"monthly", "yearly", "family", "school", "lifetime"}}, a plan left out
+     * when Play has no price for it. Base plans only, not trials or offers.
+     */
+    private fun prices(id: Int) {
+        fun productOf(productId: String, type: String) =
+            QueryProductDetailsParams.Product.newBuilder().setProductId(productId).setProductType(type).build()
+        val subscriptions = listOf(SUBSCRIPTION_PRODUCT, FAMILY_PRODUCT, SCHOOL_PRODUCT)
+            .map { productOf(it, BillingClient.ProductType.SUBS) }
+        withBilling({ replyError(id) }) {
+            billingClient.queryProductDetailsAsync(
+                QueryProductDetailsParams.newBuilder().setProductList(subscriptions).build(),
+            ) { subsResult, subsDetails ->
+                billingClient.queryProductDetailsAsync(
+                    QueryProductDetailsParams.newBuilder()
+                        .setProductList(listOf(productOf(LIFETIME_PRODUCT, BillingClient.ProductType.INAPP)))
+                        .build(),
+                ) { oneTimeResult, oneTimeDetails ->
+                    mainHandler.post {
+                        if (!subsResult.isOk() && !oneTimeResult.isOk()) {
+                            replyError(id)
+                            return@post
+                        }
+                        val prices = JSONObject()
+                        // a base plan's price: its offer without an offer id, the last (recurring) phase
+                        subsDetails.productDetailsList.forEach { details ->
+                            details.subscriptionOfferDetails.orEmpty()
+                                .filter { it.offerId == null }
+                                .forEach { base ->
+                                    base.pricingPhases.pricingPhaseList.lastOrNull()?.formattedPrice?.let {
+                                        prices.put(base.basePlanId, it)
+                                    }
+                                }
+                        }
+                        oneTimeDetails.productDetailsList.firstOrNull()
+                            ?.oneTimePurchaseOfferDetailsList?.firstOrNull()?.formattedPrice
+                            ?.let { prices.put("lifetime", it) }
+                        reply(id, JSONObject().put("prices", prices))
+                    }
+                }
+            }
+        }
     }
 
     private fun buy(id: Int, plan: String, offer: String = "") {
