@@ -190,6 +190,8 @@
   <url><loc>https://akhibrowser.com/id/delete-account/</loc></url>
   <url><loc>https://akhibrowser.com/ms/delete-account/</loc></url>
   <url><loc>https://akhibrowser.com/ur/delete-account/</loc></url>
+  <url><loc>https://akhibrowser.com/fa/delete-account/</loc></url>
+  <url><loc>https://akhibrowser.com/ckb/delete-account/</loc></url>
   <url><loc>https://akhibrowser.com/newsletter/</loc></url>
   <url><loc>https://akhibrowser.com/nl/newsletter/</loc></url>
   <url><loc>https://akhibrowser.com/ar/newsletter/</loc></url>
@@ -200,6 +202,8 @@
   <url><loc>https://akhibrowser.com/id/newsletter/</loc></url>
   <url><loc>https://akhibrowser.com/ms/newsletter/</loc></url>
   <url><loc>https://akhibrowser.com/ur/newsletter/</loc></url>
+  <url><loc>https://akhibrowser.com/fa/newsletter/</loc></url>
+  <url><loc>https://akhibrowser.com/ckb/newsletter/</loc></url>
   <url><loc>https://akhibrowser.com/faq/</loc></url>
   <url><loc>https://akhibrowser.com/nl/faq/</loc></url>
   <url><loc>https://akhibrowser.com/ar/faq/</loc></url>
@@ -210,4 +214,6 @@
   <url><loc>https://akhibrowser.com/id/faq/</loc></url>
   <url><loc>https://akhibrowser.com/ms/faq/</loc></url>
   <url><loc>https://akhibrowser.com/ur/faq/</loc></url>
+  <url><loc>https://akhibrowser.com/fa/faq/</loc></url>
+  <url><loc>https://akhibrowser.com/ckb/faq/</loc></url>
 </urlset>
