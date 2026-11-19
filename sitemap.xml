@@ -187,6 +187,9 @@
   <url><loc>https://akhibrowser.com/fr/delete-account/</loc></url>
   <url><loc>https://akhibrowser.com/es/delete-account/</loc></url>
   <url><loc>https://akhibrowser.com/tr/delete-account/</loc></url>
+  <url><loc>https://akhibrowser.com/id/delete-account/</loc></url>
+  <url><loc>https://akhibrowser.com/ms/delete-account/</loc></url>
+  <url><loc>https://akhibrowser.com/ur/delete-account/</loc></url>
   <url><loc>https://akhibrowser.com/newsletter/</loc></url>
   <url><loc>https://akhibrowser.com/nl/newsletter/</loc></url>
   <url><loc>https://akhibrowser.com/ar/newsletter/</loc></url>
@@ -194,6 +197,9 @@
   <url><loc>https://akhibrowser.com/fr/newsletter/</loc></url>
   <url><loc>https://akhibrowser.com/es/newsletter/</loc></url>
   <url><loc>https://akhibrowser.com/tr/newsletter/</loc></url>
+  <url><loc>https://akhibrowser.com/id/newsletter/</loc></url>
+  <url><loc>https://akhibrowser.com/ms/newsletter/</loc></url>
+  <url><loc>https://akhibrowser.com/ur/newsletter/</loc></url>
   <url><loc>https://akhibrowser.com/faq/</loc></url>
   <url><loc>https://akhibrowser.com/nl/faq/</loc></url>
   <url><loc>https://akhibrowser.com/ar/faq/</loc></url>
@@ -201,4 +207,7 @@
   <url><loc>https://akhibrowser.com/fr/faq/</loc></url>
   <url><loc>https://akhibrowser.com/es/faq/</loc></url>
   <url><loc>https://akhibrowser.com/tr/faq/</loc></url>
+  <url><loc>https://akhibrowser.com/id/faq/</loc></url>
+  <url><loc>https://akhibrowser.com/ms/faq/</loc></url>
+  <url><loc>https://akhibrowser.com/ur/faq/</loc></url>
 </urlset>
