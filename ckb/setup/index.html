@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ckb" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ئامۆژگاری بۆ دایک و باوکان: کەلێنەکان دابخە | AkhiBrowser</title>
+<meta name="description" content="AkhiBrowser ئەوە دەپارێزێت کە لە AkhiBrowser دا ڕوودەدات. منداڵێک کە وێبگەڕ یان ئەپێکی تر بکاتەوە لێی تێدەپەڕێت. ئەم هەنگاوانە ئەو کەلێنانە دادەخەن، و زۆربەیان چەند خولەکێک دەخایەنن.">
+<link rel="canonical" href="https://akhibrowser.com/ckb/setup/">
+<link rel="alternate" hreflang="en" href="https://akhibrowser.com/setup/">
+<link rel="alternate" hreflang="nl" href="https://akhibrowser.com/nl/setup/">
+<link rel="alternate" hreflang="ar" href="https://akhibrowser.com/ar/setup/">
+<link rel="alternate" hreflang="de" href="https://akhibrowser.com/de/setup/">
+<link rel="alternate" hreflang="fr" href="https://akhibrowser.com/fr/setup/">
+<link rel="alternate" hreflang="es" href="https://akhibrowser.com/es/setup/">
+<link rel="alternate" hreflang="tr" href="https://akhibrowser.com/tr/setup/">
+<link rel="alternate" hreflang="id" href="https://akhibrowser.com/id/setup/">
+<link rel="alternate" hreflang="ms" href="https://akhibrowser.com/ms/setup/">
+<link rel="alternate" hreflang="ur" href="https://akhibrowser.com/ur/setup/">
+<link rel="alternate" hreflang="fa" href="https://akhibrowser.com/fa/setup/">
+<link rel="alternate" hreflang="ckb" href="https://akhibrowser.com/ckb/setup/">
+<link rel="alternate" hreflang="x-default" href="https://akhibrowser.com/setup/">
+<meta name="theme-color" content="#03282e">
+<meta property="og:title" content="ئامۆژگاری بۆ دایک و باوکان: کەلێنەکان دابخە | AkhiBrowser">
+<meta property="og:description" content="AkhiBrowser ئەوە دەپارێزێت کە لە AkhiBrowser دا ڕوودەدات. منداڵێک کە وێبگەڕ یان ئەپێکی تر بکاتەوە لێی تێدەپەڕێت. ئەم هەنگاوانە ئەو کەلێنانە دادەخەن، و زۆربەیان چەند خولەکێک دەخایەنن.">
+<meta property="og:image" content="https://akhibrowser.com/assets/og.png">
+<meta property="og:url" content="https://akhibrowser.com/ckb/setup/">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/assets/akhi.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/pages.css">
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', wait_for_update: 500});
+  try { if (localStorage.getItem('akhi-consent') === 'granted') gtag('consent', 'update', {analytics_storage: 'granted'}); } catch (e) {}
+  dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+</script>
+<script src="/assets/analytics.js" defer></script>
+</head>
+<body>
+<header>
+  <nav class="wrap" aria-label="لیستی سەرەکی">
+    <a class="brand" href="/"><img src="/assets/akhi.svg" alt="" width="32" height="32"><span><b>Akhi</b>Browser</span></a>
+    <div class="nav-end"><button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">لیست</button>
+      <div class="links" id="menu">
+        <details class="drop"><summary data-t="t1">تایبەتمەندییەکان</summary><div>
+          <a href="/#features" data-t="nv1">هەموو تایبەتمەندییەکان</a>
+          <a href="/#watch" data-t="t0">سەیرکردن</a>
+          <a href="/#accessibility" data-t="x11">دەستڕاگەیشتن</a>
+          <a href="/#roadmap" data-t="nv2">iPhone و Mac</a>
+          <a href="/ckb/setup/" data-t="nv14">ئامۆژگاری بۆ دایک و باوکان</a>
+        </div></details>
+        <details class="drop"><summary>Premium</summary><div>
+          <a href="/#premium" data-t="nv3">پلان و نرخەکان</a>
+          <a href="/#school" data-t="nv4">قوتابخانە / مزگەوت</a>
+          <a href="/#cancel" data-t="nv5">هەڵوەشاندنەوە یان بەڕێوەبردن</a>
+          <a href="/faq/" data-t="nvfaq">پرسیارە باوەکان</a>
+        </div></details>
+        <details class="drop"><summary data-t="n0">تایبەتێتی</summary><div>
+          <a href="/ckb/privacy/" data-t="nv6">وێبگەڕەکە چی دەنێرێت</a>
+          <a href="/#security" data-t="nv7">ئاسایش و نوێکردنەوەکان</a>
+          <a href="/ckb/money/" data-t="mm1">چۆن پارە پەیدا دەکەین</a>
+          <a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md" data-t="nv8">سیاسەتی تایبەتێتی</a>
+        </div></details>
+        <details class="drop"><summary data-t="nv9">هاوبەشەکان</summary><div>
+          <a href="/ckb/kit/" data-t="nv15">کیت بۆ قوتابخانە و مزگەوتەکان</a>
+          <a href="/ckb/affiliate/" data-t="nv10">بە قوتابخانە یان مزگەوتەکەت پێشنیاری بکە</a>
+          <a href="/ckb/affiliate/#vip" data-t="nv11">VIP بۆ کاریگەرەکان</a>
+          <a href="/ckb/money/#partner" data-t="mm14">ببە بە پشتگیر یان هاوبەش</a>
+        </div></details>
+        <details class="drop"><summary data-t="n1">بلۆگ</summary><div>
+          <a href="/ckb/blog/" data-t="nv12">هەموو ڕێنماییەکان</a>
+          <a href="/ckb/blog/what-is-a-halal-browser/" data-t="hb1">وێبگەڕی حەڵاڵ چییە؟</a>
+          <a href="/ckb/blog/best-halal-browsers/" data-t="hb2">باشترین وێبگەڕە حەڵاڵەکان</a>
+          <a href="/ckb/compare/browsers/" data-t="t89">بەراوردی وێبگەڕەکان</a>
+          <a href="/ckb/compare/kahf-browser/" data-t="t86">بەراورد لەگەڵ Kahf Browser</a>
+        </div></details>
+        <a class="nav-cta" href="/#download" data-t="nv13">داگرتن</a>
+      </div><!-- /links -->
+      <select class="lang" id="lang" aria-label="زمان"><option value="/setup/" lang="en">English</option><option value="/nl/setup/" lang="nl">Nederlands</option><option value="/ar/setup/" lang="ar">العربية</option><option value="/de/setup/" lang="de">Deutsch</option><option value="/fr/setup/" lang="fr">Français</option><option value="/es/setup/" lang="es">Español</option><option value="/tr/setup/" lang="tr">Türkçe</option><option value="/id/setup/" lang="id">Bahasa Indonesia</option><option value="/ms/setup/" lang="ms">Bahasa Melayu</option><option value="/ur/setup/" lang="ur">اردو</option><option value="/fa/setup/" lang="fa">فارسی</option><option value="/ckb/setup/" lang="ckb" selected>کوردی</option></select>
+    </div>
+  </nav>
+</header>
+<main class="wrap">
+<div class="home">
+
+      <h1 data-t="su1">ئامۆژگاری بۆ دایک و باوکان: کەلێنەکان دابخە</h1>
+      <p class="intro" data-t="su2">AkhiBrowser ئەوە دەپارێزێت کە لە AkhiBrowser دا ڕوودەدات. منداڵێک کە وێبگەڕ یان ئەپێکی تر بکاتەوە لێی تێدەپەڕێت. ئەم هەنگاوانە ئەو کەلێنانە دادەخەن، و زۆربەیان چەند خولەکێک دەخایەنن.</p>
+      <ul class="list">
+        <li><h3 data-t="su3">ئەکاونتی خۆی بدە بە منداڵەکەت</h3><p data-t="su4">لەسەر Windows، ئەکاونتێکی ئاسایی، نەک بەڕێوەبەر، بۆ ئەوەی منداڵەکەت نەتوانێت وێبگەڕی تر دابمەزرێنێت یان ڕێکخستنەکان بگۆڕێت. لەسەر Android، ئەکاونتێکی Google بۆ منداڵەکەت، کە بە Google Family Link بەڕێوە دەبرێت.</p></li>
+        <li><h3 data-t="su5">AkhiBrowser بکە بە وێبگەڕی بنەڕەت</h3><p data-t="su6">ئەوکات بەستەرەکانی ئەپەکانی تر لە AkhiBrowser دا دەکرێنەوە. Windows: Settings، Apps، Default apps. Android: Settings، Apps، Default apps، Browser app.</p></li>
+        <li><h3 data-t="su7">وێبگەڕەکانی تر ڕابگرە</h3><p data-t="su8">لەسەر Android، Chrome و هەر وێبگەڕێکی تر لە Family Link دا، لەژێر سنووری ئەپەکانی منداڵەکەت ڕابگرە. لەسەر Windows، ئەو وێبگەڕانەی منداڵەکەت پێویستی پێیان نییە لاببە، و ئەوانی تر لە Microsoft Family Safety دا، لەژێر ئەپ و یارییەکان ڕابگرە.</p></li>
+        <li><h3 data-t="su9">هەموو مۆبایلەکە یان تۆڕی ماڵەوە فلتەر بکە</h3><p data-t="su10">AkhiBrowser ماڵپەڕەکان لە ڕێگەی DNS ی خێزانی Cloudflare دەدۆزێتەوە. بۆ هەموو ئەپێکیش بەکاری بهێنە: لەسەر Android، Private DNS لەسەر family.cloudflare-dns.com دابنێ (Settings، Network and internet؛ ڕێگاکە لە هەر مۆبایلێکدا کەمێک جیاوازە). لەسەر ڕاوتەرەکەت، ڕاژەکارەکانی DNS لەسەر 1.1.1.3 و 1.0.0.3 دابنێ، بۆ هەموو ئامێرێکی Wi-Fi ەکەت.</p></li>
+        <li><h3 data-t="su11">PIN ی دایک و باوک دابنێ</h3><p data-t="su12">لە ڕێکخستنەکانی AkhiBrowser دا PIN ی دایک و باوک دابنێ، بۆ ئەوەی پاراستنەکان بەبێ تۆ نەکوژێنرێنەوە.</p></li>
+        <li><h3 data-t="su13">لەگەڵ منداڵەکەت قسە بکە</h3><p data-t="su14">هیچ فلتەرێک هەموو شتێک ناگرێت. بە منداڵەکەت بڵێ بۆچی ئەم یاسایانە هەن، و هەمیشە دەتوانێت بێتە لات کاتێک شتێکی هەڵە دەبینێت.</p></li>
+      </ul>
+    
+</div>
+<aside class="cta"><h2>AkhiBrowser وەربگرە</h2><p>وێبگەڕێکی تایبەت بۆ موسڵمانان، لەسەر بنەمای Firefox. لە Microsoft Store بۆ Windows و لە Google Play بۆ Android. پاراستنەکان بەخۆڕایین.</p><a class="btn" href="/#download">AkhiBrowser وەربگرە</a></aside>
+</main>
+<footer class="wrap">
+  <p>AkhiBrowser لەسەر <a href="https://www.firefox.com/">Firefox</a> دروستکراوە، و Mozilla دروستی نەکردووە و پشتگیری نەکردووە. فلتەرەکان لەوانەیە هەندێک شت لەدەست بدەن، و جێگەی چاودێری دایک و باوک ناگرنەوە. <a href="/ckb/">سەرەکی</a> · <a href="/faq/">پرسیارە باوەکان</a> · <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a></p>
+  <p>&copy; <span data-year>2026</span> AkhiBrowser</p>
+</footer>
+<script>
+document.querySelectorAll("[data-year]").forEach(n => n.textContent = new Date().getFullYear());
+document.title = document.title.replace("2026", new Date().getFullYear());
+const menu = document.getElementById("lang");
+menu.addEventListener("change", () => {
+  try { localStorage.setItem("lang", menu.selectedOptions[0].lang); } catch (err) {}
+  location.href = menu.value;
+});
+// coming back with the Back button shows this page's language again
+addEventListener("pageshow", () => { menu.value = menu.querySelector("[selected]").value; });
+</script>
+<script>
+// the menu: one group open at a time, closed by a click elsewhere, Escape or a chosen link; a button on phones
+(function () {
+  const links = document.getElementById("menu");
+  const button = document.querySelector(".menu-btn");
+  const drops = [...links.querySelectorAll(".drop")];
+  function closeAll(except) {
+    for (const drop of drops) {
+      if (drop !== except) {
+        drop.open = false;
+      }
+    }
+  }
+  function setOpen(open) {
+    links.classList.toggle("open", open);
+    button.setAttribute("aria-expanded", String(open));
+    if (!open) {
+      closeAll();
+    }
+  }
+  for (const drop of drops) {
+    drop.addEventListener("toggle", () => {
+      if (drop.open) {
+        closeAll(drop);
+      }
+    });
+  }
+  button.addEventListener("click", () => setOpen(!links.classList.contains("open")));
+  links.addEventListener("click", e => {
+    if (e.target.closest("a")) {
+      setOpen(false);
+    }
+  });
+  document.addEventListener("click", e => {
+    if (!e.target.closest("nav")) {
+      setOpen(false);
+    }
+  });
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && (links.classList.contains("open") || drops.some(drop => drop.open))) {
+      setOpen(false);
+      button.offsetParent ? button.focus() : drops[0].querySelector("summary").focus();
+    }
+  });
+})();
+</script>
+<script>
+// Cloudflare Turnstile, the check against robots on the forms: loaded once someone starts filling one in
+(function () {
+  let loaded = false;
+  function load() {
+    if (!loaded) {
+      loaded = true;
+      const script = document.createElement("script");
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+      script.async = true;
+      document.head.append(script);
+    }
+  }
+  for (const form of document.querySelectorAll("form.affiliate")) {
+    form.addEventListener("focusin", load);
+    form.addEventListener("pointerdown", load);
+  }
+})();
+</script>
+</body>
+</html>
