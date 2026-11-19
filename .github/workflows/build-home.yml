@@ -1,7 +1,7 @@
 # Keeps the home pages up to date, on every push to gh-pages and when asked (the workflow "Latest release on the
 # website" on main asks after a release, and once a day):
 #  - tools/update_release.py puts the latest GitHub release on index.html: its number, and a link to its notes;
-#  - tools/build_home.py builds the Dutch and Arabic home pages (/nl/ and /ar/) from index.html.
+#  - tools/build_home.py builds the home page in each language (/nl/, /ar/, /de/ ...) from index.html.
 # The result is committed.
 name: Build the home pages
 
@@ -32,13 +32,13 @@ jobs:
       - run: python tools/build_home.py
       - name: Commit the pages
         run: |
-          if git diff --quiet -- index.html nl/index.html ar/index.html sitemap.xml; then
+          if git diff --quiet -- index.html '*/index.html' sitemap.xml; then
             echo "Already up to date"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898699+github-actions[bot]@users.noreply.github.com"
-          git add index.html nl/index.html ar/index.html sitemap.xml
-          git commit -m "Home pages: the latest release, /nl/ and /ar/ built from index.html"
+          git add index.html nl ar de fr es tr id ms ur fa ckb sitemap.xml
+          git commit -m "Home pages: the latest release, each language built from index.html"
           git pull --rebase
           git push

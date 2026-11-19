@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
-"""Builds /nl/ and /ar/: the home page (index.html) with its Dutch and Arabic texts already in the HTML, so search
-engines find a Dutch and an Arabic home page of their own. Change index.html (its texts, const NL and const AR, and
-META), then run
+"""Builds the home page in each language (/nl/, /ar/, /de/ ...): index.html with that language's texts already in the
+HTML, so search engines find a home page of its own in each language. Dutch and Arabic are index.html's const NL and
+const AR (and its META); the other languages are in tools/i18n/home/ (see tools/langs.py). Change those, then run
 
     python tools/build_home.py
 
-It also keeps /nl/ and /ar/ in sitemap.xml. On GitHub this runs by itself when index.html changes
+It also keeps those home pages in sitemap.xml. On GitHub this runs by itself when index.html changes
 (.github/workflows/build-home.yml).
 """
 import html
 import json
 import re
 from pathlib import Path
+
+from langs import EXTRA, META, direction, home_texts, release_line
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://akhibrowser.com"
@@ -50,7 +52,7 @@ def build(source, lang, words, info):
     title, description = html.escape(info["title"]), html.escape(info["description"], quote=True)
     url = f"{SITE}/{lang}/"
     head = [
-        ('<html lang="en">', '<html lang="%s"%s data-home="%s">' % (lang, ' dir="rtl"' if lang == "ar" else "", lang)),
+        ('<html lang="en">', '<html lang="%s"%s data-home="%s">' % (lang, direction(lang), lang)),
         (re.search(r"<title>.*?</title>", page).group(0), f"<title>{title}</title>"),
         (re.search(r'<meta name="description" content="[^"]*">', page).group(0), f'<meta name="description" content="{description}">'),
         ('<link rel="canonical" href="https://akhibrowser.com/">', f'<link rel="canonical" href="{url}">'),
@@ -63,25 +65,39 @@ def build(source, lang, words, info):
         page = page.replace(old, new, 1)
     # the page lives one folder down: pictures and videos from /assets/, links to the pages in this language
     page = re.sub(r'(\b(?:src|href|poster|srcset)="|, )assets/', r"\1/assets/", page)
-    page = re.sub(r'href="/(%s[^"]*)"' % PAGES, rf'href="/{lang}/\1"', page)
+    # only to the pages that exist in this language yet; the others stay English
+    def local(m):
+        path = m.group(1).split("#")[0].split("?")[0]
+        return f'href="/{lang}/{m.group(1)}"' if (ROOT / lang / path / "index.html").exists() else m.group(0)
+
+    page = re.sub(r'href="/(%s[^"]*)"' % PAGES, local, page)
     page = page.replace('href="/#', f'href="/{lang}/#')
     return page
 
 
 def main():
     source = (ROOT / "index.html").read_text(encoding="utf-8")
-    for lang, name in (("nl", "NL"), ("ar", "AR")):
+    english_release = re.search(r'<p class="note" data-t="f9">(.*?)</p>', source, re.S)
+    builds = [(lang, texts(source, lang.upper()), meta(source, lang)) for lang in ("nl", "ar")]
+    for lang in EXTRA:
+        words = home_texts(lang)
+        line = release_line(english_release and english_release.group(1), lang)
+        if line:
+            words["f9"] = line
+        builds.append((lang, words, META[lang]))
+    for lang, words, info in builds:
         target = ROOT / lang / "index.html"
-        target.write_text(build(source, lang, texts(source, name), meta(source, lang)), encoding="utf-8", newline="\n")
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(build(source, lang, words, info), encoding="utf-8", newline="\n")
     sitemap = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
-    for lang in ("ar", "nl"):
+    # in order after /: the languages as in the menu
+    anchor = f"  <url><loc>{SITE}/</loc></url>\n"
+    for lang, _, _ in reversed(builds):
         line = f"  <url><loc>{SITE}/{lang}/</loc></url>"
         if line not in sitemap:
-            sitemap = sitemap.replace(f"  <url><loc>{SITE}/</loc></url>\n", f"  <url><loc>{SITE}/</loc></url>\n{line}\n", 1)
-    # in order: /, /nl/, /ar/
+            sitemap = sitemap.replace(anchor, anchor + line + "\n", 1)
     (ROOT / "sitemap.xml").write_text(sitemap, encoding="utf-8", newline="\n")
-    print("built /nl/ and /ar/")
-
+    print("built " + " ".join(f"/{lang}/" for lang, _, _ in builds))
 
 if __name__ == "__main__":
     main()

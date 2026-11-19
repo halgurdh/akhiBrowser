@@ -1,0 +1,299 @@
+h0	AkhiBrowser presenta
+nv0	Menú
+t1	Funciones
+nv1	Todas las funciones
+t0	Ver
+x11	Accesibilidad
+nv2	iPhone y Mac
+nv14	Consejos para padres
+nv3	Planes y precios
+nv4	Escuela / Mezquita
+nv5	Cancelar o gestionar
+nvfaq	Preguntas frecuentes
+n0	Privacidad
+nv6	Qué envía el navegador
+nv7	Seguridad y actualizaciones
+mm1	Cómo ganamos dinero
+nv8	Política de privacidad
+nv9	Socios
+nv15	Kit para escuelas y mezquitas
+nv10	Recomiéndalo a tu escuela o mezquita
+nv11	VIP para influencers
+mm14	Hazte patrocinador o socio
+n1	Blog
+nv12	Todas las guías
+hb1	¿Qué es un navegador halal?
+hb2	Los mejores navegadores halal
+t89	Comparar navegadores
+t86	Comparar con Kahf Browser
+nv13	Descargar
+t2	<span>El navegador halal</span> que filtra la web en tu dispositivo.
+t3	Un navegador halal y privado para musulmanes, basado en Firefox. Un solo navegador lo hace todo, en tu dispositivo: bloquea anuncios y sitios haram, difumina las imágenes hasta comprobarlas y quita la música de los vídeos, sin rastrear lo que navegas.
+rv1	¿Usas AkhiBrowser? Deja una reseña: ayuda a otras familias a encontrarlo.
+t4w	Instalador para Windows (.exe)<small>Windows 10 u 11, 64 bits</small>
+t7	Consigue la extensión de Chrome<small>Gratis, ya disponible</small>
+t7f	Consigue el complemento de Firefox<small>Gratis, ya disponible</small>
+t4a	¿En un ordenador? Abre allí akhibrowser.com para Windows, Chrome y Firefox.
+t4b	iOS y macOS: próximamente<small>Ver la hoja de ruta</small>
+t7b	Las extensiones de Chrome y Firefox son una versión más ligera y gratuita: bloquean sitios para adultos y haram, difuminan imágenes y quitan la música de fondo, pero no tienen Premium, ni control parental, ni bloqueador de anuncios propio, y se pueden quitar. El árabe llegará pronto a las extensiones.
+t11	Protecciones gratuitas.
+k1	protecciones gratuitas, activas desde la primera página
+k2	idiomas
+k3	páginas, imágenes o historial enviados a nosotros
+k4	dispositivos con una clave Family
+h1	En un mundo lleno de ruido,
+h2	un navegador lo mantiene limpio.
+h3	Sitios haram, bloqueados.
+h4	Música, eliminada.
+h5	Tu historial se queda en tu dispositivo.
+t12	Míralo en acción
+cta	Descargar gratis
+t13	Activo desde la primera página
+t14	Estas protecciones son gratuitas y vienen integradas. Cada una se puede desactivar en el escudo de AkhiBrowser. Las funciones Premium son opcionales y están desactivadas hasta que las actives.
+t15	Anuncios y rastreadores bloqueados
+t16	uBlock Origin se instala por ti y se mantiene activo, con un bloqueador integrado de dominios de anuncios, rastreadores y malware debajo.
+t17	Sitios para adultos y haram bloqueados
+t18	Sitios para adultos, de alcohol, drogas, vapeo y apuestas. SafeSearch está forzado en Google, Bing, DuckDuckGo y Yahoo, igual que el Modo restringido de YouTube.
+t19	Búsquedas filtradas
+t20	Las búsquedas de contenido para adultos o haram se bloquean en 11 idiomas. Las preguntas sobre ellos siguen permitidas, como «por qué el alcohol es haram».
+t21	No music
+t22	Quita la música de fondo de los vídeos y conserva las voces, con un modelo de voz que funciona en tu dispositivo.
+t68	Sitios de phishing y estafas bloqueados
+t69	Los sitios de phishing y estafas conocidos se detienen antes de cargar, con un botón para continuar si un sitio se incluyó por error.
+t70	Horarios de oración y un versículo al día
+t71	Horarios de oración para la ciudad que elijas, calculados en tu dispositivo sin tu ubicación, y un versículo del Corán cada día.
+t72	Tus ajustes en la página de inicio
+t73	En ordenadores, las pestañas nuevas abren la página de AkhiBrowser con un buscador, tus sitios más visitados, el versículo del día y todos los ajustes. Puedes desactivarla.
+t56	Imágenes comprobadas en tu dispositivo
+t57	Las imágenes siguen difuminadas hasta comprobarlas. Las imágenes inseguras siguen difuminadas; una imagen que no se puede comprobar se muestra.
+t23	12 idiomas
+t24	Inglés, árabe, persa, kurdo (sorani), urdu, turco, francés, alemán, neerlandés, español, indonesio y malayo, de derecha a izquierda cuando hace falta.
+t25	Ligero en dispositivos antiguos
+t26	Solo se comprueba lo que está en pantalla, y las imágenes ya vistas se responden desde una caché. La carga de páginas nunca espera al modelo.
+t58	Corrección del daltonismo
+t59	Un ajuste opcional en el dispositivo hace que el rojo y el verde se distingan mejor en los dos tipos de daltonismo rojo-verde.
+t31	Imágenes de demostración
+t27	Las imágenes siguen difuminadas hasta comprobarlas
+t28	Un modelo en el dispositivo comprueba imágenes, fondos, vídeos y lienzos antes de que aparezcan, para que nada se vea de golpe. Las imágenes inseguras siguen difuminadas.
+t29	Premium añade la opción de difuminar a mujeres, hombres o ambos, y puede reconocer el hiyab para que una mujer cubierta siga visible. Estos ajustes de imagen opcionales usan modelos en el dispositivo.
+t30	Los filtros pueden dejar pasar cosas, y una imagen que no se puede comprobar se muestra. No sustituyen el cuidado de los padres.
+t32	Qué muestra un sitio bloqueado
+t33	Bloqueado antes de cargar
+t34	Los sitios para adultos, de alcohol, drogas, vapeo y apuestas se detienen aquí, igual que las páginas que se marcan a sí mismas como para adultos.
+t37	Ilustración
+t35	Las voces se quedan, la música se va
+t36	No music limpia el audio de un vídeo mientras lo ves, en tu dispositivo. Los teléfonos y ordenadores lentos usan un modelo Lite, para que los dispositivos antiguos puedan seguir el ritmo.
+t38	También en tu teléfono
+t39	Las mismas protecciones en Android, sin las historias de Mozilla ni los accesos patrocinados en la página de inicio. Para cambiarlas, abre el menú, luego Extensiones y luego AkhiBrowser. Los usuarios gratuitos ven ahí hasta dos accesos directos de nuestros propios patrocinadores, que puedes desactivar en los ajustes; Premium no tiene ninguno.
+x0	Accesibilidad
+x1	Para personas daltónicas o con problemas de audición, y para cualquiera que necesite un poco más de ayuda en la web.
+x2	Daltonismo
+x3	Activa la corrección del daltonismo en el escudo de AkhiBrowser. Ajusta los colores de las páginas web para que el rojo y el verde se distingan mejor, en los dos tipos de daltonismo rojo-verde. Está desactivada por defecto y no ayuda con el daltonismo azul-amarillo.
+x4	Problemas de audición
+x5	No music quita la música de fondo de los vídeos y conserva las voces, lo que puede hacer que el habla sea más fácil de seguir. No crea subtítulos por sí mismo, y los subtítulos que ofrece un sitio funcionan como siempre.
+x6	De Firefox
+x7	Las herramientas propias de Firefox siguen en el navegador, como el soporte para lectores de pantalla, el zoom de página y la Vista de lectura. No las hemos probado por separado en AkhiBrowser.
+x8	Esta página
+x9	Funciona con el teclado, sus imágenes tienen descripciones de texto, y la imagen en movimiento se queda quieta si has pedido a tu dispositivo que reduzca el movimiento. Los vídeos aún no tienen subtítulos, pero muestran su mensaje como texto en pantalla, y esta página dice lo mismo.
+x10	¿Algo no te funciona? Dínoslo en <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a>.
+s0	¿Es seguro?
+s1	AkhiBrowser es Firefox con filtros añadidos. Las partes que te protegen en internet vienen de Firefox.
+s2	Firefox por debajo
+s3	El mismo motor y entorno aislado que Firefox, que separan cada sitio web de tus archivos y de otros sitios. Los dominios de malware conocidos también se bloquean.
+s4	Actualizaciones firmadas
+s5	Una vez al día el navegador busca una nueva versión. En Windows instala la actualización después de comprobar su firma. En Android te pide que la instales, y antes comprueba la suma de verificación del archivo. Las correcciones de seguridad de Firefox te llegan con estas actualizaciones, así que instálalas cuando lleguen.
+s8	Qué es de código abierto
+s9	AkhiBrowser está basado en Firefox. Nuestros cambios en Firefox, y cada archivo bajo la licencia de Firefox (MPL), son públicos en <a href="https://github.com/halgurdh/akhiBrowser">GitHub</a>. Las protecciones en sí, la extensión AkhiBrowser, Premium y su servicio de licencias son nuestro propio código y no son públicos, como en la mayoría de las apps de pago. Qué envía el navegador, y a quién, se detalla en <a href="/privacy/">Privacidad</a>.
+s10	¿Has encontrado un problema de seguridad? Dínoslo en <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a>.
+t47	Premium, si lo quieres
+t48	Todas las protecciones de arriba siguen siendo gratuitas. Premium es para ti: más control sobre las imágenes y una web más tranquila. Family Premium es para padres: todo lo de Premium, más el control parental, en hasta diez dispositivos. Cada función está desactivada hasta que la activas, y sus datos se quedan en el dispositivo.
+t48b	Premium solo está en el navegador AkhiBrowser, con una clave de licencia. La extensión gratuita de AkhiBrowser para Chrome y Firefox tiene las protecciones gratuitas de arriba, sin Premium. El navegador también aporta lo que una extensión no puede: sin telemetría, estudios ni informes de fallos para Mozilla, uBlock Origin integrado y protección estricta contra el rastreo.
+t82	Premium, para ti
+t60	Elige a quién difuminar
+t61	Difumina a mujeres, hombres o ambos. Reconocer el hiyab puede dejar visibles a las mujeres cubiertas.
+t74	Modo estricto
+t75	Cada imagen y vídeo sigue difuminado hasta que lo tocas, en todos los sitios o en los que elijas.
+t78	Una web más tranquila
+t79	YouTube sin recomendaciones, Shorts ni reproducción automática, comentarios ocultos y palabrotas tapadas en el texto de las páginas.
+t83	Family Premium, para padres
+t62	Control parental
+t63	Pon un PIN, bloquea sitios elegidos, permite solo sitios aprobados, programa la hora de dormir y el horario escolar, o fija un límite diario de navegación.
+t64	Resumen de actividad
+t65	Consulta las páginas bloqueadas de los últimos siete días por motivo, sin direcciones de páginas. El resumen se queda en tu dispositivo.
+t66	Limitar las redes sociales
+t67	Oculta los feeds de vídeos cortos y fija un límite diario en las webs de redes sociales dentro de AkhiBrowser, no en las apps de redes sociales.
+t80	Pausar internet, guardar los ajustes
+t81	Pausa la navegación al instante con el PIN, y pasa el control parental a otro dispositivo en un archivo bloqueado con el PIN.
+t76	Pausa de oración
+t77	Los sitios de redes sociales, vídeos y juegos, o todos los sitios, se pausan unos minutos después de cada hora de oración.
+f1	Comprobación halal y lugares halal
+f2	Un aviso en páginas de productos con cerdo, alcohol, gelatina o números E dudosos, y los lugares marcados como halal en Google Maps y webs de reparto.
+f3	Aviso de riba, cajas de botín bloqueadas
+f4	Un aviso en páginas de préstamos con interés, tarjetas de crédito y «compra ahora, paga después», y bloqueo de sitios de apertura de cajas y apuestas de skins.
+f5	Recitación del Corán, fuentes fiables
+f6	Sigue una recitación en YouTube versículo a versículo con su significado, y ve primero fuentes académicas cuando busques sobre el islam.
+f7	Deen Time
+f8	YouTube solo con los canales que elegiste, para tus hijos.
+bg0	¿Qué plan me conviene?
+bg1	<strong>¿Tienes un teléfono o tableta Android?</strong> Consigue AkhiBrowser en Google Play Store y activa Premium en AkhiBrowser. Ve a: Menú, Extensiones, AkhiBrowser.
+bg2	<strong>¿Compras en esta web?</strong> Usa los botones de abajo. Recibes una clave de licencia por correo, para hasta 3 dispositivos, o 10 con Family. AkhiBrowser es para Windows y Android; no hay (todavía) versión para iPhone ni Mac.
+bg3	<strong>¿Una escuela o mezquita?</strong> Elige Escuela / Mezquita abajo.
+bg4	<strong>¿Un regalo?</strong> Regala Family Premium con los botones de abajo, o en AkhiBrowser. La clave que regalas funciona en Windows y en Android.
+andb	En tu teléfono, compra Premium en AkhiBrowser de Google Play: menú, Extensiones, AkhiBrowser, Premium. Google Play se encarga del pago.
+andall	¿Compras para un ordenador? Ver todas las formas de pago
+t49	Premium mensual<small>3,99 € al mes</small>
+t50	Premium anual<small>39,00 € al año</small>
+t51	Premium de por vida<small>119 € una vez</small>
+t85	Family Premium<small>59,99 € al año, 3 días gratis</small>
+gift1	Regalar Family Premium<small>59,99 € una vez: un año para otra familia</small>
+vip1	Tu enlace VIP te da un 10 % de descuento en Family Premium: 53,99 € al año en lugar de 59,99 €, cada año que sigas. Stripe muestra el precio antes de pagar.
+sm1	Escuela / Mezquita<small>30 € al mes</small>
+sm2	Family Premium para todos los niños de tu escuela o mezquita: una clave para hasta 500 dispositivos.
+t52	En AkhiBrowser de Google Play, compra Premium a través de Google Play o pega una clave de esta web. En otras versiones, Stripe muestra el precio antes de pagar; recibes una clave de licencia sin crear una cuenta. Una clave Premium funciona en hasta tres dispositivos a la vez, una clave Family en hasta diez, una clave Escuela / Mezquita en hasta 500. ¿Compraste Premium o de por vida antes de la versión 1.2.1? Conservas el control parental que tenías. Mensual, anual y Family: paga con tarjeta como suscripción, o una vez con iDEAL o PayPal por un mes o un año al mismo precio, sin renovación. Una suscripción Family con tarjeta empieza con 3 días gratis. Un Family Premium regalado se envía por correo a la persona a quien se lo regalas.
+lp1	En Android, Google Play muestra el precio en tu propia moneda. En muchos países es más bajo que los precios de arriba.
+c0	Cómo cancelar una suscripción
+c1	Abre el escudo de AkhiBrowser en la barra de herramientas. En Android: menú, luego Extensiones y luego AkhiBrowser.
+c2	En Premium, pulsa Gestionar suscripción. Se abre tu suscripción en Stripe.
+c3	Elige cancelar y confirma.
+c4	Premium termina entonces, y todas las protecciones gratuitas siguen funcionando. Una compra de por vida no es una suscripción, así que no hay nada que cancelar.
+c5	¿No puedes acceder al navegador? Escribe a <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a> con el correo con el que pagaste.
+gp0	Comprado en Google Play
+gp1	Cámbialo o cancélalo en Google Play: en Play Store, toca tu foto de perfil, luego Pagos y suscripciones, Suscripciones, AkhiBrowser. Premium sigue funcionando hasta el final del periodo pagado.
+gp2	Premium también en tu ordenador
+gp3	En AkhiBrowser en tu teléfono: menú, luego Extensiones y luego AkhiBrowser. En Premium, pulsa Obtener una clave de licencia.
+gp4	Copia la clave, o pulsa Enviarme la clave por correo y abre el correo en tu ordenador.
+gp5	En AkhiBrowser en Windows, abre el escudo de AkhiBrowser en la barra de herramientas y pega la clave en Premium.
+gp6	La clave funciona en hasta 3 dispositivos, o 10 con Family. Si cancelas en Google Play, también termina en tu ordenador.
+gp7	¿Comprado en esta web, recibido como regalo o una clave Escuela / Mezquita?
+gp8	Tu clave funciona en AkhiBrowser en Windows y en Android: menú, Extensiones, AkhiBrowser, Premium, pega la clave. Una clave Escuela / Mezquita funciona igual, en hasta 500 dispositivos.
+t87	Hoja de ruta: iPhone y Mac
+t88	AkhiBrowser es hoy para Windows y Android. Las versiones para iOS y macOS se anunciarán, aún sin fecha. Nuestro objetivo es empezar con ellas cuando 100 familias usen Family Premium.
+t53	AkhiBrowser está basado en <a href="https://www.firefox.com/">Firefox</a>, y no está hecho ni respaldado por Mozilla. La eliminación de la música de fondo se basa en <a href="https://github.com/mohamedsadiqaguenaou/NoMusic">NoMusic</a> de Mohamed Sadiq.
+faqf	Preguntas frecuentes
+nlb	Boletín: un versículo cada semana
+t54	Código fuente en GitHub
+rv0	¿Contento con AkhiBrowser? Una reseña ayuda a otras familias a encontrarlo:
+loc	Almere, Países Bajos
+p0	Con la tecnología de
+kt1	Kit para escuelas y mezquitas
+kt2	Con el plan Escuela / Mezquita, todos los niños de tu escuela o mezquita reciben Family Premium gratis: una clave para hasta 500 dispositivos. Esta página redacta el mensaje y el cartel por ti.
+kt3	1. Consigue la clave
+kt4	Contrata el <a href="/#school">plan Escuela / Mezquita</a>, 30 € al mes, que puedes cancelar en cualquier momento. Recibes la clave en pantalla y por correo.
+kt5	2. Compártela con tus familias
+kt6	Pega la clave abajo para tener un mensaje listo para tu grupo de WhatsApp o boletín, y un cartel para imprimir. La clave se queda en esta página: no se nos envía nada.
+kt7	3. Las familias instalan AkhiBrowser
+kt8	Descargan AkhiBrowser, pegan la clave en Premium y lo configuran con los <a href="/setup/">consejos para padres</a>.
+kt8p	4. Familias con AkhiBrowser de Google Play
+kt8q	AkhiBrowser de Google Play también funciona con tu clave: las familias pegan la misma clave, en hasta 500 dispositivos en total.
+kt9	Tu clave Escuela / Mezquita
+kt10	Nombre de tu escuela o mezquita
+kt11	Mensaje para tus familias
+kt12	Copiar mensaje
+kt13	Compartir en WhatsApp
+kt14	Imprimir el cartel
+kt15	Comparte la clave solo dentro de tu comunidad, no en redes sociales públicas: funciona en hasta 500 dispositivos, y cualquiera que la tenga puede usar uno. Cuando los 500 estén en uso, el dispositivo usado hace más tiempo deja sitio, y te enviamos un correo.
+kt16	¡Assalamu alaikum! {NAME} regala a cada familia AkhiBrowser Family Premium: un navegador halal que bloquea sitios haram y anuncios, difumina imágenes y quita la música de los vídeos. 1. Descarga AkhiBrowser: https://akhibrowser.com/#download 2. Abre el escudo de AkhiBrowser, pega esta clave en Premium y pulsa Activar: {KEY} 3. ¿Lo configuras para tus hijos? Consejos: https://akhibrowser.com/setup/ Por favor, guarda la clave dentro de nuestra comunidad.
+kt20	nuestra escuela o mezquita
+kt17	Gratis para tu familia, de parte de {NAME}
+kt18	AkhiBrowser Family Premium: el navegador halal que bloquea sitios haram y anuncios, difumina imágenes y quita la música de los vídeos.
+kt19	Escanea para descargar, y luego pídenos la clave.
+su1	Consejos para padres: cierra los huecos
+su2	AkhiBrowser protege lo que pasa en AkhiBrowser. Un niño que abre otro navegador o app lo esquiva. Estos pasos cierran esos huecos, y la mayoría llevan unos minutos.
+su3	Dale a tu hijo su propia cuenta
+su4	En Windows, una cuenta estándar, no de administrador, para que tu hijo no pueda instalar otros navegadores ni cambiar ajustes. En Android, una cuenta de Google para tu hijo, gestionada con Google Family Link.
+su5	Haz de AkhiBrowser el navegador predeterminado
+su6	Así los enlaces de otras apps se abren en AkhiBrowser. Windows: Configuración, Aplicaciones, Aplicaciones predeterminadas. Android: Ajustes, Aplicaciones, Aplicaciones predeterminadas, Navegador.
+su7	Bloquea los otros navegadores
+su8	En Android, bloquea Chrome y cualquier otro navegador en Family Link, en los límites de apps de tu hijo. En Windows, desinstala los navegadores que tu hijo no necesita y bloquea el resto en Microsoft Family Safety, en aplicaciones y juegos.
+su9	Filtra todo el teléfono o la red de casa
+su10	AkhiBrowser busca los sitios a través del DNS familiar de Cloudflare. Úsalo también para cada app: en Android, pon el DNS privado en family.cloudflare-dns.com (Ajustes, Red e internet; la ruta cambia un poco según el teléfono). En tu router, pon los servidores DNS en 1.1.1.3 y 1.0.0.3, para todos los dispositivos de tu Wi-Fi.
+su11	Pon el PIN parental
+su12	En los ajustes de AkhiBrowser, pon un PIN parental, para que las protecciones no se puedan desactivar sin ti.
+su13	Habla con tu hijo
+su14	Ningún filtro lo atrapa todo. Explica a tu hijo por qué existen estas reglas, y que siempre puede acudir a ti cuando vea algo malo.
+t40	Qué sale de tu dispositivo
+t41	Tu historial, páginas e imágenes se quedan en tu dispositivo. Nada de lo que haces nos llega, y no se envía telemetría, estudios ni informes de fallos a Mozilla. Aun así, un navegador tiene que hablar con algunos servicios, así que aquí están todos.
+t42	<strong>Nombres de sitios, a Cloudflare.</strong> Para bloquear sitios para adultos a nivel de red, el navegador busca los nombres a través del DNS familiar de Cloudflare, así que Cloudflare ve los nombres de los sitios que visitas.
+t43	<strong>Descargas.</strong> uBlock Origin desde addons.mozilla.org, listas de bloqueo de anuncios y códecs de vídeo de Mozilla, Cisco y Google.
+t44	<strong>Novedades.</strong> Tras una actualización, la página de inicio pide una vez a GitHub las notas de esa versión. No se envía nada sobre ti.
+t90	<strong>Un recuento anónimo, a nosotros.</strong> Una vez al día el navegador se cuenta a sí mismo: su versión, su sistema, si Premium está activo y el país desde el que llega la petición (no tu dirección), sin identificador y sin nada de lo que visitas. Desactívalo en los ajustes, en Contarme de forma anónima.
+t45	<strong>Una clave Premium, si introduces una.</strong> Se comprueba con nuestro servidor de licencias, con un identificador de instalación aleatorio, para que una clave funcione en 3 dispositivos a la vez. El servidor solo guarda hashes de la clave y del identificador de instalación, nunca tus datos de navegación. Si das un correo (para recibir tu clave, para un regalo o para el informe parental de Family), se usa para eso; la <a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md">política de privacidad</a> dice qué se guarda.
+nws1	<strong>Boletín.</strong> Solo si te suscribes en <a href="/newsletter/">akhibrowser.com/es/newsletter</a> (o marcas la casilla al pagar) y confirmas por correo: el servidor de licencias guarda tu dirección, su idioma y las fechas, para enviarte un versículo del Corán y las novedades una vez por semana, y una vez un 10 % de descuento en Family Premium. Cada correo tiene un enlace para darte de baja; la dirección nunca se comparte.
+t55	<strong>Analítica del sitio.</strong> Nada de Google se carga hasta que pulsas Permitir en el aviso; después, el sitio carga Google Tag Manager, así que Google recibe la dirección IP de la conexión e información técnica de la petición. Google Analytics solo cuenta visitas y clics (en un botón de descarga o un plan) después de que pulses Permitir en el aviso; hasta entonces no se pone ninguna cookie de analítica. Cuando compras un plan después de permitirlo, tu identificador anónimo de Google Analytics va con el pago, para que la compra (plan e importe, nunca tu correo ni tu clave) se cuente para la visita. Después de permitirlo, también se carga el píxel de Reddit, para que Reddit pueda ver que una visita, un clic en un botón de descarga, una suscripción confirmada al boletín o una solicitud de afiliado o socio vino de uno de sus anuncios (Reddit pone su propia cookie para esto). Si vienes de un anuncio en Reddit y, después de permitirlo, pulsas un botón de descarga o compras un plan, el servidor de licencias le dice a Reddit que el anuncio llevó a una descarga (el identificador de clic de Reddit y la tienda, más tu dirección IP y el agente de usuario de tu navegador) o a una compra (el identificador de clic de Reddit, el importe y la moneda del plan). Lo mismo vale para suscribirte al boletín (cuando lo confirmes) o solicitar ser afiliado o socio: el identificador de clic de Reddit, un identificador de evento, tu dirección IP y tu agente de usuario, nunca tu nombre ni tu correo. Si instalas la app de Android desde Google Play tras un clic así, el enlace de Play lleva el identificador de clic de Reddit, y la app lo envía una vez al servidor de licencias con un identificador aleatorio para esa instalación, para que Reddit pueda contar las instalaciones que vienen de sus anuncios (el identificador de clic de Reddit, ese identificador, tu dirección IP y tu agente de usuario). Desactivar «Contarme de forma anónima» en la app también detiene esto. <a href="#cookies">Cambiar tu elección</a>. Consulta la <a href="https://policies.google.com/privacy">política de privacidad de Google</a>.
+t46	<a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md">Política de privacidad</a>
+af1	Recomienda AkhiBrowser a tu escuela o mezquita
+af2	¿Conoces una escuela, mezquita o centro islámico al que le vendría bien AkhiBrowser? Hazte afiliado: recibes el 20 % de cada uno de sus pagos de Escuela / Mezquita, cada mes, mientras sigan suscritos. Un pago cuenta cuando tiene 30 días, y pagamos cada mes.
+afn	Dos programas, cada uno con su propio formulario: <a href="#schools">para escuelas y mezquitas</a> y <a href="#vip">para influencers (VIP)</a>.
+afh1	Para escuelas y mezquitas
+sc1	La escuela o mezquita paga
+sc2	30 €<small>al mes</small>
+sc3	Plan Escuela / Mezquita: todo lo de Family Premium, una clave para hasta 500 dispositivos, para regalar a sus familias.
+sc4	Tú recibes
+sc5	6 €<small>al mes, por cada escuela</small>
+sc6	El 20 % de cada pago, mientras sigan suscritos.
+af3	Tu nombre
+af4	Correo electrónico
+af5	Escuela, mezquita u organización
+af7	Solicitar para escuelas y mezquitas
+af8	Te enviamos tu propio enlace por correo en unos días. Tus datos solo se usan para esto. Para mantener fuera a los robots, el formulario carga Cloudflare Turnstile cuando empiezas a rellenarlo.
+afh2	Para influencers: el programa VIP
+vip2	¿Eres influencer? Nuestro programa de afiliados VIP para Family Premium: tus seguidores tienen un 10 % de descuento, y tú recibes el 10 % de cada pago que hagan, cada año que sigan. 200 familias te aportan unos 900 € al año, año tras año.
+vipf2	Tu nombre
+vipf3	Correo electrónico
+vipf4	Nombre de tu canal o marca
+vipf5	¿Dónde publicas y cuántos seguidores tienes?
+vipf6	Solicitar como VIP
+vipf7	Respondemos en unos días. Cuando te invitemos, recibirás tu código y tus enlaces por correo.
+mm2	AkhiBrowser es gratis y nunca vende ni comparte lo que haces. Los usuarios gratuitos ven algunos accesos directos de nuestros patrocinadores en la pestaña nueva, que pueden desactivar; Premium no tiene ninguno. Así se financia, de todas las formas:
+mm3	Premium
+mm4	Funciones de pago opcionales para ti, para familias y para escuelas y mezquitas. La mayor parte del dinero viene de aquí.
+mm5	Socios de búsqueda
+mm6	Cuando un buscador tiene un contrato de socio con nosotros, una búsqueda que empiezas en AkhiBrowser lleva nuestro código de socio, y el buscador nos da una pequeña parte de lo que gana. Solo se añade el código: nada sobre ti ni tu búsqueda nos llega.
+mm7	Tiendas asociadas, solo si tú quieres
+mm8	Desactivado a menos que lo actives: cuando vas tú mismo a una tienda asociada, añadimos nuestro código y la tienda nos da una pequeña parte. Pagas lo mismo, y un enlace de otro sitio conserva su propio código.
+mm9	Consejos en nuestra página de inicio
+mm10	De vez en cuando, un consejo con un enlace de afiliado, siempre marcado como tal. Nunca cambiamos los enlaces de otras webs.
+mm11	Afiliados, patrocinadores y socios
+mm12	Quienes traen escuelas y mezquitas reciben el 20 % de sus pagos. Los patrocinadores y las organizaciones pueden apoyar AkhiBrowser, pero nunca obtienen tus datos ni voz sobre lo que se bloquea.
+mm13	Lo que nunca hacemos: vender o compartir tu navegación, rastrearte entre sitios o para anuncios, ni dejar que el dinero cambie lo que se bloquea. El acceso directo de un patrocinador solo cuenta sus clics, sin nada sobre quién hizo clic.
+mm28	Nuestros patrocinadores y socios
+mm15	Tu nombre
+mm16	Correo electrónico
+mm17	Organización
+mm26	Tu sitio web
+mm18	¿Qué tipo de socio?
+mm19	Patrocinador
+mm20	Socio del ecosistema: una app islámica, una plataforma escolar o una organización
+mm21	Buscador
+mm22	Tienda
+mm23	¿Qué propones?
+mm27	Mostrar nuestra organización, con un enlace a nuestra web, en la página de patrocinadores y como acceso directo en la pestaña nueva de AkhiBrowser para usuarios gratuitos
+mm24	Enviar
+mm25	Respondemos en unos días. Una colaboración tiene que mantener AkhiBrowser privado: ningún dato de nuestros usuarios forma parte de ella.
+aStore	Descargar en Microsoft Store
+aPlay	Disponible en Google Play
+a0	Los ajustes de AkhiBrowser: el versículo del día, los horarios de oración y las cinco protecciones, todas activas: anuncios y rastreadores bloqueados, música de fondo eliminada, contenido para adultos bloqueado, sitios haram bloqueados e imágenes de desnudos difuminadas.
+a1	Tráiler de AkhiBrowser: NoMusic quita la música de fondo y conserva la voz, el filtro haram bloquea desnudos y contenido para adultos en tu dispositivo, y uBlock Origin viene integrado, 25 segundos
+a9	Vídeo de AkhiBrowser: solo quieres ver una charla en internet, NoMusic quita la música de fondo y conserva la voz, 21 segundos
+a2	Vídeo de AkhiBrowser: ellos pusieron música, así que nosotros la quitamos, 19 segundos
+car0	Funciones de AkhiBrowser
+car1	Gratis: Baja la mirada. Automáticamente. Cada imagen y vídeo sigue difuminado hasta que la IA del dispositivo lo comprueba, para que nada aparezca de golpe. Una página de noticias en AkhiBrowser con las imágenes difuminadas.
+car2	Gratis: Conserva la voz. Pierde la música. AkhiBrowser quita la música de fondo de los vídeos mientras se reproducen. Un vídeo de una charla con la voz y sin la música.
+car3	Gratis: Busca «cerveza». Recibe la verdad. Las búsquedas haram se bloquean o se convierten en preguntas, en 11 idiomas, y SafeSearch siempre está activo.
+car4	Premium: Lo bastante listo para ver el hiyab. Las mujeres cubiertas se muestran y las demás se difuminan. Tú eliges a quién difuminar: mujeres, hombres o ambos.
+car5	Premium: YouTube, sin la madriguera. Sin recomendaciones, pantallas finales, reproducción automática ni Shorts, y con los comentarios ocultos.
+car6	Family Premium: Tú pones las reglas. Un PIN las protege. Un PIN parental, un límite diario, la hora de dormir y el horario escolar.
+car7	Family Premium: ¿Llama el adhan? El feed se detiene. Los sitios de redes sociales, vídeos y juegos se pausan unos minutos después de cada hora de oración.
+car8	Family Premium: ¿Halal o no? Sábelo antes. Una tienda avisa sobre la gelatina y un número E, y una oferta de pago aplazado recibe un aviso de riba.
+carPrev	Imagen anterior
+carPause	Pausa
+carNext	Imagen siguiente
+a3	Un paisaje difuminado con la etiqueta: Comprobando en tu dispositivo.
+a4	El mismo paisaje, nítido, con la etiqueta: Comprobado: se muestra.
+a10	Una foto de una persona que sigue difuminada, con la etiqueta: Comprobado: oculto.
+a5	Una página que dice: Esta página está bloqueada. AkhiBrowser bloquea sitios de alcohol, drogas y apuestas. Debajo, un versículo del Corán, 2:219, en árabe e inglés, con un enlace a quran.com.
+a6	Una onda sonora de voces, con la etiqueta: Música de fondo: eliminada.
+a7	La página de inicio de AkhiBrowser en Android: una barra de búsqueda, el logo de AkhiBrowser y la etiqueta: Estás protegido.
+aPlans	Los planes de AkhiBrowser comparados. Gratis: anuncios y rastreadores bloqueados, sitios haram bloqueados, sin música en los vídeos, horarios de oración y versículo, 0 €. Premium: todo lo de Gratis, elegir a quién difuminar, modo estricto, una web más tranquila; 3,99 € al mes, 39 € al año o 119 € de por vida. Family Premium: todo lo de Premium, control parental y PIN, resumen de actividad, pausa de oración, comprobación halal y de riba; 59,99 € al año, 3 días gratis, 10 dispositivos. Escuela / Mezquita: todo lo de Family, una clave de licencia, hasta 500 dispositivos, 30 € al mes.
+mm26p	misitio.es
+carPlay	Reproducir

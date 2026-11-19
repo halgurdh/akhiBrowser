@@ -1,0 +1,299 @@
+h0	AkhiBrowser sunar
+nv0	Menü
+t1	Özellikler
+nv1	Tüm özellikler
+t0	İzle
+x11	Erişilebilirlik
+nv2	iPhone ve Mac
+nv14	Ebeveynler için ipuçları
+nv3	Planlar ve fiyatlar
+nv4	Okul / Cami
+nv5	İptal et veya yönet
+nvfaq	Sık sorulan sorular
+n0	Gizlilik
+nv6	Tarayıcının gönderdikleri
+nv7	Güvenlik ve güncellemeler
+mm1	Nasıl para kazanıyoruz
+nv8	Gizlilik politikası
+nv9	Ortaklar
+nv15	Okullar ve camiler için kit
+nv10	Okuluna veya camine öner
+nv11	Influencer'lar için VIP
+mm14	Sponsor veya ortak ol
+n1	Blog
+nv12	Tüm rehberler
+hb1	Helal tarayıcı nedir?
+hb2	En iyi helal tarayıcılar
+t89	Tarayıcıları karşılaştır
+t86	Kahf Browser ile karşılaştır
+nv13	İndir
+t2	Web'i cihazında filtreleyen <span>helal tarayıcı</span>.
+t3	Müslümanlar için Firefox tabanlı, gizliliğe saygılı bir helal tarayıcı. Tek bir tarayıcı her şeyi cihazında yapar: reklamları ve haram siteleri engeller, görselleri kontrol edilene kadar bulanık tutar ve videolardaki müziği kaldırır, ne gezdiğini takip etmeden.
+rv1	AkhiBrowser kullanıyor musun? Bir yorum bırak: başka ailelerin onu bulmasına yardım eder.
+t4w	Windows yükleyicisi (.exe)<small>Windows 10 veya 11, 64 bit</small>
+t7	Chrome uzantısını al<small>Ücretsiz, şimdi mevcut</small>
+t7f	Firefox eklentisini al<small>Ücretsiz, şimdi mevcut</small>
+t4a	Bilgisayarda mısın? Windows, Chrome ve Firefox için akhibrowser.com'u orada aç.
+t4b	iOS ve macOS: yakında<small>Yol haritasına bak</small>
+t7b	Chrome ve Firefox uzantıları daha hafif, ücretsiz bir sürümdür: yetişkin ve haram siteleri engeller, görselleri bulanıklaştırır ve arka plan müziğini kaldırır, ancak Premium'u, ebeveyn denetimleri ve kendi reklam engelleyicisi yoktur ve kaldırılabilir. Uzantılara Arapça yakında geliyor.
+t11	Ücretsiz korumalar.
+k1	ilk sayfadan itibaren açık ücretsiz koruma
+k2	dil
+k3	bize gönderilen sayfa, görsel veya geçmiş
+k4	tek Family anahtarıyla cihaz
+h1	Gürültüyle dolu bir dünyada,
+h2	bir tarayıcı her şeyi temiz tutar.
+h3	Haram siteler, engellendi.
+h4	Müzik, kaldırıldı.
+h5	Geçmişin cihazında kalır.
+t12	Nasıl çalıştığını gör
+cta	Ücretsiz indir
+t13	İlk sayfadan itibaren açık
+t14	Bu korumalar ücretsiz ve yerleşiktir. Her biri AkhiBrowser kalkanında kapatılabilir. Premium özellikler isteğe bağlıdır ve sen açana kadar kapalıdır.
+t15	Reklamlar ve izleyiciler engellendi
+t16	uBlock Origin senin için yüklenir ve açık kalır; altında reklam, izleyici ve kötü amaçlı yazılım alan adları için yerleşik bir engelleyici bulunur.
+t17	Yetişkin ve haram siteler engellendi
+t18	Yetişkin, alkol, uyuşturucu, elektronik sigara ve kumar siteleri. Google, Bing, DuckDuckGo ve Yahoo'da SafeSearch zorunludur, YouTube'un Kısıtlı Modu da öyle.
+t19	Aramalar filtrelenir
+t20	Yetişkin veya haram içerik aramaları 11 dilde engellenir. Bunlar hakkındaki sorulara izin verilir, örneğin "alkol neden haram".
+t21	No music
+t22	Cihazında çalışan bir konuşma modeliyle videolardaki arka plan müziğini kaldırır ve sesleri korur.
+t68	Kimlik avı ve dolandırıcılık siteleri engellendi
+t69	Bilinen kimlik avı ve dolandırıcılık siteleri yüklenmeden durdurulur; bir site yanlışlıkla listelenmişse devam etmek için bir düğme vardır.
+t70	Namaz vakitleri ve her gün bir ayet
+t71	Seçtiğin şehrin namaz vakitleri, konumun olmadan cihazında hesaplanır, ve her gün Kur'an'dan bir ayet.
+t72	Ayarların başlangıç sayfasında
+t73	Bilgisayarlarda yeni sekmeler; arama kutusu, en çok ziyaret ettiğin siteler, günün ayeti ve tüm ayarlarla AkhiBrowser sayfasını açar. Bunu kapatabilirsin.
+t56	Görseller cihazında kontrol edilir
+t57	Görseller kontrol edilene kadar bulanık kalır. Uygunsuz görseller bulanık kalır; kontrol edilemeyen bir görsel gösterilir.
+t23	12 dil
+t24	İngilizce, Arapça, Farsça, Kürtçe (Sorani), Urduca, Türkçe, Fransızca, Almanca, Felemenkçe, İspanyolca, Endonezce ve Malayca; gerektiğinde sağdan sola.
+t25	Eski cihazlarda hafif
+t26	Yalnızca ekranda olan kontrol edilir ve daha önce görülen görseller önbellekten yanıtlanır. Sayfa yüklemeleri asla modeli beklemez.
+t58	Renk körlüğü düzeltmesi
+t59	Cihazdaki isteğe bağlı bir ayar, iki tür kırmızı-yeşil renk körlüğü için kırmızı ve yeşili ayırt etmeyi kolaylaştırır.
+t31	Demo görseller
+t27	Görseller kontrol edilene kadar bulanık kalır
+t28	Cihazdaki bir model görselleri, arka planları, videoları ve tuvalleri görünmeden önce kontrol eder, böylece hiçbir şey önce ekranda belirmez. Uygunsuz görseller bulanık kalır.
+t29	Premium, kadınları, erkekleri veya her ikisini bulanıklaştırma seçeneği ekler ve tesettürlü bir kadının görünür kalması için başörtüsünü tanıyabilir. Bu isteğe bağlı görsel ayarları cihazdaki modelleri kullanır.
+t30	Filtreler bazı şeyleri kaçırabilir ve kontrol edilemeyen bir görsel gösterilir. Bir ebeveynin ilgisinin yerini tutmazlar.
+t32	Engellenen bir site ne gösterir
+t33	Yüklenmeden engellendi
+t34	Yetişkin, alkol, uyuşturucu, elektronik sigara ve kumar siteleri burada durur, kendini yetişkin içerik olarak işaretleyen sayfalar da öyle.
+t37	Çizim
+t35	Sesler kalır, müzik gider
+t36	No music, sen izlerken bir videonun sesini cihazında temizler. Telefonlar ve yavaş bilgisayarlar Lite modelini kullanır, böylece eski cihazlar da yetişebilir.
+t38	Telefonunda da
+t39	Android'de aynı korumalar, ana sayfada Mozilla'nın haberleri veya sponsorlu kutucukları olmadan. Değiştirmek için menüyü, sonra Uzantılar'ı, sonra AkhiBrowser'ı aç. Ücretsiz kullanıcılar orada kendi sponsorlarımızın en fazla iki kısayolunu görür, bunları ayarlardan kapatabilirsin; Premium'da hiç yoktur.
+x0	Erişilebilirlik
+x1	Renk körü veya işitme güçlüğü çeken kişiler ve web'de biraz daha yardıma ihtiyacı olan herkes için.
+x2	Renk körlüğü
+x3	AkhiBrowser kalkanında renk körlüğü düzeltmesini aç. Web sayfalarının renklerini, iki tür kırmızı-yeşil renk körlüğü için kırmızı ve yeşil daha kolay ayırt edilsin diye ayarlar. Varsayılan olarak kapalıdır ve mavi-sarı renk körlüğüne yardımcı olmaz.
+x4	İşitme güçlüğü
+x5	No music videolardaki arka plan müziğini kaldırır ve sesleri korur, bu da konuşmayı takip etmeyi kolaylaştırabilir. Kendisi altyazı oluşturmaz ve bir sitenin sunduğu altyazılar her zamanki gibi çalışır.
+x6	Firefox'tan
+x7	Firefox'un kendi araçları tarayıcıda kalır; ekran okuyucu desteği, sayfa yakınlaştırma ve Okuyucu Görünümü gibi. Bunları AkhiBrowser'da ayrıca test etmedik.
+x8	Bu sayfa
+x9	Klavyeyle çalışır, görsellerinin metin açıklamaları vardır ve cihazından hareketi azaltmasını istediysen hareketli görsel durur. Videoların henüz altyazısı yok, ancak mesajlarını ekranda metin olarak gösterirler ve bu sayfa da aynısını söyler.
+x10	Senin için bir şey çalışmıyor mu? Bize <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a> adresinden yaz.
+s0	Güvenli mi?
+s1	AkhiBrowser, filtreler eklenmiş Firefox'tur. Seni internette güvende tutan parçalar Firefox'tan gelir.
+s2	Altında Firefox
+s3	Firefox ile aynı motor ve korumalı alan; her web sitesini dosyalarından ve diğer sitelerden ayrı tutar. Bilinen kötü amaçlı alan adları da engellenir.
+s4	İmzalı güncellemeler
+s5	Tarayıcı günde bir kez yeni bir sürüm olup olmadığını kontrol eder. Windows'ta imzasını kontrol ettikten sonra güncellemeyi yükler. Android'de yüklemeni ister ve önce dosyanın sağlama toplamını kontrol eder. Firefox güvenlik düzeltmeleri bu güncellemelerle sana ulaşır, bu yüzden geldiklerinde yükle.
+s8	Açık kaynak olan nedir
+s9	AkhiBrowser Firefox tabanlıdır. Firefox'ta yaptığımız değişiklikler ve Firefox lisansı (MPL) altındaki her dosya <a href="https://github.com/halgurdh/akhiBrowser">GitHub</a>'da herkese açıktır. Korumaların kendisi, AkhiBrowser uzantısı, Premium ve lisans hizmeti bizim kendi kodumuzdur ve çoğu ücretli uygulamada olduğu gibi herkese açık değildir. Tarayıcının ne gönderdiği ve kime gönderdiği <a href="/privacy/">Gizlilik</a> bölümünde listelenir.
+s10	Bir güvenlik sorunu mu buldun? Bize <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a> adresinden yaz.
+t47	İstersen Premium
+t48	Yukarıdaki her koruma ücretsiz kalır. Premium senin için: görseller üzerinde daha fazla kontrol ve daha sakin bir web. Family Premium ebeveynler için: Premium'daki her şey, artı ebeveyn denetimleri, en fazla on cihazda. Her özellik sen açana kadar kapalıdır ve verileri cihazda kalır.
+t48b	Premium yalnızca AkhiBrowser tarayıcısında, bir lisans anahtarıyla vardır. Chrome ve Firefox için ücretsiz AkhiBrowser uzantısı, Premium olmadan yukarıdaki ücretsiz korumalara sahiptir. Tarayıcı ayrıca bir uzantının yapamadıklarını getirir: Mozilla'ya telemetri, çalışma veya çökme raporu yok, yerleşik uBlock Origin ve sıkı izleme koruması.
+t82	Senin için Premium
+t60	Kimin bulanık olacağını seç
+t61	Kadınları, erkekleri veya her ikisini bulanıklaştır. Başörtüsü tanıma, tesettürlü kadınları görünür bırakabilir.
+t74	Sıkı mod
+t75	Her görsel ve video, sen dokunana kadar bulanık kalır; tüm sitelerde veya seçtiklerinde.
+t78	Daha sakin bir web
+t79	Önerisiz, Shorts'suz ve otomatik oynatmasız YouTube, gizli yorumlar ve sayfa metinlerinde maskelenmiş küfürler.
+t83	Ebeveynler için Family Premium
+t62	Ebeveyn denetimleri
+t63	Bir PIN belirle, seçtiğin siteleri engelle, yalnızca onaylı sitelere izin ver, yatma ve okul saatlerini planla veya günlük gezinme sınırı koy.
+t64	Etkinlik özeti
+t65	Son yedi günde engellenen sayfaları nedenine göre, sayfa adresleri olmadan gör. Özet cihazında kalır.
+t66	Sosyal akışları sınırla
+t67	AkhiBrowser'da kısa video akışlarını gizle ve sosyal medya sitelerine günlük sınır koy, sosyal medya uygulamalarında değil.
+t80	İnterneti duraklat, ayarları yedekle
+t81	PIN ile gezinmeyi hemen duraklat ve ebeveyn denetimlerini PIN ile kilitli bir dosyayla başka bir cihaza taşı.
+t76	Namaz molası
+t77	Sosyal medya, video ve oyun siteleri veya tüm siteler, her namaz vaktinden sonra birkaç dakika duraklar.
+f1	Helal kontrolü ve helal mekânlar
+f2	Domuz, alkol, jelatin veya şüpheli E-kodları içeren ürün sayfalarında bir uyarı ve Google Haritalar ile yemek siparişi sitelerinde helal olarak işaretlenmiş mekânlar.
+f3	Faiz uyarısı, ganimet kutuları engellendi
+f4	Faizli kredi, kredi kartı ve "şimdi al sonra öde" sayfalarında bir uyarı; kasa açma ve skin kumarı siteleri engellenir.
+f5	Kur'an tilaveti, güvenilir kaynaklar
+f6	YouTube'da bir tilaveti anlamıyla birlikte ayet ayet takip et ve İslam hakkında arama yaptığında önce âlimlerin kaynaklarını gör.
+f7	Deen Time
+f8	Çocukların için yalnızca senin seçtiğin kanallarla YouTube.
+bg0	Bana hangi plan uygun?
+bg1	<strong>Android telefonun veya tabletin mi var?</strong> AkhiBrowser'ı Google Play Store'dan al ve Premium'u AkhiBrowser'da aç. Şuraya git: Menü, Uzantılar, AkhiBrowser.
+bg2	<strong>Bu web sitesinden mi alıyorsun?</strong> Aşağıdaki düğmeleri kullan. E-postayla en fazla 3 cihaz için, Family ile 10 cihaz için bir lisans anahtarı alırsın. AkhiBrowser Windows ve Android içindir; iPhone veya Mac sürümü (henüz) yok.
+bg3	<strong>Bir okul veya cami misin?</strong> Aşağıda Okul / Cami'yi seç.
+bg4	<strong>Hediye mi?</strong> Aşağıdaki düğmelerle veya AkhiBrowser'da Family Premium hediye et. Hediye ettiğin anahtar Windows'ta ve Android'de çalışır.
+andb	Telefonunda Premium'u Google Play'deki AkhiBrowser'dan al: menü, Uzantılar, AkhiBrowser, Premium. Ödemeyi Google Play alır.
+andall	Bilgisayar için mi alıyorsun? Tüm ödeme yollarını göster
+t49	Aylık Premium<small>ayda 3,99 €</small>
+t50	Yıllık Premium<small>yılda 39,00 €</small>
+t51	Ömür boyu Premium<small>bir kez 119 €</small>
+t85	Family Premium<small>yılda 59,99 €, 3 gün ücretsiz</small>
+gift1	Family Premium hediye et<small>bir kez 59,99 €: başka bir aile için bir yıl</small>
+vip1	VIP bağlantın Family Premium'da %10 indirim sağlar: kaldığın her yıl 59,99 € yerine yılda 53,99 €. Stripe, ödemeden önce fiyatı gösterir.
+sm1	Okul / Cami<small>ayda 30 €</small>
+sm2	Okulunun veya caminin tüm çocukları için Family Premium: en fazla 500 cihaz için tek anahtar.
+t52	Google Play'den indirilen AkhiBrowser'da Premium'u Google Play üzerinden al veya bu siteden bir anahtar yapıştır. Diğer sürümlerde Stripe, ödemeden önce fiyatı gösterir; hesap oluşturmadan bir lisans anahtarı alırsın. Bir Premium anahtarı aynı anda en fazla üç cihazda, bir Family anahtarı en fazla onda, bir Okul / Cami anahtarı en fazla 500 cihazda çalışır. Premium'u veya ömür boyu Premium'u 1.2.1 sürümünden önce mi aldın? Sahip olduğun ebeveyn denetimlerini korursun. Aylık, yıllık ve Family: kartla abonelik olarak öde veya iDEAL ya da PayPal ile bir ay veya bir yıl için aynı fiyata tek seferlik, yenilenmeden öde. Kartla Family aboneliği 3 gün ücretsiz başlar. Hediye edilen Family Premium, hediye ettiğin kişiye e-postayla gönderilir.
+lp1	Android'de Google Play fiyatı kendi para biriminde gösterir. Birçok ülkede yukarıdaki fiyatlardan daha düşüktür.
+c0	Abonelik nasıl iptal edilir
+c1	Araç çubuğundaki AkhiBrowser kalkanını aç. Android'de: menü, sonra Uzantılar, sonra AkhiBrowser.
+c2	Premium altında Aboneliği yönet'e bas. Bu, Stripe'taki aboneliğini açar.
+c3	İptal etmeyi seç ve onayla.
+c4	Ardından Premium sona erer ve tüm ücretsiz korumalar çalışmaya devam eder. Ömür boyu satın alma bir abonelik değildir, iptal edilecek bir şey yoktur.
+c5	Tarayıcıya ulaşamıyor musun? Ödeme yaptığın e-posta adresiyle <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a> adresine yaz.
+gp0	Google Play'den alındı
+gp1	Google Play'de değiştir veya iptal et: Play Store'da profil resmine dokun, sonra Ödemeler ve abonelikler, Abonelikler, AkhiBrowser. Premium, ödediğin dönemin sonuna kadar çalışmaya devam eder.
+gp2	Bilgisayarında da Premium
+gp3	Telefonundaki AkhiBrowser'da: menü, sonra Uzantılar, sonra AkhiBrowser. Premium altında Lisans anahtarı al'a bas.
+gp4	Anahtarı kopyala veya Anahtarı bana e-postayla gönder'e bas ve e-postayı bilgisayarında aç.
+gp5	Windows'taki AkhiBrowser'da araç çubuğundaki AkhiBrowser kalkanını aç ve anahtarı Premium altına yapıştır.
+gp6	Anahtar en fazla 3 cihazda, Family ile 10 cihazda çalışır. Google Play'de iptal edersen bilgisayarında da sona erer.
+gp7	Bu siteden mi aldın, hediye mi aldın yoksa Okul / Cami anahtarın mı var?
+gp8	Anahtarın Windows'ta ve Android'de AkhiBrowser'da çalışır: menü, Uzantılar, AkhiBrowser, Premium, anahtarı yapıştır. Okul / Cami anahtarı da aynı şekilde, en fazla 500 cihazda çalışır.
+t87	Yol haritası: iPhone ve Mac
+t88	AkhiBrowser bugün Windows ve Android içindir. iOS ve macOS sürümleri duyurulacak, henüz tarih yok. Hedefimiz, 100 aile Family Premium kullanmaya başladığında bunlara başlamak.
+t53	AkhiBrowser <a href="https://www.firefox.com/">Firefox</a> tabanlıdır ve Mozilla tarafından yapılmamış veya onaylanmamıştır. Arka plan müziğinin kaldırılması Mohamed Sadiq'in <a href="https://github.com/mohamedsadiqaguenaou/NoMusic">NoMusic</a> projesine dayanır.
+faqf	Sık sorulan sorular
+nlb	Bülten: her hafta bir ayet
+t54	GitHub'da kaynak kodu
+rv0	AkhiBrowser'dan memnun musun? Bir yorum, başka ailelerin onu bulmasına yardım eder:
+loc	Almere, Hollanda
+p0	Destekleyen
+kt1	Okullar ve camiler için kit
+kt2	Okul / Cami planıyla okulunun veya caminin tüm çocukları Family Premium'u ücretsiz alır: en fazla 500 cihaz için tek anahtar. Bu sayfa mesajı ve afişi senin için hazırlar.
+kt3	1. Anahtarı al
+kt4	Ayda 30 € olan ve istediğin zaman iptal edebileceğin <a href="/#school">Okul / Cami planını</a> al. Anahtarı ekranda ve e-postayla alırsın.
+kt5	2. Ailelerinle paylaş
+kt6	WhatsApp grubun veya bültenin için hazır bir mesaj ve yazdırılacak bir afiş için anahtarı aşağıya yapıştır. Anahtar bu sayfada kalır: bize hiçbir şey gönderilmez.
+kt7	3. Aileler AkhiBrowser'ı yükler
+kt8	AkhiBrowser'ı indirir, anahtarı Premium altına yapıştırır ve <a href="/setup/">ebeveynler için ipuçlarıyla</a> kurarlar.
+kt8p	4. Google Play'den AkhiBrowser kullanan aileler
+kt8q	Google Play'den indirilen AkhiBrowser da anahtarınla çalışır: aileler aynı anahtarı yapıştırır, toplam en fazla 500 cihazda.
+kt9	Okul / Cami anahtarın
+kt10	Okulunun veya caminin adı
+kt11	Ailelerin için mesaj
+kt12	Mesajı kopyala
+kt13	WhatsApp'ta paylaş
+kt14	Afişi yazdır
+kt15	Anahtarı yalnızca topluluğunun içinde paylaş, herkese açık sosyal medyada değil: en fazla 500 cihazda çalışır ve ona sahip olan herkes bunlardan birini kullanabilir. 500'ün tamamı kullanımdayken en uzun süredir kullanılmayan cihaz yer açar ve sana e-posta göndeririz.
+kt16	Esselamu aleyküm! {NAME} her aileye AkhiBrowser Family Premium'u ücretsiz veriyor: haram siteleri ve reklamları engelleyen, görselleri bulanıklaştıran ve videolardaki müziği kaldıran bir helal tarayıcı. 1. AkhiBrowser'ı indir: https://akhibrowser.com/#download 2. AkhiBrowser kalkanını aç, bu anahtarı Premium altına yapıştır ve Etkinleştir'e bas: {KEY} 3. Çocukların için mi kuruyorsun? İpuçları: https://akhibrowser.com/setup/ Lütfen anahtarı topluluğumuzun içinde tut.
+kt20	okulumuz veya camimiz
+kt17	Ailen için ücretsiz, {NAME} tarafından
+kt18	AkhiBrowser Family Premium: haram siteleri ve reklamları engelleyen, görselleri bulanıklaştıran ve videolardaki müziği kaldıran helal tarayıcı.
+kt19	İndirmek için tara, sonra anahtarı bizden iste.
+su1	Ebeveynler için ipuçları: açıkları kapat
+su2	AkhiBrowser, AkhiBrowser içinde olanları korur. Başka bir tarayıcı veya uygulama açan bir çocuk onu atlatır. Bu adımlar o açıkları kapatır ve çoğu birkaç dakika sürer.
+su3	Çocuğuna kendi hesabını ver
+su4	Windows'ta yönetici değil standart bir hesap, böylece çocuğun başka tarayıcı yükleyemez veya ayarları değiştiremez. Android'de çocuğun için Google Family Link ile yönetilen bir Google hesabı.
+su5	AkhiBrowser'ı varsayılan tarayıcı yap
+su6	Böylece diğer uygulamalardaki bağlantılar AkhiBrowser'da açılır. Windows: Ayarlar, Uygulamalar, Varsayılan uygulamalar. Android: Ayarlar, Uygulamalar, Varsayılan uygulamalar, Tarayıcı uygulaması.
+su7	Diğer tarayıcıları engelle
+su8	Android'de Chrome'u ve diğer tüm tarayıcıları Family Link'te, çocuğunun uygulama sınırları altında engelle. Windows'ta çocuğunun ihtiyaç duymadığı tarayıcıları kaldır ve geri kalanını Microsoft Family Safety'de, uygulamalar ve oyunlar altında engelle.
+su9	Tüm telefonu veya ev ağını filtrele
+su10	AkhiBrowser siteleri Cloudflare'in aile DNS'i üzerinden arar. Bunu her uygulama için de kullan: Android'de Özel DNS'i family.cloudflare-dns.com olarak ayarla (Ayarlar, Ağ ve internet; yol telefona göre biraz değişir). Modeminde DNS sunucularını 1.1.1.3 ve 1.0.0.3 olarak ayarla, Wi-Fi'ndeki her cihaz için.
+su11	Ebeveyn PIN'ini belirle
+su12	AkhiBrowser ayarlarında bir ebeveyn PIN'i belirle, böylece korumalar sensiz kapatılamaz.
+su13	Çocuğunla konuş
+su14	Hiçbir filtre her şeyi yakalamaz. Çocuğuna bu kuralların neden olduğunu ve yanlış bir şey gördüğünde her zaman sana gelebileceğini anlat.
+t40	Cihazından ne çıkar
+t41	Geçmişin, sayfaların ve görsellerin cihazında kalır. Yaptığın hiçbir şey bize gelmez ve Mozilla'ya telemetri, çalışma veya çökme raporu gitmez. Yine de bir tarayıcının birkaç hizmetle konuşması gerekir, işte hepsi.
+t42	<strong>Site adları, Cloudflare'e.</strong> Yetişkin siteleri ağ düzeyinde engellemek için tarayıcı adları Cloudflare'in aile DNS'i üzerinden arar, bu yüzden Cloudflare ziyaret ettiğin sitelerin adlarını görür.
+t43	<strong>İndirmeler.</strong> addons.mozilla.org'dan uBlock Origin, reklam engelleme listeleri ve Mozilla, Cisco ve Google'dan video codec'leri.
+t44	<strong>Yenilikler.</strong> Bir güncellemeden sonra başlangıç sayfası o sürümün sürüm notlarını GitHub'dan bir kez ister. Senin hakkında hiçbir şey gönderilmez.
+t90	<strong>Anonim bir sayım, bize.</strong> Tarayıcı günde bir kez kendini sayar: sürümü, sistemi, Premium'un açık olup olmadığı ve isteğin geldiği ülke (adresin değil), kimlik olmadan ve ziyaret ettiğin hiçbir şey olmadan. Ayarlarda Beni anonim olarak say altından kapat.
+t45	<strong>Bir Premium anahtarı, girersen.</strong> Rastgele bir kurulum kimliğiyle lisans sunucumuzda kontrol edilir, böylece bir anahtar aynı anda 3 cihazda çalışır. Sunucu yalnızca anahtarın ve kurulum kimliğinin özetlerini tutar, asla gezinme verilerini değil. Bir e-posta adresi verirsen (anahtarını almak, bir hediye veya Family ebeveyn raporu için), o amaçla kullanılır; <a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md">gizlilik politikası</a> neyin saklandığını söyler.
+nws1	<strong>Bülten.</strong> Yalnızca <a href="/newsletter/">akhibrowser.com/tr/newsletter</a> adresinden kaydolursan (veya ödeme sırasında kutuyu işaretlersen) ve e-postayla onaylarsan: lisans sunucusu adresini, dilini ve tarihleri tutar; haftada bir Kur'an'dan bir ayet ve yenilikleri, bir kez de Family Premium'da %10 indirim göndermek için. Her e-postada bırakmak için bir bağlantı vardır; adres asla paylaşılmaz.
+t55	<strong>Site analitiği.</strong> Banner'da İzin ver'e basana kadar Google'dan hiçbir şey yüklenmez; ardından site Google Tag Manager'ı yükler, böylece Google bağlantının IP adresini ve teknik istek bilgilerini alır. Google Analytics ziyaretleri ve tıklamaları (bir indirme düğmesine veya plana) yalnızca banner'da İzin ver'e bastıktan sonra sayar; o zamana kadar analitik çerezi ayarlanmaz. İzin verdikten sonra bir plan satın aldığında anonim Google Analytics kimliğin ödemeyle birlikte gider, böylece satın alma (plan ve tutar, asla e-postan veya anahtarın değil) ziyaret için sayılır. İzin verdikten sonra Reddit pikseli de yüklenir, böylece Reddit bir ziyaretin, bir indirme düğmesine tıklamanın, onaylanmış bir bülten kaydının veya bir bağlı kuruluş ya da ortaklık başvurusunun reklamlarından birinden geldiğini görebilir (Reddit bunun için kendi çerezini ayarlar). Reddit'teki bir reklamdan geldiysen ve izin verdikten sonra bir indirme düğmesine tıklarsan veya bir plan satın alırsan, lisans sunucusu Reddit'e reklamın bir indirmeye (Reddit'in tıklama kimliği ve mağaza, artı IP adresin ve tarayıcının kullanıcı aracısı) veya bir satın almaya (Reddit'in tıklama kimliği, planın tutarı ve para birimi) yol açtığını bildirir. Bülten kaydı (onayladığında) veya bağlı kuruluş ya da ortaklık başvurusu için de aynısı geçerlidir: Reddit'in tıklama kimliği, bir etkinlik kimliği, IP adresin ve kullanıcı aracın, asla adın veya e-postan değil. Böyle bir tıklamadan sonra Android uygulamasını Google Play'den yüklersen, Play bağlantısı Reddit'in tıklama kimliğini taşır ve uygulama bunu o kurulum için rastgele bir kimlikle lisans sunucusuna bir kez gönderir, böylece Reddit reklamlarından gelen kurulumları sayabilir (Reddit'in tıklama kimliği, o kimlik, IP adresin ve kullanıcı aracın). Uygulamada "Beni anonim olarak say"ı kapatmak bunu da durdurur. <a href="#cookies">Seçimini değiştir</a>. <a href="https://policies.google.com/privacy">Google'ın gizlilik politikasına</a> bak.
+t46	<a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md">Gizlilik politikası</a>
+af1	AkhiBrowser'ı okuluna veya camine öner
+af2	AkhiBrowser'dan faydalanabilecek bir okul, cami veya İslami merkez mi biliyorsun? Bağlı kuruluş ol: abone kaldıkları sürece her ay Okul / Cami ödemelerinin her birinin %20'sini alırsın. Bir ödeme 30 günlük olduğunda sayılır ve aylık ödeme yaparız.
+afn	Her biri kendi formuna sahip iki program: <a href="#schools">okullar ve camiler için</a> ve <a href="#vip">influencer'lar için (VIP)</a>.
+afh1	Okullar ve camiler için
+sc1	Okul veya cami öder
+sc2	30 €<small>ayda</small>
+sc3	Okul / Cami planı: Family Premium'daki her şey, ailelerine ücretsiz vermek için en fazla 500 cihazlık tek anahtar.
+sc4	Sen alırsın
+sc5	6 €<small>ayda, her okul için</small>
+sc6	Abone kaldıkları sürece her ödemenin %20'si.
+af3	Adın
+af4	E-posta adresi
+af5	Okul, cami veya kuruluş
+af7	Okullar ve camiler için başvur
+af8	Birkaç gün içinde sana kendi bağlantını e-postayla göndeririz. Bilgilerin yalnızca bunun için kullanılır. Robotları uzak tutmak için form, doldurmaya başladığında Cloudflare Turnstile'ı yükler.
+afh2	Influencer'lar için: VIP programı
+vip2	Influencer mısın? Family Premium için VIP bağlı kuruluş programımız: takipçilerin %10 indirim alır, sen de kaldıkları her yıl yaptıkları her ödemenin %10'unu alırsın. 200 aile sana yılda yaklaşık 900 € kazandırır, yıldan yıla.
+vipf2	Adın
+vipf3	E-posta adresi
+vipf4	Kanalının veya markanın adı
+vipf5	Nerede paylaşıyorsun ve kaç takipçin var?
+vipf6	VIP olarak başvur
+vipf7	Birkaç gün içinde yanıt veririz. Seni davet ettiğimizde kodunu ve bağlantılarını e-postayla alırsın.
+mm2	AkhiBrowser ücretsizdir ve yaptıklarını asla satmaz veya paylaşmaz. Ücretsiz kullanıcılar yeni sekmede sponsorlarımızın birkaç kısayolunu görür ve bunları kapatabilir; Premium'da hiç yoktur. Kendini şu yollarla finanse eder, hepsi bu:
+mm3	Premium
+mm4	Senin, ailelerin, okulların ve camilerin için isteğe bağlı ücretli özellikler. Paranın çoğu buradan gelir.
+mm5	Arama ortakları
+mm6	Bir arama motorunun bizimle ortaklık sözleşmesi olduğunda, AkhiBrowser'da başlattığın bir arama ortak kodumuzu taşır ve arama motoru kazandığının küçük bir payını bize verir. Yalnızca kod eklenir: senin veya araman hakkında hiçbir şey bize gelmez.
+mm7	Ortak mağazalar, yalnızca sen seçersen
+mm8	Sen açmadıkça kapalı: kendin bir ortak mağazaya gittiğinde kodumuzu ekleriz ve mağaza bize küçük bir pay verir. Aynı fiyatı ödersin ve başka bir siteden gelen bağlantı kendi kodunu korur.
+mm9	Başlangıç sayfamızda ipuçları
+mm10	Arada bir, her zaman öyle etiketlenmiş bir bağlı kuruluş bağlantılı ipucu. Diğer web sitelerinin bağlantılarını asla değiştirmeyiz.
+mm11	Bağlı kuruluşlar, sponsorlar ve ortaklar
+mm12	Okul ve cami getirenler ödemelerinin %20'sini alır. Sponsorlar ve kuruluşlar AkhiBrowser'ı destekleyebilir, ancak asla verilerini veya neyin engelleneceği konusunda söz hakkı almazlar.
+mm13	Asla yapmadıklarımız: gezinmeni satmak veya paylaşmak, seni siteler arasında veya reklam için takip etmek ya da paranın neyin engelleneceğini değiştirmesine izin vermek. Bir sponsorun kısayolu yalnızca tıklamalarını sayar, kimin tıkladığına dair hiçbir şey olmadan.
+mm28	Sponsorlarımız ve ortaklarımız
+mm15	Adın
+mm16	E-posta adresi
+mm17	Kuruluş
+mm26	Web siten
+mm18	Ne tür bir ortak?
+mm19	Sponsor
+mm20	Ekosistem ortağı: bir İslami uygulama, okul platformu veya kuruluş
+mm21	Arama motoru
+mm22	Mağaza
+mm23	Ne öneriyorsun?
+mm27	Kuruluşumuzu, web sitemize bir bağlantıyla, sponsorlar sayfasında ve ücretsiz kullanıcılar için AkhiBrowser'ın yeni sekmesinde bir kısayol olarak göster
+mm24	Gönder
+mm25	Birkaç gün içinde yanıt veririz. Bir ortaklık AkhiBrowser'ı gizli tutmalıdır: kullanıcılarımızın hiçbir verisi asla bunun parçası değildir.
+aStore	Microsoft Store'dan indir
+aPlay	Google Play'den alın
+a0	AkhiBrowser ayarları: günün ayeti, namaz vakitleri ve beş koruma, hepsi açık: reklamlar ve izleyiciler engellendi, arka plan müziği kaldırıldı, yetişkin içerik engellendi, haram siteler engellendi ve çıplak görseller bulanık.
+a1	AkhiBrowser fragmanı: NoMusic arka plan müziğini kaldırır ve sesi korur, haram filtresi cihazında çıplaklığı ve yetişkin içeriği engeller ve uBlock Origin yerleşiktir, 25 saniye
+a9	AkhiBrowser videosu: sadece internette bir sohbet izlemek istiyorsun, NoMusic arka plan müziğini kaldırır ve sesi korur, 21 saniye
+a2	AkhiBrowser videosu: onlar müzik koydu, biz de çıkardık, 19 saniye
+car0	AkhiBrowser özellikleri
+car1	Ücretsiz: Gözünü haramdan sakın. Otomatik olarak. Her görsel ve video, cihazdaki yapay zekâ kontrol edene kadar bulanık kalır, böylece hiçbir şey birden belirmez. AkhiBrowser'da görselleri bulanık bir haber sayfası.
+car2	Ücretsiz: Sesi koru. Müziği at. AkhiBrowser videolar oynarken arka plan müziğini kaldırır. Sesi korunmuş, müziği kaldırılmış bir sohbet videosu.
+car3	Ücretsiz: "Bira" ara. Gerçeği öğren. Haram aramalar 11 dilde engellenir veya sorulara dönüştürülür ve SafeSearch her zaman açıktır.
+car4	Premium: Başörtüsünü görecek kadar akıllı. Tesettürlü kadınlar gösterilir, açık olanlar bulanıklaştırılır. Kimin bulanık olacağını sen seçersin: kadınlar, erkekler veya her ikisi.
+car5	Premium: Tavşan deliği olmadan YouTube. Öneri, bitiş ekranı, otomatik oynatma veya Shorts yok, yorumlar gizli.
+car6	Family Premium: Kuralları sen koyarsın. Bir PIN onları korur. Bir ebeveyn PIN'i, günlük sınır, yatma ve okul saatleri.
+car7	Family Premium: Ezan mı okunuyor? Akış durur. Sosyal medya, video ve oyun siteleri her namaz vaktinden sonra birkaç dakika duraklar.
+car8	Family Premium: Helal mi değil mi? Önce bil. Bir mağaza sayfası jelatin ve bir E-kodu hakkında uyarır, sonra öde teklifi faiz uyarısı alır.
+carPrev	Önceki görsel
+carPause	Duraklat
+carNext	Sonraki görsel
+a3	Bulanık bir manzara ve şu etiket: Cihazında kontrol ediliyor.
+a4	Aynı manzara, net, şu etiketle: Kontrol edildi: gösteriliyor.
+a10	Bulanık kalan bir kişi görseli, şu etiketle: Kontrol edildi: gizlendi.
+a5	Şunu söyleyen bir sayfa: Bu sayfa engellendi. AkhiBrowser alkol, uyuşturucu ve kumar sitelerini engeller. Altında Kur'an'dan bir ayet, 2:219, Arapça ve İngilizce, quran.com'a bir bağlantıyla.
+a6	Seslerin ses dalgası, şu etiketle: Arka plan müziği: kaldırıldı.
+a7	Android'de AkhiBrowser ana sayfası: bir arama çubuğu, AkhiBrowser logosu ve şu etiket: Korunuyorsun.
+aPlans	AkhiBrowser planlarının karşılaştırması. Ücretsiz: reklamlar ve izleyiciler engellendi, haram siteler engellendi, videolarda müzik yok, namaz vakitleri ve ayet, 0 €. Premium: Ücretsiz'deki her şey, kimin bulanık olacağını seç, sıkı mod, daha sakin bir web; ayda 3,99 €, yılda 39 € veya ömür boyu 119 €. Family Premium: Premium'daki her şey, ebeveyn denetimleri ve PIN, etkinlik özeti, namaz molası, helal ve faiz kontrolü; yılda 59,99 €, 3 gün ücretsiz, 10 cihaz. Okul / Cami: Family'deki her şey, tek lisans anahtarı, en fazla 500 cihaz, ayda 30 €.
+mm26p	sitem.com
+carPlay	Oynat

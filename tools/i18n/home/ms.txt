@@ -1,0 +1,299 @@
+h0	AkhiBrowser mempersembahkan
+nv0	Menu
+t1	Ciri-ciri
+nv1	Semua ciri
+t0	Tonton
+x11	Kebolehcapaian
+nv2	iPhone dan Mac
+nv14	Tip untuk ibu bapa
+nv3	Pelan dan harga
+nv4	Sekolah / Masjid
+nv5	Batal atau urus
+nvfaq	Soalan lazim
+n0	Privasi
+nv6	Apa yang dihantar pelayar
+nv7	Keselamatan dan kemas kini
+mm1	Cara kami menjana wang
+nv8	Dasar privasi
+nv9	Rakan kongsi
+nv15	Kit untuk sekolah dan masjid
+nv10	Cadangkan kepada sekolah atau masjid anda
+nv11	VIP untuk pempengaruh
+mm14	Jadi penaja atau rakan kongsi
+n1	Blog
+nv12	Semua panduan
+hb1	Apakah pelayar halal?
+hb2	Pelayar halal terbaik
+t89	Bandingkan pelayar
+t86	Bandingkan dengan Kahf Browser
+nv13	Muat turun
+t2	<span>Pelayar halal</span> yang menapis web pada peranti anda.
+t3	Pelayar halal dan peribadi untuk umat Islam, dibina atas Firefox. Satu pelayar melakukan semuanya, pada peranti anda: menyekat iklan dan laman haram, mengaburkan gambar sehingga diperiksa dan membuang muzik daripada video, tanpa menjejak apa yang anda layari.
+rv1	Guna AkhiBrowser? Tinggalkan ulasan: ia membantu keluarga lain menemuinya.
+t4w	Pemasang Windows (.exe)<small>Windows 10 atau 11, 64-bit</small>
+t7	Dapatkan sambungan Chrome<small>Percuma, tersedia sekarang</small>
+t7f	Dapatkan add-on Firefox<small>Percuma, tersedia sekarang</small>
+t4a	Di komputer? Buka akhibrowser.com di sana untuk Windows, Chrome dan Firefox.
+t4b	iOS dan macOS: akan datang<small>Lihat pelan hala tuju</small>
+t7b	Sambungan Chrome dan Firefox ialah versi yang lebih ringan dan percuma: ia menyekat laman dewasa dan haram, mengaburkan gambar dan membuang muzik latar, tetapi tiada Premium, kawalan ibu bapa atau penyekat iklan sendiri, dan ia boleh dibuang. Bahasa Arab dalam sambungan akan datang tidak lama lagi.
+t11	Perlindungan percuma.
+k1	perlindungan percuma, aktif dari halaman pertama
+k2	bahasa
+k3	halaman, gambar atau sejarah yang dihantar kepada kami
+k4	peranti dengan satu kunci Family
+h1	Dalam dunia yang penuh bising,
+h2	satu pelayar memastikannya bersih.
+h3	Laman haram, disekat.
+h4	Muzik, dibuang.
+h5	Sejarah anda kekal pada peranti anda.
+t12	Lihat cara ia berfungsi
+cta	Muat Turun Percuma
+t13	Aktif dari halaman pertama
+t14	Perlindungan ini percuma dan terbina dalam. Setiap satu boleh dimatikan dalam perisai AkhiBrowser. Ciri Premium adalah pilihan dan mati sehingga anda menghidupkannya.
+t15	Iklan dan penjejak disekat
+t16	uBlock Origin dipasang untuk anda dan sentiasa hidup, dengan penyekat terbina dalam untuk domain iklan, penjejak dan perisian hasad di bawahnya.
+t17	Laman dewasa dan haram disekat
+t18	Laman dewasa, arak, dadah, vape dan judi. SafeSearch dipaksa pada Google, Bing, DuckDuckGo dan Yahoo, begitu juga Mod Terhad YouTube.
+t19	Carian ditapis
+t20	Carian kandungan dewasa atau haram disekat dalam 11 bahasa. Soalan tentangnya tetap dibenarkan, seperti "mengapa arak haram".
+t21	No music
+t22	Membuang muzik latar daripada video dan mengekalkan suara, menggunakan model pertuturan yang berjalan pada peranti anda.
+t68	Laman pancingan data dan penipuan disekat
+t69	Laman pancingan data dan penipuan yang diketahui dihentikan sebelum dimuatkan, dengan butang untuk meneruskan jika laman tersenarai secara silap.
+t70	Waktu solat dan satu ayat sehari
+t71	Waktu solat untuk bandar pilihan anda, dikira pada peranti anda tanpa lokasi anda, dan satu ayat al-Quran setiap hari.
+t72	Tetapan anda di halaman permulaan
+t73	Di komputer, tab baharu membuka halaman AkhiBrowser dengan kotak carian, laman yang paling kerap anda lawati, ayat hari ini dan semua tetapan. Anda boleh mematikannya.
+t56	Gambar diperiksa pada peranti anda
+t57	Gambar kekal kabur sehingga diperiksa. Gambar yang tidak selamat kekal kabur; gambar yang tidak dapat diperiksa akan ditunjukkan.
+t23	12 bahasa
+t24	Inggeris, Arab, Parsi, Kurdi (Sorani), Urdu, Turki, Perancis, Jerman, Belanda, Sepanyol, Indonesia dan Melayu, dari kanan ke kiri bila perlu.
+t25	Ringan pada peranti lama
+t26	Hanya apa yang ada di skrin diperiksa, dan gambar yang pernah dilihat dijawab daripada cache. Pemuatan halaman tidak pernah menunggu model.
+t58	Pembetulan buta warna
+t59	Tetapan pilihan pada peranti menjadikan merah dan hijau lebih mudah dibezakan untuk dua jenis buta warna merah-hijau.
+t31	Gambar demo
+t27	Gambar kekal kabur sehingga diperiksa
+t28	Model pada peranti memeriksa gambar, latar belakang, video dan kanvas sebelum ia muncul, jadi tiada apa yang terpapar dahulu. Gambar yang tidak selamat kekal kabur.
+t29	Premium menambah pilihan untuk mengaburkan wanita, lelaki atau kedua-duanya, dan boleh mengenali tudung supaya wanita yang menutup aurat kekal kelihatan. Tetapan gambar pilihan ini menggunakan model pada peranti.
+t30	Penapis boleh terlepas sesuatu, dan gambar yang tidak dapat diperiksa akan ditunjukkan. Ia tidak menggantikan penjagaan ibu bapa.
+t32	Apa yang ditunjukkan laman yang disekat
+t33	Disekat sebelum dimuatkan
+t34	Laman dewasa, arak, dadah, vape dan judi berhenti di sini, begitu juga halaman yang melabel dirinya sebagai dewasa.
+t37	Ilustrasi
+t35	Suara kekal, muzik hilang
+t36	No music membersihkan audio video semasa anda menonton, pada peranti anda. Telefon dan komputer perlahan menggunakan model Lite, supaya peranti lama boleh mengikutinya.
+t38	Pada telefon anda juga
+t39	Perlindungan yang sama pada Android, tanpa cerita Mozilla atau jubin tajaan di halaman utama. Untuk mengubahnya, buka menu, kemudian Sambungan, kemudian AkhiBrowser. Pengguna percuma melihat sehingga dua pintasan penaja kami sendiri di sana, yang boleh anda matikan dalam tetapan; Premium tiada.
+x0	Kebolehcapaian
+x1	Untuk orang yang buta warna atau kurang pendengaran, dan untuk sesiapa yang memerlukan sedikit bantuan tambahan di web.
+x2	Buta warna
+x3	Hidupkan pembetulan buta warna dalam perisai AkhiBrowser. Ia melaraskan warna halaman web supaya merah dan hijau lebih mudah dibezakan, untuk dua jenis buta warna merah-hijau. Ia mati secara lalai, dan tidak membantu buta warna biru-kuning.
+x4	Kurang pendengaran
+x5	No music membuang muzik latar daripada video dan mengekalkan suara, yang boleh menjadikan pertuturan lebih mudah diikuti. Ia tidak membuat sari kata sendiri, dan sari kata yang ditawarkan laman tetap berfungsi seperti biasa.
+x6	Daripada Firefox
+x7	Alat Firefox sendiri kekal dalam pelayar, seperti sokongan pembaca skrin, zum halaman dan Paparan Pembaca. Kami belum mengujinya secara berasingan dalam AkhiBrowser.
+x8	Halaman ini
+x9	Ia berfungsi dengan papan kekunci, gambarnya ada penerangan teks, dan gambar bergerak kekal pegun jika anda meminta peranti mengurangkan gerakan. Video belum ada sari kata, tetapi ia menunjukkan mesejnya sebagai teks pada skrin, dan halaman ini menyatakan perkara yang sama.
+x10	Ada yang tidak berfungsi untuk anda? Beritahu kami di <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a>.
+s0	Adakah ia selamat?
+s1	AkhiBrowser ialah Firefox dengan penapis tambahan. Bahagian yang memastikan anda selamat dalam talian datang daripada Firefox.
+s2	Firefox di bawahnya
+s3	Enjin dan kotak pasir yang sama seperti Firefox, yang memisahkan setiap laman web daripada fail anda dan daripada laman lain. Domain perisian hasad yang diketahui turut disekat.
+s4	Kemas kini bertandatangan
+s5	Sekali sehari pelayar menyemak versi baharu. Pada Windows ia memasang kemas kini selepas menyemak tandatangannya. Pada Android ia meminta anda memasangnya, dan menyemak checksum fail dahulu. Pembaikan keselamatan Firefox sampai kepada anda melalui kemas kini ini, jadi pasanglah apabila ia tiba.
+s8	Apa yang sumber terbuka
+s9	AkhiBrowser dibina atas Firefox. Perubahan kami pada Firefox, dan setiap fail di bawah lesen Firefox (MPL), terbuka kepada umum di <a href="https://github.com/halgurdh/akhiBrowser">GitHub</a>. Perlindungan itu sendiri, sambungan AkhiBrowser, Premium dan perkhidmatan lesennya ialah kod kami sendiri dan tidak terbuka, seperti kebanyakan aplikasi berbayar. Apa yang dihantar pelayar, dan kepada siapa, disenaraikan di bawah <a href="/privacy/">Privasi</a>.
+s10	Menemui masalah keselamatan? Beritahu kami di <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a>.
+t47	Premium, jika anda mahu
+t48	Setiap perlindungan di atas kekal percuma. Premium untuk anda: lebih kawalan ke atas gambar dan web yang lebih tenang. Family Premium untuk ibu bapa: semua dalam Premium, serta kawalan ibu bapa, pada sehingga sepuluh peranti. Setiap ciri mati sehingga anda menghidupkannya, dan datanya kekal pada peranti.
+t48b	Premium hanya ada dalam pelayar AkhiBrowser, dengan kunci lesen. Sambungan AkhiBrowser percuma untuk Chrome dan Firefox mempunyai perlindungan percuma di atas, tanpa Premium. Pelayar juga membawa apa yang tidak dapat dilakukan sambungan: tiada telemetri, kajian atau laporan ranap kepada Mozilla, uBlock Origin terbina dalam dan perlindungan penjejakan yang ketat.
+t82	Premium, untuk anda
+t60	Pilih siapa yang dikaburkan
+t61	Kaburkan wanita, lelaki atau kedua-duanya. Pengecaman tudung boleh membiarkan wanita bertudung kekal kelihatan.
+t74	Mod ketat
+t75	Setiap gambar dan video kekal kabur sehingga anda mengetiknya, di semua laman atau laman pilihan anda.
+t78	Web yang lebih tenang
+t79	YouTube tanpa cadangan, Shorts atau main automatik, komen disembunyikan dan kata-kata kesat ditutup dalam teks halaman.
+t83	Family Premium, untuk ibu bapa
+t62	Kawalan ibu bapa
+t63	Tetapkan PIN, sekat laman pilihan, benarkan hanya laman yang diluluskan, jadualkan waktu tidur dan waktu sekolah, atau tetapkan had melayari harian.
+t64	Ringkasan aktiviti
+t65	Lihat halaman yang disekat dalam tujuh hari lepas mengikut sebab, tanpa alamat halaman. Ringkasan kekal pada peranti anda.
+t66	Hadkan suapan media sosial
+t67	Sembunyikan suapan video pendek dan tetapkan had harian untuk laman media sosial dalam AkhiBrowser, bukan dalam aplikasi media sosial.
+t80	Jeda internet, sandarkan tetapan
+t81	Jeda melayari sekarang dengan PIN, dan pindahkan kawalan ibu bapa ke peranti lain dalam fail yang dikunci dengan PIN.
+t76	Jeda solat
+t77	Laman media sosial, video dan permainan, atau semua laman, dijeda selama beberapa minit selepas setiap waktu solat.
+f1	Semakan halal dan tempat halal
+f2	Amaran pada halaman produk yang mengandungi babi, arak, gelatin atau nombor E yang meragukan, serta tempat bertanda halal di Google Maps dan laman penghantaran.
+f3	Amaran riba, loot box disekat
+f4	Amaran pada halaman pinjaman berfaedah, kad kredit dan beli sekarang bayar kemudian, serta laman buka peti dan judi skin disekat.
+f5	Bacaan al-Quran, sumber dipercayai
+f6	Ikuti bacaan di YouTube ayat demi ayat dengan maknanya, dan lihat sumber ulama dahulu apabila anda mencari tentang Islam.
+f7	Deen Time
+f8	YouTube hanya dengan saluran yang anda pilih, untuk anak-anak anda.
+bg0	Pelan mana yang paling sesuai untuk saya?
+bg1	<strong>Ada telefon atau tablet Android?</strong> Dapatkan AkhiBrowser dari Google Play Store, dan hidupkan Premium dalam AkhiBrowser. Pergi ke: Menu, Sambungan, AkhiBrowser.
+bg2	<strong>Membeli di laman web ini?</strong> Gunakan butang di bawah. Anda mendapat kunci lesen melalui e-mel, untuk sehingga 3 peranti, atau 10 dengan Family. AkhiBrowser untuk Windows dan Android; belum ada versi iPhone atau Mac.
+bg3	<strong>Sekolah atau masjid?</strong> Pilih Sekolah / Masjid di bawah.
+bg4	<strong>Hadiah?</strong> Berikan Family Premium dengan butang di bawah, atau dalam AkhiBrowser. Kunci yang anda berikan berfungsi pada Windows dan Android.
+andb	Pada telefon anda, beli Premium dalam AkhiBrowser dari Google Play: menu, Sambungan, AkhiBrowser, Premium. Google Play mengambil bayaran.
+andall	Membeli untuk komputer? Tunjukkan semua cara bayar
+t49	Premium bulanan<small>€3.99 sebulan</small>
+t50	Premium tahunan<small>€39.00 setahun</small>
+t51	Premium seumur hidup<small>€119 sekali</small>
+t85	Family Premium<small>€59.99 setahun, 3 hari percuma</small>
+gift1	Hadiahkan Family Premium<small>€59.99 sekali: setahun untuk keluarga lain</small>
+vip1	Pautan VIP anda memberi diskaun 10% untuk Family Premium: €53.99 setahun dan bukan €59.99, setiap tahun anda kekal. Stripe menunjukkan harga sebelum anda membayar.
+sm1	Sekolah / Masjid<small>€30 sebulan</small>
+sm2	Family Premium untuk semua kanak-kanak di sekolah atau masjid anda: satu kunci untuk sehingga 500 peranti.
+t52	Dalam AkhiBrowser dari Google Play, beli Premium melalui Google Play atau tampal kunci dari laman web ini. Dalam versi lain, Stripe menunjukkan harga sebelum anda membayar; anda mendapat kunci lesen tanpa membuat akaun. Kunci Premium berfungsi pada sehingga tiga peranti serentak, kunci Family pada sehingga sepuluh, kunci Sekolah / Masjid pada sehingga 500. Membeli Premium atau seumur hidup sebelum versi 1.2.1? Anda mengekalkan kawalan ibu bapa yang anda ada. Bulanan, tahunan dan Family: bayar dengan kad sebagai langganan, atau sekali dengan iDEAL atau PayPal untuk sebulan atau setahun pada harga yang sama, tanpa pembaharuan. Langganan Family dengan kad bermula dengan 3 hari percuma. Family Premium yang dihadiahkan dihantar melalui e-mel kepada orang yang anda berikan.
+lp1	Pada Android, Google Play menunjukkan harga dalam mata wang anda sendiri. Di banyak negara, ia lebih rendah daripada harga di atas.
+c0	Cara membatalkan langganan
+c1	Buka perisai AkhiBrowser di bar alat. Pada Android: menu, kemudian Sambungan, kemudian AkhiBrowser.
+c2	Di bawah Premium, tekan Urus langganan. Ini membuka langganan anda di Stripe.
+c3	Pilih untuk membatalkan, dan sahkan.
+c4	Premium kemudian tamat, dan semua perlindungan percuma terus berfungsi. Pembelian seumur hidup bukan langganan, jadi tiada apa yang perlu dibatalkan.
+c5	Tidak dapat membuka pelayar? E-mel <a href="mailto:support@akhibrowser.com">support@akhibrowser.com</a> dengan alamat e-mel yang anda gunakan untuk membayar.
+gp0	Dibeli di Google Play
+gp1	Ubah atau batalkan dalam Google Play: di Play Store, ketik gambar profil anda, kemudian Pembayaran dan langganan, Langganan, AkhiBrowser. Premium terus berfungsi sehingga akhir tempoh yang anda bayar.
+gp2	Premium pada komputer anda juga
+gp3	Dalam AkhiBrowser pada telefon anda: menu, kemudian Sambungan, kemudian AkhiBrowser. Di bawah Premium, tekan Dapatkan kunci lesen.
+gp4	Salin kunci, atau tekan E-melkan kunci kepada saya dan buka e-mel pada komputer anda.
+gp5	Dalam AkhiBrowser pada Windows, buka perisai AkhiBrowser di bar alat dan tampal kunci di bawah Premium.
+gp6	Kunci berfungsi pada sehingga 3 peranti, atau 10 dengan Family. Batalkan di Google Play, dan ia tamat pada komputer anda juga.
+gp7	Membeli di laman web ini, mendapat hadiah atau kunci Sekolah / Masjid?
+gp8	Kunci anda berfungsi dalam AkhiBrowser pada Windows dan Android: menu, Sambungan, AkhiBrowser, Premium, tampal kunci. Kunci Sekolah / Masjid berfungsi dengan cara yang sama, pada sehingga 500 peranti.
+t87	Pelan hala tuju: iPhone dan Mac
+t88	AkhiBrowser hari ini untuk Windows dan Android. Versi iOS dan macOS akan diumumkan, belum ada tarikh. Matlamat kami ialah memulakannya sebaik sahaja 100 keluarga menggunakan Family Premium.
+t53	AkhiBrowser dibina atas <a href="https://www.firefox.com/">Firefox</a>, dan tidak dibuat atau disokong oleh Mozilla. Pembuangan muzik latar dibina daripada <a href="https://github.com/mohamedsadiqaguenaou/NoMusic">NoMusic</a> oleh Mohamed Sadiq.
+faqf	Soalan lazim
+nlb	Surat berita: satu ayat setiap minggu
+t54	Kod sumber di GitHub
+rv0	Puas hati dengan AkhiBrowser? Ulasan membantu keluarga lain menemuinya:
+loc	Almere, Belanda
+p0	Dikuasakan oleh
+kt1	Kit untuk sekolah dan masjid
+kt2	Dengan pelan Sekolah / Masjid, semua kanak-kanak di sekolah atau masjid anda mendapat Family Premium secara percuma: satu kunci untuk sehingga 500 peranti. Halaman ini menulis mesej dan poster untuk anda.
+kt3	1. Dapatkan kunci
+kt4	Ambil <a href="/#school">pelan Sekolah / Masjid</a>, €30 sebulan, yang boleh dibatalkan pada bila-bila masa. Anda mendapat kunci pada skrin dan melalui e-mel.
+kt5	2. Kongsikan dengan keluarga anda
+kt6	Tampal kunci di bawah untuk mesej siap untuk kumpulan WhatsApp atau surat berita anda, dan poster untuk dicetak. Kunci kekal di halaman ini: tiada apa yang dihantar kepada kami.
+kt7	3. Keluarga memasang AkhiBrowser
+kt8	Mereka memuat turun AkhiBrowser, menampal kunci di bawah Premium, dan menyediakannya dengan <a href="/setup/">tip untuk ibu bapa</a>.
+kt8p	4. Keluarga dengan AkhiBrowser dari Google Play
+kt8q	AkhiBrowser dari Google Play juga berfungsi dengan kunci anda: keluarga menampal kunci yang sama, pada sehingga 500 peranti bersama-sama.
+kt9	Kunci Sekolah / Masjid anda
+kt10	Nama sekolah atau masjid anda
+kt11	Mesej untuk keluarga anda
+kt12	Salin mesej
+kt13	Kongsi di WhatsApp
+kt14	Cetak poster
+kt15	Kongsikan kunci hanya dalam komuniti anda, bukan di media sosial awam: ia berfungsi pada sehingga 500 peranti, dan sesiapa yang memilikinya boleh menggunakan salah satunya. Apabila kesemua 500 digunakan, peranti yang paling lama tidak digunakan memberi ruang, dan kami menghantar e-mel kepada anda.
+kt16	Assalamualaikum! {NAME} memberikan AkhiBrowser Family Premium secara percuma kepada setiap keluarga: pelayar halal yang menyekat laman haram dan iklan, mengaburkan gambar dan membuang muzik daripada video. 1. Muat turun AkhiBrowser: https://akhibrowser.com/#download 2. Buka perisai AkhiBrowser, tampal kunci ini di bawah Premium dan tekan Aktifkan: {KEY} 3. Menyediakannya untuk anak-anak anda? Tip: https://akhibrowser.com/setup/ Sila simpan kunci ini dalam komuniti kita.
+kt20	sekolah atau masjid kami
+kt17	Percuma untuk keluarga anda, daripada {NAME}
+kt18	AkhiBrowser Family Premium: pelayar halal yang menyekat laman haram dan iklan, mengaburkan gambar dan membuang muzik daripada video.
+kt19	Imbas untuk memuat turun, kemudian minta kunci daripada kami.
+su1	Tip untuk ibu bapa: tutup lompang
+su2	AkhiBrowser melindungi apa yang berlaku dalam AkhiBrowser. Kanak-kanak yang membuka pelayar atau aplikasi lain dapat mengelaknya. Langkah ini menutup lompang tersebut, dan kebanyakannya hanya mengambil beberapa minit.
+su3	Berikan anak anda akaun sendiri
+su4	Pada Windows, akaun standard, bukan pentadbir, supaya anak anda tidak boleh memasang pelayar lain atau mengubah tetapan. Pada Android, akaun Google untuk anak anda, diurus dengan Google Family Link.
+su5	Jadikan AkhiBrowser pelayar lalai
+su6	Pautan daripada aplikasi lain kemudian dibuka dalam AkhiBrowser. Windows: Tetapan, Apl, Apl lalai. Android: Tetapan, Apl, Apl lalai, Apl pelayar.
+su7	Sekat pelayar lain
+su8	Pada Android, sekat Chrome dan pelayar lain dalam Family Link, di bawah had aplikasi anak anda. Pada Windows, nyahpasang pelayar yang tidak diperlukan anak anda, dan sekat yang lain dalam Microsoft Family Safety, di bawah aplikasi dan permainan.
+su9	Tapis seluruh telefon atau rangkaian rumah
+su10	AkhiBrowser mencari laman melalui DNS keluarga Cloudflare. Gunakannya juga untuk setiap aplikasi: pada Android, tetapkan DNS Peribadi kepada family.cloudflare-dns.com (Tetapan, Rangkaian dan internet; laluannya sedikit berbeza mengikut telefon). Pada penghala anda, tetapkan pelayan DNS kepada 1.1.1.3 dan 1.0.0.3, untuk setiap peranti pada Wi-Fi anda.
+su11	Tetapkan PIN ibu bapa
+su12	Dalam tetapan AkhiBrowser, tetapkan PIN ibu bapa, supaya perlindungan tidak boleh dimatikan tanpa anda.
+su13	Berbual dengan anak anda
+su14	Tiada penapis yang menangkap semuanya. Beritahu anak anda mengapa peraturan ini ada, dan bahawa mereka sentiasa boleh datang kepada anda apabila melihat sesuatu yang salah.
+t40	Apa yang keluar dari peranti anda
+t41	Sejarah, halaman dan gambar anda kekal pada peranti anda. Tiada apa yang anda lakukan sampai kepada kami, dan tiada telemetri, kajian atau laporan ranap dihantar kepada Mozilla. Pelayar tetap perlu berhubung dengan beberapa perkhidmatan, jadi inilah semuanya.
+t42	<strong>Nama laman, kepada Cloudflare.</strong> Untuk menyekat laman dewasa di peringkat rangkaian, pelayar mencari nama melalui DNS keluarga Cloudflare, jadi Cloudflare melihat nama laman yang anda lawati.
+t43	<strong>Muat turun.</strong> uBlock Origin dari addons.mozilla.org, senarai sekatan iklan, dan codec video dari Mozilla, Cisco dan Google.
+t44	<strong>Apa yang baharu.</strong> Selepas kemas kini, halaman permulaan meminta nota keluaran versi itu daripada GitHub sekali. Tiada apa-apa tentang anda dihantar.
+t90	<strong>Kiraan tanpa nama, kepada kami.</strong> Sekali sehari pelayar mengira dirinya: versinya, sistemnya, sama ada Premium hidup dan negara asal permintaan (bukan alamat anda), tanpa ID dan tanpa apa-apa yang anda lawati. Matikannya dalam tetapan, di bawah Kira tanpa nama.
+t45	<strong>Kunci Premium, jika anda memasukkannya.</strong> Ia disemak dengan pelayan lesen kami, dengan ID pemasangan rawak, supaya satu kunci berfungsi pada 3 peranti serentak. Pelayan hanya menyimpan cincangan kunci dan ID pemasangan, tidak pernah data pelayaran anda. Jika anda memberikan alamat e-mel (untuk menerima kunci anda, untuk hadiah atau untuk laporan ibu bapa Family), ia digunakan untuk itu; <a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md">dasar privasi</a> menyatakan apa yang disimpan.
+nws1	<strong>Surat berita.</strong> Hanya jika anda mendaftar di <a href="/newsletter/">akhibrowser.com/ms/newsletter</a> (atau menanda kotak semasa pembayaran) dan mengesahkan melalui e-mel: pelayan lesen menyimpan alamat anda, bahasanya dan tarikhnya, untuk menghantar satu ayat al-Quran dan berita terkini seminggu sekali, dan sekali diskaun 10% untuk Family Premium. Setiap e-mel ada pautan untuk berhenti; alamat tidak pernah dikongsi.
+t55	<strong>Analitik laman.</strong> Tiada apa-apa daripada Google dimuatkan sehingga anda menekan Benarkan pada sepanduk; selepas itu laman memuatkan Google Tag Manager, jadi Google menerima alamat IP sambungan dan maklumat teknikal permintaan. Google Analytics hanya mengira lawatan dan klik (pada butang muat turun atau pelan) selepas anda menekan Benarkan pada sepanduk; sehingga itu tiada kuki analitik ditetapkan. Apabila anda membeli pelan selepas membenarkannya, ID Google Analytics tanpa nama anda dibawa bersama pembayaran, supaya pembelian (pelan dan jumlah, tidak pernah e-mel atau kunci anda) dikira untuk lawatan itu. Selepas anda membenarkannya, piksel Reddit turut dimuatkan, supaya Reddit dapat melihat bahawa lawatan, klik pada butang muat turun, pendaftaran surat berita yang disahkan atau permohonan menjadi ahli gabungan atau rakan kongsi datang daripada salah satu iklannya (Reddit menetapkan kukinya sendiri untuk ini). Jika anda datang daripada iklan di Reddit dan, selepas membenarkannya, mengklik butang muat turun atau membeli pelan, pelayan lesen memberitahu Reddit bahawa iklan itu membawa kepada muat turun (ID klik Reddit dan kedai, serta alamat IP dan ejen pengguna pelayar anda) atau pembelian (ID klik Reddit, jumlah dan mata wang pelan). Perkara yang sama berlaku untuk mendaftar surat berita (sebaik sahaja anda mengesahkannya) atau memohon menjadi ahli gabungan atau rakan kongsi: ID klik Reddit, ID peristiwa, alamat IP dan ejen pengguna anda, tidak pernah nama atau e-mel anda. Jika anda memasang aplikasi Android dari Google Play selepas klik sedemikian, pautan Play membawa ID klik Reddit, dan aplikasi menghantarnya sekali kepada pelayan lesen dengan ID rawak untuk pemasangan itu, supaya Reddit boleh mengira pemasangan daripada iklannya (ID klik Reddit, ID itu, alamat IP dan ejen pengguna anda). Mematikan "Kira tanpa nama" dalam aplikasi juga menghentikan ini. <a href="#cookies">Ubah pilihan anda</a>. Lihat <a href="https://policies.google.com/privacy">dasar privasi Google</a>.
+t46	<a href="https://github.com/halgurdh/akhiBrowser/blob/main/PRIVACY.md">Dasar privasi</a>
+af1	Cadangkan AkhiBrowser kepada sekolah atau masjid anda
+af2	Kenal sekolah, masjid atau pusat Islam yang boleh menggunakan AkhiBrowser? Jadi ahli gabungan: anda mendapat 20% daripada setiap bayaran Sekolah / Masjid mereka, setiap bulan, selagi mereka kekal melanggan. Bayaran dikira apabila ia berusia 30 hari, dan kami membayar setiap bulan.
+afn	Dua program, setiap satu dengan borangnya sendiri: <a href="#schools">untuk sekolah dan masjid</a> dan <a href="#vip">untuk pempengaruh (VIP)</a>.
+afh1	Untuk sekolah dan masjid
+sc1	Sekolah atau masjid membayar
+sc2	€30<small>sebulan</small>
+sc3	Pelan Sekolah / Masjid: semua dalam Family Premium, satu kunci untuk sehingga 500 peranti, untuk diberikan percuma kepada keluarga mereka.
+sc4	Anda mendapat
+sc5	€6<small>sebulan, untuk setiap sekolah</small>
+sc6	20% daripada setiap bayaran, selagi mereka kekal melanggan.
+af3	Nama anda
+af4	Alamat e-mel
+af5	Sekolah, masjid atau organisasi
+af7	Mohon untuk sekolah dan masjid
+af8	Kami menghantar pautan anda sendiri melalui e-mel dalam beberapa hari. Butiran anda hanya digunakan untuk ini. Untuk menghalang robot, borang memuatkan Cloudflare Turnstile sebaik sahaja anda mula mengisinya.
+afh2	Untuk pempengaruh: program VIP
+vip2	Pempengaruh? Program ahli gabungan VIP kami untuk Family Premium: pengikut anda mendapat diskaun 10%, dan anda mendapat 10% daripada setiap bayaran mereka, setiap tahun mereka kekal. 200 keluarga membawa anda kira-kira €900 setahun, tahun demi tahun.
+vipf2	Nama anda
+vipf3	Alamat e-mel
+vipf4	Nama saluran atau jenama anda
+vipf5	Di mana anda menyiarkan, dan berapa ramai pengikut anda?
+vipf6	Mohon sebagai VIP
+vipf7	Kami menjawab dalam beberapa hari. Sebaik sahaja kami menjemput anda, anda mendapat kod dan pautan anda melalui e-mel.
+mm2	AkhiBrowser percuma dan tidak pernah menjual atau berkongsi apa yang anda lakukan. Pengguna percuma melihat beberapa pintasan penaja kami pada tab baharu, yang boleh mereka matikan; Premium tiada. Beginilah cara ia membiayai dirinya, semua caranya:
+mm3	Premium
+mm4	Ciri berbayar pilihan untuk anda, untuk keluarga, dan untuk sekolah dan masjid. Kebanyakan wang datang dari sini.
+mm5	Rakan kongsi carian
+mm6	Apabila enjin carian mempunyai kontrak rakan kongsi dengan kami, carian yang anda mulakan dalam AkhiBrowser membawa kod rakan kongsi kami, dan enjin carian memberi kami bahagian kecil daripada pendapatannya. Hanya kod ditambah: tiada apa-apa tentang anda atau carian anda sampai kepada kami.
+mm7	Kedai rakan kongsi, hanya jika anda memilih
+mm8	Mati kecuali anda menghidupkannya: apabila anda sendiri pergi ke kedai rakan kongsi, kami menambah kod kami dan kedai memberi kami bahagian kecil. Anda membayar sama, dan pautan dari laman lain mengekalkan kodnya sendiri.
+mm9	Tip di halaman permulaan kami
+mm10	Sesekali tip dengan pautan ahli gabungan, sentiasa dilabel sedemikian. Kami tidak pernah mengubah pautan laman web lain.
+mm11	Ahli gabungan, penaja dan rakan kongsi
+mm12	Orang yang membawa sekolah dan masjid mendapat 20% daripada bayaran mereka. Penaja dan organisasi boleh menyokong AkhiBrowser, tetapi tidak pernah mendapat data anda atau hak bersuara tentang apa yang disekat.
+mm13	Apa yang kami tidak pernah lakukan: menjual atau berkongsi pelayaran anda, menjejak anda merentas laman atau untuk iklan, atau membiarkan wang mengubah apa yang disekat. Pintasan penaja hanya mengira kliknya, tanpa apa-apa tentang siapa yang mengklik.
+mm28	Penaja dan rakan kongsi kami
+mm15	Nama anda
+mm16	Alamat e-mel
+mm17	Organisasi
+mm26	Laman web anda
+mm18	Jenis rakan kongsi apa?
+mm19	Penaja
+mm20	Rakan kongsi ekosistem: aplikasi Islam, platform sekolah atau organisasi
+mm21	Enjin carian
+mm22	Kedai
+mm23	Apa cadangan anda?
+mm27	Tunjukkan organisasi kami, dengan pautan ke laman web kami, di halaman penaja dan sebagai pintasan pada tab baharu AkhiBrowser untuk pengguna percuma
+mm24	Hantar
+mm25	Kami menjawab dalam beberapa hari. Perkongsian mesti memastikan AkhiBrowser kekal peribadi: tiada data pengguna kami pernah menjadi sebahagian daripadanya.
+aStore	Muat turun dari Microsoft Store
+aPlay	Dapatkannya di Google Play
+a0	Tetapan AkhiBrowser: ayat hari ini, waktu solat, dan lima perlindungan, semuanya hidup: iklan dan penjejak disekat, muzik latar dibuang, kandungan dewasa disekat, laman haram disekat dan gambar bogel dikaburkan.
+a1	Treler AkhiBrowser: NoMusic membuang muzik latar dan mengekalkan suara, penapis haram menyekat kebogelan dan kandungan dewasa pada peranti anda, dan uBlock Origin terbina dalam, 25 saat
+a9	Video AkhiBrowser: anda hanya mahu menonton ceramah dalam talian, NoMusic membuang muzik latar dan mengekalkan suara, 21 saat
+a2	Video AkhiBrowser: mereka masukkan muzik, jadi kami keluarkannya, 19 saat
+car0	Ciri-ciri AkhiBrowser
+car1	Percuma: Tundukkan pandangan. Secara automatik. Setiap gambar dan video kekal kabur sehingga AI pada peranti memeriksanya, jadi tiada apa yang terpapar tiba-tiba. Halaman berita dalam AkhiBrowser dengan gambar dikaburkan.
+car2	Percuma: Kekalkan suara. Buang muzik. AkhiBrowser membuang muzik latar daripada video semasa dimainkan. Video ceramah dengan suara dikekalkan dan muzik dibuang.
+car3	Percuma: Cari "bir". Dapatkan kebenaran. Carian haram disekat atau ditukar menjadi soalan, dalam 11 bahasa, dan SafeSearch sentiasa hidup.
+car4	Premium: Cukup bijak untuk melihat tudung. Wanita bertudung ditunjukkan dan yang tidak bertudung dikaburkan. Anda memilih siapa yang dikaburkan: wanita, lelaki atau kedua-duanya.
+car5	Premium: YouTube, tanpa lubang arnab. Tiada cadangan, skrin akhir, main automatik atau Shorts, dan komen disembunyikan.
+car6	Family Premium: Anda tetapkan peraturan. PIN menjaganya. PIN ibu bapa, had harian, waktu tidur dan waktu sekolah.
+car7	Family Premium: Azan berkumandang? Suapan berhenti. Laman media sosial, video dan permainan dijeda beberapa minit selepas setiap waktu solat.
+car8	Family Premium: Halal atau tidak? Ketahui dahulu. Halaman kedai memberi amaran tentang gelatin dan nombor E, dan tawaran bayar kemudian mendapat amaran riba.
+carPrev	Gambar sebelumnya
+carPause	Jeda
+carNext	Gambar seterusnya
+a3	Pemandangan kabur dengan label: Memeriksa pada peranti anda.
+a4	Pemandangan yang sama, tajam, dengan label: Diperiksa: ditunjukkan.
+a10	Gambar seseorang yang kekal kabur, dengan label: Diperiksa: disembunyikan.
+a5	Halaman yang berkata: Halaman ini disekat. AkhiBrowser menyekat laman arak, dadah dan judi. Di bawahnya satu ayat al-Quran, 2:219, dalam bahasa Arab dan Inggeris, dengan pautan ke quran.com.
+a6	Gelombang bunyi suara, dengan label: Muzik latar: dibuang.
+a7	Halaman utama AkhiBrowser pada Android: bar carian, logo AkhiBrowser dan label: Anda dilindungi.
+aPlans	Perbandingan pelan AkhiBrowser. Percuma: iklan dan penjejak disekat, laman haram disekat, tiada muzik dalam video, waktu solat dan ayat, €0. Premium: semua dalam Percuma, pilih siapa yang dikaburkan, mod ketat, web yang lebih tenang; €3.99 sebulan, €39 setahun atau €119 seumur hidup. Family Premium: semua dalam Premium, kawalan ibu bapa dan PIN, ringkasan aktiviti, jeda solat, semakan halal dan riba; €59.99 setahun, 3 hari percuma, 10 peranti. Sekolah / Masjid: semua dalam Family, satu kunci lesen, sehingga 500 peranti, €30 sebulan.
+mm26p	lamansaya.my
+carPlay	Main

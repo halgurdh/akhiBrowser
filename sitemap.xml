@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://akhibrowser.com/</loc></url>
+  <url><loc>https://akhibrowser.com/de/</loc></url>
+  <url><loc>https://akhibrowser.com/fr/</loc></url>
+  <url><loc>https://akhibrowser.com/es/</loc></url>
+  <url><loc>https://akhibrowser.com/tr/</loc></url>
+  <url><loc>https://akhibrowser.com/id/</loc></url>
+  <url><loc>https://akhibrowser.com/ms/</loc></url>
+  <url><loc>https://akhibrowser.com/ur/</loc></url>
+  <url><loc>https://akhibrowser.com/fa/</loc></url>
+  <url><loc>https://akhibrowser.com/ckb/</loc></url>
   <url><loc>https://akhibrowser.com/nl/</loc></url>
   <url><loc>https://akhibrowser.com/ar/</loc></url>
   <url><loc>https://akhibrowser.com/blog/</loc></url>

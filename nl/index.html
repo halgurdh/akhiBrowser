@@ -9,6 +9,15 @@
 <link rel="alternate" hreflang="en" href="https://akhibrowser.com/">
 <link rel="alternate" hreflang="nl" href="https://akhibrowser.com/nl/">
 <link rel="alternate" hreflang="ar" href="https://akhibrowser.com/ar/">
+<link rel="alternate" hreflang="de" href="https://akhibrowser.com/de/">
+<link rel="alternate" hreflang="fr" href="https://akhibrowser.com/fr/">
+<link rel="alternate" hreflang="es" href="https://akhibrowser.com/es/">
+<link rel="alternate" hreflang="tr" href="https://akhibrowser.com/tr/">
+<link rel="alternate" hreflang="id" href="https://akhibrowser.com/id/">
+<link rel="alternate" hreflang="ms" href="https://akhibrowser.com/ms/">
+<link rel="alternate" hreflang="ur" href="https://akhibrowser.com/ur/">
+<link rel="alternate" hreflang="fa" href="https://akhibrowser.com/fa/">
+<link rel="alternate" hreflang="ckb" href="https://akhibrowser.com/ckb/">
 <link rel="alternate" hreflang="x-default" href="https://akhibrowser.com/">
 <meta name="theme-color" content="#03282e">
 <meta property="og:site_name" content="AkhiBrowser">
@@ -587,10 +596,19 @@ footer .powered a:hover { text-decoration: underline; }
         </div></details>
         <a class="nav-cta" href="#download" data-t="nv13">Downloaden</a>
       </div><!-- /links -->
-      <select class="lang" id="lang" aria-label="Language · Taal · اللغة" hidden>
+      <select class="lang" id="lang" aria-label="Language · Taal · اللغة · Sprache · Langue · Idioma · Dil · Bahasa · زبان · زمان" hidden>
         <option value="en" lang="en">English</option>
         <option value="nl" lang="nl">Nederlands</option>
         <option value="ar" lang="ar">العربية</option>
+        <option value="de" lang="de">Deutsch</option>
+        <option value="fr" lang="fr">Français</option>
+        <option value="es" lang="es">Español</option>
+        <option value="tr" lang="tr">Türkçe</option>
+        <option value="id" lang="id">Bahasa Indonesia</option>
+        <option value="ms" lang="ms">Bahasa Melayu</option>
+        <option value="ur" lang="ur">اردو</option>
+        <option value="fa" lang="fa">فارسی</option>
+        <option value="ckb" lang="ckb">کوردی</option>
       </select>
       </div>
     </nav>
@@ -1503,7 +1521,8 @@ footer .powered a:hover { text-decoration: underline; }
       description: "AkhiBrowser متصفح حلال مجاني للمسلمين، مبني على Firefox. يحجب الإعلانات والمواقع الإباحية والمحرمة، ويموّه الصور حتى تُفحص، ويزيل الموسيقى الخلفية من الفيديوهات، وكل ذلك على جهازك.",
     },
   };
-  const LANGS = ["en", "nl", "ar"];
+  const LANGS = ["en", "nl", "ar", "de", "fr", "es", "tr", "id", "ms", "ur", "fa", "ckb"];
+  const RTL = ["ar", "ur", "fa", "ckb"];
   const description = document.querySelector('meta[name="description"]');
   META.en = { title: document.title, description: description.content };
   const textNodes = [...document.querySelectorAll("[data-t]")].map(node => [node, node.innerHTML]);
@@ -1518,7 +1537,7 @@ footer .powered a:hover { text-decoration: underline; }
   function show(lang) {
     const dict = DICTS[lang] || {};
     document.documentElement.lang = lang;
-    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+    document.documentElement.dir = RTL.includes(lang) ? "rtl" : "ltr";
     document.title = META[lang].title;
     description.content = META[lang].description;
     for (const [node, en] of textNodes) {
@@ -1559,10 +1578,14 @@ footer .powered a:hover { text-decoration: underline; }
   const device = (navigator.languages || [navigator.language]).map(l => String(l).slice(0, 2).toLowerCase()).find(l => LANGS.includes(l));
   // /nl/ and /ar/ are this page already in that language (tools/build_home.py): they keep it
   const fixed = document.documentElement.dataset.home;
+  const wanted = LANGS.includes(saved) ? saved : device || "en";
   if (fixed) {
     menu.value = fixed;
+  } else if (wanted !== "en" && !DICTS[wanted]) {
+    // the languages without their texts in this page have only their own home page (tools/build_home.py)
+    location.replace(`/${wanted}/${location.search}${location.hash}`);
   } else {
-    show(LANGS.includes(saved) ? saved : device || "en");
+    show(wanted);
   }
   // a choice in the menu opens the home page in that language, and is remembered
   menu.addEventListener("change", () => {
