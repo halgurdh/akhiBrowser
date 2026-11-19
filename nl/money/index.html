@@ -9,6 +9,7 @@
 <link rel="alternate" hreflang="en" href="https://akhibrowser.com/money/">
 <link rel="alternate" hreflang="nl" href="https://akhibrowser.com/nl/money/">
 <link rel="alternate" hreflang="ar" href="https://akhibrowser.com/ar/money/">
+<link rel="alternate" hreflang="de" href="https://akhibrowser.com/de/money/">
 <link rel="alternate" hreflang="x-default" href="https://akhibrowser.com/money/">
 <meta name="theme-color" content="#03282e">
 <meta property="og:title" content="Hoe we geld verdienen | AkhiBrowser">
@@ -68,7 +69,7 @@
         </div></details>
         <a class="nav-cta" href="/#download" data-t="nv13">Downloaden</a>
       </div><!-- /links -->
-      <select class="lang" id="lang" aria-label="Taal"><option value="/money/" lang="en">English</option><option value="/nl/money/" lang="nl" selected>Nederlands</option><option value="/ar/money/" lang="ar">العربية</option></select>
+      <select class="lang" id="lang" aria-label="Taal"><option value="/money/" lang="en">English</option><option value="/nl/money/" lang="nl" selected>Nederlands</option><option value="/ar/money/" lang="ar">العربية</option><option value="/de/money/" lang="de">Deutsch</option></select>
     </div>
   </nav>
 </header>
@@ -247,6 +248,15 @@ addEventListener("pageshow", () => { menu.value = menu.querySelector("[selected]
       robot: "لحظة من فضلك: ما زلنا نتحقق من أنك لست روبوتًا. انتظر بضع ثوانٍ ثم اضغط الزر مرة أخرى.",
       sending: "جارٍ الإرسال…",
     },
+    de: {"name": "Bitte gib deinen Namen ein.", "email": "Bitte gib eine gültige E-Mail-Adresse ein, etwa name@beispiel.de.", "site": "Bitte prüfe die Adresse deiner Website, etwa deinname.de, oder lass das Feld leer.", "organisation": "Bitte gib den Namen deiner Schule, Moschee, Organisation oder deines Kanals ein.", "robot": "Einen Moment: Wir prüfen noch, dass du kein Roboter bist. Warte ein paar Sekunden und drück die Schaltfläche erneut.", "sending": "Wird gesendet…"},
+    fr: {"name": "Merci d'indiquer ton nom.", "email": "Merci d'indiquer une adresse e-mail valide, comme nom@exemple.fr.", "site": "Vérifie l'adresse de ton site, comme tonnom.fr, ou laisse le champ vide.", "organisation": "Merci d'indiquer le nom de ton école, ta mosquée, ton organisation ou ta chaîne.", "robot": "Un instant : nous vérifions encore que tu n'es pas un robot. Attends quelques secondes et appuie de nouveau sur le bouton.", "sending": "Envoi…"},
+    es: {"name": "Escribe tu nombre.", "email": "Escribe un correo electrónico válido, como nombre@ejemplo.com.", "site": "Revisa la dirección de tu web, como tunombre.com, o déjala vacía.", "organisation": "Escribe el nombre de tu escuela, mezquita, organización o canal.", "robot": "Un momento: aún estamos comprobando que no eres un robot. Espera unos segundos y vuelve a pulsar el botón.", "sending": "Enviando…"},
+    tr: {"name": "Lütfen adını yaz.", "email": "Lütfen geçerli bir e-posta adresi yaz, örneğin ad@ornek.com.", "site": "Lütfen web sitenin adresini kontrol et, örneğin adin.com, ya da boş bırak.", "organisation": "Lütfen okulunun, caminin, kuruluşunun veya kanalının adını yaz.", "robot": "Bir saniye: robot olmadığını hâlâ kontrol ediyoruz. Birkaç saniye bekle ve düğmeye tekrar bas.", "sending": "Gönderiliyor…"},
+    id: {"name": "Silakan isi namamu.", "email": "Silakan isi alamat email yang valid, seperti nama@contoh.com.", "site": "Silakan periksa alamat situs webmu, seperti namamu.com, atau biarkan kosong.", "organisation": "Silakan isi nama sekolah, masjid, organisasi, atau saluranmu.", "robot": "Sebentar: kami masih memeriksa bahwa kamu bukan robot. Tunggu beberapa detik lalu tekan tombolnya lagi.", "sending": "Mengirim…"},
+    ms: {"name": "Sila isi nama anda.", "email": "Sila isi alamat e-mel yang sah, seperti nama@contoh.com.", "site": "Sila semak alamat laman web anda, seperti namaanda.com, atau biarkan kosong.", "organisation": "Sila isi nama sekolah, masjid, organisasi atau saluran anda.", "robot": "Sebentar: kami masih menyemak bahawa anda bukan robot. Tunggu beberapa saat dan tekan butang sekali lagi.", "sending": "Menghantar…"},
+    ur: {"name": "براہ کرم اپنا نام لکھیں۔", "email": "براہ کرم درست ای میل پتہ لکھیں، جیسے name@example.com۔", "site": "براہ کرم اپنی ویب سائٹ کا پتہ جانچیں، جیسے yourname.com، یا اسے خالی چھوڑ دیں۔", "organisation": "براہ کرم اپنے اسکول، مسجد، ادارے یا چینل کا نام لکھیں۔", "robot": "ایک لمحہ: ہم ابھی جانچ رہے ہیں کہ آپ روبوٹ نہیں ہیں۔ چند سیکنڈ انتظار کریں اور بٹن دوبارہ دبائیں۔", "sending": "بھیجا جا رہا ہے…"},
+    fa: {"name": "لطفاً نامت را بنویس.", "email": "لطفاً یک نشانی ایمیل درست بنویس، مثل name@example.com.", "site": "لطفاً نشانی وب‌سایتت را بررسی کن، مثل yourname.com، یا خالی بگذار.", "organisation": "لطفاً نام مدرسه، مسجد، سازمان یا کانالت را بنویس.", "robot": "یک لحظه: هنوز داریم بررسی می‌کنیم که ربات نیستی. چند ثانیه صبر کن و دوباره دکمه را بزن.", "sending": "در حال ارسال…"},
+    ckb: {"name": "تکایە ناوت بنووسە.", "email": "تکایە ناونیشانێکی ئیمەیڵی دروست بنووسە، وەک name@example.com.", "site": "تکایە ناونیشانی ماڵپەڕەکەت بپشکنە، وەک yourname.com، یان بە بەتاڵی بیهێڵەرەوە.", "organisation": "تکایە ناوی قوتابخانە، مزگەوت، ڕێکخراو یان کەناڵەکەت بنووسە.", "robot": "ساتێک: هێشتا دەپشکنین کە ڕۆبۆت نیت. چەند چرکەیەک چاوەڕێ بکە و دووبارە دوگمەکە دابگرە.", "sending": "دەنێردرێت…"},
   }[lang] ?? null;
   if (!words) {
     return;

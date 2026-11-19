@@ -17,7 +17,8 @@ import json
 import re
 from pathlib import Path
 
-from content import ARTICLES, COMPARE, COMPARE_BROWSERS, UI
+from content import ARTICLES, COMPARE, COMPARE_BROWSERS, LANGS, UI
+from langs import EXTRA, FORMS, LABEL as LANG_LABEL, NAMES, direction, home_texts
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://akhibrowser.com"
@@ -31,9 +32,8 @@ GTM = """<script>
 <script src="/assets/analytics.js" defer></script>"""
 
 
-LANGS = ("en", "nl", "ar")
-LANG_NAMES = {"en": "English", "nl": "Nederlands", "ar": "العربية"}
-LANG_LABEL = {"en": "Language", "nl": "Taal", "ar": "اللغة"}
+# the languages these pages are built in: English, Dutch, Arabic and each language with a tools/content_<lang>.py
+LANG_NAMES = {lang: NAMES[lang] for lang in LANGS}
 YEAR = "2026"
 # keeps the year current; a choice in the language menu opens that page and is remembered for the home page
 SCRIPT = """<script>
@@ -100,6 +100,7 @@ FORM_CHECKS = """<script>
       robot: "لحظة من فضلك: ما زلنا نتحقق من أنك لست روبوتًا. انتظر بضع ثوانٍ ثم اضغط الزر مرة أخرى.",
       sending: "جارٍ الإرسال…",
     },
+    EXTRA_FORMS
   }[lang] ?? null;
   if (!words) {
     return;
@@ -167,7 +168,7 @@ FORM_CHECKS = """<script>
     button.dataset.label = button.textContent;
   }
 })();
-</script>"""
+</script>""".replace("EXTRA_FORMS", "\n    ".join(f"{lang}: {json.dumps(FORMS[lang], ensure_ascii=False)}," for lang in EXTRA))
 
 
 SPONSORS_SCRIPT = """<script>
@@ -236,6 +237,8 @@ def home():
     for lang, name in (("nl", "NL"), ("ar", "AR")):
         block = re.search(r"const %s = \{\n(.*?)\n\};" % name, text, re.S).group(1)
         dicts[lang] = {k: json.loads(v) for k, v in re.findall(r'^"([\w-]+)": (".*"),?$', block, re.M)}
+    for lang in EXTRA:
+        dicts[lang] = home_texts(lang)
     menu = re.search(r'<div class="links" id="menu">.*?</div><!-- /links -->', text, re.S).group(0)
     template = re.search(r'<template id="pages">(.*?)</template>', text, re.S).group(1)
     sections = dict(re.findall(r'<section id="(\w+)">\s*<div class="wrap">(.*?)</div>\s*</section>', template, re.S))
@@ -300,9 +303,8 @@ def page(lang, path, title, description, body, json_ld=None, scripts="", early_s
     canonical = SITE + url_of(lang, path)
     ld = f'<script type="application/ld+json">{json.dumps(json_ld, ensure_ascii=False)}</script>\n' if json_ld else ""
     alternates = "\n".join(f'<link rel="alternate" hreflang="{code}" href="{SITE + url_of(code, path)}">' for code in LANGS)
-    direction = ' dir="rtl"' if lang == "ar" else ""
     return f"""<!doctype html>
-<html lang="{lang}"{direction}>
+<html lang="{lang}"{direction(lang)}>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -452,9 +454,31 @@ def main():
         for path, content in builders:
             write(lang, path, content)
             paths.append(url_of(lang, path))
-    # /nl/ and /ar/: tools/build_home.py; the account deletion, newsletter and FAQ pages are written by hand
-    by_hand = [url_of(lang, path) for path in ("delete-account/", "newsletter/", "faq/") for lang in LANGS]
-    urls = ["/", "/nl/", "/ar/"] + paths + by_hand
+    # a link to a page that doesn't exist in that language yet (say, its FAQ) goes to the English page
+    for url in paths:
+        target = ROOT / url.lstrip("/") / "index.html"
+        lang = url.split("/")[1] if url.split("/")[1] in LANGS else "en"
+        if lang == "en":
+            continue
+
+        def local(m, lang=lang):
+            rest = m.group(1)
+            page = rest.split("#")[0].split("?")[0]
+            return m.group(0) if not page or (ROOT / lang / page / "index.html").exists() else f'href="/{rest}"'
+
+        text = target.read_text(encoding="utf-8")
+        fixed = re.sub(r'href="/%s/([^"]*)"' % lang, local, text)
+        if fixed != text:
+            target.write_text(fixed, encoding="utf-8", newline="\n")
+    # the home pages: tools/build_home.py, run after this, which links to these pages; the account deletion, newsletter and FAQ pages are written by hand
+    by_hand = [
+        url_of(lang, path)
+        for path in ("delete-account/", "newsletter/", "faq/")
+        for lang in LANGS
+        if (ROOT / url_of(lang, path).lstrip("/") / "index.html").exists()
+    ]
+    homes = ["/"] + [f"/{lang}/" for lang in NAMES if lang != "en" and (ROOT / lang / "index.html").exists()]
+    urls = homes + paths + by_hand
     sitemap = "\n".join(f"  <url><loc>{SITE}{u}</loc></url>" for u in urls)
     (ROOT / "sitemap.xml").write_text(
         f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{sitemap}\n</urlset>\n',

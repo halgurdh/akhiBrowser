@@ -566,3 +566,21 @@ for _article in ARTICLES:
     _article["ar"] = content_ar.ARTICLES[_article["slug"]]
 COMPARE["ar"] = content_ar.COMPARE
 COMPARE_BROWSERS["ar"] = content_ar.COMPARE_BROWSERS
+
+# the other languages, each with a content_<lang>.py of the same shape as content_ar.py (see tools/langs.py)
+import importlib  # noqa: E402
+from pathlib import Path as _Path  # noqa: E402
+
+from langs import EXTRA as _EXTRA  # noqa: E402
+
+LANGS = ["en", "nl", "ar"]
+for _lang in _EXTRA:
+    if not (_Path(__file__).resolve().parent / f"content_{_lang}.py").exists():
+        continue
+    _module = importlib.import_module(f"content_{_lang}")
+    UI[_lang] = _module.UI
+    for _article in ARTICLES:
+        _article[_lang] = _module.ARTICLES[_article["slug"]]
+    COMPARE[_lang] = _module.COMPARE
+    COMPARE_BROWSERS[_lang] = _module.COMPARE_BROWSERS
+    LANGS.append(_lang)
