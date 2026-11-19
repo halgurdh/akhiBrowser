@@ -3,6 +3,7 @@ import com.android.build.api.variant.FilterConfiguration
 import java.time.format.DateTimeFormatter
 
 import org.mozilla.conventions.WriteRuntimeDependencies
+import org.mozilla.conventions.GleanIndex
 
 import static org.mozilla.conventions.BuildConfigKt.getBuildId
 
@@ -583,6 +584,7 @@ ext {
     gleanExpireByVersion = Config.majorVersion(project)
     gleanNamespace = "mozilla.telemetry.glean"
     gleanPythonEnvDir = gradle.mozconfig.substs.GRADLE_GLEAN_PARSER_VENV
+    gleanYamlFiles = GleanIndex.getGleanYamlFiles(project)
 }
 apply plugin: "org.mozilla.telemetry.glean-gradle-plugin"
 
@@ -609,8 +611,6 @@ nimbus {
             release: "release",
             benchmark: "nightly",
     ]
-    applicationServicesDir = gradle.hasProperty('localProperties.autoPublish.application-services.dir')
-            ? gradle.getProperty('localProperties.autoPublish.application-services.dir') : null
 }
 
 dependencies {

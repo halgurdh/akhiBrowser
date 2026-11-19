@@ -694,7 +694,7 @@ nsCSPContext::GetAllowsInline(CSPDirective aDirective, bool aHasUnsafeHash,
 #endif
 
       // Step 2.1. For each expression of list: [...]
-      if (mPolicies[i]->allows(aDirective, CSP_NONCE, aNonce)) {
+      if (mPolicies[i]->allowsByNonce(aDirective, aNonce)) {
         continue;
       }
     }
@@ -731,7 +731,7 @@ nsCSPContext::GetAllowsInline(CSPDirective aDirective, bool aHasUnsafeHash,
     // aHasUnsafeHash is true for event handlers (type "script attribute"),
     // style= attributes (type "style attribute") and the javascript: protocol.
     if (!aHasUnsafeHash || unsafeHashesFlag) {
-      if (mPolicies[i]->allows(aDirective, CSP_HASH, content)) {
+      if (mPolicies[i]->allowsByHash(aDirective, content)) {
         continue;
       }
     }

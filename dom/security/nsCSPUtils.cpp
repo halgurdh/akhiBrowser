@@ -961,19 +961,6 @@ nsCSPNonceSrc::nsCSPNonceSrc(const nsAString& aNonce) : mNonce(aNonce) {}
 
 nsCSPNonceSrc::~nsCSPNonceSrc() = default;
 
-bool nsCSPNonceSrc::allows(enum CSPKeyword aKeyword,
-                           const nsAString& aContentOrNonce) const {
-  CSPUTILSLOG(("nsCSPNonceSrc::allows, aKeyWord: %s, a aContentOrNonce: %s",
-               CSP_EnumToUTF8Keyword(aKeyword),
-               NS_ConvertUTF16toUTF8(aContentOrNonce).get()));
-
-  if (aKeyword != CSP_NONCE) {
-    return false;
-  }
-  // nonces can not be invalidated by strict-dynamic
-  return mNonce.Equals(aContentOrNonce);
-}
-
 bool nsCSPNonceSrc::visit(nsCSPSrcVisitor* aVisitor) const {
   return aVisitor->visitNonceSrc(*this);
 }
@@ -1019,37 +1006,46 @@ void nsCSPHashSrcBase::toString(nsAString& outStr) const {
   outStr.AppendLiteral("'");
 }
 
-/* ===== nsCSPHashSrc ===================== */
+// The constructor lowercased the algorithm and converted base64url characters
+// in the hash to base64, as the digest is encoded.
+bool nsCSPHashSrcBase::matchesDigestOf(CSPHashDigestsCache& aCache) const {
+  Maybe<const nsCString&> digest = aCache.GetOrComputeDigest(mAlgorithm);
+  return digest && mHash.EqualsASCII(digest->get(), digest->Length());
+}
 
-bool nsCSPHashSrc::allows(enum CSPKeyword aKeyword,
-                          const nsAString& aContentOrNonce) const {
-  CSPUTILSLOG(("nsCSPHashSrc::allows, aKeyWord: %s, a aContentOrNonce: %s",
-               CSP_EnumToUTF8Keyword(aKeyword),
-               NS_ConvertUTF16toUTF8(aContentOrNonce).get()));
+/* ===== CSPHashDigestsCache ===================== */
 
-  if (aKeyword != CSP_HASH) {
-    return false;
+Maybe<const nsCString&> CSPHashDigestsCache::GetOrComputeDigest(
+    const nsAString& aAlgorithm) {
+  for (size_t i = 0; i < std::size(kAlgorithms); i++) {
+    if (!aAlgorithm.EqualsASCII(kAlgorithms[i])) {
+      continue;
+    }
+
+    if (mDigests[i].isNothing()) {
+      nsCOMPtr<nsICryptoHash> hasher;
+      nsresult rv = NS_NewCryptoHash(nsDependentCString(kAlgorithms[i]),
+                                     getter_AddRefs(hasher));
+      NS_ENSURE_SUCCESS(rv, Nothing());
+
+      rv = hasher->Update(
+          reinterpret_cast<const uint8_t*>(mValue.BeginReading()),
+          mValue.Length());
+      NS_ENSURE_SUCCESS(rv, Nothing());
+
+      nsAutoCString digest;
+      rv = hasher->Finish(true, digest);
+      NS_ENSURE_SUCCESS(rv, Nothing());
+
+      mDigests[i].emplace(digest);
+    }
+    return SomeRef<const nsCString>(mDigests[i].ref());
   }
 
-  // hashes can not be invalidated by strict-dynamic
-
-  // Convert aContentOrNonce to UTF-8
-  NS_ConvertUTF16toUTF8 content(aContentOrNonce);
-
-  nsCOMPtr<nsICryptoHash> hasher;
-  nsresult rv = NS_NewCryptoHash(NS_ConvertUTF16toUTF8(mAlgorithm),
-                                 getter_AddRefs(hasher));
-  NS_ENSURE_SUCCESS(rv, false);
-
-  rv = hasher->Update((uint8_t*)content.get(), content.Length());
-  NS_ENSURE_SUCCESS(rv, false);
-
-  nsAutoCString hash;
-  rv = hasher->Finish(true, hash);
-  NS_ENSURE_SUCCESS(rv, false);
-
-  return NS_ConvertUTF16toUTF8(mHash).Equals(hash);
+  return Nothing();
 }
+
+/* ===== nsCSPHashSrc ===================== */
 
 bool nsCSPHashSrc::visit(nsCSPSrcVisitor* aVisitor) const {
   return aVisitor->visitHashSrc(*this);
@@ -1186,12 +1182,8 @@ static bool DoesNonceMatchSourceList(nsILoadInfo* aLoadInfo,
   for (nsCSPBaseSrc* src : aSrcs) {
     // Step 3.1. If expression matches the nonce-source grammar, and nonce is
     // identical to expression’s base64-value part, return "Matches".
-    if (src->isNonce()) {
-      nsAutoString srcNonce;
-      static_cast<nsCSPNonceSrc*>(src)->getNonce(srcNonce);
-      if (srcNonce == nonce) {
-        return true;
-      }
+    if (src->isNonce() && static_cast<nsCSPNonceSrc*>(src)->nonce() == nonce) {
+      return true;
     }
   }
 
@@ -1403,6 +1395,56 @@ bool nsCSPDirective::allows(enum CSPKeyword aKeyword,
 
   for (uint32_t i = 0; i < mSrcs.Length(); i++) {
     if (mSrcs[i]->allows(aKeyword, aContentOrNonce)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// https://w3c.github.io/webappsec-csp/#match-element-to-source-list
+// Step 2.1. For each expression of list: If expression matches the
+// nonce-source grammar, and element has a nonce attribute whose value is
+// expression's base64-value part, return "Matches".
+bool nsCSPDirective::allowsByNonce(const nsAString& aNonce) const {
+  for (const nsCSPBaseSrc* src : mSrcs) {
+    if (src->isNonce() &&
+        static_cast<const nsCSPNonceSrc*>(src)->nonce() == aNonce) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// https://w3c.github.io/webappsec-csp/#match-element-to-source-list
+// Steps 5.1 and 5.2 for hash-source expressions: UTF-8 encode the content, and
+// return "Matches" if the base64 encoding of its hash with an expression's
+// algorithm is that expression's base64-value. 'strict-dynamic' (step 5.2.1)
+// is handled separately by the caller.
+bool nsCSPDirective::allowsByHash(const nsAString& aContent) const {
+  // Only hash-source expressions are considered, so don't convert the content
+  // to UTF-8 if there are none.
+  //
+  // TODO: Whether the directive has hash-source expressions, and their
+  // algorithms, could be computed once when its sources are added, rather
+  // than on each check.
+  bool hasHashSource = false;
+  for (const nsCSPBaseSrc* src : mSrcs) {
+    if (src->isHash()) {
+      hasHashSource = true;
+      break;
+    }
+  }
+  if (!hasHashSource) {
+    return false;
+  }
+
+  // The expressions share the digests, so that the content is hashed once per
+  // algorithm, rather than once per expression.
+  NS_ConvertUTF16toUTF8 content(aContent);
+  CSPHashDigestsCache cache(content);
+  for (const nsCSPBaseSrc* src : mSrcs) {
+    if (src->isHash() &&
+        static_cast<const nsCSPHashSrc*>(src)->matchesDigestOf(cache)) {
       return true;
     }
   }
@@ -1892,6 +1934,28 @@ bool nsCSPPolicy::allows(CSPDirective aDirective, enum CSPKeyword aKeyword,
   //    if there is a [script-src] or [default-src]
   // b) inline styles should only be blocked
   //    if there is a [style-src] or [default-src]
+  return true;
+}
+
+bool nsCSPPolicy::allowsByNonce(CSPDirective aDirective,
+                                const nsAString& aNonce) const {
+  if (nsCSPDirective* directive = matchingOrDefaultDirective(aDirective)) {
+    return directive->allowsByNonce(aNonce);
+  }
+
+  // No matching directive or default directive as fallback found, thus
+  // allowing the load, like allows().
+  return true;
+}
+
+bool nsCSPPolicy::allowsByHash(CSPDirective aDirective,
+                               const nsAString& aContent) const {
+  if (nsCSPDirective* directive = matchingOrDefaultDirective(aDirective)) {
+    return directive->allowsByHash(aContent);
+  }
+
+  // No matching directive or default directive as fallback found, thus
+  // allowing the load, like allows().
   return true;
 }
 

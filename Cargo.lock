@@ -5715,7 +5715,7 @@ checksum = "e4a24736216ec316047a1fc4252e27dabb04218aa4a3f37c6e7ddbf1f9782b54"
 
 [[package]]
 name = "nimbus-fml"
-version = "0.6.0"
+version = "0.7.0"
 dependencies = [
  "anyhow",
  "askama",
@@ -8718,6 +8718,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "askama",
+ "bitflags 2.10.0",
  "camino",
  "cargo_metadata",
  "clap",
@@ -8751,6 +8752,7 @@ dependencies = [
  "camino",
  "cargo_metadata",
  "clap",
+ "mozilla-central-workspace-hack",
  "uniffi",
  "uniffi_bindgen",
 ]

@@ -515,21 +515,25 @@ JSJitProfilingFrameIterator::JSJitProfilingFrameIterator(
 
 bool JSJitProfilingFrameIterator::tryInitWithPC(void* pc) {
   JSScript* callee = frameScript();
+  JitScript* jitScript = callee->jitScript();
 
   // Check for Ion first, since it's more likely for hot code.
-  if (callee->hasIonScript() &&
-      callee->ionScript()->method()->containsNativePC(pc)) {
-    type_ = FrameType::IonJS;
-    resumePCinCurrentFrame_ = pc;
-    return true;
+  if (IonScript* ionScript = jitScript->maybeIonScriptForProfiler()) {
+    if (ionScript->method()->containsNativePC(pc)) {
+      type_ = FrameType::IonJS;
+      resumePCinCurrentFrame_ = pc;
+      return true;
+    }
   }
 
   // Check for containment in Baseline jitcode second.
-  if (callee->hasBaselineScript() &&
-      callee->baselineScript()->method()->containsNativePC(pc)) {
-    type_ = FrameType::BaselineJS;
-    resumePCinCurrentFrame_ = pc;
-    return true;
+  if (BaselineScript* baselineScript =
+          jitScript->maybeBaselineScriptForProfiler()) {
+    if (baselineScript->method()->containsNativePC(pc)) {
+      type_ = FrameType::BaselineJS;
+      resumePCinCurrentFrame_ = pc;
+      return true;
+    }
   }
 
   return false;
