@@ -270,7 +270,8 @@ def translated(markup, lang):
 
 def menu_of(lang):
     markup = translated(HOME_MENU, lang)
-    markup = re.sub(r'href="#', 'href="/#', markup)
+    # the home page's sections, on the home page in this language
+    markup = re.sub(r'href="#', 'href="%s#' % url_of(lang, ""), markup)
     markup = re.sub(r'href="/((?:blog|compare|affiliate|money|privacy|setup|kit|faq|newsletter|delete-account)/[^"]*)"', lambda m: f'href="{url_of(lang, m.group(1))}"', markup)
     return markup
 
@@ -327,7 +328,7 @@ def page(lang, path, title, description, body, json_ld=None, scripts="", early_s
 <body>
 <header>
   <nav class="wrap" aria-label="{ui['nav_label']}">
-    <a class="brand" href="/"><img src="/assets/akhi.svg" alt="" width="32" height="32"><span><b>Akhi</b>Browser</span></a>
+    <a class="brand" href="{url_of(lang, '')}"><img src="/assets/akhi.svg" alt="" width="32" height="32"><span><b>Akhi</b>Browser</span></a>
     <div class="nav-end"><button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">{HOME_TEXTS[lang].get('nv0', 'Menu')}</button>
       {menu_of(lang)}
       {lang_menu(lang, path)}
@@ -352,7 +353,7 @@ def page(lang, path, title, description, body, json_ld=None, scripts="", early_s
 
 def cta(lang):
     ui = UI[lang]
-    return f"""<aside class="cta"><h2>{ui['cta_title']}</h2><p>{ui['cta_text']}</p><a class="btn" href="/#download">{ui['download']}</a></aside>"""
+    return f"""<aside class="cta"><h2>{ui['cta_title']}</h2><p>{ui['cta_text']}</p><a class="btn" href="{url_of(lang, '')}#download">{ui['download']}</a></aside>"""
 
 
 def article_page(lang, article):
