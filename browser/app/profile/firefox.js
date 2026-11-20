@@ -2500,6 +2500,13 @@ pref("browser.smartwindow.smartformfill.disallowedRegions", "FR");
 // something other than a form the user fills in.
 pref("browser.smartwindow.smartformfill.minFormFields", 4);
 
+// How many characters of page text a fill sends, shared between the page and
+// the source tabs.
+pref("browser.smartwindow.smartformfill.maxPageContentLength", 10000);
+
+// How many open tabs Smart Form Fill considers as sources for a form.
+pref("browser.smartwindow.smartformfill.maxTabs", 30);
+
 #ifdef NIGHTLY_BUILD
 pref("browser.smartwindow.aitab.menus", true);
 #else
@@ -3047,6 +3054,11 @@ pref("browser.migrate.firefox.enabled", true);
 pref("browser.migrate.opera.enabled", true);
 pref("browser.migrate.opera-gx.enabled", true);
 pref("browser.migrate.safari.enabled", true);
+// Number of most recent URLs to import from Safari history, 0 for no limit.
+pref("browser.migrate.safari.history.limit", 0);
+// Number of recent visits to import per URL from Safari history, capped at
+// places.frecency.pages.numSampledVisits.
+pref("browser.migrate.safari.history.visit.limit", 5);
 pref("browser.migrate.vivaldi.enabled", true);
 
 pref("browser.migrate.content-modal.import-all.enabled", true);
@@ -3243,9 +3255,7 @@ pref("browser.toolbars.tab-groups.enabled", false);
 
 pref("security.certerrors.felt-privacy-v1", true);
 
-#ifdef NIGHTLY_BUILD
-  pref("security.utility_pkcs11_module_process.enabled", true);
-#endif
+pref("security.utility_pkcs11_module_process.enabled", true);
 
 // Prefs to control the Firefox Account toolbar menu.
 // This pref will surface existing Firefox Account information
@@ -3806,6 +3816,19 @@ pref("browser.fireButton.enabled", false);
 // Which flow the fire button starts. "panel" shows the confirmation panel;
 // "direct" skips it and opens the clear browsing data dialog straight away.
 pref("browser.fireButton.flow", "panel");
+
+// Whether private windows get covered by a lock screen, requiring OS
+// authentication, when the OS session gets locked, starts the screensaver
+// (macOS only) or goes to sleep. Only supported on macOS and Windows.
+pref("browser.privatebrowsing.lockOnScreenLock.enabled", false);
+// Whether locking windows is available at all. If false, windows never get
+// locked, regardless of browser.privatebrowsing.lockOnScreenLock.enabled, and
+// the setting is hidden.
+#ifdef NIGHTLY_BUILD
+pref("browser.privatebrowsing.lockOnScreenLock.featureGate", true);
+#else
+pref("browser.privatebrowsing.lockOnScreenLock.featureGate", false);
+#endif
 
 // the preferences related to the Nimbus experiment, to activate and deactivate
 // the the entire rollout (see: bug 1864216 - two prompts, 1877500 - set two in one prompt)

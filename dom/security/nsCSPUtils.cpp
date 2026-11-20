@@ -25,6 +25,7 @@
 #include "nsICryptoHash.h"
 #include "nsIScriptError.h"
 #include "nsIStringBundle.h"
+#include "nsIURIMutator.h"
 #include "nsIURL.h"
 #include "nsNetUtil.h"
 #include "nsReadableUtils.h"
@@ -623,17 +624,6 @@ bool nsCSPBaseSrc::permits(nsIURI* aUri, bool aWasRedirected, bool aReportOnly,
   return false;
 }
 
-// ::allows is only called for inlined loads, therefore:
-// nsCSPSchemeSrc, nsCSPHostSrc fall back
-// to this base class implementation which will never allow the load.
-bool nsCSPBaseSrc::allows(enum CSPKeyword aKeyword,
-                          const nsAString& aContentOrNonce) const {
-  CSPUTILSLOG(("nsCSPBaseSrc::allows, aKeyWord: %s, a aContentOrNonce: %s",
-               aKeyword == CSP_HASH ? "hash" : CSP_EnumToUTF8Keyword(aKeyword),
-               NS_ConvertUTF16toUTF8(aContentOrNonce).get()));
-  return false;
-}
-
 /* ====== nsCSPSchemeSrc ===================== */
 
 nsCSPSchemeSrc::nsCSPSchemeSrc(const nsAString& aScheme) : mScheme(aScheme) {
@@ -939,14 +929,6 @@ nsCSPKeywordSrc::nsCSPKeywordSrc(enum CSPKeyword aKeyword)
 
 nsCSPKeywordSrc::~nsCSPKeywordSrc() = default;
 
-bool nsCSPKeywordSrc::allows(enum CSPKeyword aKeyword,
-                             const nsAString& aContentOrNonce) const {
-  CSPUTILSLOG(("nsCSPKeywordSrc::allows, aKeyWord: %s, aContentOrNonce: %s",
-               CSP_EnumToUTF8Keyword(aKeyword),
-               NS_ConvertUTF16toUTF8(aContentOrNonce).get()));
-  return mKeyword == aKeyword;
-}
-
 bool nsCSPKeywordSrc::visit(nsCSPSrcVisitor* aVisitor) const {
   return aVisitor->visitKeywordSrc(*this);
 }
@@ -1191,6 +1173,66 @@ static bool DoesNonceMatchSourceList(nsILoadInfo* aLoadInfo,
   return false;
 }
 
+// §6.7.3.7 Does the hash of value match source list?, for hash type
+// "url-hash".
+// https://github.com/w3c/webappsec-csp/pull/784
+//
+// Step 1 (UTF-8 encoding the value) is a no-op, as aValue is a serialized
+// URL, which is ASCII. Steps 2.1.2-2.1.5 are matchesDigestOf().
+//
+// Step 2.1 only considers url-hash-source expressions here. §6.7.3.6 Is
+// expression of hash type? also returns "Yes" for any hash-source (step 3),
+// which would let a hash of inline content allow a script URL; that looks like
+// a mistake in the PR, as hash-source and url-hash-source are separate
+// grammars.
+static bool DoesValueUrlHashMatchSourceList(
+    const nsACString& aValue, const nsTArray<nsCSPBaseSrc*>& aSrcs) {
+  CSPHashDigestsCache cache(aValue);
+  for (const nsCSPBaseSrc* src : aSrcs) {
+    if (src->isUrlHash() &&
+        static_cast<const nsCSPUrlHashSrc*>(src)->matchesDigestOf(cache)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// §6.7.3.4 Does the hash of request's URL match source list?
+// https://github.com/w3c/webappsec-csp/pull/784
+//
+// TODO: Only the absolute URL is checked so far; matching relative URLs
+// (steps 4-10) is not implemented yet.
+static bool DoesUrlHashMatchSourceList(nsIURI* aURI,
+                                       const nsTArray<nsCSPBaseSrc*>& aSrcs) {
+  // Step 1. If request's url's scheme is not an HTTP(S) scheme, then return
+  // "Does Not Match".
+  if (!net::SchemeIsHttpOrHttps(aURI)) {
+    return false;
+  }
+
+  // Step 2. Let requestURL be the result of executing §5.5 Strip HTTP(S) URL
+  // on request's url.
+  //
+  // That sets its fragment, username and password to the empty string. An
+  // empty fragment would still serialize as a trailing "#", which the tests
+  // don't expect, so the fragment is removed instead.
+  nsCOMPtr<nsIURI> strippedURI;
+  if (NS_FAILED(NS_MutateURI(aURI).SetRef(""_ns).SetUserPass(""_ns).Finalize(
+          strippedURI))) {
+    return false;
+  }
+
+  nsAutoCString requestURL;
+  if (NS_FAILED(strippedURI->GetSpec(requestURL))) {
+    return false;
+  }
+
+  // Step 3. If the result of executing §6.7.3.7 Does the hash of value match
+  // source list? on requestURL, "url-hash", and source list is "Matches",
+  // return "Matches".
+  return DoesValueUrlHashMatchSourceList(requestURL, aSrcs);
+}
+
 // https://www.w3.org/TR/SRI/#parse-metadata
 // This function is similar to SRICheck::IntegrityMetadata, but also keeps
 // SRI metadata with weaker hashes.
@@ -1320,7 +1362,8 @@ bool nsCSPDirective::permits(CSPDirective aDirective, nsILoadInfo* aLoadInfo,
       }
     }
 
-    // https://w3c.github.io/webappsec-csp/#script-pre-request
+    // https://w3c.github.io/webappsec-csp/#script-pre-request, numbered as in
+    // https://github.com/w3c/webappsec-csp/pull/784, which adds url hashes.
     // Step 1. If request’s destination is script-like:
     else if (aDirective == CSPDirective::SCRIPT_SRC_ELEM_DIRECTIVE ||
              aDirective == CSPDirective::WORKER_SRC_DIRECTIVE) {
@@ -1335,10 +1378,13 @@ bool nsCSPDirective::permits(CSPDirective aDirective, nsILoadInfo* aLoadInfo,
       // Collect what the steps below need in one pass over the source list,
       // including the integrity expressions of §6.7.2.4 step 2.
       nsTArray<nsCSPHashSrc*> integrityExpressions;
+      bool hasUrlHash = false;
       bool hasStrictDynamicKeyword = false;
       for (nsCSPBaseSrc* src : mSrcs) {
         if (src->isHash()) {
           integrityExpressions.AppendElement(static_cast<nsCSPHashSrc*>(src));
+        } else if (src->isUrlHash()) {
+          hasUrlHash = true;
         } else if (src->isKeyword(CSP_STRICT_DYNAMIC)) {
           hasStrictDynamicKeyword = true;
         }
@@ -1353,7 +1399,15 @@ bool nsCSPDirective::permits(CSPDirective aDirective, nsILoadInfo* aLoadInfo,
         return true;
       }
 
-      // Step 1.3. If directive’s value contains a source expression that is an
+      // Step 1.3. If the result of executing §6.7.3.4 Does the hash of
+      // request’s URL match source list? on this directive’s value and
+      // request is "Matches", return "Allowed".
+      if (hasUrlHash && DoesUrlHashMatchSourceList(aUri, mSrcs)) {
+        CSPUTILSLOG(("  Allowed by matching url hash (script-like)"));
+        return true;
+      }
+
+      // Step 1.4. If directive’s value contains a source expression that is an
       // ASCII case-insensitive match for the "'strict-dynamic'" keyword-source:
       if (hasStrictDynamicKeyword) {
         // GetParserCreatedScript() isn't set for XSLT.
@@ -1363,7 +1417,7 @@ bool nsCSPDirective::permits(CSPDirective aDirective, nsILoadInfo* aLoadInfo,
           return false;
         }
 
-        // Step 1.3.1. If the request’s parser metadata is "parser-inserted",
+        // Step 1.4.1. If the request’s parser metadata is "parser-inserted",
         // return "Blocked". Otherwise, return "Allowed".
         if (aLoadInfo->GetParserCreatedScript()) {
           CSPUTILSLOG(
@@ -1374,6 +1428,21 @@ bool nsCSPDirective::permits(CSPDirective aDirective, nsILoadInfo* aLoadInfo,
         CSPUTILSLOG(
             ("  Allowed by 'strict-dynamic' because not-parser-inserted"));
         return true;
+      }
+
+      // Step 1.5. If directive’s value does not contain a source expression
+      // that is a match for the "url-hash-source" grammar:
+      // Step 1.5.1. If the result of executing §6.7.2.5 Does request match
+      // source list? on request, directive’s value, and policy, is "Does Not
+      // Match", return "Blocked".
+      //
+      // Step 1.5.1 is the source list matching below. With a url-hash-source,
+      // the PR falls through to step 2, Return "Allowed", which would allow
+      // any script once a url-hash-source is present. Block instead, as the
+      // explainer and Chromium do.
+      if (hasUrlHash) {
+        CSPUTILSLOG(("  Blocked, url-hash-source present (script-like)"));
+        return false;
       }
     }
   }
@@ -1387,14 +1456,12 @@ bool nsCSPDirective::permits(CSPDirective aDirective, nsILoadInfo* aLoadInfo,
   return false;
 }
 
-bool nsCSPDirective::allows(enum CSPKeyword aKeyword,
-                            const nsAString& aContentOrNonce) const {
-  CSPUTILSLOG(("nsCSPDirective::allows, aKeyWord: %s, aContentOrNonce: %s",
-               CSP_EnumToUTF8Keyword(aKeyword),
-               NS_ConvertUTF16toUTF8(aContentOrNonce).get()));
+bool nsCSPDirective::allows(enum CSPKeyword aKeyword) const {
+  CSPUTILSLOG(("nsCSPDirective::allows, aKeyWord: %s",
+               CSP_EnumToUTF8Keyword(aKeyword)));
 
-  for (uint32_t i = 0; i < mSrcs.Length(); i++) {
-    if (mSrcs[i]->allows(aKeyword, aContentOrNonce)) {
+  for (const nsCSPBaseSrc* src : mSrcs) {
+    if (src->isKeyword(aKeyword)) {
       return true;
     }
   }
@@ -1493,7 +1560,7 @@ bool nsCSPDirective::ShouldCreateViolationForNewTrustedTypesPolicy(
   MOZ_ASSERT(mDirective == nsIContentSecurityPolicy::TRUSTED_TYPES_DIRECTIVE);
 
   if (mDirective == nsIContentSecurityPolicy::TRUSTED_TYPES_DIRECTIVE) {
-    if (allows(CSP_NONE, EmptyString())) {
+    if (allows(CSP_NONE)) {
       // Step 2.4: if directive’s value only contains a tt-keyword which is a
       // match for a value 'none', set createViolation to true.
       // `nsCSPParser` ignores the 'none' keyword if other keywords or policy
@@ -1502,7 +1569,7 @@ bool nsCSPDirective::ShouldCreateViolationForNewTrustedTypesPolicy(
     }
 
     if (aCreatedPolicyNames.Contains(aPolicyName) &&
-        !allows(CSP_ALLOW_DUPLICATES, EmptyString())) {
+        !allows(CSP_ALLOW_DUPLICATES)) {
       // Step 2.5: if createdPolicyNames contains policyName and directive’s
       // value does not contain a tt-keyword which is a match for a value
       // 'allow-duplicates', set createViolation to true.
@@ -1918,14 +1985,13 @@ bool nsCSPPolicy::permits(CSPDirective aDir, nsILoadInfo* aLoadInfo,
   return true;
 }
 
-bool nsCSPPolicy::allows(CSPDirective aDirective, enum CSPKeyword aKeyword,
-                         const nsAString& aContentOrNonce) const {
-  CSPUTILSLOG(("nsCSPPolicy::allows, aKeyWord: %s, a aContentOrNonce: %s",
-               CSP_EnumToUTF8Keyword(aKeyword),
-               NS_ConvertUTF16toUTF8(aContentOrNonce).get()));
+bool nsCSPPolicy::allows(CSPDirective aDirective,
+                         enum CSPKeyword aKeyword) const {
+  CSPUTILSLOG(
+      ("nsCSPPolicy::allows, aKeyWord: %s", CSP_EnumToUTF8Keyword(aKeyword)));
 
   if (nsCSPDirective* directive = matchingOrDefaultDirective(aDirective)) {
-    return directive->allows(aKeyword, aContentOrNonce);
+    return directive->allows(aKeyword);
   }
 
   // No matching directive or default directive as fallback found, thus
@@ -1963,14 +2029,14 @@ bool nsCSPPolicy::allowsByHash(CSPDirective aDirective,
 bool nsCSPPolicy::isStrict() const {
   nsCSPDirective* scriptDir = matchingOrDefaultDirective(
       nsIContentSecurityPolicy::SCRIPT_SRC_ELEM_DIRECTIVE);
-  if (!scriptDir || !scriptDir->allows(CSP_STRICT_DYNAMIC, u""_ns)) {
+  if (!scriptDir || !scriptDir->allows(CSP_STRICT_DYNAMIC)) {
     return false;
   }
   for (nsCSPDirective* directive : mDirectives) {
     if (directive->equals(nsIContentSecurityPolicy::BASE_URI_DIRECTIVE)) {
       // This works because 'none' is only included by the parser when no
       // other source except 'report-sample' is used.
-      return directive->allows(CSP_NONE, u""_ns);
+      return directive->allows(CSP_NONE);
     }
   }
   return false;
