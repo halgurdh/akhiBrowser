@@ -748,29 +748,24 @@ bool SetArrayLength(JSContext* cx, HandleObject obj, HandleValue value,
                     bool strict) {
   Handle<ArrayObject*> array = obj.as<ArrayObject>();
 
-  RootedId id(cx, NameToId(cx->names().length));
   ObjectOpResult result;
 
   // SetArrayLength is called by IC stubs for SetProp and SetElem on arrays'
   // "length" property.
   //
-  // ArraySetLength below coerces |value| before checking for length being
-  // writable, and in the case of illegal values, will throw RangeError even
-  // when "length" is not writable. This is incorrect observable behavior,
-  // as a regular [[Set]] operation will check for "length" being
-  // writable before attempting any assignment.
-  //
-  // So, perform ArraySetLength if and only if "length" is writable.
+  // ArrayLengthSetter must only be called if "length" is writable. This check
+  // must also happen before |value| is coerced: a regular [[Set]] on a
+  // non-writable "length" fails without throwing a RangeError for invalid
+  // length values.
   if (array->lengthIsWritable()) {
-    Rooted<PropertyDescriptor> desc(
-        cx, PropertyDescriptor::Data(value, JS::PropertyAttribute::Writable));
-    if (!ArraySetLength(cx, array, id, desc, result)) {
+    if (!ArrayLengthSetter(cx, array, value, result)) {
       return false;
     }
   } else {
     MOZ_ALWAYS_TRUE(result.fail(JSMSG_READ_ONLY));
   }
 
+  RootedId id(cx, NameToId(cx->names().length));
   return result.checkStrictModeError(cx, obj, id, strict);
 }
 
