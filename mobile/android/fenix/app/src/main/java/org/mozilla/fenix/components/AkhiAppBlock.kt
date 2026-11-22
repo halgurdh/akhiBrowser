@@ -302,6 +302,7 @@ class AkhiAppBlockBoot : BroadcastReceiver() {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
             AkhiAppBlock.applyWatch(context)
             AkhiPhoneFilter.startAfterBoot(context)
+            AkhiPrayerReminder.reschedule(context)
         }
     }
 }

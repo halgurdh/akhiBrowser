@@ -820,6 +820,10 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <receiver
+            android:name=".components.AkhiPrayerReminderAlarm"
+            android:exported="false" />
+
+        <receiver
             android:name=".components.AkhiAppBlockBoot"
             android:exported="false">
             <intent-filter>

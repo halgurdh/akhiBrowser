@@ -4,12 +4,14 @@
 
 package org.mozilla.fenix.components
 
+import android.Manifest
 import android.content.Context
 import android.hardware.GeomagneticField
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.os.Build
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,15 +23,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -52,6 +58,8 @@ import org.mozilla.fenix.HomeActivity
 import org.mozilla.fenix.R
 import org.mozilla.fenix.ext.asActivity
 import org.mozilla.fenix.ext.components
+import org.mozilla.fenix.ext.isDefaultBrowserPromptSupported
+import org.mozilla.fenix.ext.openSetDefaultBrowserOption
 import java.time.LocalDate
 import kotlin.math.roundToInt
 
@@ -64,6 +72,10 @@ internal object AkhiHomeCard {
 
     private const val PREFERENCES = "akhi"
     private const val CONTENT = "home_card"
+    private const val WELCOME_DONE = "welcome_done"
+    private const val NOTIFICATIONS_ASKED = "prayer_notifications_asked"
+    private const val NOTIFICATIONS_REQUEST = 7314
+    private const val YOUTUBE = "https://m.youtube.com/"
     private const val MINUTE_MS = 60_000L
     private const val COLLAPSED_VERSE_LINES = 3
     private const val FULL_TURN = 360f
@@ -83,6 +95,7 @@ internal object AkhiHomeCard {
             val text = message.toString()
             appContext.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE).edit().putString(CONTENT, text).apply()
             content.value = text
+            AkhiPrayerReminder.schedule(appContext, text)
             return JSONObject().put("ok", true)
         }
     }
@@ -102,6 +115,7 @@ internal object AkhiHomeCard {
             if (content.value == null) {
                 content.value = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE).getString(CONTENT, null)
             }
+            AkhiPrayerReminder.schedule(context, content.value)
         }
     }
 
@@ -163,6 +177,10 @@ internal object AkhiHomeCard {
             }
         }
         val card = remember(text) { text?.let { runCatching { JSONObject(it) }.getOrNull() } } ?: return
+        card.optJSONObject("welcome")?.let { Welcome(it, modifier) }
+        if (card.optBoolean("reminder")) {
+            AskNotifications()
+        }
         val day = currentDay(card, now)
         val verse = currentVerse(card)
         if (day == null && verse == null) {
@@ -195,6 +213,121 @@ internal object AkhiHomeCard {
             }
             if (verse != null) {
                 Verse(card.getString("verseTitle"), verse) { open(null) }
+            }
+        }
+    }
+
+    private fun openTab(context: Context, url: String) {
+        val activity = context.asActivity() as? HomeActivity ?: return
+        activity.components.useCases.tabsUseCases.selectOrAddTab(
+            url = url,
+            private = activity.components.appStore.state.mode.isPrivate,
+        )
+        activity.openToBrowser(BrowserDirection.FromHome)
+    }
+
+    private fun needsNotificationPermission(context: Context) =
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !AkhiPrayerReminder.canNotify(context)
+
+    private fun askNotificationPermission(context: Context) {
+        val activity = context.asActivity() ?: return
+        if (needsNotificationPermission(activity)) {
+            activity.requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), NOTIFICATIONS_REQUEST)
+        }
+    }
+
+    /** Asks once for the notifications of the prayer reminder, when it's on and Android 13 or later doesn't allow them. */
+    @Composable
+    private fun AskNotifications() {
+        val context = LocalContext.current
+        LaunchedEffect(Unit) {
+            val preferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
+            if (needsNotificationPermission(context) && !preferences.getBoolean(NOTIFICATIONS_ASKED, false)) {
+                preferences.edit().putBoolean(NOTIFICATIONS_ASKED, true).apply()
+                askNotificationPermission(context)
+            }
+        }
+    }
+
+    /**
+     * After a new install, what's on and where to start, until it's closed: YouTube without its music, AkhiBrowser as
+     * the default browser so links from other apps open filtered, and the prayer times with their reminder.
+     *
+     * @param texts The welcome texts of the extension's language (lib/home_card.js).
+     */
+    @Composable
+    private fun Welcome(texts: JSONObject, modifier: Modifier) {
+        val context = LocalContext.current
+        val preferences = remember { context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE) }
+        var isDone by remember { mutableStateOf(preferences.getBoolean(WELCOME_DONE, false)) }
+        if (isDone) {
+            return
+        }
+        val canAskDefault = remember { context.isDefaultBrowserPromptSupported() }
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surfaceBright, RoundedCornerShape(16.dp))
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Text(
+                text = texts.optString("welcomeTitle"),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Text(
+                text = texts.optString("welcomeIntro"),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            listOf("welcomeBlock", "welcomeBlur", "welcomeMusic", "welcomeAds").forEach { key ->
+                Text(
+                    text = "✓  ${texts.optString(key)}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+            }
+            Button(onClick = { openTab(context, YOUTUBE) }, modifier = Modifier.fillMaxWidth()) {
+                Text(texts.optString("welcomeYoutube"))
+            }
+            if (canAskDefault) {
+                Button(
+                    onClick = {
+                        (context.asActivity() as? HomeActivity)?.openSetDefaultBrowserOption(
+                            from = BrowserDirection.FromHome,
+                        )
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(texts.optString("welcomeDefault"))
+                }
+                Text(
+                    text = texts.optString("welcomeDefaultWhy"),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            Button(
+                onClick = {
+                    askNotificationPermission(context)
+                    val activity = context.asActivity() as? HomeActivity
+                    if (activity != null && openSettings(activity, "prayer")) {
+                        activity.openToBrowser(BrowserDirection.FromHome)
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(texts.optString("welcomePrayer"))
+            }
+            TextButton(
+                onClick = {
+                    preferences.edit().putBoolean(WELCOME_DONE, true).apply()
+                    isDone = true
+                },
+                modifier = Modifier.align(Alignment.End),
+            ) {
+                Text(texts.optString("welcomeDone"))
             }
         }
     }
