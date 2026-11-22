@@ -3169,10 +3169,12 @@ class Settings(
                 numberOfSetAsDefaultPromptShownTimes < max
             } ?: true
 
+        // AkhiBrowser: its onboarding is off, so the first prompt comes at the first start, not after a few
         val coldStartsOk =
-            nimbusFeature.coldStartsBetweenPrompts?.let { minColdStarts ->
-                coldStartsBetweenSetAsDefaultPrompts >= minColdStarts
-            } ?: true
+            numberOfSetAsDefaultPromptShownTimes == 0 ||
+                nimbusFeature.coldStartsBetweenPrompts?.let { minColdStarts ->
+                    coldStartsBetweenSetAsDefaultPrompts >= minColdStarts
+                } ?: true
 
         return daysOk && maxOk && coldStartsOk
     }

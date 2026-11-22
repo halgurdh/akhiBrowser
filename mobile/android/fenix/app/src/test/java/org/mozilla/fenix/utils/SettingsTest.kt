@@ -1292,6 +1292,16 @@ class SettingsTest {
     }
 
     @Test
+    fun `GIVEN the prompt was never shown WHEN checking prompt eligibility at the first start THEN shouldShowSetAsDefaultPrompt is true`() {
+        settings.numberOfSetAsDefaultPromptShownTimes = 0
+        settings.lastSetAsDefaultPromptShownTimeInMillis = 0L
+        settings.coldStartsBetweenSetAsDefaultPrompts = 0
+        settings.seventhDayOnboardingCompletedTimestamp = 1L
+
+        assertTrue(settings.shouldShowSetAsDefaultPrompt())
+    }
+
+    @Test
     fun `GIVEN enough cold starts and conditions met WHEN checking prompt eligibility THEN shouldShowSetAsDefaultPrompt is true`() {
         settings.numberOfSetAsDefaultPromptShownTimes = 1
         settings.lastSetAsDefaultPromptShownTimeInMillis = 0L
