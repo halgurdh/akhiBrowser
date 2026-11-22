@@ -21,7 +21,10 @@ from mozsystemmonitor.resourcemonitor import SystemResourceMonitor
 import mozharness
 from mozharness.base.errors import PythonErrorList
 from mozharness.base.log import CRITICAL, DEBUG, ERROR, INFO, OutputParser
-from mozharness.base.python import perfherder_schema_path
+from mozharness.base.python import (
+    perf_expected_changes_path,
+    perfherder_schema_path,
+)
 from mozharness.base.vcs.vcsbase import MercurialScript
 from mozharness.mozilla.automation import (
     EXIT_STATUS_DICT,
@@ -622,6 +625,19 @@ class Raptor(TestingMixin, MercurialScript, CodeCoverageMixin, AndroidMixin):
                 },
             ],
             [
+                ["--perfherder-extra-option"],
+                {
+                    "action": "append",
+                    "metavar": "OPTION",
+                    "dest": "perfherder_extra_options",
+                    "default": [],
+                    "help": (
+                        "Add an extra option to the Perfherder data, which puts "
+                        "the results in a separate series."
+                    ),
+                },
+            ],
+            [
                 ["--benchmark-repository"],
                 {
                     "dest": "benchmark_repository",
@@ -1194,6 +1210,11 @@ class Raptor(TestingMixin, MercurialScript, CodeCoverageMixin, AndroidMixin):
                 f"--extra-summary-methods={method}"
                 for method in self.config.get("extra_summary_methods")
             ])
+        if self.config.get("perfherder_extra_options"):
+            options.extend([
+                f"--perfherder-extra-option={option}"
+                for option in self.config.get("perfherder_extra_options")
+            ])
         if self.config.get("page_timeout"):
             options.extend([f"--page-timeout={self.page_timeout}"])
         if self.config.get("post_startup_delay"):
@@ -1455,6 +1476,7 @@ class Raptor(TestingMixin, MercurialScript, CodeCoverageMixin, AndroidMixin):
         env["SCRIPTSPATH"] = scripts_path
         env["EXTERNALTOOLSPATH"] = external_tools_path
         env["PERFHERDER_SCHEMA_PATH"] = perfherder_schema_path()
+        env["PERF_EXPECTED_CHANGES_PATH"] = perf_expected_changes_path()
 
         # xpcshell may come from local build, or fetched from build artifacts in
         # the case of CI.

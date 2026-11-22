@@ -2646,7 +2646,7 @@
 # Bug 2037346
 - name: docshell.shistory.restoreSubframesOnReload
   type: bool
-  value: @IS_NOT_NIGHTLY_BUILD@
+  value: false
   mirror: always
 
 #---------------------------------------------------------------------------
@@ -5868,12 +5868,6 @@
   value: 5000
   mirror: always
 
-# Whether to treat the clicks on scrollbars as user interaction with web content.
-- name: dom.user_activation.ignore_scrollbars
-  type: bool
-  value: true
-  mirror: always
-
 # Whether to shim a Components object on untrusted windows.
 - name: dom.use_components_shim
   type: bool
@@ -7699,6 +7693,14 @@
   type: RelaxedAtomicBool
   value: true
   mirror: always
+
+#ifdef MOZ_WIDGET_ANDROID
+# Enable GPU-process readback for ImageReader video in remote canvas drawImage.
+- name: gfx.canvas.remote.use-draw-image-fast-path-aimage-reader
+  type: RelaxedAtomicBool
+  value: true
+  mirror: always
+#endif
 
 #ifdef XP_WIN
 - name: gfx.canvas.remote.use-draw-image-fast-path-d3d
@@ -13972,6 +13974,15 @@
   value: true
   mirror: always
 
+# Whether the end of a video frame in fragmented MP4 is set to the start of the
+# next frame in presentation order when that frame comes in a later fragment or
+# append: the frame is extended to it, or cut back when a new frame starts
+# inside it. Used by the MP4 parser and by the MSE track buffer.
+- name: media.mp4.frame-ends-across-fragments.enabled
+  type: RelaxedAtomicBool
+  value: true
+  mirror: always
+
 # Error/warning handling, Decoder Doctor.
 #
 # Set to true to force demux/decode warnings to be treated as errors.
@@ -14426,6 +14437,15 @@
 - name: media.mediacontrol.eligible.media.duration.s
   type: AtomicFloat
   value: 3.0f
+  mirror: always
+
+# If this pref is on, a page that plays audio only through the Web Audio API
+# can activate media control, which otherwise requires an HTMLMediaElement.
+# The condition under which that should happen is still being specified, see
+# https://github.com/w3c/mediasession/issues/378.
+- name: media.mediacontrol.webaudio.activation.enabled
+  type: bool
+  value: @IS_NIGHTLY_BUILD@
   mirror: always
 
 # Encoder creation strategy for WebRTC

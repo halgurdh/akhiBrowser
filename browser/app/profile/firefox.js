@@ -2313,6 +2313,13 @@ pref("messaging-system.rsexperimentloader.collection_id", "nimbus-desktop-experi
 pref("nimbus.debug", false);
 pref("nimbus.validation.enabled", true);
 pref("nimbus.firstUpdateComplete", false);
+pref("app.normandy.run_interval_seconds", 21600); // 6 hours
+pref("app.normandy.shieldLearnMoreUrl", "https://support.mozilla.org/1/firefox/%VERSION%/%OS%/%LOCALE%/shield");
+#ifdef MOZ_DATA_REPORTING
+  pref("app.shield.optoutstudies.enabled", true);
+#else
+  pref("app.shield.optoutstudies.enabled", false);
+#endif
 
 // Enable the targeting context telemetry by default, but allow it to be
 // disabled, e.g., for artifact builds.
@@ -2377,6 +2384,7 @@ pref("sidebar.backupState", "{}");
 pref("sidebar.expandOnHover", true);
 pref("sidebar.old-sidebar.has-used", false);
 pref("sidebar.new-sidebar.has-used", false);
+pref("sidebar.history.showAllHistory", false);
 pref("sidebar.history.sortOption", "date");
 #ifdef NIGHTLY_BUILD
 pref("sidebar.updatedBookmarks.enabled", true);
@@ -2460,6 +2468,7 @@ pref("browser.smartwindow.memories.generateFromHistory", true);
 pref("browser.smartwindow.memories.generateFromConversation", true);
 pref("browser.smartwindow.memories.hasSeenMemories", false);
 pref("browser.smartwindow.memories.logLevel", "Warn");
+pref("browser.smartwindow.newtab.focusSmartbar", true);
 // Gates resume-activity ("pick up where you left off") starter generation.
 pref("browser.smartwindow.resumeActivity.enabled", true);
 // TODO Bug 2067871: remove once journey store is available.
@@ -3172,22 +3181,6 @@ pref("doh-rollout.clearModeOnShutdown", false);
 
 // DoH UI: default the fallback checkbox to on.
 pref("network.trr_ui.fallback_was_checked", true);
-
-// Normandy client preferences
-pref("app.normandy.api_url", "https://normandy.cdn.mozilla.net/api/v1");
-pref("app.normandy.dev_mode", false);
-pref("app.normandy.enabled", true);
-pref("app.normandy.first_run", true);
-pref("app.normandy.logging.level", 50); // Warn
-pref("app.normandy.run_interval_seconds", 21600); // 6 hours
-pref("app.normandy.shieldLearnMoreUrl", "https://support.mozilla.org/1/firefox/%VERSION%/%OS%/%LOCALE%/shield");
-pref("app.normandy.last_seen_buildid", "");
-pref("app.normandy.onsync_skew_sec", 600);
-#ifdef MOZ_DATA_REPORTING
-  pref("app.shield.optoutstudies.enabled", true);
-#else
-  pref("app.shield.optoutstudies.enabled", false);
-#endif
 
 // Multi-lingual preferences:
 //  *.enabled - Are langpacks available for the build of Firefox?

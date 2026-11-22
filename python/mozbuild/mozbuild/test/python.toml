@@ -35,6 +35,8 @@ subsuite = "mozbuild"
 
 ["action/test_run_cargo.py"]
 
+["action/test_wine_exe.py"]
+
 ["action/test_xpi_archive.py"]
 
 ["action/test_zip.py"]
@@ -105,6 +107,8 @@ subsuite = "mozbuild"
 
 ["controller/test_clobber.py"]
 
+["controller/test_jobserver.py"]
+
 ["controller/test_source_repo.py"]
 
 ["frontend/test_context.py"]
@@ -141,11 +145,11 @@ subsuite = "mozbuild"
 
 ["test_containers.py"]
 
-["test_devtools_mcp.py"]
-
 ["test_dotproperties.py"]
 
 ["test_expression.py"]
+
+["test_firefox_mcp.py"]
 
 ["test_generate_sbom.py"]
 

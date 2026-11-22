@@ -296,10 +296,6 @@ android {
 
     lint {
         lintConfig = file("../../shared-lint.xml")
-        baseline = file("lint-baseline.xml")
-        sarifReport = true
-        sarifOutput = file("../build/reports/lint/lint-report.sarif.json")
-        abortOnError = false
     }
 
     // Exclude native libraries for unsupported architectures from third-party dependencies
@@ -583,7 +579,6 @@ ext {
     // Enable expiration by major version.
     gleanExpireByVersion = Config.majorVersion(project)
     gleanNamespace = "mozilla.telemetry.glean"
-    gleanPythonEnvDir = gradle.mozconfig.substs.GRADLE_GLEAN_PARSER_VENV
     gleanYamlFiles = GleanIndex.getGleanYamlFiles(project)
 }
 apply plugin: "org.mozilla.telemetry.glean-gradle-plugin"
@@ -614,7 +609,6 @@ nimbus {
 }
 
 dependencies {
-    implementation project('longfox')
     implementation project(':components:browser-engine-gecko')
     implementation project(':components:compose-awesomebar')
     implementation project(':components:compose-base')
@@ -979,8 +973,7 @@ mozilla {
     ktfmtSourcePaths = ["src/**/*.kt", "!**/build/**/*.kt"]
     detektSourcePaths = [
         "**/src/**/*.kt",
-        "!**/build/**", "!**/resources/**", "!**/tmp/**",
-        "!**/longfox/**"
+        "!**/build/**", "!**/resources/**", "!**/tmp/**"
     ]
     detektConfig = "$projectDir/../config/detekt.yml"
     detektBaseline = "$projectDir/../config/detekt-baseline.xml"

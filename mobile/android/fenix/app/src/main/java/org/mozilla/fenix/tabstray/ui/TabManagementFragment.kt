@@ -536,9 +536,6 @@ class TabManagementFragment : Fragment() {
                 group = expandedGroup,
                 homepageAsNewTabEnabled = tabsTrayStore.state.config.homepageAsNewTabEnabled,
                 dispatch = tabsTrayStore::dispatch,
-                addNewHomepageTab = {
-                    requireComponents.useCases.fenixBrowserUseCases.addNewHomepageTab(private = false)
-                },
                 onTabClick = handleTabClick,
                 onShareClick = { handleShareTabGroupClick(group = expandedGroup, dotColor = expandedGroupDotColor) },
                 onAddNewTabCompleted = { tabManagerController.handleNavigateToHome() },
@@ -569,7 +566,9 @@ class TabManagementFragment : Fragment() {
                     page = page,
                 )
             },
-            onTabClose = { tab -> tabManagerInteractor.onTabClosed(tab, TAB_MANAGER_FEATURE_NAME) },
+            onTabClose = { tab, tabCloseType ->
+                tabManagerInteractor.onTabClosed(tab, TAB_MANAGER_FEATURE_NAME, tabCloseType)
+            },
             onItemClick = { handleItemClick(item = it, handleTabClick = handleTabClick) },
             onItemLongClick = { item ->
                 tabsTrayStore.dispatch(TabsTrayAction.TabItemLongClicked(item))

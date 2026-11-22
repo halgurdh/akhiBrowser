@@ -1066,7 +1066,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
             tabViewSetting.set(settings.getTabViewPingString())
             closeTabSetting.set(settings.getTabTimeoutPingString())
 
-            val isDefaultTheCurrentWallpaper = Wallpaper.nameIsDefault(settings.currentWallpaperName)
+            val isDefaultTheCurrentWallpaper = Wallpaper.nameIsSolid(settings.currentWallpaperName)
 
             defaultWallpaper.set(isDefaultTheCurrentWallpaper)
 

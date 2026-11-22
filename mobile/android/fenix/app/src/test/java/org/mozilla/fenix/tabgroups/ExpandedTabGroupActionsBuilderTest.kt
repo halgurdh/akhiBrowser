@@ -26,6 +26,7 @@ import org.mozilla.fenix.helpers.FenixGleanTestRule
 import org.mozilla.fenix.tabstray.data.TabsTrayItem
 import org.mozilla.fenix.tabstray.data.createTabGroup
 import org.mozilla.fenix.tabstray.redux.action.TabGroupAction
+import org.mozilla.fenix.tabstray.telemetry.TabCloseType
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class) // for gleanTestRule
@@ -41,7 +42,6 @@ class ExpandedTabGroupActionsBuilderTest {
 
     private fun buildActions(
         homepageAsNewTabEnabled: Boolean = true,
-        addNewHomepageTab: () -> String = { "new-tab" },
         onTabClick: (TabsTrayItem.Tab) -> Unit = {},
         onShareClick: () -> Unit = {},
         onAddNewTabCompleted: () -> Unit = {},
@@ -50,7 +50,6 @@ class ExpandedTabGroupActionsBuilderTest {
             group = group,
             homepageAsNewTabEnabled = homepageAsNewTabEnabled,
             dispatch = { dispatched.add(it) },
-            addNewHomepageTab = addNewHomepageTab,
             onTabClick = onTabClick,
             onShareClick = onShareClick,
             onAddNewTabCompleted = onAddNewTabCompleted,
@@ -58,7 +57,7 @@ class ExpandedTabGroupActionsBuilderTest {
 
     @Test
     fun `WHEN a tab is closed THEN TabClosed is dispatched for that tab and group`() {
-        buildActions().onTabClose(tab1)
+        buildActions().onTabClose(tab1, TabCloseType.TAP)
 
         assertEquals(
             expected = listOf<TabGroupAction>(TabGroupAction.TabClosed(tab = tab1, group = group)),
@@ -121,26 +120,18 @@ class ExpandedTabGroupActionsBuilderTest {
     }
 
     @Test
-    fun `GIVEN HNT is enabled WHEN add tab is clicked THEN a new tab is opened and added to the group`() {
+    fun `GIVEN HNT is enabled WHEN add tab is clicked THEN AddNewTabToGroupClicked is dispatched`() {
         var added = false
         val actions =
             buildActions(
                 homepageAsNewTabEnabled = true,
-                addNewHomepageTab = { "new-tab" },
                 onAddNewTabCompleted = { added = true },
             )
 
         assertNotNull(actions.onAddNewTabClick).invoke()
 
         assertEquals(
-            expected =
-                listOf<TabGroupAction>(
-                    TabGroupAction.TabAddedToExistingTabGroup(
-                        tabId = "new-tab",
-                        groupId = group.id,
-                        groupTitle = group.title,
-                    )
-                ),
+            expected = listOf<TabGroupAction>(TabGroupAction.AddNewTabToGroupClicked(group = group)),
             actual = dispatched,
         )
         assertTrue(added)
