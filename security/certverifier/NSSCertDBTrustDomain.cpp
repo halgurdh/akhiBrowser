@@ -1563,8 +1563,8 @@ SECStatus InitializeNSS(const nsACString& dir, NSSDBConfig nssDbConfig,
   nsAutoCString dbTypeAndDirectory("sql:");
   dbTypeAndDirectory.Append(dir);
   MOZ_LOG(gCertVerifierLog, LogLevel::Debug,
-          ("InitializeNSS(%s, %d, %d)", dbTypeAndDirectory.get(),
-           (int)nssDbConfig, (int)pkcs11DbConfig));
+          ("InitializeNSS(%s, %u, %u, 0x%x)", dbTypeAndDirectory.get(),
+           (unsigned int)nssDbConfig, (unsigned int)pkcs11DbConfig, flags));
   SECStatus srv =
       NSS_Initialize(dbTypeAndDirectory.get(), "", "", SECMOD_DB, flags);
   if (srv != SECSuccess) {
@@ -1695,7 +1695,7 @@ bool LoadOSClientCertsModule() {
 #endif
 }
 
-#if defined(NIGHTLY_BUILD) && !defined(MOZ_NO_SMART_CARDS)
+#if !defined(MOZ_NO_SMART_CARDS)
 extern "C" {
 // Extern declaration of the C_GetFunctionList function in the remotecerts
 // module. NSS calls it to obtain the list of functions comprising this module.
@@ -1707,7 +1707,7 @@ bool LoadRemoteCertsModule() {
   return LoadUserModuleFromXul(kRemoteCertsModuleName.get(),
                                RemoteCerts_C_GetFunctionList);
 }
-#endif  // NIGHTLY_BUILD && !MOZ_NO_SMART_CARDS
+#endif  // !MOZ_NO_SMART_CARDS
 
 bool LoadLoadableRoots(const nsCString& dir) {
   int unusedModType;

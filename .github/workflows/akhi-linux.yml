@@ -78,7 +78,7 @@ jobs:
           python3 browser/branding/akhi/tools/smoke_test.py --binary "$RUNNER_TEMP/akhibrowser/akhibrowser" \
             --out artifacts/smoke > artifacts/smoke.log 2>&1
           result=$?
-          grep -E ": (ok|missing)$|doesn't start" artifacts/smoke.log
+          grep -E ": (ok|FAILED), |doesn't start|Couldn't drive|^Failed:" artifacts/smoke.log || tail -n 20 artifacts/smoke.log
           exit $result
 
       - name: Upload to a private draft release

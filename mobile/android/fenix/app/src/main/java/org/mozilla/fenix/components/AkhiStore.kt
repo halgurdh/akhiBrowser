@@ -109,6 +109,7 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
                 } else {
                     replyError(id)
                 }
+                "prices" -> if (BuildConfig.AKHI_PLAY_STORE) prices(id) else replyError(id)
                 "referrer" -> if (BuildConfig.AKHI_PLAY_STORE) referrer(id) else replyError(id)
                 "gifts" -> if (BuildConfig.AKHI_PLAY_STORE) gifts(id) else replyError(id)
                 "consume" -> if (BuildConfig.AKHI_PLAY_STORE) consumeGift(id, request.optString("purchaseToken")) else replyError(id)
@@ -173,6 +174,7 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
             purchasesOf(BillingClient.ProductType.SUBS, onError) { subscriptions ->
                 purchasesOf(BillingClient.ProductType.INAPP, onError) { oneTime ->
                     val ownedOneTime = oneTime.filter { LIFETIME_PRODUCT in it.products }
+                    val ownedSchool = subscriptions.filter { SCHOOL_PRODUCT in it.products }
                     val ownedFamily = subscriptions.filter { FAMILY_PRODUCT in it.products }
                     val ownedSubscriptions = subscriptions.filter { SUBSCRIPTION_PRODUCT in it.products }
                     // a year of Family from a gift's promo code: once the year is over it's consumed, so that the
@@ -181,8 +183,10 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
                         .filter { FAMILY_YEAR_PRODUCT in it.products }
                         .partition { System.currentTimeMillis() < it.purchaseTime + YEAR_MS }
                     endedYear.forEach(::consume)
-                    (ownedOneTime + ownedFamily + ownedSubscriptions + ownedYear).forEach(::acknowledge)
+                    (ownedOneTime + ownedSchool + ownedFamily + ownedSubscriptions + ownedYear).forEach(::acknowledge)
+                    // School / Mosque gives Family's features here; its key is for the families (lib/premium.js)
                     val (plan, purchase, product) = when {
+                        ownedSchool.isNotEmpty() -> Triple("family", ownedSchool.first(), SCHOOL_PRODUCT)
                         ownedFamily.isNotEmpty() -> Triple("family", ownedFamily.first(), FAMILY_PRODUCT)
                         ownedYear.isNotEmpty() -> Triple("family", ownedYear.first(), FAMILY_YEAR_PRODUCT)
                         ownedOneTime.isNotEmpty() -> Triple("lifetime", ownedOneTime.first(), LIFETIME_PRODUCT)
@@ -247,10 +251,55 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
         )
     }
 
+    /**
+     * The prices Play charges this user, in their currency and as Play writes them (local prices included), for the
+     * plan cards of the settings: {"prices": {"monthly", "yearly", "family", "school", "lifetime"}}, a plan left out
+     * when Play has no price for it. Base plans only, not trials or offers.
+     */
+    private fun prices(id: Int) {
+        fun productOf(productId: String, type: String) =
+            QueryProductDetailsParams.Product.newBuilder().setProductId(productId).setProductType(type).build()
+        val subscriptions = listOf(SUBSCRIPTION_PRODUCT, FAMILY_PRODUCT, SCHOOL_PRODUCT)
+            .map { productOf(it, BillingClient.ProductType.SUBS) }
+        withBilling({ replyError(id) }) {
+            billingClient.queryProductDetailsAsync(
+                QueryProductDetailsParams.newBuilder().setProductList(subscriptions).build(),
+            ) { subsResult, subsDetails ->
+                billingClient.queryProductDetailsAsync(
+                    QueryProductDetailsParams.newBuilder()
+                        .setProductList(listOf(productOf(LIFETIME_PRODUCT, BillingClient.ProductType.INAPP)))
+                        .build(),
+                ) { oneTimeResult, oneTimeDetails ->
+                    mainHandler.post {
+                        if (!subsResult.isOk() && !oneTimeResult.isOk()) {
+                            replyError(id)
+                            return@post
+                        }
+                        val prices = JSONObject()
+                        // a base plan's price: its offer without an offer id, the last (recurring) phase
+                        subsDetails.productDetailsList.forEach { details ->
+                            details.subscriptionOfferDetails.orEmpty()
+                                .filter { it.offerId == null }
+                                .forEach { base ->
+                                    base.pricingPhases.pricingPhaseList.lastOrNull()?.formattedPrice?.let {
+                                        prices.put(base.basePlanId, it)
+                                    }
+                                }
+                        }
+                        oneTimeDetails.productDetailsList.firstOrNull()
+                            ?.oneTimePurchaseOfferDetailsList?.firstOrNull()?.formattedPrice
+                            ?.let { prices.put("lifetime", it) }
+                        reply(id, JSONObject().put("prices", prices))
+                    }
+                }
+            }
+        }
+    }
+
     private fun buy(id: Int, plan: String, offer: String = "") {
         val isLifetime = plan == "lifetime"
         val isGift = plan == "gift"
-        if (!isLifetime && !isGift && plan != "monthly" && plan != "yearly" && plan != "family") {
+        if (!isLifetime && !isGift && plan != "monthly" && plan != "yearly" && plan != "family" && plan != "school") {
             replyError(id)
             return
         }
@@ -262,6 +311,7 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
                     "lifetime" -> LIFETIME_PRODUCT
                     "gift" -> GIFT_PRODUCT
                     "family" -> FAMILY_PRODUCT
+                    "school" -> SCHOOL_PRODUCT
                     else -> SUBSCRIPTION_PRODUCT
                 },
             )
@@ -412,6 +462,7 @@ internal class AkhiStore(context: Context) : MessageHandler, PurchasesUpdatedLis
         // As set up in the Play Console. Family is its own product because a purchase doesn't say its base plan.
         private const val SUBSCRIPTION_PRODUCT = "akhi_premium"
         private const val FAMILY_PRODUCT = "akhi_family"
+        private const val SCHOOL_PRODUCT = "akhi_school"
         private const val LIFETIME_PRODUCT = "akhi_premium_lifetime"
 
         // Given only with promo codes, for gifts (the license server's /redeem): a year of Family from redeeming it

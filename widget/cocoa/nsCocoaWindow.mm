@@ -2579,7 +2579,10 @@ NSEvent* gLastDragMouseDownEvent = nil;  // [strong]
   // window state when the second click's mouseUp is handled here. Snapshot
   // the zoomed state on the first mouseUp and skip our own toggle if it
   // already changed when checked in the second mouseUp.
-  if (nsCocoaFeatures::OnGoldenGateOrLater() && [theEvent clickCount] == 1) {
+  // This no longer reproduces on macOS 27.2.1.
+  bool needsNativeZoomCheck = nsCocoaFeatures::OnGoldenGateOrLater() &&
+                              !nsCocoaFeatures::IsAtLeastVersion(27, 2, 1);
+  if (needsNativeZoomCheck && [theEvent clickCount] == 1) {
     mZoomStateAtLastSingleClick = [[self window] isZoomed];
   }
 
@@ -2588,7 +2591,7 @@ NSEvent* gLastDragMouseDownEvent = nil;  // [strong]
       !mGeckoChild->GetNonDraggableRegion().Contains(pos.x, pos.y)) {
     // Did the window state already change?
     bool zoomStateAlreadyChanged =
-        nsCocoaFeatures::OnGoldenGateOrLater() &&
+        needsNativeZoomCheck &&
         ([[self window] isZoomed] != mZoomStateAtLastSingleClick);
 
     if (!zoomStateAlreadyChanged) {
@@ -7401,7 +7404,7 @@ void nsCocoaWindow::SetMenuBar(RefPtr<nsMenuBarX>&& aMenuBar) {
   if (mMenuBar && ((!gSomeMenuBarPainted &&
                     RefPtr<nsMenuBarX>(
                         nsMenuUtilsX::GetHiddenWindowMenuBar()) == mMenuBar) ||
-                   mWindow.isMainWindow)) {
+                   (mWindow.isMainWindow && !IsMediaPiPWindow()))) {
     // We do an async paint in order to prevent crashes when macOS is actively
     // enumerating the menu items in `NSApp.mainMenu`.
     mMenuBar->PaintAsyncIfNeeded();
@@ -7836,11 +7839,13 @@ already_AddRefed<nsIWidget> nsIWidget::CreateChildWindow() {
   NS_ASSERTION(geckoWidget, "Window delegate not returning a gecko widget!");
 
   RefPtr<nsMenuBarX> geckoMenuBar = geckoWidget->GetMenuBar();
-  if (!geckoMenuBar && geckoWidget->IsMediaPiPWindow()) {
-    // The Picture-in-Picture player has no menu bar of its own. Show the hidden
-    // window's, as when no window is main, rather than one with only the
-    // application menu.
-    geckoMenuBar = nsMenuUtilsX::GetHiddenWindowMenuBar();
+  if (geckoWidget->IsMediaPiPWindow()) {
+    // The Picture-in-Picture player's document has no <menubar>, so its own
+    // menu bar is empty. Show the hidden window's, as when no window is main.
+    if (RefPtr<nsMenuBarX> hiddenWindowMenuBar =
+            nsMenuUtilsX::GetHiddenWindowMenuBar()) {
+      geckoMenuBar = std::move(hiddenWindowMenuBar);
+    }
   }
   if (geckoMenuBar) {
     // We do an async paint in order to prevent crashes when macOS is actively

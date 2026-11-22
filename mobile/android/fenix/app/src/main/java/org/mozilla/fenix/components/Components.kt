@@ -501,6 +501,10 @@ class Components(
             add(context.getString(R.string.pref_key_homepage_search_location_top))
             add(context.getString(R.string.pref_key_enable_homepage_searchbar2))
         }
+
+        if (!settings.enableOledTheme) {
+            add(context.getString(R.string.pref_key_oled_theme))
+        }
     }
 
     val ipProtectionPromptRepository by lazy {
@@ -510,6 +514,8 @@ class Components(
     val ads by lazy {
         Ads(context = context)
     }
+
+    val sports by lazy { Sports(context = context, crashReporter = analytics.crashReporter) }
 
     val relayEligibilityStore by lazy {
         RelayEligibilityStore(middleware = listOf(ClearLastUsedMiddleware()))

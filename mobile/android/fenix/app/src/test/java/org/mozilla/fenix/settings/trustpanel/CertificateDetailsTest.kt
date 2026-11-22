@@ -13,47 +13,9 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import org.mozilla.fenix.settings.trustpanel.store.CertificateDetails
 import org.mozilla.fenix.settings.trustpanel.store.WebsiteInfoState
-import org.mozilla.fenix.settings.trustpanel.store.parseDistinguishedName
-import org.mozilla.fenix.settings.trustpanel.store.toCertificateDetails
 
 class CertificateDetailsTest {
-
-    @Test
-    fun `GIVEN a certificate with all fields WHEN mapped THEN all certificate details are present`() {
-        val certificate =
-            createCertificate(
-                subject = "CN=www.theguardian.com, O=Guardian News & Media Ltd, L=London, C=GB",
-                issuer = "CN=GlobalSign GCC R3 OV TLS CA 2024, O=GlobalSign nv-sa, C=BE",
-            )
-
-        assertEquals(
-            CertificateDetails(
-                subjectOrganization = "Guardian News & Media Ltd",
-                subjectLocality = "London",
-                subjectCountry = "GB",
-                subjectCommonName = "www.theguardian.com",
-                issuerOrganization = "GlobalSign nv-sa",
-                issuerCommonName = "GlobalSign GCC R3 OV TLS CA 2024",
-            ),
-            certificate.toCertificateDetails(),
-        )
-    }
-
-    @Test
-    fun `GIVEN a certificate with only common names WHEN mapped THEN missing fields are null`() {
-        val certificate = createCertificate(subject = "CN=example.com", issuer = "CN=R13, O=Let's Encrypt, C=US")
-
-        assertEquals(
-            CertificateDetails(
-                subjectCommonName = "example.com",
-                issuerOrganization = "Let's Encrypt",
-                issuerCommonName = "R13",
-            ),
-            certificate.toCertificateDetails(),
-        )
-    }
 
     @Test
     fun `GIVEN a website without a certificate THEN certificate details are null`() {
@@ -98,34 +60,31 @@ class CertificateDetailsTest {
     }
 
     @Test
-    fun `GIVEN values with escaped separators WHEN parsed THEN values are unescaped`() {
-        val attributes = parseDistinguishedName("""CN=example.com,O=Example\, Inc.,L=Saint\+Denis""")
+    fun `GIVEN a secure website whose certificate has only an issuer THEN the certificate details can be opened`() {
+        val certificate = createCertificate(subject = "CN=example.com", issuer = "CN=R13")
 
-        assertEquals("Example, Inc.", attributes["O"])
-        assertEquals("Saint+Denis", attributes["L"])
+        assertTrue(WebsiteInfoState(isSecured = true, certificate = certificate).canOpenCertificateDetails)
     }
 
     @Test
-    fun `GIVEN values with non-ASCII characters WHEN mapped THEN values are kept`() {
-        val certificate = createCertificate(subject = "CN=example.com, O=Société Générale, L=Paris", issuer = "CN=CA")
+    fun `GIVEN a secure website whose certificate has nothing to show THEN the certificate details cannot be opened`() {
+        val certificate = createCertificate(subject = "CN=example.com", issuer = "DC=example")
 
-        assertEquals("Société Générale", certificate.toCertificateDetails().subjectOrganization)
+        assertFalse(WebsiteInfoState(isSecured = true, certificate = certificate).canOpenCertificateDetails)
     }
 
     @Test
-    fun `GIVEN multi-valued and repeated attributes WHEN parsed THEN the first value of each type is kept`() {
-        val attributes = parseDistinguishedName("CN=first.example+O=Example,CN=second.example")
+    fun `GIVEN a secure website with a QWAC THEN it is shown as qualified`() {
+        val certificate = createCertificate(subject = "CN=example.com", issuer = "CN=Issuer")
 
-        assertEquals("first.example", attributes["CN"])
-        assertEquals("Example", attributes["O"])
+        assertTrue(WebsiteInfoState(isSecured = true, certificate = certificate, qwac = certificate).isQwac)
     }
 
     @Test
-    fun `GIVEN blank values WHEN parsed THEN they are skipped`() {
-        val attributes = parseDistinguishedName("O=,CN=example.com")
+    fun `GIVEN an insecure website with a QWAC THEN it is not shown as qualified`() {
+        val certificate = createCertificate(subject = "CN=example.com", issuer = "CN=Issuer")
 
-        assertNull(attributes["O"])
-        assertEquals("example.com", attributes["CN"])
+        assertFalse(WebsiteInfoState(isSecured = false, certificate = certificate, qwac = certificate).isQwac)
     }
 
     private fun createCertificate(subject: String, issuer: String): X509Certificate =
