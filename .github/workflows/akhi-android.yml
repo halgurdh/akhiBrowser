@@ -115,6 +115,10 @@ jobs:
             "out/AkhiBrowser-$version-android-arm64-v8a.apk"
           ./mach gradle --stop > /dev/null 2>&1 || true
           pkill -f KotlinCompileDaemon || true
+          # lint passed for the APK; run again for the bundle it hung for over an hour
+          mkdir -p "$HOME/.gradle/init.d"
+          echo 'allprojects { tasks.matching { it.name.startsWith("lintVital") }.configureEach { enabled = false } }' \
+            > "$HOME/.gradle/init.d/no-lint-vital.gradle"
           python3 browser/branding/akhi/tools/build_play.py --signing "$AKHI_SIGNING_PROPERTIES" > artifacts/play.log 2>&1 \
             || { tail -n 40 artifacts/play.log; exit 1; }
           cp artifacts/play-$version/*.aab artifacts/play-$version/*universal.apk out/
