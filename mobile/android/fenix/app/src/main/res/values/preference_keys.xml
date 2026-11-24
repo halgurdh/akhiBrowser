@@ -408,8 +408,6 @@
     <string name="pref_key_current_wallpaper_card_color_light" translatable="false">pref_key_current_wallpaper_card_color_light</string>
     <string name="pref_key_current_wallpaper_card_color_dark" translatable="false">pref_key_current_wallpaper_card_color_dark</string>
     <string name="pref_key_wallpapers_onboarding" translatable="false">pref_key_wallpapers_onboarding</string>
-    <string name="pref_key_should_migrate_wallpaper" translatable="false">pref_key_should_migrate_wallpaper</string>
-    <string name="pref_key_should_migrate_wallpaper_card_colors" translatable="false">pref_key_should_migrate_wallpaper_card_colors</string>
 
     <!-- Top Sites -->
     <string name="default_top_sites_added" translatable="false">pref_key_pocket_top_site_added</string>
@@ -528,7 +526,6 @@
     <string name="pref_key_enable_uninstall_survey" translatable="false">pref_key_enable_uninstall_survey</string>
     <string name="pref_key_enable_homepage_customization" translatable="false">pref_key_enable_homepage_customization</string>
     <string name="pref_key_enable_homepage_trending_recent_search" translatable="false">pref_key_enable_homepage_trending_recent_search</string>
-    <string name="pref_key_enable_oled_theme" translatable="false">pref_key_enable_oled_theme</string>
     <string name="pref_key_enable_menu_customization_screen" translatable="false">pref_key_enable_menu_customization_screen</string>
     <string name="pref_key_enable_account_settings_new_ui" translatable="false">pref_key_enable_account_settings_new_ui</string>
     <string name="pref_key_enable_sync_decoupling" translatable="false">pref_key_enable_sync_decoupling</string>
@@ -603,7 +600,6 @@
     <!-- Crash reporting -->
     <string name="pref_key_crash_reporting_cutoff_date" translatable="false">pref_key_crash_reporting_cutoff_date_2026_08_18</string>
     <string name="pref_key_crash_reporting_deferred_until" translatable="false">pref_key_crash_reporting_deferred_until</string>
-    <string name="pref_key_use_new_crash_reporter" translatable="false">pref_key_use_new_crash_reporter</string>
 
     <!-- Bookmarks -->
     <string name="pref_last_folder_saved_in" translatable="false">pref_last_folder_saved_in</string>

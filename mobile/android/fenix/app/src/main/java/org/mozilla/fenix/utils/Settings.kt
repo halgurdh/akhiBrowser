@@ -634,20 +634,6 @@ class Settings(
             default = 0,
         )
 
-    /** Indicates if the current legacy wallpaper should be migrated. */
-    var shouldMigrateLegacyWallpaper by
-        booleanPreference(
-            key = appContext.getPreferenceKey(R.string.pref_key_should_migrate_wallpaper),
-            default = true,
-        )
-
-    /** Indicates if the current legacy wallpaper card colors should be migrated. */
-    var shouldMigrateLegacyWallpaperCardColors by
-        booleanPreference(
-            key = appContext.getPreferenceKey(R.string.pref_key_should_migrate_wallpaper_card_colors),
-            default = true,
-        )
-
     /** Indicates if the wallpaper onboarding dialog should be shown. */
     var showWallpaperOnboarding by
         booleanPreference(
@@ -3538,13 +3524,6 @@ class Settings(
         booleanPreference(
             key = appContext.getPreferenceKey(R.string.pref_key_enable_uninstall_survey),
             default = { FxNimbus.features.uninstallSurvey.value().enabled },
-        )
-
-    /** Indicates if the OLED theme is enabled. */
-    var enableOledTheme by
-        booleanPreference(
-            key = appContext.getPreferenceKey(R.string.pref_key_enable_oled_theme),
-            default = { FxNimbus.features.oledTheme.value().enabled },
         )
 
     /** Indicates if Homepage Customization is enabled. */

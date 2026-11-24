@@ -261,7 +261,7 @@ export const PURPOSES = Object.freeze({
  */
 export const FEATURE_MAJOR_VERSIONS = Object.freeze({
   [MODEL_FEATURES.CHAT]: 12,
-  [MODEL_FEATURES.SMART_FORM_FILL]: 1,
+  [MODEL_FEATURES.SMART_FORM_FILL]: 2,
   [MODEL_FEATURES.TITLE_GENERATION]: 2,
   [MODEL_FEATURES.TAB_GROUP_NAMING]: 2,
   [MODEL_FEATURES.CONVERSATION_STARTERS_SIDEBAR_SYSTEM]: 1,
@@ -294,7 +294,7 @@ export const FEATURE_MAJOR_VERSIONS = Object.freeze({
   // aitab structured-page generation. Paired with the `version` major in
   // models/aitab/component_schema.json (AITab.loadAssets rejects a mismatch).
   // Bump both, plus the aitab records in the packaged dump, in one patch.
-  [MODEL_FEATURES.AITAB]: 1,
+  [MODEL_FEATURES.AITAB]: 2,
 });
 
 /**

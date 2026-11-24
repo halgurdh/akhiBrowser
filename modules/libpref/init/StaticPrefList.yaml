@@ -12815,6 +12815,12 @@
   value: @IS_NIGHTLY_BUILD@
   mirror: always
 
+# Whether MediaSource supports the audio/aac byte stream format.
+- name: media.mediasource.aac.enabled
+  type: RelaxedAtomicBool
+  value: @IS_NIGHTLY_BUILD@
+  mirror: always
+
 # true for talos tests so that VideoSink passes on the most recently decoded
 # frame to exercise the compositor even when the frame is out of date because
 # the decoder is stressed.
@@ -17776,6 +17782,15 @@
   value: true
   mirror: always
 
+# Comma-separated list of HTTP auth schemes (case-insensitive; "basic",
+# "digest", "ntlm", "negotiate") that the browser must not use, even if
+# offered by the server. Challenges for disabled schemes are ignored
+# entirely, as if the server had not sent them.
+- name: network.http.auth.disabled-schemes
+  type: String
+  value: ""
+  mirror: never
+
 - name: network.http.happy_eyeballs_enabled
   type: RelaxedAtomicBool
   value: @IS_NIGHTLY_BUILD@
@@ -21629,6 +21644,14 @@
 # Use native D&D session type on Wayland instead of Gtk.
 # Recently disabled due compositor bugs (Bug 2046911).
 - name: widget.wayland.native-data-session
+  type: bool
+  value: false
+  mirror: once
+
+# Use native D&D popups with layered rendering.
+# Recently disabled due Mutter compositor bug
+# https://gitlab.gnome.org/GNOME/mutter/-/work_items/5207
+- name: widget.wayland.native-dnd-popups
   type: bool
   value: false
   mirror: once

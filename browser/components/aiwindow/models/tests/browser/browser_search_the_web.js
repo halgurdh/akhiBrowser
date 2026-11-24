@@ -10,6 +10,7 @@ const { SEARCH_ANSWER_SCHEMA, runSearchTheWeb } = ChromeUtils.importESModule(
 const {
   GetPageContent,
   GET_PAGE_CONTENT,
+  RunSearch,
   SEARCH_QUERY_ENDPOINT_PREF,
   SEARCH_QUERY_APIKEY_PREF,
   SEARCH_THE_WEB_FAST_PREF,
@@ -481,9 +482,9 @@ add_task(async function test_search_the_web_invalid_answer_is_not_answered() {
   }
 });
 
-add_task(async function test_search_the_web_retrieval_error_returns_failure() {
-  // A non-2xx from the search endpoint must be caught and returned as a
-  // not-answered result with an error, never thrown.
+add_task(async function test_search_the_web_retrieval_error_hands_off() {
+  // A non-2xx from the search endpoint must be caught, never thrown, and route
+  // the turn to the search handoff.
   await pushSearchPrefs();
 
   const mockSearchManager = new MockSearchManager();
@@ -500,19 +501,11 @@ add_task(async function test_search_the_web_retrieval_error_returns_failure() {
     });
     const result = await runPromise;
     Assert.equal(
-      result.could_answer,
-      false,
-      "A retrieval error yields a not-answered result"
+      result.requiresSearchHandoff,
+      true,
+      "A retrieval error routes the turn to the search handoff"
     );
-    Assert.deepEqual(
-      result.searched_urls,
-      [],
-      "No URLs are searched when retrieval fails"
-    );
-    Assert.ok(
-      result.error,
-      "An error message is returned so the assistant can fall back"
-    );
+    Assert.ok(result.error, "The provider failure is reported");
     mockSearchManager.assertAllRequestsHandled();
   } finally {
     mockSearchManager.rejectAllRequests();
@@ -541,6 +534,11 @@ add_task(async function test_search_the_web_no_results_returns_failure() {
       "No results yields a not-answered result"
     );
     Assert.deepEqual(result.searched_urls, [], "No URLs are searched");
+    Assert.equal(
+      result.requiresSearchHandoff,
+      false,
+      "A search that finds nothing returns to the assistant"
+    );
     mockSearchManager.assertAllRequestsHandled();
   } finally {
     mockSearchManager.rejectAllRequests();
@@ -955,105 +953,98 @@ add_task(async function test_fast_search_through_chat() {
   ];
 
   await pushSearchPrefs(true);
+  const mockEngineManager = new MockEngineManager();
   const mockSearchManager = new MockSearchManager();
-  const wireRequests = [];
 
   try {
-    await withServer(
-      {
-        toolCall: { name: SEARCH_THE_WEB, args: JSON.stringify({ query }) },
-        followupChunks: ["Widgets cost nine dollars."],
-        onRequest(body) {
-          wireRequests.push(body);
-        },
-      },
-      async () => {
-        const conversation = new ChatConversation({
-          pageUrl: new URL("https://example.com"),
-          pageMeta: {},
-        });
-        conversation.engine = await openAIEngine.build({
-          model: TEST_MODEL,
-          serviceType: SERVICE_TYPES.AI,
-          purpose: PURPOSES.CHAT,
-          flowId: null,
-          feature: MODEL_FEATURES.CHAT,
-        });
-        conversation.addUserMessage(query, "https://example.com", 0);
-        conversation.addAssistantMessage("text", "");
+    const conversation = new ChatConversation({
+      pageUrl: new URL("https://example.com"),
+      pageMeta: {},
+    });
+    conversation.engine = await openAIEngine.build({
+      model: TEST_MODEL,
+      serviceType: SERVICE_TYPES.AI,
+      purpose: PURPOSES.CHAT,
+      flowId: null,
+      feature: MODEL_FEATURES.CHAT,
+    });
+    conversation.addUserMessage(query, "https://example.com", 0);
+    conversation.addAssistantMessage("text", "");
 
-        const fetchPromise = Chat.fetchWithHistory({ conversation });
-        await mockSearchManager.respondTo({ response: { results } });
-        await fetchPromise;
+    const fetchPromise = Chat.fetchWithHistory({ conversation });
+    await mockEngineManager.respondToWithToolCall({
+      toolName: SEARCH_THE_WEB,
+      toolParams: { query },
+    });
+    await mockSearchManager.respondTo({ response: { results } });
+    const followupTurn = await mockEngineManager.captureRequest({
+      purpose: PURPOSES.CHAT,
+    });
+    followupTurn.respond("Widgets cost nine dollars.");
+    await fetchPromise;
 
-        const toolMessages = conversation.messages.filter(
-          message => message.role === MESSAGE_ROLE.TOOL
-        );
-        Assert.equal(toolMessages.length, 1, "One search tool result recorded");
-        Assert.deepEqual(
-          toolMessages[0].content.body,
-          {
-            results: results.map(item => ({
-              title: sanitizeUntrustedContent(item.title),
-              url: item.url,
-              snippet: item.text,
-            })),
-            requiresSearchHandoff: false,
-          },
-          "The snippets reach the conversation as the tool result"
-        );
-
-        // No commit() here: the follow-up turn committed the staged flags.
-        Assert.ok(
-          conversation.securityProperties.privateData,
-          "The follow-up turn commits the private-data flag the tool staged"
-        );
-        Assert.ok(
-          conversation.securityProperties.untrustedInput,
-          "The follow-up turn commits the untrusted-input flag the tool staged"
-        );
-
-        Assert.deepEqual(
-          conversation.getCitationsSnapshot(),
-          results.map(item => ({ url: item.url, title: item.title })),
-          "Every returned result is registered as a citation, with its raw title"
-        );
-        Assert.deepEqual(
-          [...conversation.serpUrlsForAnonymousFetch],
-          results.map(item => item.url),
-          "The returned results are eligible for anonymous page extraction"
-        );
-
-        // The follow-up turn carries the tool result back to the model, which
-        // is where the generic URL tokenization has to have taken effect.
-        Assert.equal(
-          wireRequests.length,
-          2,
-          "A tool turn and a follow-up turn"
-        );
-        const wireToolMessage = wireRequests[1].messages.find(
-          message => message.role === "tool"
-        );
-        Assert.ok(
-          wireToolMessage,
-          "The follow-up turn includes the tool result"
-        );
-        for (const item of results) {
-          const token = conversation.urlToToken.get(item.url);
-          Assert.ok(token, `The result URL is tokenized: ${item.url}`);
-          Assert.ok(
-            wireToolMessage.content.includes(`§url_token: ${token}§`),
-            "The model sees the token for the result URL"
-          );
-          Assert.ok(
-            !wireToolMessage.content.includes(item.url),
-            "The model does not see the raw result URL"
-          );
-        }
-      }
+    const toolMessages = conversation.messages.filter(
+      message => message.role === MESSAGE_ROLE.TOOL
     );
+    Assert.equal(toolMessages.length, 1, "One search tool result recorded");
+    Assert.deepEqual(
+      toolMessages[0].content.body,
+      {
+        results: results.map(item => ({
+          title: sanitizeUntrustedContent(item.title),
+          url: item.url,
+          snippet: item.text,
+        })),
+        requiresSearchHandoff: false,
+      },
+      "The snippets reach the conversation as the tool result"
+    );
+
+    // No commit() here: the follow-up turn committed the staged flags.
+    Assert.ok(
+      conversation.securityProperties.privateData,
+      "The follow-up turn commits the private-data flag the tool staged"
+    );
+    Assert.ok(
+      conversation.securityProperties.untrustedInput,
+      "The follow-up turn commits the untrusted-input flag the tool staged"
+    );
+
+    Assert.deepEqual(
+      conversation.getCitationsSnapshot(),
+      results.map(item => ({ url: item.url, title: item.title })),
+      "Every returned result is registered as a citation, with its raw title"
+    );
+    Assert.deepEqual(
+      [...conversation.serpUrlsForAnonymousFetch],
+      results.map(item => item.url),
+      "The returned results are eligible for anonymous page extraction"
+    );
+
+    // The follow-up turn carries the tool result back to the model, which
+    // is where the generic URL tokenization has to have taken effect.
+    const wireToolMessage = followupTurn.request.args.find(
+      message => message.role === "tool"
+    );
+    Assert.ok(wireToolMessage, "The follow-up turn includes the tool result");
+    for (const item of results) {
+      const token = conversation.urlToToken.get(item.url);
+      Assert.ok(token, `The result URL is tokenized: ${item.url}`);
+      Assert.ok(
+        wireToolMessage.content.includes(`§url_token: ${token}§`),
+        "The model sees the token for the result URL"
+      );
+      Assert.ok(
+        !wireToolMessage.content.includes(item.url),
+        "The model does not see the raw result URL"
+      );
+    }
+    mockEngineManager.assertAllRequestsHandled();
+    mockSearchManager.assertAllRequestsHandled();
   } finally {
+    await mockEngineManager.rejectAllRequests();
     mockSearchManager.rejectAllRequests();
+    mockEngineManager.cleanupMocks();
     mockSearchManager.cleanupMocks();
     await SpecialPowers.popPrefEnv();
   }
@@ -1215,14 +1206,15 @@ function abortError() {
 }
 
 // Retrieval failures and empty result sets, each stating the category and
-// status the event has to record. The optional count fields are asserted only
-// where a case is specifically about them.
+// status the event has to record and whether the turn hands off. The optional
+// count fields are asserted only where a case is specifically about them.
 const ERROR_CASES = [
   {
     name: "no_results",
     mock: { response: { results: [] } },
     error: "no_results",
     status: "200",
+    handoff: false,
     retrieved: "0",
     returned: "0",
   },
@@ -1241,6 +1233,7 @@ const ERROR_CASES = [
     },
     error: "no_results",
     status: "200",
+    handoff: false,
     retrieved: "1",
     returned: "0",
   },
@@ -1249,6 +1242,7 @@ const ERROR_CASES = [
     mock: { response: "upstream exploded", status: 503 },
     error: "http_error",
     status: "503",
+    handoff: true,
     retrieved: "0",
     processingZero: true,
   },
@@ -1261,18 +1255,23 @@ const ERROR_CASES = [
     },
     error: "network_error",
     status: "0",
+    handoff: true,
   },
   {
+    // The provider's own request timer aborts the fetch, so this AbortError
+    // is a timeout rather than a user cancellation.
     name: "timeout",
     mock: { rejectWith: abortError() },
     error: "timeout",
     status: "0",
+    handoff: true,
   },
   {
     name: "unparseable_body",
     mock: { response: "<html>gateway error</html>", jsonThrows: true },
     error: "retrieval_failed",
     status: "200",
+    handoff: true,
   },
 ];
 
@@ -1283,6 +1282,11 @@ add_task(async function test_fast_search_telemetry_error_categories() {
 
     const { result } = await runFastSearchWithMock(testCase.mock);
     Assert.ok(result.error, `${testCase.name}: the flow reports a failure`);
+    Assert.equal(
+      result.requiresSearchHandoff,
+      testCase.handoff,
+      `${testCase.name}: whether the turn hands off`
+    );
 
     const extra = getSearchTheWebExtra();
     Assert.equal(
@@ -1338,6 +1342,7 @@ const PREREQUEST_FAILURE_CASES = [
     query: "   ",
     endpoint: SEARCH_ENDPOINT,
     error: "invalid_query",
+    handoff: false,
     retrievalZero: true,
   },
   {
@@ -1345,6 +1350,7 @@ const PREREQUEST_FAILURE_CASES = [
     query: "widgets",
     endpoint: "",
     error: "config_error",
+    handoff: true,
   },
 ];
 
@@ -1364,6 +1370,11 @@ add_task(async function test_fast_search_telemetry_prerequest_failures() {
         conversation
       );
       Assert.ok(result.error, `${testCase.name}: the flow reports a failure`);
+      Assert.equal(
+        result.requiresSearchHandoff,
+        testCase.handoff,
+        `${testCase.name}: whether the turn hands off`
+      );
 
       const extra = getSearchTheWebExtra();
       Assert.equal(
@@ -1467,72 +1478,83 @@ add_task(async function test_grounded_path_records_no_search_the_web_event() {
 add_task(async function test_fast_search_failure_marks_tool_call_error() {
   // Drives the real caller so tool_call is recorded the way it is in
   // production, where a failed search resolves with an error-bearing result
-  // instead of throwing.
+  // instead of throwing, and then hands the turn off.
   Services.fog.testResetFOG();
   await pushSearchPrefs(true);
 
   const query = "how much are widgets?";
+  const mockEngineManager = new MockEngineManager();
   const mockSearchManager = new MockSearchManager();
+  const runSearchStub = sinon
+    .stub(RunSearch, "runSearch")
+    .resolves("Search handoff results");
 
   try {
-    await withServer(
-      {
-        toolCall: { name: SEARCH_THE_WEB, args: JSON.stringify({ query }) },
-        followupChunks: ["I could not search just now."],
-      },
-      async () => {
-        const conversation = new ChatConversation({
-          pageUrl: new URL("https://example.com"),
-          pageMeta: {},
-        });
-        conversation.engine = await openAIEngine.build({
-          model: TEST_MODEL,
-          serviceType: SERVICE_TYPES.AI,
-          purpose: PURPOSES.CHAT,
-          flowId: null,
-          feature: MODEL_FEATURES.CHAT,
-        });
-        conversation.addUserMessage(query, "https://example.com", 0);
-        conversation.addAssistantMessage("text", "");
+    const conversation = new ChatConversation({
+      pageUrl: new URL("https://example.com"),
+      pageMeta: {},
+    });
+    conversation.engine = await openAIEngine.build({
+      model: TEST_MODEL,
+      serviceType: SERVICE_TYPES.AI,
+      purpose: PURPOSES.CHAT,
+      flowId: null,
+      feature: MODEL_FEATURES.CHAT,
+    });
+    conversation.addUserMessage(query, "https://example.com", 0);
+    conversation.addAssistantMessage("text", "");
 
-        const fetchPromise = Chat.fetchWithHistory({
-          conversation,
-          mode: "fullpage",
-        });
-        await mockSearchManager.respondTo({
-          response: "upstream exploded",
-          status: 503,
-        });
-        await fetchPromise;
+    const fetchPromise = Chat.fetchWithHistory({
+      conversation,
+      mode: "fullpage",
+    });
+    await mockEngineManager.respondToWithToolCall({
+      toolName: SEARCH_THE_WEB,
+      toolParams: { query },
+    });
+    await mockSearchManager.respondTo({
+      response: "upstream exploded",
+      status: 503,
+    });
+    await fetchPromise;
 
-        const toolCalls = Glean.smartWindow.toolCall.testGetValue();
-        Assert.equal(toolCalls?.length, 1, "One tool_call event is recorded");
-        Assert.equal(
-          toolCalls[0].extra.tool_name,
-          SEARCH_THE_WEB,
-          "The event is attributed to search_the_web"
-        );
-        Assert.equal(
-          toolCalls[0].extra.error,
-          "execution_failed",
-          "A failed search is not counted as a successful tool call"
-        );
+    const toolCalls = Glean.smartWindow.toolCall.testGetValue();
+    Assert.equal(toolCalls?.length, 1, "One tool_call event is recorded");
+    Assert.equal(
+      toolCalls[0].extra.tool_name,
+      SEARCH_THE_WEB,
+      "The event is attributed to search_the_web"
+    );
+    Assert.equal(
+      toolCalls[0].extra.error,
+      "execution_failed",
+      "A failed search is not counted as a successful tool call"
+    );
+    Assert.ok(runSearchStub.calledOnce, "The failed search hands off");
+    const handoffEvents = Glean.smartWindow.searchHandoff.testGetValue();
+    Assert.equal(handoffEvents?.length, 1, "The handoff is recorded");
+    Assert.equal(
+      handoffEvents?.[0]?.extra.reason,
+      "search_failed",
+      "The handoff is recorded as caused by the failed search"
+    );
 
-        const extra = getSearchTheWebExtra();
-        Assert.equal(
-          extra.error,
-          "http_error",
-          "The precise reason lives on the search_the_web event"
-        );
-        Assert.equal(
-          extra.location,
-          "fullpage",
-          "Chat passes the surface through to the flow"
-        );
-      }
+    const extra = getSearchTheWebExtra();
+    Assert.equal(
+      extra.error,
+      "http_error",
+      "The precise reason lives on the search_the_web event"
+    );
+    Assert.equal(
+      extra.location,
+      "fullpage",
+      "Chat passes the surface through to the flow"
     );
   } finally {
+    runSearchStub.restore();
+    await mockEngineManager.rejectAllRequests();
     mockSearchManager.rejectAllRequests();
+    mockEngineManager.cleanupMocks();
     mockSearchManager.cleanupMocks();
     await SpecialPowers.popPrefEnv();
   }
@@ -1544,46 +1566,49 @@ add_task(
     await pushSearchPrefs(true);
 
     const query = "how much are widgets?";
+    const mockEngineManager = new MockEngineManager();
     const mockSearchManager = new MockSearchManager();
 
     try {
-      await withServer(
-        {
-          toolCall: { name: SEARCH_THE_WEB, args: JSON.stringify({ query }) },
-          followupChunks: ["Widgets cost nine dollars."],
-        },
-        async () => {
-          const conversation = new ChatConversation({
-            pageUrl: new URL("https://example.com"),
-            pageMeta: {},
-          });
-          conversation.engine = await openAIEngine.build({
-            model: TEST_MODEL,
-            serviceType: SERVICE_TYPES.AI,
-            purpose: PURPOSES.CHAT,
-            flowId: null,
-            feature: MODEL_FEATURES.CHAT,
-          });
-          conversation.addUserMessage(query, "https://example.com", 0);
-          conversation.addAssistantMessage("text", "");
+      const conversation = new ChatConversation({
+        pageUrl: new URL("https://example.com"),
+        pageMeta: {},
+      });
+      conversation.engine = await openAIEngine.build({
+        model: TEST_MODEL,
+        serviceType: SERVICE_TYPES.AI,
+        purpose: PURPOSES.CHAT,
+        flowId: null,
+        feature: MODEL_FEATURES.CHAT,
+      });
+      conversation.addUserMessage(query, "https://example.com", 0);
+      conversation.addAssistantMessage("text", "");
 
-          const fetchPromise = Chat.fetchWithHistory({ conversation });
-          await mockSearchManager.respondTo({
-            response: { results: TELEMETRY_RESULTS },
-          });
-          await fetchPromise;
+      const fetchPromise = Chat.fetchWithHistory({ conversation });
+      await mockEngineManager.respondToWithToolCall({
+        toolName: SEARCH_THE_WEB,
+        toolParams: { query },
+      });
+      await mockSearchManager.respondTo({
+        response: { results: TELEMETRY_RESULTS },
+      });
+      await mockEngineManager.respondTo({
+        purpose: PURPOSES.CHAT,
+        response: "Widgets cost nine dollars.",
+      });
+      await fetchPromise;
 
-          const toolCalls = Glean.smartWindow.toolCall.testGetValue();
-          Assert.equal(toolCalls?.length, 1, "One tool_call event is recorded");
-          Assert.equal(
-            toolCalls[0].extra.error,
-            "",
-            "A successful search still reports no tool_call error"
-          );
-        }
+      const toolCalls = Glean.smartWindow.toolCall.testGetValue();
+      Assert.equal(toolCalls?.length, 1, "One tool_call event is recorded");
+      Assert.equal(
+        toolCalls[0].extra.error,
+        "",
+        "A successful search still reports no tool_call error"
       );
     } finally {
+      await mockEngineManager.rejectAllRequests();
       mockSearchManager.rejectAllRequests();
+      mockEngineManager.cleanupMocks();
       mockSearchManager.cleanupMocks();
       await SpecialPowers.popPrefEnv();
     }
@@ -1953,6 +1978,90 @@ add_task(async function test_answers_failure_returns_turn_then_escalates() {
 
     mockEngineManager.assertAllRequestsHandled();
   } finally {
+    await mockEngineManager.rejectAllRequests();
+    mockEngineManager.cleanupMocks();
+    await SpecialPowers.popPrefEnv();
+  }
+});
+
+add_task(async function test_answers_request_failure_hands_off() {
+  // A failed request is a provider failure and hands off. That includes an
+  // AbortError raised inside the request while the response was not stopped,
+  // since only Chat's signal decides whether the user cancelled.
+  await pushSearchPrefs(false, true);
+
+  const mockEngineManager = new MockEngineManager();
+
+  try {
+    for (const reason of [new Error("Answer request failed"), abortError()]) {
+      info(`answers request rejected with ${reason.name}`);
+      const conversation = makeAnswersConversation();
+      const runPromise = runSearchTheWeb({ query: "weather" }, conversation);
+      (
+        await mockEngineManager.captureRequest({ purpose: ANSWERS_ENGINE_KEY })
+      ).reject(reason);
+
+      const result = await runPromise;
+      Assert.equal(
+        result.requiresSearchHandoff,
+        true,
+        `A ${reason.name} routes the turn to the search handoff`
+      );
+      Assert.ok(result.error, "The provider failure is reported");
+      Assert.ok(
+        !result.directAnswerStream,
+        "A failed request delivers no reply to the user"
+      );
+      Assert.deepEqual(
+        conversation.getCitationsSnapshot(),
+        [],
+        "A failed request leaves no citations behind"
+      );
+    }
+
+    mockEngineManager.assertAllRequestsHandled();
+  } finally {
+    await mockEngineManager.rejectAllRequests();
+    mockEngineManager.cleanupMocks();
+    await SpecialPowers.popPrefEnv();
+  }
+});
+
+add_task(async function test_answers_citation_error_does_not_hand_off() {
+  // Recording the citations is local work done after the request succeeded, so
+  // an error there must not be mistaken for a failed request and hand off.
+  await pushSearchPrefs(false, true);
+
+  const mockEngineManager = new MockEngineManager();
+  const conversation = makeAnswersConversation();
+  const addCitationsStub = sinon
+    .stub(conversation, "addCitations")
+    .throws(new Error("citation bookkeeping failed"));
+
+  try {
+    const runPromise = runSearchTheWeb({ query: "weather" }, conversation);
+    (
+      await mockEngineManager.captureRequest({ purpose: ANSWERS_ENGINE_KEY })
+    ).respond({
+      finalOutput: "It is sunny today.",
+      providerSpecificFields: {
+        citations: [{ url: "https://weather.example/", title: "Weather" }],
+      },
+    });
+
+    await Assert.rejects(
+      runPromise,
+      /citation bookkeeping failed/,
+      "The local error surfaces as a tool error instead of a handoff result"
+    );
+    Assert.ok(
+      addCitationsStub.calledOnce,
+      "The error came from recording the citations"
+    );
+
+    mockEngineManager.assertAllRequestsHandled();
+  } finally {
+    addCitationsStub.restore();
     await mockEngineManager.rejectAllRequests();
     mockEngineManager.cleanupMocks();
     await SpecialPowers.popPrefEnv();

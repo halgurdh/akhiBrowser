@@ -261,6 +261,11 @@ support-files = [
   "seek-odd-keyframes/single-idr-vp9-1.mp4^headers^",
 
   # MPEG audio
+  "../../test/adts.aac",
+  "../../test/adts-cbr.aac",
+  "aac_crc.aac",
+  "aac_he.aac",
+  "aac_stereo.aac",
   "../../test/empty_size.mp3",
   "../../test/huge-id3.mp3",
   "../../test/small-shot.mp3",
@@ -271,6 +276,12 @@ support-files = [
   "mp1_tone.mp1",
   "mp2_click.mp2",
 ]
+
+["test_AAC_AbortAndResync.html"]
+
+["test_AAC_Append.html"]
+
+["test_AAC_TypeSupport.html"]
 
 ["test_BufferedSeekCanPlayThrough.html"]
 
@@ -298,10 +309,6 @@ skip-if = [
 ]
 
 ["test_FrameSelection_mp4.html"]
-skip-if = [
-  "os == 'android' && arch == 'aarch64' && debug", # Bug 1776960 - android aarch64 debug
-  "os == 'mac' && os_version == '10.15' && arch == 'x86_64'", # mac due to bug 1487973
-]
 
 ["test_H264_SPS_InvalidDimensions.html"]
 
@@ -326,9 +333,6 @@ scheme = "https" # AudioWorklet needs a secure context.
 ["test_MP3_TypeSupport.html"]
 
 ["test_NoAudioLoopBackData.html"]
-skip-if = [
-  "os == 'mac' && os_version == '10.15' && arch == 'x86_64' && opt",
-]
 
 ["test_NoAudioLoopBackData_Muted.html"]
 
@@ -337,19 +341,12 @@ skip-if = [
 ["test_PlayEvents.html"]
 
 ["test_Resolution_change_should_not_cause_video_freeze.html"]
-skip-if = [
-  "os == 'win' && os_version == '11.26100' && opt && verify-standalone",
-  "os == 'win' && os_version == '11.26200' && opt && verify-standalone",
-]
 
 ["test_ResumeAfterClearing_mp4.html"]
 
 ["test_SeekToLastFrame_mp4.html"]
 
 ["test_SeekToNonIDR_mp4.html"]
-skip-if = [
-  "os == 'win' && wmfme",
-]
 
 ["test_SeekedEvent_mp4.html"]
 
