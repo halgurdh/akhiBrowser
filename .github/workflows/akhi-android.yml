@@ -79,7 +79,7 @@ jobs:
           # Gradle within 16 GB: the project asks 7 GB heap and 6 GB metaspace per daemon, and the machine stopped
           mkdir -p "$HOME/.gradle"
           printf '%s\n' \
-            "org.gradle.jvmargs=-Xmx5g -Xms1g -XX:MaxMetaspaceSize=1536m -XX:+UseParallelGC -XX:ReservedCodeCacheSize=384m" \
+            "org.gradle.jvmargs=-Xmx4g -Xms1g -XX:MaxMetaspaceSize=1536m -XX:+UseParallelGC -XX:ReservedCodeCacheSize=384m" \
             "kotlin.daemon.jvmargs=-Xmx2g" "org.gradle.workers.max=2" > "$HOME/.gradle/gradle.properties"
           (cd browser/extensions/akhi/webext && npm ci --no-audit --no-fund > /dev/null 2>&1 || npm install --no-audit --no-fund > /dev/null)
 
@@ -115,6 +115,10 @@ jobs:
             "out/AkhiBrowser-$version-android-arm64-v8a.apk"
           ./mach gradle --stop > /dev/null 2>&1 || true
           pkill -f KotlinCompileDaemon || true
+          # lint passed for the APK; run again for the bundle it hung for over an hour
+          mkdir -p "$HOME/.gradle/init.d"
+          echo 'allprojects { tasks.matching { it.name.startsWith("lintVital") }.configureEach { enabled = false } }' \
+            > "$HOME/.gradle/init.d/no-lint-vital.gradle"
           python3 browser/branding/akhi/tools/build_play.py --signing "$AKHI_SIGNING_PROPERTIES" > artifacts/play.log 2>&1 \
             || { tail -n 40 artifacts/play.log; exit 1; }
           cp artifacts/play-$version/*.aab artifacts/play-$version/*universal.apk out/
