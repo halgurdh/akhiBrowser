@@ -584,3 +584,9 @@ for _lang in _EXTRA:
     COMPARE[_lang] = _module.COMPARE
     COMPARE_BROWSERS[_lang] = _module.COMPARE_BROWSERS
     LANGS.append(_lang)
+
+# the article with picks in every language, from content_top_apps.py
+import content_top_apps  # noqa: E402
+
+ARTICLES.append(content_top_apps.article())
+assert set(LANGS) <= set(ARTICLES[-1]), "content_top_apps.py lacks a language"
