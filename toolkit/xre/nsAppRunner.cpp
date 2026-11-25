@@ -1665,6 +1665,16 @@ nsXULAppInfo::GetDesktopEnvironment(nsACString& aDesktopEnvironment) {
 }
 
 NS_IMETHODIMP
+nsXULAppInfo::GetIsGnomeDesktopEnvironment(bool* aResult) {
+#ifdef MOZ_WIDGET_GTK
+  *aResult = IsGnomeDesktopEnvironment();
+#else
+  *aResult = false;
+#endif
+  return NS_OK;
+}
+
+NS_IMETHODIMP
 nsXULAppInfo::GetIsWayland(bool* aResult) {
 #ifdef MOZ_WIDGET_GTK
   *aResult = GdkIsWaylandDisplay();
@@ -5245,7 +5255,8 @@ enum struct ShouldNotProcessUpdatesReason {
   NotAnUpdatingTask,
   OtherInstanceRunning,
   FirstStartup,
-  DisabledByEnvironment
+  DisabledByEnvironment,
+  LaunchedByAIAgent
 };
 
 const char* ShouldNotProcessUpdatesReasonAsString(
@@ -5259,9 +5270,28 @@ const char* ShouldNotProcessUpdatesReasonAsString(
       return "OtherInstanceRunning";
     case ShouldNotProcessUpdatesReason::DisabledByEnvironment:
       return "DisabledByEnvironment";
+    case ShouldNotProcessUpdatesReason::LaunchedByAIAgent:
+      return "LaunchedByAIAgent";
     default:
       MOZ_CRASH("impossible value for ShouldNotProcessUpdatesReason");
   }
+}
+
+// Returns the name of the first environment variable found that indicates a
+// launch by an AI agent, or nullptr if there is none.
+static const char* GetAIAgentEnvVar() {
+  static const char* const kAIAgentEnvVars[] = {
+      "CLAUDECODE",     "CLINE_ACTIVE", "CODEX_SANDBOX",     "CODEX_THREAD_ID",
+      "COPILOT_AGENT",  "COPILOT_CLI",  "CURSOR_AGENT",      "DSH_SHELL",
+      "GEMINI_CLI",     "HERMES_AGENT", "HERMES_SESSION_ID", "MUSE_SESSION_ID",
+      "OPENCLAW_SHELL", "OPENCODE",     "PI_CODING_AGENT",   "PI_TOOL_CALL_ID",
+  };
+  for (const char* envVar : kAIAgentEnvVars) {
+    if (EnvHasValue(envVar)) {
+      return envVar;
+    }
+  }
+  return nullptr;
 }
 
 Maybe<ShouldNotProcessUpdatesReason> ShouldNotProcessUpdates(
@@ -5345,6 +5375,25 @@ Maybe<ShouldNotProcessUpdatesReason> ShouldNotProcessUpdates(
     }
   }
 #  endif
+
+  // Applying a pending update forces other running instances of the same
+  // installation to restart (bug 1480452), which an AI agent launching its own
+  // instance should not do to the user.
+  if (ARG_FOUND != CheckArgExists("test-process-updates") &&
+      !EnvHasValue("MOZ_TEST_PROCESS_UPDATES") &&
+      !EnvHasValue("MOZ_AGENT_ALLOW_UPDATE_PROCESSING")) {
+    if (const char* agentEnvVar = GetAIAgentEnvVar()) {
+      printf(
+          "Pending updates will not be applied because %s is set in the "
+          "environment, which indicates a launch by an AI agent. Set "
+          "MOZ_AGENT_ALLOW_UPDATE_PROCESSING=1 to apply pending updates at "
+          "startup.\n",
+          agentEnvVar);
+      fflush(stdout);
+      NS_WARNING("ShouldNotProcessUpdates(): LaunchedByAIAgent");
+      return Some(ShouldNotProcessUpdatesReason::LaunchedByAIAgent);
+    }
+  }
 
   return Nothing();
 }
@@ -5729,22 +5778,8 @@ int XREMain::XRE_mainStartup(bool* aExitFlag) {
 
 #if defined(MOZ_HAS_REMOTE)
   if (gRemoteService) {
-    // Use the full profile path to identify the profile.
-    nsCString profilePath;
-
-#  ifdef XP_WIN
-    nsString path;
-    rv = mProfD->GetPath(path);
+    rv = gRemoteService->SetProfile(mProfD, profile);
     if (NS_SUCCEEDED(rv)) {
-      CopyUTF16toUTF8(path, profilePath);
-    }
-#  else
-    rv = mProfD->GetNativePath(profilePath);
-#  endif
-
-    if (NS_SUCCEEDED(rv)) {
-      gRemoteService->SetProfile(profilePath);
-
       if (!mDisableRemoteClient) {
         // Try to remote the entire command line. If this fails, start up
         // normally.
@@ -5759,19 +5794,6 @@ int XREMain::XRE_mainStartup(bool* aExitFlag) {
         gRemoteService->SetStartupToken(startupToken);
 #  endif
         rv = gRemoteService->StartClient();
-
-        if (rv == NS_ERROR_NOT_AVAILABLE && profile) {
-          // Older versions would use the profile name in preference to the
-          // path.
-          nsCString profileName;
-          profile->GetName(profileName);
-          gRemoteService->SetProfile(profileName);
-
-          rv = gRemoteService->StartClient();
-
-          // Reset back to the path.
-          gRemoteService->SetProfile(profilePath);
-        }
 
         if (NS_SUCCEEDED(rv)) {
           *aExitFlag = true;
