@@ -166,7 +166,7 @@
     if (a && !(M.exclude && li.matches(M.exclude))) {
       var text = a.textContent.trim().toLowerCase(), href = (a.getAttribute("href") || "").replace(/^https?:\/\/[^/]+/, "");
       M.panels.forEach(function (cfg, i) {
-        if (found < 0 && [].concat(cfg.match).some(function (m) { m = String(m); return /^[\/#]/.test(m) ? href === m : text === m.toLowerCase(); })) found = i;
+        if (found < 0 && [].concat(cfg.match).some(function (m) { m = String(m); return /^[\/#]/.test(m) ? href === m || href.replace(/^\/[a-z]{2,3}\//, "/") === m : text === m.toLowerCase(); })) found = i;
       });
     }
     li.dataset.mega = found < 0 ? "" : found;
