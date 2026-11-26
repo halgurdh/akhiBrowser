@@ -44,7 +44,8 @@
           var term = terms.filter(function (t) { return !src.skipTerms || src.skipTerms.indexOf(t.name) < 0; })[0];
           var size = media && media.media_details && media.media_details.sizes;
           return {
-            img: (size && (size.medium_large || size.large || size.medium) || {}).source_url || (media && media.source_url),
+            img: (size && (size.medium_large || size.medium || size.large) || {}).source_url || (media && media.source_url),
+            srcset: size ? Object.keys(size).filter(function (k) { return size[k].width >= 280 && size[k].width <= 1600 && !/^(woocommerce_gallery|shop_single)/.test(k); }).map(function (k) { return size[k].source_url + " " + size[k].width + "w"; }).join(", ") : "",
             badge: T(src.badge) || (term && decode(term.name)) || "",
             title: decode(p.title && p.title.rendered),
             text: cut(p.excerpt && p.excerpt.rendered, 80),
@@ -59,7 +60,7 @@
         if (src.filter) list = list.filter(function (p) { return src.filter(p, lang); });
         return list.slice(0, n).map(function (p) {
           var img = p.images && p.images[0];
-          return { img: img && (img.thumbnail || img.src), badge: price(p), title: decode(p.name), text: cut(p.short_description || p.description, 80), href: p.permalink, button: T(src.button) };
+          return { img: img && (img.thumbnail || img.src), srcset: img && img.srcset, badge: price(p), title: decode(p.name), text: cut(p.short_description || p.description, 80), href: p.permalink, button: T(src.button) };
         });
       });
     }
@@ -71,7 +72,14 @@
     a.href = c.href || "#";
     if (/^https?:/.test(a.href) && a.host !== location.host) { a.target = "_blank"; a.rel = "noopener"; }
     var pic = el("div", "mega-pic");
-    if (c.img) { var im = el("img"); im.src = c.img; im.alt = ""; im.decoding = "async"; pic.appendChild(im); } else pic.classList.add("mega-noimg");
+    if (c.img) {
+      var im = el("img");
+      im.alt = ""; im.decoding = "async";
+      if (c.full) im.onerror = function () { im.onerror = null; im.removeAttribute("srcset"); im.src = c.full; };
+      if (c.srcset) { im.sizes = "(min-width: 1400px) 330px, 24vw"; im.srcset = c.srcset; }
+      im.src = c.img;
+      pic.appendChild(im);
+    } else pic.classList.add("mega-noimg");
     if (c.badge) pic.appendChild(el("span", "mega-badge", c.badge));
     a.appendChild(pic);
     a.appendChild(el("strong", "mega-title", c.title));
@@ -126,11 +134,14 @@
     for (var k = 0; k < nCards; k++) grid.appendChild(el("div", "mega-card mega-skeleton"));
     right.appendChild(grid);
     box.appendChild(right);
-    // cards of a panel seen earlier in this visit come from sessionStorage, so they show at once
-    var key = "mega1:" + lang + ":" + i, saved = null;
-    try { saved = !Array.isArray(cfg.cards) && JSON.parse(sessionStorage.getItem(key) || "null"); } catch (e) {}
-    (saved ? Promise.resolve(saved) : loadCards(cfg.cards)).then(function (cards) {
-      if (!saved && !Array.isArray(cfg.cards)) try { sessionStorage.setItem(key, JSON.stringify(cards)); } catch (e) {}
+    // cards fetched on an earlier visit (last 12 hours) show at once; a fresh copy is fetched in the background for next time
+    var key = "mega2:" + lang + ":" + i, saved = null, live = !Array.isArray(cfg.cards);
+    try { saved = live && JSON.parse(localStorage.getItem(key) || "null"); } catch (e) {}
+    if (saved && Date.now() - saved.t > 12 * 3600e3) saved = null;
+    var recent = saved && Date.now() - saved.t < 3600e3;
+    var fresh = recent ? null : live ? loadCards(cfg.cards).then(function (cards) { try { localStorage.setItem(key, JSON.stringify({ t: Date.now(), cards: cards })); } catch (e) {} return cards; }) : loadCards(cfg.cards);
+    if (saved && fresh) fresh.catch(function () {});
+    (saved ? Promise.resolve(saved.cards) : fresh).then(function (cards) {
       grid.innerHTML = "";
       if (!cards.length) { right.remove(); box.classList.add("mega-only-links"); return; }
       cards.forEach(function (c) { grid.appendChild(card(c)); });
@@ -185,9 +196,11 @@
     var go = function () {
       topItems.forEach(function (li) { var i = panelOf(li); if (i >= 0 && !built[i]) build(i, M.panels[i], li); });
     };
-    if (window.requestIdleCallback) requestIdleCallback(go, { timeout: 2500 }); else setTimeout(go, 1200);
+    if (window.requestIdleCallback) requestIdleCallback(go, { timeout: 800 }); else setTimeout(go, 300);
   }
-  if (document.readyState === "complete") prebuild(); else window.addEventListener("load", prebuild);
+  prebuild();
+  // the pointer heading for the menu: build now, without waiting for an idle moment
+  header.addEventListener("pointerenter", function () { topItems.forEach(function (li) { var i = panelOf(li); if (i >= 0 && !built[i]) build(i, M.panels[i], li); }); }, { once: true });
   document.addEventListener("mouseover", function (e) {
     if (!desktop.matches) return;
     var li = e.target.closest && e.target.closest(M.items);
