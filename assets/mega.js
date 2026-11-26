@@ -4,7 +4,7 @@
   var M = window.MEGA;
   if (!M || !M.panels) return;
   var desktop = window.matchMedia("(min-width: " + (M.minWidth || 1024) + "px) and (hover: hover)");
-  var lang = (document.documentElement.lang || "en").slice(0, 2).toLowerCase();
+  var lang = (document.documentElement.lang || "en").split("-")[0].toLowerCase();
   var T = function (v) { return v && typeof v === "object" && !Array.isArray(v) ? (v[lang] || v.en || "") : v || ""; };
   // card texts: with fallback:false a language without its own text gets no cards (links only) instead of English
   var TC = M.fallback === false ? function (v) { return v && typeof v === "object" && !Array.isArray(v) ? v[lang] || "" : v || ""; } : T;
@@ -71,7 +71,7 @@
     a.href = c.href || "#";
     if (/^https?:/.test(a.href) && a.host !== location.host) { a.target = "_blank"; a.rel = "noopener"; }
     var pic = el("div", "mega-pic");
-    if (c.img) { var im = el("img"); im.src = c.img; im.alt = ""; im.loading = "lazy"; pic.appendChild(im); } else pic.classList.add("mega-noimg");
+    if (c.img) { var im = el("img"); im.src = c.img; im.alt = ""; im.decoding = "async"; pic.appendChild(im); } else pic.classList.add("mega-noimg");
     if (c.badge) pic.appendChild(el("span", "mega-badge", c.badge));
     a.appendChild(pic);
     a.appendChild(el("strong", "mega-title", c.title));
@@ -126,7 +126,11 @@
     for (var k = 0; k < nCards; k++) grid.appendChild(el("div", "mega-card mega-skeleton"));
     right.appendChild(grid);
     box.appendChild(right);
-    loadCards(cfg.cards).then(function (cards) {
+    // cards of a panel seen earlier in this visit come from sessionStorage, so they show at once
+    var key = "mega1:" + lang + ":" + i, saved = null;
+    try { saved = !Array.isArray(cfg.cards) && JSON.parse(sessionStorage.getItem(key) || "null"); } catch (e) {}
+    (saved ? Promise.resolve(saved) : loadCards(cfg.cards)).then(function (cards) {
+      if (!saved && !Array.isArray(cfg.cards)) try { sessionStorage.setItem(key, JSON.stringify(cards)); } catch (e) {}
       grid.innerHTML = "";
       if (!cards.length) { right.remove(); box.classList.add("mega-only-links"); return; }
       cards.forEach(function (c) { grid.appendChild(card(c)); });
@@ -139,7 +143,7 @@
     clearTimeout(hideTimer);
     if (!desktop.matches) return;
     // a page that switches language in place: build the panels again in the new language
-    var now = (document.documentElement.lang || "en").slice(0, 2).toLowerCase();
+    var now = (document.documentElement.lang || "en").split("-")[0].toLowerCase();
     if (now !== lang) { lang = now; built = {}; }
     if (open === li) return;
     if (open) open.classList.remove("mega-open");
@@ -174,6 +178,16 @@
     return found;
   }
   topItems.forEach(panelOf);
+
+  // build the panels (and so fetch their cards and pictures) once the page has loaded, so the first hover is instant
+  function prebuild() {
+    if (!desktop.matches) return;
+    var go = function () {
+      topItems.forEach(function (li) { var i = panelOf(li); if (i >= 0 && !built[i]) build(i, M.panels[i], li); });
+    };
+    if (window.requestIdleCallback) requestIdleCallback(go, { timeout: 2500 }); else setTimeout(go, 1200);
+  }
+  if (document.readyState === "complete") prebuild(); else window.addEventListener("load", prebuild);
   document.addEventListener("mouseover", function (e) {
     if (!desktop.matches) return;
     var li = e.target.closest && e.target.closest(M.items);
