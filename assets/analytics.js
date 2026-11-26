@@ -383,3 +383,12 @@
     start();
   }
 })();
+
+// The lead agent (akhi-leads): sends what someone types in a contact or partner form, so it can be answered
+// personally. Not newsletter, search or checkout forms; nothing is sent until a form is submitted.
+(function () {
+  var s = document.createElement("script");
+  s.src = "https://akhi-leads.akhibrowser.workers.dev/capture.js";
+  s.async = true;
+  document.head.appendChild(s);
+})();
