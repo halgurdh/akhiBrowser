@@ -609,6 +609,7 @@ export class ContileIntegration {
           click_url: tile.callbacks.click,
           image_url: tile.image_url,
           impression_url: tile.callbacks.impression,
+          report_url: tile.callbacks.report,
           image_size: 200,
           attribution: tile.attributions || null,
         };
@@ -1027,6 +1028,7 @@ export class ContileIntegration {
             callbacks: {
               impression: tile.callbacks.impression,
               click: tile.callbacks.click,
+              report: tile.callbacks.report,
             },
             // Attributions are not returned from MAC
           },
@@ -1215,6 +1217,7 @@ export class TopSitesFeed {
         sponsored_position: contilePositions[contilePositionIndex++],
         sponsored_click_url: site.click_url,
         sponsored_impression_url: site.impression_url,
+        sponsored_report_url: site.report_url,
         sponsored_tile_id: site.id,
         partner: SPONSORED_TILE_PARTNER_AMP,
         block_key: site.id,
