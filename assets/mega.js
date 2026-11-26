@@ -6,6 +6,8 @@
   var desktop = window.matchMedia("(min-width: " + (M.minWidth || 1024) + "px) and (hover: hover)");
   var lang = (document.documentElement.lang || "en").slice(0, 2).toLowerCase();
   var T = function (v) { return v && typeof v === "object" && !Array.isArray(v) ? (v[lang] || v.en || "") : v || ""; };
+  // card texts: with fallback:false a language without its own text gets no cards (links only) instead of English
+  var TC = M.fallback === false ? function (v) { return v && typeof v === "object" && !Array.isArray(v) ? v[lang] || "" : v || ""; } : T;
 
   function decode(html) {
     var d = document.createElement("textarea");
@@ -29,7 +31,7 @@
 
   // cards: [{img, badge, title, text, href, button}]
   function loadCards(src) {
-    if (Array.isArray(src)) return Promise.resolve(src.map(function (c) { return Object.assign({}, c, { badge: T(c.badge), title: T(c.title), text: T(c.text), button: T(c.button), href: T(c.href) }); }));
+    if (Array.isArray(src)) return Promise.resolve(src.map(function (c) { return Object.assign({}, c, { badge: TC(c.badge), title: TC(c.title), text: TC(c.text), button: TC(c.button), href: T(c.href) }); }).filter(function (c) { return c.title; }));
     var n = src.count || 3;
     if (src.type === "posts" || src.type === "cpt") {
       var base = src.type === "posts" ? "posts" : src.restBase;
@@ -100,11 +102,11 @@
     var box = el("div", "mega-inner");
     var left = el("div", "mega-left");
     var h = el("div", "mega-h");
-    h.innerHTML = T(cfg.title);
+    if (cfg.title === "item") { var head = li.querySelector("summary") || li.firstElementChild; h.textContent = head ? head.textContent.trim() : ""; } else h.innerHTML = T(cfg.title);
     left.appendChild(h);
     var ul = el("ul", "mega-links");
     var links = cfg.links === "submenu" || !cfg.links
-      ? Array.prototype.slice.call(li.querySelectorAll(":scope > ul a, :scope > .sub-menu a")).map(function (a) { return { text: a.textContent.trim(), href: a.href }; })
+      ? Array.prototype.slice.call(li.querySelectorAll(M.submenu || ":scope > ul a, :scope > .sub-menu a")).map(function (a) { return { text: a.textContent.trim(), href: a.href }; })
       : cfg.links.map(function (l) { return { text: T(l.text), href: T(l.href) }; });
     links.forEach(function (l) {
       var a = el("a", null, l.text);
@@ -120,7 +122,8 @@
     right.appendChild(el("div", "mega-h", T(M.texts.featured)));
     var grid = el("div", "mega-cards");
     if (cfg.ratio) grid.style.setProperty("--mega-ratio", cfg.ratio);
-    for (var k = 0; k < (cfg.cards.count || 3); k++) grid.appendChild(el("div", "mega-card mega-skeleton"));
+    var nCards = Array.isArray(cfg.cards) ? cfg.cards.length : cfg.cards.count || 3;
+    for (var k = 0; k < nCards; k++) grid.appendChild(el("div", "mega-card mega-skeleton"));
     right.appendChild(grid);
     box.appendChild(right);
     loadCards(cfg.cards).then(function (cards) {
@@ -135,6 +138,9 @@
   function show(i, cfg, li) {
     clearTimeout(hideTimer);
     if (!desktop.matches) return;
+    // a page that switches language in place: build the panels again in the new language
+    var now = (document.documentElement.lang || "en").slice(0, 2).toLowerCase();
+    if (now !== lang) { lang = now; built = {}; }
     if (open === li) return;
     if (open) open.classList.remove("mega-open");
     open = li;
@@ -160,7 +166,7 @@
     if (a && !(M.exclude && li.matches(M.exclude))) {
       var text = a.textContent.trim().toLowerCase(), href = (a.getAttribute("href") || "").replace(/^https?:\/\/[^/]+/, "");
       M.panels.forEach(function (cfg, i) {
-        if (found < 0 && [].concat(cfg.match).some(function (m) { m = String(m); return m.charAt(0) === "/" ? href === m : text === m.toLowerCase(); })) found = i;
+        if (found < 0 && [].concat(cfg.match).some(function (m) { m = String(m); return /^[\/#]/.test(m) ? href === m : text === m.toLowerCase(); })) found = i;
       });
     }
     li.dataset.mega = found < 0 ? "" : found;

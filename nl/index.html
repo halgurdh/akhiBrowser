@@ -2210,5 +2210,66 @@ Houd de sleutel alsjeblieft binnen onze gemeenschap.</span>
   </section>
 
 </template>
+<!-- mega menu (desktop): wide panels under the menu with featured cards; shared code in assets/mega.js -->
+<link rel="stylesheet" href="/assets/mega.css?v=2">
+<style>
+.mega-panel{--mega-bg:#062f33;--mega-text:#fff;--mega-accent:#f4be34;--mega-badge-bg:#f4be34;--mega-badge-text:#03282e;--mega-font:"Segoe UI",Tahoma,"Noto Sans Arabic",system-ui,sans-serif;--mega-head:"Trajan Pro","Cinzel",Georgia,serif;--mega-head-weight:400;--mega-radius:16px;--mega-pic-bg:#03282e;border:1px solid #1c5a58;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.mega-panel .mega-text{color:#c9dedb;opacity:1}
+.mega-panel .mega-btn{border-radius:999px}
+.mega-panel .mega-card:hover .mega-btn{color:#03282e}
+@media (min-width:1024px) and (hover:hover){html.mega-on .drop.mega-has > div{display:none!important}html.mega-on .drop.mega-has.mega-open summary{color:#f4be34}}
+</style>
+<script>
+window.MEGA = {
+  header: "#bar",
+  items: "#menu > details.drop",
+  submenu: ":scope > div a",
+  fallback: false,
+  texts: { featured: { en: "Featured", nl: "Uitgelicht" } },
+  panels: [
+    {
+      match: "#features", title: "item", ratio: "16 / 9",
+      cards: [
+        { img: "/assets/shots/1-nudity-blur.webp", badge: { en: "On by default", nl: "Standaard aan" }, title: { en: "Blurs nudity before you see it", nl: "Vervaagt bloot voordat je het ziet" }, text: { en: "On-device AI checks every picture and video.", nl: "AI op je eigen toestel checkt elke foto en video." }, href: { en: "/#features", nl: "/nl/#features" }, button: { en: "See features", nl: "Bekijk functies" } },
+        { img: "/assets/shots/2-no-music.webp", badge: { en: "Videos", nl: "Video's" }, title: { en: "Videos without background music", nl: "Video's zonder achtergrondmuziek" }, text: { en: "Keeps the voice, removes the music.", nl: "Houdt de stem, haalt de muziek weg." }, href: { en: "/#features", nl: "/nl/#features" }, button: { en: "How it works", nl: "Zo werkt het" } },
+        { img: "/assets/shots/7-prayer-pause.webp", badge: { en: "Salah", nl: "Salah" }, title: { en: "Pauses for prayer time", nl: "Pauzeert bij gebedstijd" }, text: { en: "A reminder and a pause when it is time to pray.", nl: "Een herinnering en een pauze als het tijd is om te bidden." }, href: { en: "/#features", nl: "/nl/#features" }, button: { en: "See features", nl: "Bekijk functies" } }
+      ]
+    },
+    {
+      match: "#premium", title: "item", ratio: "16 / 9",
+      cards: [
+        { img: "/assets/plans.webp", badge: "Premium", title: { en: "Plans and prices", nl: "Abonnementen en prijzen" }, text: { en: "Free to use. Premium adds more for families.", nl: "Gratis te gebruiken. Premium geeft gezinnen meer." }, href: { en: "/#premium", nl: "/nl/#premium" }, button: { en: "See plans", nl: "Bekijk abonnementen" } },
+        { img: "/assets/shots/6-parental-pin-time-limits.webp", badge: { en: "Families", nl: "Gezinnen" }, title: { en: "Parental PIN and time limits", nl: "Ouder-pincode en tijdslimieten" }, text: { en: "Settings stay the way you set them.", nl: "Instellingen blijven zoals jij ze zet." }, href: { en: "/#premium", nl: "/nl/#premium" }, button: { en: "Read more", nl: "Lees meer" } },
+        { img: "/assets/shots/8-halal-check-riba-warning.webp", badge: { en: "Schools and mosques", nl: "Scholen en moskeeën" }, title: { en: "For schools and mosques", nl: "Voor scholen en moskeeën" }, text: { en: "Family Premium for all the children, one key for up to 500 devices.", nl: "Family Premium voor alle kinderen, één sleutel voor tot 500 toestellen." }, href: { en: "/#school", nl: "/nl/#school" }, button: { en: "Read more", nl: "Lees meer" } }
+      ]
+    },
+    {
+      match: "/privacy/", title: "item", ratio: "16 / 9",
+      cards: [
+        { img: "/assets/shots/3-search-blocking.webp", badge: { en: "Privacy", nl: "Privacy" }, title: { en: "What the browser sends", nl: "Wat de browser verstuurt" }, text: { en: "No account, and the checks run on your device.", nl: "Geen account, de checks draaien op je toestel." }, href: { en: "/privacy/", nl: "/nl/privacy/" }, button: { en: "Read more", nl: "Lees meer" } },
+        { img: "/assets/shots/5-youtube-clean-mode.webp", badge: { en: "Security", nl: "Veiligheid" }, title: { en: "Security and updates", nl: "Veiligheid en updates" }, text: { en: "Firefox underneath, with signed updates.", nl: "Firefox eronder, met ondertekende updates." }, href: { en: "/#security", nl: "/nl/#security" }, button: { en: "Read more", nl: "Lees meer" } },
+        { img: "/assets/og.png", badge: { en: "Open", nl: "Open" }, title: { en: "How we make money", nl: "Hoe we geld verdienen" }, text: { en: "Free, and it never sells or shares what you do.", nl: "Gratis, en het verkoopt of deelt nooit wat je doet." }, href: { en: "/money/", nl: "/nl/money/" }, button: { en: "Read more", nl: "Lees meer" } }
+      ]
+    },
+    {
+      match: "/kit/", title: "item", ratio: "16 / 9",
+      cards: [
+        { img: "/assets/trailer-poster.jpg", badge: { en: "Free kit", nl: "Gratis kit" }, title: { en: "Kit for schools and mosques", nl: "Kit voor scholen en moskeeën" }, text: { en: "We write the message and the poster for you.", nl: "Wij schrijven het bericht en de poster voor je." }, href: { en: "/kit/", nl: "/nl/kit/" }, button: { en: "Get the kit", nl: "Pak de kit" } },
+        { img: "/assets/shots/4-hijab-recognition.webp", badge: { en: "Earn", nl: "Verdien" }, title: { en: "Recommend AkhiBrowser", nl: "Raad AkhiBrowser aan" }, text: { en: "Get 20% of a school or mosque's payments, every month.", nl: "Krijg 20% van de betalingen van een school of moskee, elke maand." }, href: { en: "/affiliate/", nl: "/nl/affiliate/" }, button: { en: "Read more", nl: "Lees meer" } },
+        { img: "/assets/og.png", badge: { en: "Partners", nl: "Partners" }, title: { en: "Become a sponsor or partner", nl: "Word sponsor of partner" }, text: { en: "Work with us on a halal internet.", nl: "Werk met ons aan een halal internet." }, href: { en: "/money/#partner", nl: "/nl/money/#partner" }, button: { en: "Get in touch", nl: "Neem contact op" } }
+      ]
+    },
+    {
+      match: "/blog/", title: "item", ratio: "16 / 9",
+      cards: [
+        { img: "/assets/shots/1-nudity-blur.webp", badge: "Guide", title: { en: "What is a halal browser?", nl: "Wat is een halal browser?" }, text: { en: "What it blocks and how it differs from a filter.", nl: "Wat het tegenhoudt en hoe het verschilt van een filter." }, href: { en: "/blog/what-is-a-halal-browser/", nl: "/nl/blog/what-is-a-halal-browser/" }, button: { en: "Read the guide", nl: "Lees de gids" } },
+        { img: "/assets/shots/3-search-blocking.webp", badge: { en: "Compare", nl: "Vergelijk" }, title: { en: "The best halal browsers", nl: "De beste halal browsers" }, text: { en: "The options side by side.", nl: "De opties naast elkaar." }, href: { en: "/blog/best-halal-browsers/", nl: "/nl/blog/best-halal-browsers/" }, button: { en: "Read the guide", nl: "Lees de gids" } },
+        { img: "/assets/shots/2-no-music.webp", badge: "Guide", title: { en: "Remove background music from videos", nl: "Achtergrondmuziek uit video's halen" }, text: { en: "Watch without the music, step by step.", nl: "Kijken zonder muziek, stap voor stap." }, href: { en: "/blog/remove-background-music-from-videos/", nl: "/nl/blog/remove-background-music-from-videos/" }, button: { en: "Read the guide", nl: "Lees de gids" } }
+      ]
+    }
+  ]
+};
+</script>
+<script src="/assets/mega.js?v=2" defer></script>
 </body>
 </html>
