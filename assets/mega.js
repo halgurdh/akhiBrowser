@@ -1,10 +1,11 @@
 /* Mega menu (desktop only): a top-level menu item opens a wide panel under the header, with its links on the left and
-   three featured cards on the right. Configured by window.MEGA before this script (see the site's snippet). */
+   featured cards (two by default, window.MEGA.maxCards) on the right. Configured by window.MEGA before this script (see the site's snippet). */
 (function () {
   var M = window.MEGA;
   if (!M || !M.panels) return;
   var desktop = window.matchMedia("(min-width: " + (M.minWidth || 1024) + "px) and (hover: hover)");
   var lang = (document.documentElement.lang || "en").split("-")[0].toLowerCase();
+  var MAX = M.maxCards || 2;
   var T = function (v) { return v && typeof v === "object" && !Array.isArray(v) ? (v[lang] || v.en || "") : v || ""; };
   // card texts: with fallback:false a language without its own text gets no cards (links only) instead of English
   var TC = M.fallback === false ? function (v) { return v && typeof v === "object" && !Array.isArray(v) ? v[lang] || "" : v || ""; } : T;
@@ -34,8 +35,8 @@
 
   // cards: [{img, badge, title, text, href, button}]
   function loadCards(src) {
-    if (Array.isArray(src)) return Promise.resolve(src.map(function (c) { return Object.assign({}, c, { badge: TC(c.badge), title: TC(c.title), text: TC(c.text), button: TC(c.button), href: T(c.href) }); }).filter(function (c) { return c.title; }));
-    var n = src.count || 3;
+    if (Array.isArray(src)) return Promise.resolve(src.map(function (c) { return Object.assign({}, c, { badge: TC(c.badge), title: TC(c.title), text: TC(c.text), button: TC(c.button), href: T(c.href) }); }).filter(function (c) { return c.title; }).slice(0, MAX));
+    var n = Math.min(src.count || MAX, MAX);
     var pre = given(src);
     if (pre) return Promise.resolve(pre.slice(0, n).map(function (c) {
       return Object.assign({}, c, { badge: T(src.badge) || c.badge || (c.free ? T(M.texts && M.texts.free) || "Free" : ""), button: T(src.button) });
@@ -137,7 +138,7 @@
     right.appendChild(el("div", "mega-h", T(M.texts.featured)));
     var grid = el("div", "mega-cards");
     if (cfg.ratio) grid.style.setProperty("--mega-ratio", cfg.ratio);
-    var nCards = Array.isArray(cfg.cards) ? cfg.cards.length : cfg.cards.count || 3;
+    var nCards = Math.min(Array.isArray(cfg.cards) ? cfg.cards.length : cfg.cards.count || MAX, MAX);
     for (var k = 0; k < nCards; k++) grid.appendChild(el("div", "mega-card mega-skeleton"));
     right.appendChild(grid);
     box.appendChild(right);
