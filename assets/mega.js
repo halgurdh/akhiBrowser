@@ -29,10 +29,17 @@
     return (p.prices.currency_symbol || "€") + n.toFixed(n % 1 ? 2 : 0).replace(".", lang === "en" ? "." : ",");
   }
 
+  // cards the page already holds (window.MEGA_DATA, written by the site, e.g. a WordPress snippet): no request needed
+  function given(src) { var d = window.MEGA_DATA, k = src && T(src.key); return d && k && Array.isArray(d[k]) ? d[k] : null; }
+
   // cards: [{img, badge, title, text, href, button}]
   function loadCards(src) {
     if (Array.isArray(src)) return Promise.resolve(src.map(function (c) { return Object.assign({}, c, { badge: TC(c.badge), title: TC(c.title), text: TC(c.text), button: TC(c.button), href: T(c.href) }); }).filter(function (c) { return c.title; }));
     var n = src.count || 3;
+    var pre = given(src);
+    if (pre) return Promise.resolve(pre.slice(0, n).map(function (c) {
+      return Object.assign({}, c, { badge: T(src.badge) || c.badge || (c.free ? T(M.texts && M.texts.free) || "Free" : ""), button: T(src.button) });
+    }));
     if (src.type === "posts" || src.type === "cpt") {
       var base = src.type === "posts" ? "posts" : src.restBase;
       var url = "/wp-json/wp/v2/" + base + "?per_page=" + (src.fetch || n) + "&_embed=wp:featuredmedia,wp:term" + (T(src.query) ? "&" + T(src.query) : "");
@@ -135,7 +142,7 @@
     right.appendChild(grid);
     box.appendChild(right);
     // cards fetched on an earlier visit (last 12 hours) show at once; a fresh copy is fetched in the background for next time
-    var key = "mega2:" + lang + ":" + i, saved = null, live = !Array.isArray(cfg.cards);
+    var key = "mega2:" + lang + ":" + i, saved = null, live = !Array.isArray(cfg.cards) && !given(cfg.cards);
     try { saved = live && JSON.parse(localStorage.getItem(key) || "null"); } catch (e) {}
     if (saved && Date.now() - saved.t > 12 * 3600e3) saved = null;
     var recent = saved && Date.now() - saved.t < 3600e3;
