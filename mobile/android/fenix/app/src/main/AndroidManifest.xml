@@ -825,6 +825,23 @@
             android:exported="false" />
 
         <receiver
+            android:name=".components.AkhiWeeklySummaryAlarm"
+            android:exported="false" />
+
+        <!-- AkhiPrayerWidget: the prayer times on the phone's home screen -->
+        <receiver
+            android:name=".components.AkhiPrayerWidget"
+            android:exported="true"
+            android:label="@string/akhi_prayer_widget_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/akhi_prayer_widget_info" />
+        </receiver>
+
+        <receiver
             android:name=".components.AkhiAppBlockBoot"
             android:exported="false">
             <intent-filter>

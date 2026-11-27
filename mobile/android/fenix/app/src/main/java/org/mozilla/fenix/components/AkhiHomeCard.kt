@@ -96,6 +96,8 @@ internal object AkhiHomeCard {
             appContext.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE).edit().putString(CONTENT, text).apply()
             content.value = text
             AkhiPrayerReminder.schedule(appContext, text)
+            AkhiWeeklySummary.schedule(appContext, text)
+            AkhiPrayerWidget.update(appContext)
             return JSONObject().put("ok", true)
         }
     }
@@ -116,6 +118,7 @@ internal object AkhiHomeCard {
                 content.value = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE).getString(CONTENT, null)
             }
             AkhiPrayerReminder.schedule(context, content.value)
+            AkhiWeeklySummary.schedule(context, content.value)
         }
     }
 
@@ -178,7 +181,8 @@ internal object AkhiHomeCard {
         }
         val card = remember(text) { text?.let { runCatching { JSONObject(it) }.getOrNull() } } ?: return
         card.optJSONObject("welcome")?.let { Welcome(it, modifier) }
-        if (card.optBoolean("reminder")) {
+        // the weekly summary asks only once a week has something to show, not at the first start
+        if (card.optBoolean("reminder") || AkhiWeeklySummary.hasSomething(text)) {
             AskNotifications()
         }
         val day = currentDay(card, now)
@@ -236,7 +240,10 @@ internal object AkhiHomeCard {
         }
     }
 
-    /** Asks once for the notifications of the prayer reminder, when it's on and Android 13 or later doesn't allow them. */
+    /**
+     * Asks once for the notifications of the prayer reminder and the weekly summary, when one of them is on and Android
+     * 13 or later doesn't allow them.
+     */
     @Composable
     private fun AskNotifications() {
         val context = LocalContext.current
