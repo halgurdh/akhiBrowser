@@ -2915,10 +2915,10 @@ class Settings(
             default = { FxNimbus.features.microsurveys.value().enabled },
         )
 
-    /** Nimbus controlled feature flag that Indicates if the Shake to Summarize feature should be enabled */
+    /** Indicates if AI page summaries are enabled. Mozilla removed the Nimbus flag and its string resource. */
     var shakeToSummarizeFeatureFlagEnabled by
         booleanPreference(
-            key = appContext.getPreferenceKey(R.string.pref_key_enable_shake_to_summarize),
+            key = "pref_key_enable_shake_to_summarize",
             // AkhiBrowser: no AI page summaries, the page would be sent to an AI service
             default = { false },
         )
