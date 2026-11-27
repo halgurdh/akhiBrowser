@@ -92,6 +92,22 @@
         <li><h3 data-t="kt7">3. خاندان AkhiBrowser انسٹال کرتے ہیں</h3><p data-t="kt8">وہ AkhiBrowser ڈاؤن لوڈ کرتے ہیں، Premium کے نیچے کلید پیسٹ کرتے ہیں، اور <a href="/setup/">والدین کے مشوروں</a> کے ساتھ اسے سیٹ کرتے ہیں۔</p></li>
         <li><h3 data-t="kt8p">4. Google Play والے AkhiBrowser کے ساتھ خاندان</h3><p data-t="kt8q">Google Play والا AkhiBrowser بھی آپ کی کلید سے کام کرتا ہے: خاندان وہی کلید پیسٹ کرتے ہیں، مجموعی طور پر 500 آلات تک۔</p></li>
       </ul>
+      <form class="kit kit-ask" id="kit-ask" data-nocapture novalidate>
+        <h3 data-t="kq1">شروع کرنے سے پہلے کوئی سوال؟</h3>
+        <p class="note" data-t="kq2">ہمیں اپنے اسکول یا مسجد کے بارے میں بتائیں، ہم ایک کاروباری دن کے اندر ای میل سے جواب دیں گے۔ نہ کال، نہ کوئی پابندی۔</p>
+        <label for="ka-name" data-t="kq3">آپ کا نام</label>
+        <input id="ka-name" name="name" autocomplete="name" required>
+        <label for="ka-email" data-t="kq4">آپ کا ای میل پتہ</label>
+        <input id="ka-email" name="email" type="email" autocomplete="email" required>
+        <label for="ka-org" data-t="kq5">اسکول یا مسجد، اور کتنے خاندان</label>
+        <input id="ka-org" name="company" autocomplete="organization">
+        <label for="ka-msg" data-t="kq6">آپ کا سوال</label>
+        <textarea id="ka-msg" name="message" rows="4"></textarea>
+        <input name="hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
+        <span class="kit-actions"><button type="submit" class="btn" data-t="kq7">میرا سوال بھیجیں</button></span>
+        <p class="note" id="ka-ok" hidden data-t="kq8">شکریہ! ہم ایک کاروباری دن کے اندر ای میل سے جواب دیں گے۔</p>
+        <p class="note" id="ka-err" hidden data-t="kq9">براہ کرم اپنا نام اور درست ای میل پتہ لکھیں۔</p>
+      </form>
       <form class="kit" id="kit" onsubmit="return false">
         <label for="kit-key" data-t="kt9">آپ کی اسکول / مسجد کلید</label>
         <input id="kit-key" autocomplete="off" spellcheck="false" placeholder="AKHI-...">
@@ -205,6 +221,21 @@ addEventListener("pageshow", () => { menu.value = menu.querySelector("[selected]
   $("kit-copy").addEventListener("click", () => navigator.clipboard.writeText($("kit-msg").value));
   $("kit-print").addEventListener("click", () => print());
   update();
+  // questions from schools and mosques: sent to the lead agent, which mails us; we answer by email
+  const ask = $("kit-ask");
+  if (ask) ask.addEventListener("submit", async e => {
+    e.preventDefault();
+    const d = Object.fromEntries(new FormData(ask));
+    const ok = d.name && d.name.trim() && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email || "");
+    $("ka-err").hidden = Boolean(ok);
+    if (!ok) return;
+    d.page = location.pathname;
+    d.message = d.message || "School / Mosque question";
+    ask.querySelector("button").disabled = true;
+    try { await fetch("https://akhi-leads.akhibrowser.workers.dev/lead", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(d) }); } catch (err) {}
+    for (const el of ask.querySelectorAll("label, input, textarea, .kit-actions")) el.hidden = true;
+    $("ka-ok").hidden = false;
+  });
 })();
 </script>
 </body>

@@ -297,3 +297,14 @@ a7	La page d'accueil d'AkhiBrowser sur Android : une barre de recherche, le logo
 aPlans	Les formules d'AkhiBrowser comparées. Gratuit : publicités et traqueurs bloqués, sites haram bloqués, pas de musique dans les vidéos, heures de prière et verset, 0 €. Premium : tout Gratuit, choisir qui flouter, mode strict, un web plus calme ; 3,99 € par mois, 39 € par an ou 119 € à vie. Family Premium : tout Premium, contrôle parental et PIN, résumé d'activité, pause prière, vérification halal et riba ; 59,99 € par an, 3 jours gratuits, 10 appareils. École / Mosquée : tout Family, une clé de licence, jusqu'à 500 appareils, 30 € par mois.
 mm26p	monsite.fr
 carPlay	Lecture
+hp1	Premium et Family Premium, à partir de 3,99 € par mois →
+sm3	Comment ça marche pour votre école ou mosquée, avec réponses à vos questions →
+kq1	Des questions avant de commencer ?
+kq2	Parlez-nous de votre école ou mosquée et nous répondons par e-mail sous un jour ouvré. Sans appel, sans engagement.
+kq3	Votre nom
+kq4	Votre adresse e-mail
+kq5	École ou mosquée, et combien de familles
+kq6	Votre question
+kq7	Envoyer ma question
+kq8	Merci ! Nous répondons par e-mail sous un jour ouvré.
+kq9	Indiquez votre nom et une adresse e-mail valide, s’il vous plaît.

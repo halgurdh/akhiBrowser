@@ -297,3 +297,14 @@ a7	Halaman beranda AkhiBrowser di Android: bilah pencarian, logo AkhiBrowser, da
 aPlans	Perbandingan paket AkhiBrowser. Gratis: iklan dan pelacak diblokir, situs haram diblokir, tanpa musik di video, waktu salat dan ayat, €0. Premium: semua yang ada di Gratis, pilih siapa yang diburamkan, mode ketat, web yang lebih tenang; €3,99 per bulan, €39 per tahun, atau €119 seumur hidup. Family Premium: semua yang ada di Premium, kontrol orang tua dan PIN, ringkasan aktivitas, jeda salat, cek halal dan riba; €59,99 per tahun, 3 hari gratis, 10 perangkat. Sekolah / Masjid: semua yang ada di Family, satu kunci lisensi, hingga 500 perangkat, €30 per bulan.
 mm26p	situsku.id
 carPlay	Putar
+hp1	Premium dan Family Premium, mulai €3,99 per bulan →
+sm3	Cara kerjanya untuk sekolah atau masjid Anda, beserta jawaban atas pertanyaan Anda →
+kq1	Ada pertanyaan sebelum mulai?
+kq2	Ceritakan tentang sekolah atau masjid Anda dan kami membalas lewat email dalam satu hari kerja. Tanpa telepon, tanpa kewajiban.
+kq3	Nama Anda
+kq4	Alamat email Anda
+kq5	Sekolah atau masjid, dan berapa keluarga
+kq6	Pertanyaan Anda
+kq7	Kirim pertanyaan saya
+kq8	Terima kasih! Kami membalas lewat email dalam satu hari kerja.
+kq9	Mohon isi nama Anda dan alamat email yang valid.

@@ -297,3 +297,14 @@ a7	Android'de AkhiBrowser ana sayfası: bir arama çubuğu, AkhiBrowser logosu v
 aPlans	AkhiBrowser planlarının karşılaştırması. Ücretsiz: reklamlar ve izleyiciler engellendi, haram siteler engellendi, videolarda müzik yok, namaz vakitleri ve ayet, 0 €. Premium: Ücretsiz'deki her şey, kimin bulanık olacağını seç, sıkı mod, daha sakin bir web; ayda 3,99 €, yılda 39 € veya ömür boyu 119 €. Family Premium: Premium'daki her şey, ebeveyn denetimleri ve PIN, etkinlik özeti, namaz molası, helal ve faiz kontrolü; yılda 59,99 €, 3 gün ücretsiz, 10 cihaz. Okul / Cami: Family'deki her şey, tek lisans anahtarı, en fazla 500 cihaz, ayda 30 €.
 mm26p	sitem.com
 carPlay	Oynat
+hp1	Premium ve Family Premium, aylık 3,99 €'dan başlayan fiyatlarla →
+sm3	Okulunuz veya caminiz için nasıl çalışır, sorularınızın yanıtlarıyla →
+kq1	Başlamadan önce sorunuz mu var?
+kq2	Bize okulunuzdan veya caminizden bahsedin, bir iş günü içinde e-postayla yanıt verelim. Arama yok, yükümlülük yok.
+kq3	Adınız
+kq4	E-posta adresiniz
+kq5	Okul veya cami, ve kaç aile
+kq6	Sorunuz
+kq7	Sorumu gönder
+kq8	Teşekkürler! Bir iş günü içinde e-postayla yanıt veriyoruz.
+kq9	Lütfen adınızı ve geçerli bir e-posta adresi yazın.

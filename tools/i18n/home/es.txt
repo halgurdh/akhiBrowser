@@ -297,3 +297,14 @@ a7	La página de inicio de AkhiBrowser en Android: una barra de búsqueda, el lo
 aPlans	Los planes de AkhiBrowser comparados. Gratis: anuncios y rastreadores bloqueados, sitios haram bloqueados, sin música en los vídeos, horarios de oración y versículo, 0 €. Premium: todo lo de Gratis, elegir a quién difuminar, modo estricto, una web más tranquila; 3,99 € al mes, 39 € al año o 119 € de por vida. Family Premium: todo lo de Premium, control parental y PIN, resumen de actividad, pausa de oración, comprobación halal y de riba; 59,99 € al año, 3 días gratis, 10 dispositivos. Escuela / Mezquita: todo lo de Family, una clave de licencia, hasta 500 dispositivos, 30 € al mes.
 mm26p	misitio.es
 carPlay	Reproducir
+hp1	Premium y Family Premium, desde 3,99 € al mes →
+sm3	Cómo funciona para tu escuela o mezquita, con respuestas a tus preguntas →
+kq1	¿Preguntas antes de empezar?
+kq2	Cuéntanos sobre tu escuela o mezquita y te respondemos por correo en un día laborable. Sin llamadas ni compromiso.
+kq3	Tu nombre
+kq4	Tu correo electrónico
+kq5	Escuela o mezquita, y cuántas familias
+kq6	Tu pregunta
+kq7	Enviar mi pregunta
+kq8	¡Gracias! Te respondemos por correo en un día laborable.
+kq9	Escribe tu nombre y un correo electrónico válido, por favor.

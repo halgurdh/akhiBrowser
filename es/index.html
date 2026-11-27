@@ -178,6 +178,8 @@ a.btn.soon:hover { background: #ffd76a; }
 .os-chrome { --logo: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 0C8.21 0 4.831 1.757 2.632 4.501l3.953 6.848A5.454 5.454 0 0 1 12 6.545h10.691A12 12 0 0 0 12 0zM1.931 5.47A11.943 11.943 0 0 0 0 12c0 6.012 4.42 10.991 10.189 11.864l3.953-6.847a5.45 5.45 0 0 1-6.865-2.29zm13.342 2.166a5.446 5.446 0 0 1 1.45 7.09l.002.001h-.002l-5.344 9.257c.206.01.413.016.621.016 6.627 0 12-5.373 12-12 0-1.54-.29-3.011-.818-4.364zM12 16.364a4.364 4.364 0 1 1 0-8.728 4.364 4.364 0 0 1 0 8.728Z'/%3E%3C/svg%3E"); }
 .os-firefox { --logo: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.824 7.287c.008 0 .004 0 0 0zm-2.8-1.4c.006 0 .003 0 0 0zm16.754 2.161c-.505-1.215-1.53-2.528-2.333-2.943.654 1.283 1.033 2.57 1.177 3.53l.002.02c-1.314-3.278-3.544-4.6-5.366-7.477-.091-.147-.184-.292-.273-.446a3.545 3.545 0 01-.13-.24 2.118 2.118 0 01-.172-.46.03.03 0 00-.027-.03.038.038 0 00-.021 0l-.006.001a.037.037 0 00-.01.005L15.624 0c-2.585 1.515-3.657 4.168-3.932 5.856a6.197 6.197 0 00-2.305.587.297.297 0 00-.147.37c.057.162.24.24.396.17a5.622 5.622 0 012.008-.523l.067-.005a5.847 5.847 0 011.957.222l.095.03a5.816 5.816 0 01.616.228c.08.036.16.073.238.112l.107.055a5.835 5.835 0 01.368.211 5.953 5.953 0 012.034 2.104c-.62-.437-1.733-.868-2.803-.681 4.183 2.09 3.06 9.292-2.737 9.02a5.164 5.164 0 01-1.513-.292 4.42 4.42 0 01-.538-.232c-1.42-.735-2.593-2.121-2.74-3.806 0 0 .537-2 3.845-2 .357 0 1.38-.998 1.398-1.287-.005-.095-2.029-.9-2.817-1.677-.422-.416-.622-.616-.8-.767a3.47 3.47 0 00-.301-.227 5.388 5.388 0 01-.032-2.842c-1.195.544-2.124 1.403-2.8 2.163h-.006c-.46-.584-.428-2.51-.402-2.913-.006-.025-.343.176-.389.206-.406.29-.787.616-1.136.974-.397.403-.76.839-1.085 1.303a9.816 9.816 0 00-1.562 3.52c-.003.013-.11.487-.19 1.073-.013.09-.026.181-.037.272a7.8 7.8 0 00-.069.667l-.002.034-.023.387-.001.06C.386 18.795 5.593 24 12.016 24c5.752 0 10.527-4.176 11.463-9.661.02-.149.035-.298.052-.448.232-1.994-.025-4.09-.753-5.844z'/%3E%3C/svg%3E"); }
 .note { margin-top: 10px; font-size: 14px; color: var(--soft); }
+.hero-plans { margin: 14px 0 0; font-weight: 600; }
+.hero-plans a { text-decoration: underline; text-underline-offset: 3px; }
 
 section { padding: 72px 0; border-top: 1px solid var(--line); }
 h2 { font-size: clamp(28px, 3.6vw, 38px); color: var(--gold); }
@@ -638,6 +640,7 @@ footer .powered a:hover { text-decoration: underline; }
           <p class="get-android" data-t="t4a">¿En un ordenador? Abre allí akhibrowser.com para Windows, Chrome y Firefox.</p>
           <a class="btn soon os-apple" href="#roadmap" data-t="t4b">iOS y macOS: próximamente<small>Ver la hoja de ruta</small></a>
         </div>
+        <p class="hero-plans"><a href="#premium" data-t="hp1">Premium y Family Premium, desde 3,99 € al mes →</a></p>
         <p class="note" data-t="t7b">Las extensiones de Chrome y Firefox son una versión más ligera y gratuita: bloquean sitios para adultos y haram, difuminan imágenes y quitan la música de fondo, pero no tienen Premium, ni control parental, ni bloqueador de anuncios propio, y se pueden quitar. El árabe llegará pronto a las extensiones.</p>
         <p class="note" data-t="t11">Protecciones gratuitas.</p>
       </div>
@@ -855,6 +858,7 @@ footer .powered a:hover { text-decoration: underline; }
       <div class="plan-school" id="school">
         <a class="btn ghost" href="https://akhi-license.akhibrowser.workers.dev/buy/school" data-t="sm1">Escuela / Mezquita<small>30 € al mes</small></a>
         <p class="note" data-t="sm2">Family Premium para todos los niños de tu escuela o mezquita: una clave para hasta 500 dispositivos.</p>
+        <p class="note"><a href="/es/kit/" data-t="sm3">Cómo funciona para tu escuela o mezquita, con respuestas a tus preguntas →</a></p>
       </div>
       <p class="note" data-t="t52">En AkhiBrowser de Google Play, compra Premium a través de Google Play o pega una clave de esta web. En otras versiones, Stripe muestra el precio antes de pagar; recibes una clave de licencia sin crear una cuenta. Una clave Premium funciona en hasta tres dispositivos a la vez, una clave Family en hasta diez, una clave Escuela / Mezquita en hasta 500. ¿Compraste Premium o de por vida antes de la versión 1.2.1? Conservas el control parental que tenías. Mensual, anual y Family: paga con tarjeta como suscripción, o una vez con iDEAL o PayPal por un mes o un año al mismo precio, sin renovación. Una suscripción Family con tarjeta empieza con 3 días gratis. Un Family Premium regalado se envía por correo a la persona a quien se lo regalas.</p>
       <p class="note" data-t="lp1">En Android, Google Play muestra el precio en tu propia moneda. En muchos países es más bajo que los precios de arriba.</p>
@@ -1047,6 +1051,17 @@ footer .powered a:hover { text-decoration: underline; }
 "vip2": "Influencer? Ons VIP-affiliateprogramma voor Family Premium: je volgers krijgen 10% korting en jij krijgt 10% van elke betaling, elk jaar dat ze blijven. 200 gezinnen leveren je zo'n €900 per jaar op, jaar na jaar.",
 "sm1": "School / Moskee<small>€30 per maand<\/small>",
 "sm2": "Family Premium voor alle kinderen van je school of moskee: één sleutel voor maximaal 500 apparaten.",
+"kq1": "Vragen voordat je begint?",
+"kq2": "Vertel ons over je school of moskee en we antwoorden binnen één werkdag per e-mail. Geen gesprek, geen verplichtingen.",
+"kq3": "Je naam",
+"kq4": "Je e-mailadres",
+"kq5": "School of moskee, en hoeveel gezinnen",
+"kq6": "Je vraag",
+"kq7": "Verstuur mijn vraag",
+"kq8": "Bedankt! We antwoorden binnen één werkdag per e-mail.",
+"kq9": "Vul je naam en een geldig e-mailadres in.",
+"sm3": "Zo werkt het voor je school of moskee, met antwoord op je vragen →",
+"hp1": "Premium en Family Premium, vanaf €3,99 per maand →",
 "f1": "Halal-check en halal plekken",
 "f2": "Een waarschuwing op productpagina's met varken, alcohol, gelatine of twijfelachtige E-nummers, en de plekken die als halal gemarkeerd zijn op Google Maps en bezorgsites.",
 "f3": "Riba-waarschuwing, lootboxen geblokkeerd",
@@ -1346,6 +1361,17 @@ footer .powered a:hover { text-decoration: underline; }
 "vip2": "مؤثر على وسائل التواصل؟ برنامج شركاء VIP لخطة Family Premium: يحصل متابعوك على خصم 10%، وتحصل أنت على 10% من كل دفعة لهم، كل سنة يبقون فيها. 200 عائلة تجلب لك نحو 900 € سنويًا، سنة بعد سنة.",
 "sm1": "مدرسة / مسجد<small>30 € شهريًا<\/small>",
 "sm2": "Family Premium لجميع أطفال مدرستك أو مسجدك: مفتاح واحد لما يصل إلى 500 جهاز.",
+"kq1": "هل لديك أسئلة قبل أن تبدأ؟",
+"kq2": "أخبرنا عن مدرستك أو مسجدك وسنرد عليك بالبريد الإلكتروني خلال يوم عمل واحد. بلا مكالمة وبلا أي التزام.",
+"kq3": "اسمك",
+"kq4": "بريدك الإلكتروني",
+"kq5": "المدرسة أو المسجد، وعدد العائلات",
+"kq6": "سؤالك",
+"kq7": "أرسل سؤالي",
+"kq8": "شكرًا لك! سنرد عليك بالبريد الإلكتروني خلال يوم عمل واحد.",
+"kq9": "يرجى كتابة اسمك وبريد إلكتروني صحيح.",
+"sm3": "كيف يعمل لمدرستك أو مسجدك، مع إجابات أسئلتك ←",
+"hp1": "Premium و Family Premium، ابتداءً من 3.99 € شهريًا ←",
 "f1": "فحص الحلال والأماكن الحلال",
 "f2": "تحذير على صفحات المنتجات التي فيها لحم خنزير أو كحول أو جيلاتين أو أرقام E مشكوك فيها، والأماكن الموسومة بالحلال على خرائط Google ومواقع التوصيل.",
 "f3": "تحذير من الربا، وحظر صناديق الغنائم",
@@ -2066,6 +2092,22 @@ footer .powered a:hover { text-decoration: underline; }
         <li><h3 data-t="kt7">3. Las familias instalan AkhiBrowser</h3><p data-t="kt8">Descargan AkhiBrowser, pegan la clave en Premium y lo configuran con los <a href="/es/setup/">consejos para padres</a>.</p></li>
         <li><h3 data-t="kt8p">4. Familias con AkhiBrowser de Google Play</h3><p data-t="kt8q">AkhiBrowser de Google Play también funciona con tu clave: las familias pegan la misma clave, en hasta 500 dispositivos en total.</p></li>
       </ul>
+      <form class="kit kit-ask" id="kit-ask" data-nocapture novalidate>
+        <h3 data-t="kq1">¿Preguntas antes de empezar?</h3>
+        <p class="note" data-t="kq2">Cuéntanos sobre tu escuela o mezquita y te respondemos por correo en un día laborable. Sin llamadas ni compromiso.</p>
+        <label for="ka-name" data-t="kq3">Tu nombre</label>
+        <input id="ka-name" name="name" autocomplete="name" required>
+        <label for="ka-email" data-t="kq4">Tu correo electrónico</label>
+        <input id="ka-email" name="email" type="email" autocomplete="email" required>
+        <label for="ka-org" data-t="kq5">Escuela o mezquita, y cuántas familias</label>
+        <input id="ka-org" name="company" autocomplete="organization">
+        <label for="ka-msg" data-t="kq6">Tu pregunta</label>
+        <textarea id="ka-msg" name="message" rows="4"></textarea>
+        <input name="hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
+        <span class="kit-actions"><button type="submit" class="btn" data-t="kq7">Enviar mi pregunta</button></span>
+        <p class="note" id="ka-ok" hidden data-t="kq8">¡Gracias! Te respondemos por correo en un día laborable.</p>
+        <p class="note" id="ka-err" hidden data-t="kq9">Escribe tu nombre y un correo electrónico válido, por favor.</p>
+      </form>
       <form class="kit" id="kit" onsubmit="return false">
         <label for="kit-key" data-t="kt9">Tu clave Escuela / Mezquita</label>
         <input id="kit-key" autocomplete="off" spellcheck="false" placeholder="AKHI-...">

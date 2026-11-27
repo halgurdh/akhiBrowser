@@ -297,3 +297,14 @@ a7	Die Startseite von AkhiBrowser auf Android: eine Suchleiste, das AkhiBrowser-
 aPlans	Die Pläne von AkhiBrowser im Vergleich. Kostenlos: Werbung und Tracker blockiert, haram Seiten blockiert, keine Musik in Videos, Gebetszeiten und Vers, 0 €. Premium: alles aus Kostenlos, wählen, wer unscharf wird, strenger Modus, ein ruhigeres Web; 3,99 € im Monat, 39 € im Jahr oder 119 € auf Lebenszeit. Family Premium: alles aus Premium, Elternkontrolle und PIN, Aktivitätsübersicht, Gebetspause, Halal- und Riba-Check; 59,99 € im Jahr, 3 Tage kostenlos, 10 Geräte. Schule / Moschee: alles aus Family, ein Lizenzschlüssel, bis zu 500 Geräte, 30 € im Monat.
 mm26p	meineseite.de
 carPlay	Abspielen
+hp1	Premium und Family Premium, ab 3,99 € im Monat →
+sm3	So funktioniert es für deine Schule oder Moschee, mit Antworten auf deine Fragen →
+kq1	Fragen, bevor du anfängst?
+kq2	Erzähl uns von deiner Schule oder Moschee, und wir antworten innerhalb eines Werktags per E-Mail. Kein Anruf, keine Verpflichtung.
+kq3	Dein Name
+kq4	Deine E-Mail-Adresse
+kq5	Schule oder Moschee, und wie viele Familien
+kq6	Deine Frage
+kq7	Frage senden
+kq8	Danke! Wir antworten innerhalb eines Werktags per E-Mail.
+kq9	Bitte gib deinen Namen und eine gültige E-Mail-Adresse ein.

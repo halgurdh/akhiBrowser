@@ -145,6 +145,9 @@ nav { position: relative; }
 .flows strong { color: #fff; font-weight: 600; }
 .kit { display: grid; gap: 8px; margin-top: 32px; padding: 20px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
 .kit label { margin-top: 8px; font-weight: 650; }
+.kit-ask { position: relative; }
+.kit-ask h3 { margin: 0; }
+.kit [hidden] { display: none !important; }
 .kit input, .kit textarea { width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: rgba(0, 0, 0, .2); color: inherit; font: inherit; }
 .kit textarea { font-size: 15px; resize: vertical; }
 .kit-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }

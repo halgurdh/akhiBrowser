@@ -92,6 +92,22 @@
         <li><h3 data-t="kt7">3. Gezinnen installeren AkhiBrowser</h3><p data-t="kt8">Ze downloaden AkhiBrowser, plakken de sleutel bij Premium en stellen het in met de <a href="/nl/setup/">tips voor ouders</a>.</p></li>
         <li><h3 data-t="kt8p">4. Gezinnen met AkhiBrowser uit Google Play</h3><p data-t="kt8q">Ook AkhiBrowser uit Google Play werkt met je sleutel: gezinnen plakken dezelfde sleutel, op samen maximaal 500 apparaten.</p></li>
       </ul>
+      <form class="kit kit-ask" id="kit-ask" data-nocapture novalidate>
+        <h3 data-t="kq1">Vragen voordat je begint?</h3>
+        <p class="note" data-t="kq2">Vertel ons over je school of moskee en we antwoorden binnen één werkdag per e-mail. Geen gesprek, geen verplichtingen.</p>
+        <label for="ka-name" data-t="kq3">Je naam</label>
+        <input id="ka-name" name="name" autocomplete="name" required>
+        <label for="ka-email" data-t="kq4">Je e-mailadres</label>
+        <input id="ka-email" name="email" type="email" autocomplete="email" required>
+        <label for="ka-org" data-t="kq5">School of moskee, en hoeveel gezinnen</label>
+        <input id="ka-org" name="company" autocomplete="organization">
+        <label for="ka-msg" data-t="kq6">Je vraag</label>
+        <textarea id="ka-msg" name="message" rows="4"></textarea>
+        <input name="hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
+        <span class="kit-actions"><button type="submit" class="btn" data-t="kq7">Verstuur mijn vraag</button></span>
+        <p class="note" id="ka-ok" hidden data-t="kq8">Bedankt! We antwoorden binnen één werkdag per e-mail.</p>
+        <p class="note" id="ka-err" hidden data-t="kq9">Vul je naam en een geldig e-mailadres in.</p>
+      </form>
       <form class="kit" id="kit" onsubmit="return false">
         <label for="kit-key" data-t="kt9">Je School / Moskee-sleutel</label>
         <input id="kit-key" autocomplete="off" spellcheck="false" placeholder="AKHI-...">
@@ -212,6 +228,21 @@ addEventListener("pageshow", () => { menu.value = menu.querySelector("[selected]
   $("kit-copy").addEventListener("click", () => navigator.clipboard.writeText($("kit-msg").value));
   $("kit-print").addEventListener("click", () => print());
   update();
+  // questions from schools and mosques: sent to the lead agent, which mails us; we answer by email
+  const ask = $("kit-ask");
+  if (ask) ask.addEventListener("submit", async e => {
+    e.preventDefault();
+    const d = Object.fromEntries(new FormData(ask));
+    const ok = d.name && d.name.trim() && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email || "");
+    $("ka-err").hidden = Boolean(ok);
+    if (!ok) return;
+    d.page = location.pathname;
+    d.message = d.message || "School / Mosque question";
+    ask.querySelector("button").disabled = true;
+    try { await fetch("https://akhi-leads.akhibrowser.workers.dev/lead", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(d) }); } catch (err) {}
+    for (const el of ask.querySelectorAll("label, input, textarea, .kit-actions")) el.hidden = true;
+    $("ka-ok").hidden = false;
+  });
 })();
 </script>
 </body>

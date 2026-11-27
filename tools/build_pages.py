@@ -226,6 +226,21 @@ KIT_SCRIPT = """<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-gener
   $("kit-copy").addEventListener("click", () => navigator.clipboard.writeText($("kit-msg").value));
   $("kit-print").addEventListener("click", () => print());
   update();
+  // questions from schools and mosques: sent to the lead agent, which mails us; we answer by email
+  const ask = $("kit-ask");
+  if (ask) ask.addEventListener("submit", async e => {
+    e.preventDefault();
+    const d = Object.fromEntries(new FormData(ask));
+    const ok = d.name && d.name.trim() && /^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(d.email || "");
+    $("ka-err").hidden = Boolean(ok);
+    if (!ok) return;
+    d.page = location.pathname;
+    d.message = d.message || "School / Mosque question";
+    ask.querySelector("button").disabled = true;
+    try { await fetch("https://akhi-leads.akhibrowser.workers.dev/lead", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(d) }); } catch (err) {}
+    for (const el of ask.querySelectorAll("label, input, textarea, .kit-actions")) el.hidden = true;
+    $("ka-ok").hidden = false;
+  });
 })();
 </script>"""
 

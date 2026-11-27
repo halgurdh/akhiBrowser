@@ -297,3 +297,14 @@ a7	Halaman utama AkhiBrowser pada Android: bar carian, logo AkhiBrowser dan labe
 aPlans	Perbandingan pelan AkhiBrowser. Percuma: iklan dan penjejak disekat, laman haram disekat, tiada muzik dalam video, waktu solat dan ayat, €0. Premium: semua dalam Percuma, pilih siapa yang dikaburkan, mod ketat, web yang lebih tenang; €3.99 sebulan, €39 setahun atau €119 seumur hidup. Family Premium: semua dalam Premium, kawalan ibu bapa dan PIN, ringkasan aktiviti, jeda solat, semakan halal dan riba; €59.99 setahun, 3 hari percuma, 10 peranti. Sekolah / Masjid: semua dalam Family, satu kunci lesen, sehingga 500 peranti, €30 sebulan.
 mm26p	lamansaya.my
 carPlay	Main
+hp1	Premium dan Family Premium, dari €3.99 sebulan →
+sm3	Cara ia berfungsi untuk sekolah atau masjid anda, dengan jawapan kepada soalan anda →
+kq1	Ada soalan sebelum bermula?
+kq2	Ceritakan tentang sekolah atau masjid anda dan kami membalas melalui e-mel dalam satu hari bekerja. Tiada panggilan, tiada komitmen.
+kq3	Nama anda
+kq4	Alamat e-mel anda
+kq5	Sekolah atau masjid, dan berapa keluarga
+kq6	Soalan anda
+kq7	Hantar soalan saya
+kq8	Terima kasih! Kami membalas melalui e-mel dalam satu hari bekerja.
+kq9	Sila isi nama anda dan alamat e-mel yang sah.
