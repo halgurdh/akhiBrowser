@@ -303,6 +303,8 @@ class AkhiAppBlockBoot : BroadcastReceiver() {
             AkhiAppBlock.applyWatch(context)
             AkhiPhoneFilter.startAfterBoot(context)
             AkhiPrayerReminder.reschedule(context)
+            AkhiWeeklySummary.reschedule(context)
+            AkhiPrayerWidget.update(context)
         }
     }
 }

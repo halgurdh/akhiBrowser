@@ -1310,6 +1310,26 @@ class SettingsTest {
     }
 
     @Test
+    fun `GIVEN the prompt was shown once 8 days ago WHEN checking prompt eligibility THEN shouldShowSetAsDefaultPrompt is true`() {
+        settings.numberOfSetAsDefaultPromptShownTimes = 1
+        settings.lastSetAsDefaultPromptShownTimeInMillis = System.currentTimeMillis() - 8 * Settings.ONE_DAY_MS
+        settings.coldStartsBetweenSetAsDefaultPrompts = 5
+        settings.seventhDayOnboardingCompletedTimestamp = 1L
+
+        assertTrue(settings.shouldShowSetAsDefaultPrompt())
+    }
+
+    @Test
+    fun `GIVEN the prompt was shown twice 8 days ago WHEN checking prompt eligibility THEN shouldShowSetAsDefaultPrompt is false`() {
+        settings.numberOfSetAsDefaultPromptShownTimes = 2
+        settings.lastSetAsDefaultPromptShownTimeInMillis = System.currentTimeMillis() - 8 * Settings.ONE_DAY_MS
+        settings.coldStartsBetweenSetAsDefaultPrompts = 5
+        settings.seventhDayOnboardingCompletedTimestamp = 1L
+
+        assertFalse(settings.shouldShowSetAsDefaultPrompt())
+    }
+
+    @Test
     fun `GIVEN enough cold starts and conditions met WHEN checking prompt eligibility THEN shouldShowSetAsDefaultPrompt is true`() {
         settings.numberOfSetAsDefaultPromptShownTimes = 1
         settings.lastSetAsDefaultPromptShownTimeInMillis = 0L
